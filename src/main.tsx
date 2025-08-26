@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider } from './components/ThemeProvider';
 import { analytics } from '../firebase-config';
 
 // Initialize Firebase Analytics
@@ -26,7 +26,7 @@ const root = document.getElementById('root');
 if (root) {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ThemeProvider>
         <App />
       </ThemeProvider>
     </React.StrictMode>

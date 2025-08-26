@@ -6,41 +6,53 @@ import type { ReactNode } from 'react';
 
 // สร้าง Context สำหรับ Theme
 interface ThemeContextType {
-  theme: string;
-  setTheme: (theme: string) => void;
+  theme: 'light' | 'dark' | 'twilight';
+  setTheme: (theme: 'light' | 'dark' | 'twilight') => void;
+  cycleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // สร้าง Provider Component
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState('light'); // default theme
+  const [theme, setThemeState] = useState<'light' | 'dark' | 'twilight'>('light'); // default theme
 
   // Effect นี้จะทำงานเฉพาะบน Client เท่านั้น
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+    if (savedTheme === 'twilight') {
+      setTheme('twilight');
+    } else if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
       setTheme('dark');
     } else {
       setTheme('light');
     }
   }, []);
 
-  const setTheme = (newTheme: string) => {
+  const setTheme = (newTheme: 'light' | 'dark' | 'twilight') => {
     setThemeState(newTheme);
+    document.documentElement.classList.remove('dark', 'twilight');
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
+    } else if (newTheme === 'twilight') {
+      document.documentElement.classList.add('twilight');
+      localStorage.setItem('theme', 'twilight');
     } else {
-      document.documentElement.classList.remove('dark');
       localStorage.setItem('theme', 'light');
     }
   };
 
+  // Helper for cycling themes
+  const cycleTheme = () => {
+    if (theme === 'light') setTheme('dark');
+    else if (theme === 'dark') setTheme('twilight');
+    else setTheme('light');
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, cycleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

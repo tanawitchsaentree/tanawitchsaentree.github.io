@@ -170,7 +170,7 @@
       ]
     },
     "ask_skills": {
-      "keywords": ["what are his skills", "what is he good at", "skills", "expertise", "strengths"],
+      "keywords": ["what are his skills", "what is he good at", "skills", "expertise", "strengths", "show me", "display", "see", "about his skills", "info on skills", "tell me about skills", "what can you show", "show", "give me skills", "can i see skills", "see more skills", "skillset", "abilities", "what can he do", "what can nate do", "show nate's skills", "show skills"],
       "response": [
         "Nate's got a whole kennel of skills! He's particularly strong in UX strategy, design systems, and user research. He's also great at mentoring and cross-functional collaboration. Want me to elaborate on any of these?",
         "Oh boy, where to start? Nate excels in product design, user experience, and creating design systems that scale. He's also fantastic at translating complex problems into simple, elegant solutions. What aspect interests you most?",
@@ -178,7 +178,7 @@
       ]
     },
     "ask_experience": {
-      "keywords": ["experience", "background", "work history", "where has he worked", "previous roles"],
+      "keywords": ["experience", "background", "work history", "where has he worked", "previous roles", "show me experience", "display experience", "see experience", "about his experience", "info on experience", "tell me about experience", "what can you show", "show experience", "give me experience", "can i see experience", "see more experience", "past jobs", "job history", "projects", "show nate's experience", "show experience"],
       "response": [
         "Nate's career has taken him through some exciting places! He's currently at Invitrace Health, and before that, he worked at Doctor Anywhere and Codefin. Each role has added new dimensions to his design expertise. Would you like to hear about a specific company or role?",
         "Oh, I love talking about Nate's journey! He's built experience across healthcare tech, fintech, and more. His roles have ranged from hands-on design to leadership positions. What part of his experience interests you most?",

@@ -63,13 +63,13 @@ function BioSection() {
   return (
     <div className="bio-section">
       <p className="bio-text">
-        I’m a product designer with 8+ years of hands-on experience across health, finance, and tools that people rely on.
+        I'm a product designer with 8+ years of experience turning complicated systems into tools people actually want to use.
       </p>
       <p className="bio-text">
-        I care about making things work well — for real people and real problems.
+        I'm curious by nature, always digging into how complex products are built and how to reshape them so they feel natural, not overwhelming.
       </p>
       <p className="bio-text">
-        I’m always learning, always building, and lately, I’ve been deep into AI — not just using it, but understanding how it changes the way we design and think.
+        Lately I've been exploring how AI changes that challenge, designing products that don't just simplify complexity but adapt to it, learning and evolving with their users.
       </p>
     </div>
   );

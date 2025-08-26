@@ -39,6 +39,10 @@ interface BotResponse {
   topicToSet: string | null;
 }
 
+declare global {
+  interface Window { __nudgedPrompts?: string[]; }
+}
+
 const profileData: ProfileData = jsonData;
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
@@ -89,12 +93,21 @@ function ChatBox() {
         await sleep(baseDelay);
     }
 
-    // NEW: Start inactivity timer if the bot just asked a question
+    // NEW: Progressive Disclosure & User-Driven: Only nudge once per session, randomize and do not repeat
     if (from === 'bot' && topicToSet) {
+      if (!window.__nudgedPrompts) window.__nudgedPrompts = [];
       inactivityTimerRef.current = setTimeout(async () => {
         setIsTyping(true);
-        const prompt = profileData.re_engagement_prompts[Math.floor(Math.random() * profileData.re_engagement_prompts.length)];
-        // Display the nudge but keep the same topic!
+        // Filter out prompts already used this session
+        if (!window.__nudgedPrompts) window.__nudgedPrompts = [];
+        const unusedPrompts = profileData.re_engagement_prompts.filter(p => !window.__nudgedPrompts!.includes(p));
+        if (unusedPrompts.length === 0) {
+          setIsTyping(false);
+          return; // No more nudges this session
+        }
+        const prompt = unusedPrompts[Math.floor(Math.random() * unusedPrompts.length)];
+        if (!window.__nudgedPrompts) window.__nudgedPrompts = [];
+        window.__nudgedPrompts.push(prompt);
         await displayHumanizedMessage(prompt, 'bot', topicToSet);
         setIsTyping(false);
       }, 20000); // 20 seconds
@@ -148,13 +161,41 @@ function ChatBox() {
     // --- Priority 5: Handle other simple intents like greetings ---
     for (const [intentName, intent] of Object.entries(profileData.intents)) {
       if (['affirmative', 'acknowledgement'].includes(intentName)) continue;
-      if (intent.keywords.some(keyword => lowercasedInput.includes(keyword.toLowerCase()))) {
+      if (intent.keywords.some(keyword => fuzzyMatch(lowercasedInput, keyword.toLowerCase()))) {
         const responses = Array.isArray(intent.response) ? intent.response : [intent.response];
         return { text: responses[Math.floor(Math.random() * responses.length)], topicToSet: null };
       }
     }
 
-    // --- Priority 6: Fallback if nothing else matches ---
+    // --- Fuzzy matching helper ---
+  function fuzzyMatch(input: string, keyword: string): boolean {
+    // If the keyword is very short, use includes
+    if (keyword.length <= 4) return input.includes(keyword);
+    // Allow one missing/extra/incorrect char for typos
+    const distance = levenshtein(input.replace(/\s+/g, ''), keyword.replace(/\s+/g, ''));
+    if (distance <= 1) return true;
+    // Also match if input includes keyword ignoring spaces
+    if (input.replace(/\s+/g, '').includes(keyword.replace(/\s+/g, ''))) return true;
+    // Also match if input includes keyword as a substring
+    if (input.includes(keyword)) return true;
+    return false;
+  }
+
+  // --- Simple Levenshtein distance implementation ---
+  function levenshtein(a: string, b: string): number {
+    const dp = Array(a.length + 1).fill(0).map(() => Array(b.length + 1).fill(0));
+    for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+    for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+    for (let i = 1; i <= a.length; i++) {
+      for (let j = 1; j <= b.length; j++) {
+        if (a[i-1] === b[j-1]) dp[i][j] = dp[i-1][j-1];
+        else dp[i][j] = 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+      }
+    }
+    return dp[a.length][b.length];
+  }
+
+  // --- Priority 6: Fallback if nothing else matches ---
     const fallbackResponse = profileData.fallbacks[Math.floor(Math.random() * profileData.fallbacks.length)];
     return { text: fallbackResponse, topicToSet: 'experience' };
   };
@@ -163,14 +204,11 @@ function ChatBox() {
     if (introDisplayed.current) return;
     introDisplayed.current = true;
     
+    // Progressive Disclosure: Only send a single greeting, no immediate follow-up
     const startConversation = async () => {
       setIsTyping(true);
       await sleep(1000);
-      const starter = profileData.conversation_starters[Math.floor(Math.random() * profileData.conversation_starters.length)];
       await displayHumanizedMessage(profileData.bot.lumo_intro, 'bot', null);
-      await sleep(1200);
-      const followUp = Array.isArray(starter.follow_up) ? starter.follow_up[Math.floor(Math.random() * starter.follow_up.length)] : starter.follow_up;
-      await displayHumanizedMessage(followUp, 'bot', starter.topic);
       setIsTyping(false);
     };
     startConversation();
@@ -252,10 +290,37 @@ function ChatBox() {
           </div>
         )}
       </div>
-      <div className="chatbox-input-container">
-        <form onSubmit={handleFormSubmit} className="chatbox-input-wrapper">
+      <div className="chatbox-input-container" style={{
+        background: 'transparent',
+        borderTop: '1px solid var(--border)',
+        padding: '0.75rem 1rem',
+      }}>
+        <form onSubmit={handleFormSubmit} className="chatbox-input-wrapper" style={{
+          background: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+        }}>
           {/* Use the new handleInputChange function here */}
-          <input ref={inputRef} type="text" value={input} onChange={handleInputChange} disabled={isTyping} className="chatbox-input" placeholder="Ask me about Nate's skills, experience, or projects..."/>
+          <input 
+            ref={inputRef} 
+            type="text" 
+            value={input} 
+            onChange={handleInputChange} 
+            disabled={isTyping} 
+            className="chatbox-input" 
+            placeholder="Ask me about Nate's skills, experience, or projects..."
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--foreground)',
+              width: '100%',
+              padding: '0.5rem 0',
+              outline: 'none',
+              fontFamily: 'inherit',
+              fontSize: '0.875rem',
+            }}
+          />
         </form>
       </div>
     </div>

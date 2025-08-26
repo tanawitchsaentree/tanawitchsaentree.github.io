@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Profile Data",
+  "description": "Schema for profile_data.json",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "object",
+      "properties": {
+        "primary_response": { "type": "string" },
+        "extra_notes": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["primary_response", "extra_notes"]
+    },
+    "current_role": { "type": "string" },
+    "career_outlook": { "type": "string" },
+    "work_experience": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "company": { "type": "string" },
+          "role": { "type": "string" },
+          "start_date": { "type": "string" },
+          "end_date": { "type": "string" },
+          "summary": { "type": "string" },
+          "description": { "type": "string" },
+          "achievements": { "type": "array", "items": { "type": "string" } },
+          "link": { "type": "string", "format": "uri" }
+        },
+        "required": ["company", "role", "start_date", "end_date", "description", "link"]
+      }
+    },
+    "competencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["name", "description"]
+      }
+    },
+    "intents": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z_]+$": {
+          "type": "object",
+          "properties": {
+            "keywords": { "type": "array", "items": { "type": "string" } },
+            "response": { "type": "array", "items": { "type": "string" } }
+          },
+          "required": ["keywords", "response"]
+        }
+      }
+    }
+  },
+  "required": ["full_name", "current_role", "career_outlook", "work_experience", "competencies", "intents"]
+}
