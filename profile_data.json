@@ -13,16 +13,19 @@
       {
         "company": "Invitrace",
         "role": "Lead Product Designer",
-        "start_date": "November 2022",
-        "end_date": "Current",
-        "description": "As Lead Product Designer at Invitrace Health, I believe our solutions bring real value to healthcare. I manage a team of designers, build scalable design systems, explore new technologies, and shape user flows to create seamless experiences. I’m passionate about mentoring my team and driving meaningful impact through thoughtful design.",
+        "start_date": "November 2024",
+        "end_date": "August 2025",
+        "description": "As Lead Product Designer at Invitrace Health, I believe our solutions bring real value to healthcare. I manage a team of designers, build scalable design systems, explore new technologies, and shape user flows to create seamless experiences. In August 2025, I led the design rollout for a major update to our care coordination platform, ensuring hospitals could adopt it smoothly. I’m passionate about mentoring my team and driving meaningful impact through thoughtful design.",
+        "achievements": [
+          "Guided the August 2025 release of Invitrace's care coordination platform so partner hospitals could adopt the new workflows without disruption."
+        ],
         "link": "https://www.invitracehealth.com/"
       },
       {
         "company": "CP Origin",
         "role": "Senior Product Designer",
         "start_date": "June 2021",
-        "end_date": "October 2022",
+        "end_date": "December 2023",
         "description": "Collaborated with multiple teams from start to finish, conducting research to create a seamless experience. Designed information architecture by conducting card sorting with users. Utilized user information to create wireframes and conduct testing with the target user personas. Defined a style guide, components, and colors to ensure consistency across both the mobile app and web app.",
         "link": "https://www.cp-origin.com/"
       },

@@ -12,9 +12,9 @@
       {
         "company": "Invitrace Health",
         "role": "Lead Product Designer",
-        "start_date": "2023",
-        "end_date": "Present",
-        "description": "Leading design for healthcare systems.",
+        "start_date": "2024",
+        "end_date": "2025",
+        "description": "Leading design for healthcare systems, including an August 2025 rollout of our care coordination platform.",
         "link": ""
       },
       {
@@ -23,6 +23,14 @@
         "start_date": "2021",
         "end_date": "2022",
         "description": "Worked on the COVID-19 vaccine passport feature.",
+        "link": ""
+      },
+      {
+        "company": "CP Origin",
+        "role": "Senior Product Designer",
+        "start_date": "2021",
+        "end_date": "2023",
+        "description": "Collaborated across teams on large-scale programs and established unified design systems.",
         "link": ""
       },
       {
@@ -59,11 +67,11 @@
     "fact_snippets": [
       {
         "topic": "current_role",
-        "text": "Nate is currently the Lead Product Designer at Invitrace Health — helping build smart healthcare systems that actually work."
+        "text": "From Nov 2024 through Aug 2025, Nate served as Lead Product Designer at Invitrace Health — helping build smart healthcare systems that actually work."
       },
       {
         "topic": "experience",
-        "text": "He's worked everywhere from fintech startups like Peakaccount to major healthcare providers like Doctor Anywhere. He loves a good challenge!"
+        "text": "He's worked everywhere from fintech startups like Peakaccount to major healthcare providers like Doctor Anywhere, and in August 2025 he led Invitrace's big care coordination rollout. He loves a good challenge!"
       },
       {
         "topic": "mentoring",
