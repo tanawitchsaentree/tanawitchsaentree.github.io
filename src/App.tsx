@@ -50,16 +50,16 @@ export default function App() {
 
       {xrayMode && <XRayOverlay />}
 
-      <main className="main-content flex flex-col lg:flex-row gap-8">
-        {/* Profile Content comes first on small screens */}
-        <section className="profile-section order-1 lg:order-none w-full lg:w-1/2">
+      <main className="main-content">
+        {/* Profile Content */}
+        <section className="profile-section">
           <div className="profile-container">
             <Index />
           </div>
         </section>
 
-        {/* Chat Interface appears below on small, side by side on large */}
-        <section className="chat-section order-2 lg:order-none w-full lg:w-1/2">
+        {/* Chat Interface */}
+        <section className="chat-section">
           <div className="chat-container">
             <ChatBox />
           </div>
