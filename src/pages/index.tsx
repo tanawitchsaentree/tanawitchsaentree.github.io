@@ -139,6 +139,7 @@ function SocialIcon({ href, children }: { href: string; children: React.ReactNod
       }}
       onMouseOver={(e) => (e.currentTarget.style.opacity = '0.7')}
       onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
+      title={href}
       aria-label={
         href.includes('linkedin') ? 'LinkedIn' :
           href.includes('medium') ? 'Medium' :
@@ -201,8 +202,6 @@ function ContactSection() {
         alignItems: 'center',
         gap: '6px',
         fontSize: 'var(--text-base)',
-        borderBottom: '1px solid var(--foreground)',
-        paddingBottom: '1px',
       }}>
         <a
           href={`mailto:${emailAddress}`}
