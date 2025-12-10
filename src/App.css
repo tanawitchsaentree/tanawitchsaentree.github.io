@@ -1,17 +1,20 @@
 /* App-specific styles can be added here if needed */
 
 :root {
-  --transition-duration: 0.3s;
+  --transition-duration: 0.2s;
 }
 
-/* Reset and base styles */
+/* Reset and base styles with smooth transitions */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: background-color var(--transition-duration) ease,
-    color var(--transition-duration) ease,
-    border-color var(--transition-duration) ease;
+  transition: background-color var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+    color var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+    border-color var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+    fill var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1),
+    stroke var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: background-color, color, border-color;
 }
 
 /* Make html and body take full viewport height */
