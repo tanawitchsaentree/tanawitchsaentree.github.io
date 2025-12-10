@@ -1,8 +1,7 @@
-import React, { type ButtonHTMLAttributes } from 'react';
+import React, { type ButtonHTMLAttributes, type CSSProperties } from 'react';
 
 interface RetroButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary';
-    isActive?: boolean;
 }
 
 export const RetroButton: React.FC<RetroButtonProps> = ({
@@ -10,52 +9,71 @@ export const RetroButton: React.FC<RetroButtonProps> = ({
     className = '',
     variant = 'primary',
     disabled,
-    isActive,
+    style,
     ...props
 }) => {
+    const buttonStyle: CSSProperties = {
+        position: 'relative',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '8px 16px',
+        fontFamily: 'var(--font-mono)',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+
+        // OUTLINE STYLE
+        background: 'transparent',
+        color: 'var(--foreground)',
+
+        // Thick Border
+        border: '2px solid var(--foreground)',
+        borderRadius: '0',
+
+        // Hard Shadow
+        boxShadow: '4px 4px 0px 0px var(--foreground)',
+
+        transition: 'all 75ms',
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.5 : 1,
+
+        ...style
+    };
+
     return (
         <button
-            className={`
-        relative
-        inline-flex items-center justify-center
-        px-4 py-2
-        font-mono text-sm font-bold uppercase tracking-wider
-        
-        /* OUTLINE STYLE - Transparent BG */
-        bg-transparent
-        text-[var(--foreground)]
-        
-        /* Thick Border */
-        border-2 border-[var(--foreground)]
-        
-        /* Sharp Corners */
-        rounded-none
-        
-        transition-all duration-75
-        
-        /* Hard Shadow */
-        shadow-[4px_4px_0px_0px_var(--foreground)]
-        
-        /* Hover */
-        hover:-translate-y-[1px] hover:-translate-x-[1px]
-        hover:shadow-[5px_5px_0px_0px_var(--foreground)]
-        
-        /* Active */
-        active:translate-y-[2px] active:translate-x-[2px]
-        active:shadow-[1px_1px_0px_0px_var(--foreground)]
-        
-        /* Disabled */
-        disabled:opacity-50 disabled:cursor-not-allowed
-        disabled:transform-none disabled:shadow-none
-        
-        ${className}
-      `}
+            className={`retro-btn ${className}`}
+            style={buttonStyle}
             disabled={disabled}
+            onMouseEnter={(e) => {
+                if (!disabled) {
+                    e.currentTarget.style.transform = 'translate(-1px, -1px)';
+                    e.currentTarget.style.boxShadow = '5px 5px 0px 0px var(--foreground)';
+                }
+            }}
+            onMouseLeave={(e) => {
+                if (!disabled) {
+                    e.currentTarget.style.transform = 'translate(0, 0)';
+                    e.currentTarget.style.boxShadow = '4px 4px 0px 0px var(--foreground)';
+                }
+            }}
+            onMouseDown={(e) => {
+                if (!disabled) {
+                    e.currentTarget.style.transform = 'translate(2px, 2px)';
+                    e.currentTarget.style.boxShadow = '1px 1px 0px 0px var(--foreground)';
+                }
+            }}
+            onMouseUp={(e) => {
+                if (!disabled) {
+                    e.currentTarget.style.transform = 'translate(-1px, -1px)';
+                    e.currentTarget.style.boxShadow = '5px 5px 0px 0px var(--foreground)';
+                }
+            }}
             {...props}
         >
-            <span className="relative z-10 flex items-center gap-2">
-                {children}
-            </span>
+            {children}
         </button>
     );
 };

@@ -166,7 +166,7 @@ const ChatBox: React.FC = () => {
                 msg.suggestions &&
                 msg.suggestions.length > 0 &&
                 (msg.displayingText === msg.text) && (
-                  <div className="flex flex-wrap gap-2 mt-2 animate-fade-in-up">
+                  <div className="flex flex-wrap gap-3 mt-3 animate-fade-in-up">
                     {msg.suggestions.map((suggestion, idx) => (
                       <RetroButton
                         key={idx}
