@@ -26,6 +26,14 @@ When adding something new:
 - New component → Update [`ui-schema.json`](docs/design-system/ui-schema.json)
 - New pattern → Create/update pattern file in [`patterns/`](docs/design-system/patterns/)
 
+### 6. Composition Over Configuration
+For flexible, context-aware UI:
+- Use compound components for complex components (Modal.Header, Modal.Body, etc.)
+- Accept `children` prop for maximum flexibility
+- Provide sub-components for common patterns
+- Document composition structure in [`ui-schema.json`](docs/design-system/ui-schema.json)
+- See [Composition Pattern](docs/design-system/patterns/composition.md) for details
+
 ---
 
 ## 📚 Quick Reference
@@ -34,6 +42,7 @@ When adding something new:
 |----------|---------|
 | [Design Tokens](docs/design-system/tokens.md) | All CSS variables (spacing, colors, typography) |
 | [UI Schema](docs/design-system/ui-schema.json) | Component definitions (AI-parseable) |
+| [Composition Pattern](docs/design-system/patterns/composition.md) | Compound components & context-aware UI |
 | [ChatBox Pattern](docs/design-system/patterns/chatbox.md) | ChatBox section rules |
 | [Button Pattern](docs/design-system/patterns/buttons.md) | Button usage & spacing |
 | [Layout Pattern](docs/design-system/patterns/layout.md) | Grid & container rules |

@@ -156,7 +156,82 @@
         "buttons": "docs/design-system/patterns/buttons.md",
         "chatbox": "docs/design-system/patterns/chatbox.md",
         "layout": "docs/design-system/patterns/layout.md",
-        "typography": "docs/design-system/patterns/typography.md"
+        "typography": "docs/design-system/patterns/typography.md",
+        "composition": "docs/design-system/patterns/composition.md"
+    },
+    "componentTypes": {
+        "simple": "Single-purpose component (e.g., Button)",
+        "compound": "Component with sub-components (e.g., Modal.Header)",
+        "contextual": "Adapts based on user context or props"
+    },
+    "compoundComponents": {
+        "Modal": {
+            "type": "compound",
+            "path": "src/components/ui/Modal/index.tsx",
+            "status": "planned",
+            "pattern": "docs/design-system/patterns/composition.md",
+            "description": "Flexible modal with composable sub-components for context-aware layouts",
+            "structure": {
+                "required": [
+                    "Modal.Body"
+                ],
+                "optional": [
+                    "Modal.Header",
+                    "Modal.Footer"
+                ]
+            },
+            "subComponents": {
+                "Modal.Header": {
+                    "description": "Modal title section",
+                    "tokens": {
+                        "padding": "var(--space-4)",
+                        "borderBottom": "1px solid var(--border)",
+                        "fontSize": "var(--text-lg)",
+                        "fontWeight": "bold"
+                    }
+                },
+                "Modal.Body": {
+                    "description": "Main modal content",
+                    "tokens": {
+                        "padding": "var(--space-4)",
+                        "minHeight": "100px"
+                    }
+                },
+                "Modal.Footer": {
+                    "description": "Action buttons container",
+                    "tokens": {
+                        "padding": "var(--space-4)",
+                        "gap": "var(--space-3)",
+                        "display": "flex",
+                        "justifyContent": "flex-end",
+                        "borderTop": "1px solid var(--border)"
+                    }
+                }
+            },
+            "contextVariants": {
+                "simple": {
+                    "description": "User 1: Image + 1 button",
+                    "uses": [
+                        "Modal.Body"
+                    ],
+                    "example": "<Modal>\n  <Modal.Body>\n    <Image />\n    <RetroButton>OK</RetroButton>\n  </Modal.Body>\n</Modal>"
+                },
+                "standard": {
+                    "description": "User 2: Title + content + 2 buttons",
+                    "uses": [
+                        "Modal.Header",
+                        "Modal.Body",
+                        "Modal.Footer"
+                    ],
+                    "example": "<Modal>\n  <Modal.Header>Title</Modal.Header>\n  <Modal.Body>Content</Modal.Body>\n  <Modal.Footer>\n    <RetroButton>Cancel</RetroButton>\n    <RetroButton>OK</RetroButton>\n  </Modal.Footer>\n</Modal>"
+                }
+            },
+            "usage": {
+                "pattern": "docs/design-system/patterns/composition.md",
+                "flexibility": "infinite",
+                "note": "One component handles all modal variations through composition"
+            }
+        }
     },
     "themes": {
         "available": [
