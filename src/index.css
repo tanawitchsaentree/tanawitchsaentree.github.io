@@ -331,7 +331,8 @@
   height: auto;
   min-height: 100%;
   width: 100%;
-  max-width: 600px;
+  max-width: 100%;
+  /* FULL WIDTH */
   margin: 0 auto;
   background: transparent;
   color: var(--foreground);

@@ -189,8 +189,7 @@ export default function Index() {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      width: '100%',
-      maxWidth: '500px',
+      width: '100%', /* Full width */
       margin: '0 auto',
       padding: '2rem 1rem',
       minHeight: '100%',
