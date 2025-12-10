@@ -19,6 +19,7 @@ const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
   const outputRef = useRef<HTMLDivElement>(null);
 
   const smartBot = useMemo(() => new SmartBot(), []);
@@ -130,6 +131,53 @@ const ChatBox: React.FC = () => {
     }
   }, [isTyping, smartBot, displayHumanizedMessage]);
 
+  // Handle email copy to clipboard
+  const handleCopyEmail = async (email: string) => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy email:', err);
+    }
+  };
+
+  // Render message with email copy icons
+  const renderMessageWithEmailCopy = (text: string) => {
+    const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g;
+    const parts = text.split(emailRegex);
+
+    return parts.map((part, index) => {
+      if (emailRegex.test(part)) {
+        return (
+          <span key={index} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            <strong>{part}</strong>
+            <button
+              onClick={() => handleCopyEmail(part)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '2px 4px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                fontSize: '14px',
+                opacity: copiedEmail ? 1 : 0.6,
+                transition: 'opacity 0.2s'
+              }}
+              title={copiedEmail ? "Copied!" : "Copy email"}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = copiedEmail ? '1' : '0.6'}
+            >
+              {copiedEmail ? '✓' : '📋'}
+            </button>
+          </span>
+        );
+      }
+      return part;
+    });
+  };
+
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleSend(input);
@@ -161,7 +209,7 @@ const ChatBox: React.FC = () => {
                   : 'bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]'
                   }`}
               >
-                {msg.displayingText !== undefined ? msg.displayingText : msg.text}
+                {msg.sender === 'bot' ? renderMessageWithEmailCopy(msg.displayingText !== undefined ? msg.displayingText : msg.text) : (msg.displayingText !== undefined ? msg.displayingText : msg.text)}
                 {msg.sender === 'bot' && msg.displayingText && msg.displayingText.length < msg.text.length && (
                   <span className="animate-pulse">_</span>
                 )}
