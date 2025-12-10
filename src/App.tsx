@@ -5,6 +5,7 @@ import Index from "./pages/index";
 import ChatBox from "./components/ChatBox";
 import XRayOverlay from "./components/XRayOverlay";
 import './index.css';
+import './App.css';
 
 function DarkModeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
