@@ -187,6 +187,14 @@
   line-height: 1.5;
 }
 
+.bio-section .bio-text {
+  margin-bottom: var(--space-4);
+}
+
+.bio-section .bio-text:last-child {
+  margin-bottom: 0;
+}
+
 /* Experience Section */
 .experience-section {
   margin-top: 0.1rem;

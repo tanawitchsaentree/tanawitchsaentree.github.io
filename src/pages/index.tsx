@@ -8,7 +8,7 @@ function ProfileHeader() {
     <div className="profile-header" style={{
       display: 'flex',
       alignItems: 'flex-start',
-      gap: '14px',
+      gap: 'var(--space-3)',
       width: '100%',
     }}>
       <div style={{
@@ -95,24 +95,25 @@ function ExperienceItem({ year, company, role, link }: { year: string; company: 
 
 function ExperienceSection() {
   return (
-    <div className="w-full flex flex-col gap-3">
+    <div className="w-full flex flex-col" style={{ gap: 'var(--space-5)' }}>
       <h2 style={{
         fontSize: '0.875rem',
         fontWeight: 600,
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
         margin: 0,
+        marginBottom: 'var(--space-4)',
         color: 'var(--foreground)',
       }}>
         Previously
       </h2>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col" style={{ gap: 'var(--space-3)' }}>
         {profileData.work_experience.map((exp, index) => (
-          <ExperienceItem 
-            key={index} 
+          <ExperienceItem
+            key={index}
             year={`${new Date(exp.start_date).getFullYear()}-${new Date(exp.end_date).getFullYear()}`}
-            role={exp.role} 
-            company={exp.company} 
+            role={exp.role}
+            company={exp.company}
             link={exp.link}
           />
         ))}
@@ -123,7 +124,7 @@ function ExperienceSection() {
 
 function SocialIcon({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a 
+    <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
@@ -155,7 +156,7 @@ function SocialLinks() {
       <SocialIcon href="https://www.linkedin.com/in/tanawitch-saentree/">
         <Linkedin style={{ width: '20px', height: '20px', color: 'inherit' }} />
       </SocialIcon>
-      
+
       <SocialIcon href="https://medium.com/@thenutlpkl">
         <BookOpenText style={{ width: '20px', height: '20px', color: 'inherit' }} />
       </SocialIcon>
@@ -166,8 +167,8 @@ function SocialLinks() {
 function ContactSection() {
   return (
     <div className="w-full mt-4">
-      <a 
-        href="mailto:tanawitchsaentree@gmail.com" 
+      <a
+        href="mailto:tanawitchsaentree@gmail.com"
         style={{
           color: 'var(--foreground)',
           textDecoration: 'none',
