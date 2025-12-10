@@ -21,20 +21,24 @@ export const RetroButton: React.FC<RetroButtonProps> = ({
         px-4 py-2
         font-mono text-xs font-bold uppercase tracking-wider
         bg-[var(--background)] text-[var(--foreground)]
-        border-2 border-[var(--primary)]
-        transition-transform duration-100 ease-out
+        border-[1.5px] border-[var(--primary)]
+        rounded-[var(--radius)]
+        transition-all duration-150 ease-out
         
-        shadow-[4px_4px_0px_0px_var(--primary)]
+        /* Modern Retro Shadow: Subtle, Hard, Respects Radius */
+        shadow-[2px_2px_0px_0px_var(--primary)]
         
-        hover:-translate-x-[1px] hover:-translate-y-[1px]
-        hover:shadow-[5px_5px_0px_0px_var(--primary)]
+        /* Hover: Lift */
+        hover:-translate-y-[1px]
+        hover:shadow-[3px_3px_0px_0px_var(--primary)]
         
-        active:translate-x-[2px] active:translate-y-[2px]
-        active:shadow-none
+        /* Active: Press */
+        active:translate-y-[1px]
+        active:shadow-[1px_1px_0px_0px_var(--primary)]
         
+        /* Disabled */
         disabled:opacity-50 disabled:cursor-not-allowed
-        disabled:transform-none
-        disabled:shadow-none
+        disabled:transform-none disabled:shadow-none
         
         ${className}
       `}
