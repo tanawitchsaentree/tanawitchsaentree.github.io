@@ -36,7 +36,7 @@
 }
 
 .theme-transition-overlay.active {
-  animation: theme-swipe 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: theme-swipe 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Reset and base styles with smooth transitions */
