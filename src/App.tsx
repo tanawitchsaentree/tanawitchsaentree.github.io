@@ -32,11 +32,8 @@ function XRayToggle({ active, onToggle }: { active: boolean; onToggle: () => voi
   return (
     <button
       onClick={onToggle}
-      className="xray-toggle"
+      className={`xray-toggle ${active ? 'active' : ''}`}
       aria-label="Toggle X-ray mode"
-      style={{
-        opacity: active ? 1 : 0.6,
-      }}
     >
       <Ruler className="w-5 h-5" />
     </button>

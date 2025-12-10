@@ -88,6 +88,13 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.xray-toggle.active {
+  background: var(--muted);
+  /* customized active bg if needed */
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
 .xray-toggle:hover {
   transform: scale(1.1);
   border-color: var(--foreground);

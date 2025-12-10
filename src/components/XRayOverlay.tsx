@@ -51,11 +51,11 @@ export default function XRayOverlay() {
 
         updateSections();
         window.addEventListener('resize', updateSections);
-        window.addEventListener('scroll', updateSections);
+        window.addEventListener('scroll', updateSections, true); // Capture scroll from all containers
 
         return () => {
             window.removeEventListener('resize', updateSections);
-            window.removeEventListener('scroll', updateSections);
+            window.removeEventListener('scroll', updateSections, true);
         };
     }, []);
 
