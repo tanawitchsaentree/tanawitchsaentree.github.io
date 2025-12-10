@@ -35,7 +35,7 @@ function ProfileHeader() {
         height: '62px',
       }}>
         <h2 style={{
-          fontSize: '1.5rem',
+          fontSize: 'var(--text-lg)',
           fontWeight: 600,
           margin: 0,
           lineHeight: '1.2',
@@ -44,7 +44,7 @@ function ProfileHeader() {
           Hey, I'm Nate
         </h2>
         <p style={{
-          fontSize: '0.75rem',
+          fontSize: 'var(--text-lg)',
           margin: 0,
           lineHeight: '1.2',
           color: 'var(--muted-foreground)',
@@ -97,7 +97,7 @@ function ExperienceSection() {
   return (
     <div className="w-full flex flex-col" style={{ gap: 'var(--space-5)' }}>
       <h2 style={{
-        fontSize: '0.875rem',
+        fontSize: 'var(--text-base)',
         fontWeight: 600,
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
@@ -172,7 +172,7 @@ function ContactSection() {
         style={{
           color: 'var(--foreground)',
           textDecoration: 'none',
-          fontSize: '0.75rem',
+          fontSize: 'var(--text-lg)',
           borderBottom: '1px solid var(--foreground)',
           paddingBottom: '1px',
           display: 'inline-block',
