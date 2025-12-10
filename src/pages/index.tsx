@@ -123,31 +123,63 @@ function ExperienceSection() {
 }
 
 function SocialIcon({ href, children }: { href: string; children: React.ReactNode }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        width: '24px',
-        height: '24px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'var(--foreground)',
-        transition: 'opacity 0.2s ease',
-      }}
-      onMouseOver={(e) => (e.currentTarget.style.opacity = '0.7')}
-      onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
-      title={href}
-      aria-label={
-        href.includes('linkedin') ? 'LinkedIn' :
-          href.includes('medium') ? 'Medium' :
-            href.includes('behance') ? 'Behance' : 'Social'
-      }
-    >
-      {children}
-    </a>
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          width: '24px',
+          height: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--foreground)',
+          transition: 'opacity 0.2s ease',
+        }}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        aria-label={
+          href.includes('linkedin') ? 'LinkedIn' :
+            href.includes('medium') ? 'Medium' :
+              href.includes('behance') ? 'Behance' : 'Social'
+        }
+      >
+        {children}
+      </a>
+      {showTooltip && (
+        <div style={{
+          position: 'absolute',
+          bottom: 'calc(-1 * var(--space-8))',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: 'var(--foreground)',
+          color: 'var(--background)',
+          padding: 'var(--space-1) var(--space-2)',
+          borderRadius: 'var(--space-1)',
+          fontSize: 'var(--text-xs)',
+          whiteSpace: 'nowrap',
+          zIndex: 1000,
+          pointerEvents: 'none',
+        }}>
+          {href}
+          <div style={{
+            position: 'absolute',
+            top: 'calc(-1 * var(--space-1))',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: 'var(--space-1) solid transparent',
+            borderRight: 'var(--space-1) solid transparent',
+            borderBottom: 'var(--space-1) solid var(--foreground)',
+          }} />
+        </div>
+      )}
+    </div>
   );
 }
 
