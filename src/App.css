@@ -268,12 +268,15 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  z-index: 100;
+  z-index: 10001;
+  /* Ensure above transition overlay */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .dark-mode-toggle:hover {
   transform: scale(1.1);
   border-color: var(--foreground);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* X-ray mode toggle */
@@ -292,12 +295,15 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  z-index: 100;
+  z-index: 10001;
+  /* Ensure above transition overlay */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .xray-toggle:hover {
   transform: scale(1.1);
   border-color: var(--foreground);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* X-ray overlay system */
