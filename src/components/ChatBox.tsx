@@ -1,187 +1,214 @@
-import { useState, useEffect, useRef } from 'react';
-// We change the import slightly to explicitly assign the type later
-import jsonData from './profile_data.json';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { SmartBot } from '../utils/SmartBot';
 import '../index.css';
 
-// --- A complete and accurate interface for our JSON data ---
-interface WorkExperience {
-  company: string;
-  role: string;
-  start_date: string;
-  end_date: string;
-  description: string;
-  link: string;
-  summary?: string;
-  achievements?: string[];
-}
-
-interface ConversationStarter {
-  greeting: string | string[];
-  follow_up: string | string[];
-  topic: string;
-}
-
-interface ProfileData {
-  bot: { name: string; persona: string; lumo_intro: string; };
-  memory: { user_name: null; last_topic: null; };
-  work_experience: WorkExperience[];
-  conversation_starters: ConversationStarter[];
-  fact_snippets: Array<{ topic: string; text: string; }>;
-  fallbacks: string[];
-  intents: { [key: string]: { keywords: string[]; response: string[] | string; }; };
-}
-
 interface Message {
-  from: 'user' | 'bot';
+  id: string;
   text: string;
+  sender: 'user' | 'bot';
+  timestamp: Date;
   displayingText?: string;
+  suggestions?: { label: string; payload: string }[];
 }
 
-// Explicitly type the imported JSON data
-const profileData: ProfileData = jsonData;
-
-let introDisplayed = false;
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-
-function ChatBox() {
+const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const outputRef = useRef<HTMLDivElement>(null);
   const [isTyping, setIsTyping] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [lastTopic, setLastTopic] = useState<string | null>(null);
+  const outputRef = useRef<HTMLDivElement>(null);
 
-  const displayHumanizedMessage = async (text: string, from: 'user' | 'bot' = 'bot', topicToSet: string | null = null) => {
-    if (from === 'bot' && topicToSet) {
-      setLastTopic(topicToSet);
-    }
-    const newMsg: Message = { from, text, displayingText: '' };
-    setMessages(prev => [...prev, newMsg]);
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i];
-      if (i > 0 && char !== ' ' && Math.random() < 0.025) {
-        const wrongChar = 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
-        setMessages(prev => prev.map((msg, index) => index === prev.length - 1 ? { ...msg, displayingText: msg.displayingText + wrongChar } : msg));
-        await sleep(Math.random() * 100 + 150);
-        setMessages(prev => prev.map((msg, index) => index === prev.length - 1 ? { ...msg, displayingText: msg.displayingText!.slice(0, -1) } : msg));
-        await sleep(Math.random() * 80 + 100);
-      }
-      setMessages(prev => prev.map((msg, index) => index === prev.length - 1 ? { ...msg, displayingText: msg.displayingText + char } : msg));
-      let baseDelay = Math.random() * 35 + 20;
-      if (char === ' ') baseDelay += (Math.random() * 50);
-      if (char === ',' || char === '،') baseDelay += (Math.random() * 150 + 100);
-      if (char === '.' || char === '?' || char === '!') baseDelay += (Math.random() * 250 + 200);
-      await sleep(baseDelay);
-    }
-  };
+  const smartBot = useMemo(() => new SmartBot(), []);
+  const hasStarted = useRef(false);
 
-  const getBotResponse = (userInput: string, currentTopic: string | null): string => {
-    const lowercasedInput = userInput.toLowerCase().trim();
-    const isAffirmative = profileData.intents.affirmative.keywords.some(k => lowercasedInput.includes(k));
-
-    if (isAffirmative && currentTopic) {
-      setLastTopic(null);
-      const fact = profileData.fact_snippets.find(f => f.topic === currentTopic);
-      if (fact) return fact.text;
-      if (currentTopic === 'experience') {
-        const companies = profileData.work_experience.map(exp => exp.company).join(', ');
-        return `Nate has worked at places like ${companies}. Want to know more about a specific one?`;
-      }
-    }
-
-    for (const [intentName, intent] of Object.entries(profileData.intents)) {
-      if (intentName === 'affirmative') continue;
-      if (intent.keywords.some(keyword => lowercasedInput.includes(keyword.toLowerCase()))) {
-        const responses = Array.isArray(intent.response) ? intent.response : [intent.response];
-        return responses[Math.floor(Math.random() * responses.length)];
-      }
-    }
-
-    return profileData.fallbacks[Math.floor(Math.random() * profileData.fallbacks.length)];
-  };
-
-  useEffect(() => {
-    if (introDisplayed) return;
-    introDisplayed = true;
-    const startConversation = async () => {
-      setIsTyping(true);
-      await sleep(1000);
-      const starter = profileData.conversation_starters[Math.floor(Math.random() * profileData.conversation_starters.length)];
-      await displayHumanizedMessage(profileData.bot.lumo_intro);
-      await sleep(1200);
-      const followUp = Array.isArray(starter.follow_up) ? starter.follow_up[Math.floor(Math.random() * starter.follow_up.length)] : starter.follow_up;
-      await displayHumanizedMessage(followUp, 'bot', starter.topic);
-      setIsTyping(false);
+  // Function to display text with typing effect
+  const displayHumanizedMessage = useCallback(async (text: string, from: 'user' | 'bot' = 'bot', suggestions?: { label: string; payload: string }[]) => {
+    const newMsg: Message = {
+      id: Date.now().toString(),
+      sender: from,
+      text,
+      displayingText: '',
+      timestamp: new Date(),
+      suggestions
     };
-    startConversation();
+
+    setMessages(prev => [...prev, newMsg]);
+
+    // Typing effect logic
+    let currentText = '';
+    // Typing speed: faster for long text
+    let baseDelay = text.length > 100 ? 10 : 20;
+
+    for (let i = 0; i < text.length; i++) {
+      currentText += text[i];
+      // Update the last message's displayingText
+      setMessages(prev => {
+        const updated = [...prev];
+        updated[updated.length - 1] = { ...updated[updated.length - 1], displayingText: currentText };
+        return updated;
+      });
+
+      const char = text[i];
+      if (['.', '?', '!'].includes(char)) await sleep(baseDelay + 150);
+      else await sleep(baseDelay);
+    }
+
+    // Finalize
+    setMessages(prev => {
+      const updated = [...prev];
+      updated[updated.length - 1] = {
+        ...updated[updated.length - 1],
+        displayingText: text
+      };
+      return updated;
+    });
   }, []);
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!input.trim() || isTyping) return;
-    const userMsg: Message = { from: 'user', text: input };
+  // Initial Greeting
+  useEffect(() => {
+    if (hasStarted.current) return;
+    hasStarted.current = true;
+
+    const startChat = async () => {
+      setIsTyping(true);
+      await sleep(500);
+
+      const hour = new Date().getHours();
+      let intro = "Good evening! 🌙";
+      if (hour < 12) intro = "Good morning! ☀️";
+      else if (hour < 18) intro = "Good afternoon! 🌤️";
+
+      await displayHumanizedMessage(intro);
+
+      await sleep(1000);
+      await displayHumanizedMessage("Ask me about his Experience, Skills, or Contact Info! 🦴", 'bot', [
+        { label: "Experience", payload: "Tell me about Nate's experience" },
+        { label: "Skills", payload: "What are Nate's skills?" },
+        { label: "Contact Info", payload: "How can I contact Nate?" }
+      ]);
+
+      setIsTyping(false);
+    };
+
+    startChat();
+  }, [displayHumanizedMessage]);
+
+  const handleSend = useCallback(async (text: string) => {
+    if (!text.trim() || isTyping) return;
+
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      sender: 'user',
+      text: text,
+      timestamp: new Date()
+    };
+
     setMessages(prev => [...prev, userMsg]);
-    const currentInput = input;
     setInput('');
     setIsTyping(true);
+
+    // Simulate thinking delay
+    await sleep(600 + Math.random() * 500);
+
     try {
-      await sleep(500);
-      const botResponse = getBotResponse(currentInput, lastTopic);
-      await displayHumanizedMessage(botResponse);
+      // Get response from SmartBot engine
+      const botResponse = smartBot.process(text);
+      await displayHumanizedMessage(botResponse.text, 'bot', botResponse.suggestions);
     } catch (err) {
-      console.error("Error:", err);
-      const fallback = "Hmm, I'm having trouble thinking right now. Could you try again?";
-      await displayHumanizedMessage(fallback);
+      console.error("AI Error:", err);
+      await displayHumanizedMessage("My brain froze! 🥶 Can you say that again?");
     } finally {
       setIsTyping(false);
     }
+  }, [isTyping, smartBot, displayHumanizedMessage]);
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSend(input);
   };
 
-  useEffect(() => {
-    outputRef.current?.scrollTo({ top: outputRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, isTyping]);
+  const handleSuggestionClick = (payload: string) => {
+    handleSend(payload);
+  };
 
+  // Auto-scroll
   useEffect(() => {
-    if (!isTyping) { inputRef.current?.focus(); }
-  }, [isTyping]);
+    if (outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    }
+  }, [messages, isTyping]);
 
   return (
     <div className="chatbox-container">
       <div ref={outputRef} className="chatbox-output">
-        {messages.map((msg, i) => (
-          <div key={i} className={`chatbox-message ${msg.from === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'}`}>
-            {msg.from === 'bot' && (
+        {messages.map((msg) => (
+          <div key={msg.id} className={`chatbox-message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'}`}>
+            {msg.sender === 'bot' && (
               <div className="chatbox-avatar">
                 <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
               </div>
             )}
             <div className="chatbox-message-content">
-              {msg.displayingText !== undefined ? msg.displayingText : msg.text}
-              {msg.from === 'bot' && msg.displayingText && msg.displayingText.length < msg.text.length && (
-                <span className="animate-pulse">_</span>
-              )}
+              <div
+                className={`max-w-[80%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.sender === 'user'
+                  ? 'bg-[var(--primary)] text-[var(--primary-foreground)] rounded-tr-none'
+                  : 'bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]'
+                  }`}
+              >
+                {msg.displayingText !== undefined ? msg.displayingText : msg.text}
+                {msg.sender === 'bot' && msg.displayingText && msg.displayingText.length < msg.text.length && (
+                  <span className="animate-pulse">_</span>
+                )}
+              </div>
+
+              {/* Suggestions Rendering - Show only when typing is complete */}
+              {msg.sender === 'bot' &&
+                msg.suggestions &&
+                msg.suggestions.length > 0 &&
+                (msg.displayingText === msg.text) && (
+                  <div className="flex flex-wrap gap-2 mt-2 max-w-[80%] animate-in fade-in slide-in-from-top-1 duration-500">
+                    {msg.suggestions.map((suggestion, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleSuggestionClick(suggestion.payload)}
+                        className="px-3 py-1 text-xs border border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition-colors bg-transparent opacity-80 hover:opacity-100"
+                        disabled={isTyping}
+                      >
+                        {suggestion.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
         ))}
-        {isTyping && messages[messages.length - 1]?.from === 'user' && (
+        {isTyping && messages[messages.length - 1]?.sender === 'user' && (
           <div className="chatbox-message chatbox-message-bot">
             <div className="chatbox-avatar">
               <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
             </div>
-            <div className="chatbox-typing-indicator">
-              <span className="dot"></span><span className="dot"></span><span className="dot"></span>
+            <div className="max-w-[80%] p-3 rounded-2xl bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]">
+              <span className="animate-pulse">...</span>
             </div>
           </div>
         )}
       </div>
-      <div className="chatbox-input-container">
-        <form onSubmit={handleFormSubmit} className="chatbox-input-wrapper">
-          <input ref={inputRef} type="text" value={input} onChange={e => setInput(e.target.value)} className="chatbox-input" placeholder="Ask me about Nate's skills, experience, or projects..." />
-        </form>
-      </div>
+
+      <form onSubmit={handleFormSubmit} className="chatbox-input-form">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask Lumo anything..."
+          disabled={isTyping}
+        />
+        <button type="submit" disabled={!input.trim() || isTyping}>
+          Send
+        </button>
+      </form>
     </div>
   );
-}
+};
 
 export default ChatBox;

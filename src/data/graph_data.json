@@ -1,0 +1,191 @@
+{
+    "nodes": {
+        "nate": {
+            "id": "nate",
+            "label": "Nate",
+            "type": "person"
+        },
+        "invitrace": {
+            "id": "invitrace",
+            "label": "Invitrace Health",
+            "type": "company"
+        },
+        "cp_origin": {
+            "id": "cp_origin",
+            "label": "CP Origin",
+            "type": "company"
+        },
+        "doctor_anywhere": {
+            "id": "doctor_anywhere",
+            "label": "Doctor Anywhere",
+            "type": "company"
+        },
+        "codefin": {
+            "id": "codefin",
+            "label": "Codefin",
+            "type": "company"
+        },
+        "health_tech": {
+            "id": "health_tech",
+            "label": "HealthTech",
+            "type": "industry"
+        },
+        "fin_tech": {
+            "id": "fin_tech",
+            "label": "FinTech",
+            "type": "industry"
+        },
+        "design_systems": {
+            "id": "design_systems",
+            "label": "Design Systems",
+            "type": "skill"
+        },
+        "ux_strategy": {
+            "id": "ux_strategy",
+            "label": "UX Strategy",
+            "type": "skill"
+        },
+        "consistency": {
+            "id": "consistency",
+            "label": "Consistency",
+            "type": "outcome"
+        },
+        "scalability": {
+            "id": "scalability",
+            "label": "Scalability",
+            "type": "outcome"
+        },
+        "thailand": {
+            "id": "thailand",
+            "label": "Thailand",
+            "type": "location"
+        },
+        "lumo": {
+            "id": "lumo",
+            "label": "Lumo",
+            "type": "bot"
+        },
+        "golden_retriever": {
+            "id": "golden_retriever",
+            "label": "Golden Retriever",
+            "type": "species"
+        },
+        "belly_rubs": {
+            "id": "belly_rubs",
+            "label": "Belly Rubs",
+            "type": "activity"
+        },
+        "squirrels": {
+            "id": "squirrels",
+            "label": "Squirrels",
+            "type": "creature"
+        }
+    },
+    "edges": [
+        {
+            "source": "lumo",
+            "target": "golden_retriever",
+            "relation": "is_a",
+            "text_en": "is a",
+            "text_th": "เป็นพันธุ์"
+        },
+        {
+            "source": "lumo",
+            "target": "belly_rubs",
+            "relation": "loves",
+            "text_en": "loves",
+            "text_th": "ชอบ"
+        },
+        {
+            "source": "lumo",
+            "target": "squirrels",
+            "relation": "chases",
+            "text_en": "chases",
+            "text_th": "ไล่จับ"
+        },
+        {
+            "source": "lumo",
+            "target": "nate",
+            "relation": "assists",
+            "text_en": "assists",
+            "text_th": "ช่วยงาน"
+        },
+        {
+            "source": "nate",
+            "target": "invitrace",
+            "relation": "worked_at",
+            "text_en": "worked at",
+            "text_th": "ทำงานที่"
+        },
+        {
+            "source": "nate",
+            "target": "cp_origin",
+            "relation": "worked_at",
+            "text_en": "worked at",
+            "text_th": "ทำงานที่"
+        },
+        {
+            "source": "nate",
+            "target": "doctor_anywhere",
+            "relation": "worked_at",
+            "text_en": "worked at",
+            "text_th": "ทำงานที่"
+        },
+        {
+            "source": "invitrace",
+            "target": "health_tech",
+            "relation": "in_industry",
+            "text_en": "is in the",
+            "text_th": "อยู่ในอุตสาหกรรม"
+        },
+        {
+            "source": "doctor_anywhere",
+            "target": "health_tech",
+            "relation": "in_industry",
+            "text_en": "is in the",
+            "text_th": "อยู่ในอุตสาหกรรม"
+        },
+        {
+            "source": "codefin",
+            "target": "fin_tech",
+            "relation": "in_industry",
+            "text_en": "is in the",
+            "text_th": "อยู่ในอุตสาหกรรม"
+        },
+        {
+            "source": "nate",
+            "target": "design_systems",
+            "relation": "has_skill",
+            "text_en": "is an expert in",
+            "text_th": "เชี่ยวชาญเรื่อง"
+        },
+        {
+            "source": "nate",
+            "target": "ux_strategy",
+            "relation": "has_skill",
+            "text_en": "specializes in",
+            "text_th": "ถนัดเรื่อง"
+        },
+        {
+            "source": "design_systems",
+            "target": "invitrace",
+            "relation": "applied_at",
+            "text_en": "applied at",
+            "text_th": "ใช้ที่"
+        },
+        {
+            "source": "design_systems",
+            "target": "consistency",
+            "relation": "creates",
+            "text_en": "creates",
+            "text_th": "สร้าง"
+        },
+        {
+            "source": "design_systems",
+            "target": "scalability",
+            "relation": "enables",
+            "text_en": "enables",
+            "text_th": "ทำให้เกิด"
+        }
+    ]
+}
