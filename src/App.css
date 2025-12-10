@@ -525,28 +525,6 @@ h1 {
 }
 
 /* Dark mode toggle positioning */
-.dark-mode-toggle {
-  all: unset;
-  /* reset all inherited/button styles */
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 1000;
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.dark-mode-toggle:hover {
-  opacity: 0.8;
-  transform: translateY(-2px);
-}
-
 /* Media query for mobile devices */
 @media (max-width: 1024px) {
   .main-content {
