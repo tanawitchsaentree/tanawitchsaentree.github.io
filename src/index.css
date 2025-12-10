@@ -166,10 +166,10 @@
   gap: var(--space-8);
   padding: var(--space-4);
   flex: 1;
-  max-width: 1200px;
-  /* Reduced from 1440px to pull content closer */
   width: 100%;
-  margin: 0 auto;
+  max-width: 100%;
+  /* FULL WIDTH as requested */
+  margin: 0;
   box-sizing: border-box;
 }
 
@@ -177,13 +177,12 @@
 @media (min-width: 1024px) {
   .main-content {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    /* Balanced columns preventing overflow */
-    gap: var(--space-8);
-    /* Increased gap for breathing room */
-    padding: var(--space-6) var(--space-8);
+    grid-template-columns: 1fr 1fr;
+    /* Strict 50/50 Split */
+    gap: 0;
+    /* Remove gap to ensure true 50/50 split appearance if needed, or keep small */
+    padding: var(--space-6);
     align-items: start;
-    /* Align content to top */
   }
 }
 
@@ -305,14 +304,14 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* Center vertically if needed */
-  align-items: flex-start;
-  /* Align content to left of its container */
+  align-items: center;
+  /* Center horizontally in the left column */
   width: 100%;
-  max-width: 500px;
-  /* Keep strict max-width for readability */
-  margin: 0 auto;
-  /* Center within the grid column */
+  height: 100%;
+  /* Full height to match chat */
+  padding: 0 var(--space-8);
+  /* Add padding to prevent edge sticking */
+  box-sizing: border-box;
   color: var(--foreground);
 }
 
