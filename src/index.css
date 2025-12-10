@@ -286,6 +286,15 @@
   opacity: 0.7;
 }
 
+/* Suggestion Button Groups */
+.suggestion-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  /* 32px - accounts for 4px shadow offset */
+  margin-top: var(--space-3);
+}
+
 
 /* Chat & Profile Sections (Containers) */
 .chat-section {
