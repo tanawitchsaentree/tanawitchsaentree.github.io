@@ -2,6 +2,7 @@ import brainData from '../data/brain.json';
 import dictionaryData from '../data/dictionary.json';
 import graphData from '../data/graph_data.json';
 import suggestionRulesData from '../data/suggestion_rules.json';
+import { ProfileData } from './ProfileData';
 
 // Types based on brain.json structure
 type EntityKey = keyof typeof brainData.entities;
@@ -529,28 +530,83 @@ export class SmartBot {
     }
 
     /**
+     * Generate dynamic buttons based on profile data
+     */
+    private generateDynamicButtons(intentId: string): Suggestion[] {
+        // Find rule with generator
+        const rule = this.suggestionRules.rules.find((r: any) =>
+            r.after_intent === intentId && r.generate_from
+        );
+
+        if (!rule || !(rule as any).button_type) return [];
+
+        const buttonType = (rule as any).button_type;
+        const maxButtons = (rule as any).max_buttons || 5;
+
+        // Generate based on type
+        switch (buttonType) {
+            case 'company_list':
+                return this.generateCompanyButtons(maxButtons);
+            case 'skill_list':
+                return this.generateSkillButtons(maxButtons);
+            default:
+                return [];
+        }
+    }
+
+    /**
+     * Generate buttons for each company in work experience
+     */
+    private generateCompanyButtons(max: number = 5): Suggestion[] {
+        const companies = ProfileData.getWorkExperienceSorted();
+
+        return companies.slice(0, max).map(job => ({
+            label: job.company,
+            payload: `Tell me about ${job.company}`
+        }));
+    }
+
+    /**
+     * Generate buttons for top skills
+     */
+    private generateSkillButtons(max: number = 5): Suggestion[] {
+        const skills = ProfileData.getTopCompetencies(max);
+
+        return skills.map((skill: any) => ({
+            label: skill.name,
+            payload: skill.name
+        }));
+    }
+
+    /**
      * Select context-aware suggestions based on conversation flow
      */
     private selectSuggestions(match: MatchResult): Suggestion[] {
         const lang = this.context.language;
 
-        // 1. Check context-aware rules first (Intent-based)
+        // 0. Try dynamic button generation FIRST
+        const dynamicButtons = this.generateDynamicButtons(match.intentId);
+        if (dynamicButtons.length > 0) {
+            return dynamicButtons.slice(0, 5);
+        }
+
+        // 1. Check context-aware rules (Intent-based)
         if (this.context.lastIntent) {
-            const rule = this.suggestionRules.rules.find(r =>
+            const rule = this.suggestionRules.rules.find((r: any) =>
                 r.after_intent === this.context.lastIntent
             );
-            if (rule && rule.suggestions[lang]) {
-                return rule.suggestions[lang];
+            if (rule && (rule as any).suggestions?.[lang]) {
+                return (rule as any).suggestions[lang];
             }
         }
 
         // 2. Check entity-based rules
         if (match.matchedEntity) {
-            const entityRule = this.suggestionRules.rules.find(r =>
+            const entityRule = this.suggestionRules.rules.find((r: any) =>
                 r.after_entity === match.matchedEntity
             );
-            if (entityRule && entityRule.suggestions[lang]) {
-                return entityRule.suggestions[lang];
+            if (entityRule && (entityRule as any).suggestions?.[lang]) {
+                return (entityRule as any).suggestions[lang];
             }
         }
 
@@ -561,7 +617,7 @@ export class SmartBot {
         }
 
         // 4. Default suggestions
-        return this.suggestionRules.default_suggestions[lang] || [];
+        return (this.suggestionRules.default_suggestions as any)[lang] || [];
     }
 
     /**

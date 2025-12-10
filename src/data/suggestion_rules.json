@@ -12,10 +12,6 @@
                     {
                         "label": "Check Skills",
                         "payload": "skills"
-                    },
-                    {
-                        "label": "See Projects",
-                        "payload": "Tell me about your work"
                     }
                 ],
                 "th": [
@@ -34,64 +30,18 @@
         {
             "id": "after_experience",
             "after_intent": "query_experience_general",
-            "suggestions": {
-                "en": [
-                    {
-                        "label": "Specific Company?",
-                        "payload": "Tell me about Invitrace"
-                    },
-                    {
-                        "label": "What Skills?",
-                        "payload": "Skills"
-                    },
-                    {
-                        "label": "Contact Him",
-                        "payload": "Contact"
-                    }
-                ],
-                "th": [
-                    {
-                        "label": "บริษัทไหนเป็นพิเศษ?",
-                        "payload": "บอกเรื่อง Invitrace"
-                    },
-                    {
-                        "label": "ทักษะอะไร?",
-                        "payload": "ทักษะ"
-                    }
-                ]
-            },
-            "reason": "After experience overview, dive deeper or take action"
+            "generate_from": "work_experience",
+            "button_type": "company_list",
+            "max_buttons": 5,
+            "reason": "Show all companies as buttons for easy exploration"
         },
         {
             "id": "after_skills",
             "after_intent": "query_skills_general",
-            "suggestions": {
-                "en": [
-                    {
-                        "label": "See Experience",
-                        "payload": "experience"
-                    },
-                    {
-                        "label": "Any Projects?",
-                        "payload": "Tell me about projects"
-                    },
-                    {
-                        "label": "Get in Touch",
-                        "payload": "contact"
-                    }
-                ],
-                "th": [
-                    {
-                        "label": "ดูประสบการณ์",
-                        "payload": "ประสบการณ์"
-                    },
-                    {
-                        "label": "ติดต่อ",
-                        "payload": "ติดต่อ"
-                    }
-                ]
-            },
-            "reason": "After skills, show proof or enable contact"
+            "generate_from": "competencies",
+            "button_type": "skill_list",
+            "max_buttons": 5,
+            "reason": "Show top skills as buttons"
         },
         {
             "id": "after_invitrace",
@@ -156,6 +106,21 @@
             "reason": "After greeting, provide entry points"
         }
     ],
+    "button_generators": {
+        "company_list": {
+            "data_source": "work_experience",
+            "label_field": "company",
+            "payload_template": "Tell me about ${company}",
+            "sort_by": "start_date",
+            "sort_order": "desc"
+        },
+        "skill_list": {
+            "data_source": "competencies",
+            "label_field": "name",
+            "payload_template": "${name}",
+            "max": 5
+        }
+    },
     "default_suggestions": {
         "en": [
             {
