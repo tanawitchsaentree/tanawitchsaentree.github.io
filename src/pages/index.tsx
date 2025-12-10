@@ -112,14 +112,12 @@ function TabButton({
         letterSpacing: '0.05em',
         background: 'none',
         border: 'none',
-        padding: `0 0 var(--space-2) 0`,
+        padding: 0,
         margin: 0,
+        marginRight: 'var(--space-4)',
         cursor: 'pointer',
         color: active ? 'var(--foreground)' : 'var(--muted-foreground)',
-        borderBottom: active
-          ? `2px solid var(--foreground)`
-          : '2px solid transparent',
-        transition: 'all 0.2s ease',
+        transition: 'color 0.2s ease',
       }}
       onMouseEnter={(e) => {
         if (!active) e.currentTarget.style.color = 'var(--foreground)';
@@ -169,12 +167,11 @@ function TabExperienceSection() {
   const [activeTab, setActiveTab] = useState<'work' | 'education'>('work');
 
   return (
-    <div className="w-full flex flex-col" style={{ gap: 'var(--space-5)' }}>
+    <div className="w-full flex flex-col" style={{ alignItems: 'flex-start' }}>
       {/* Tab Headers */}
       <div style={{
         display: 'flex',
-        gap: 'var(--space-4)',
-        borderBottom: `1px solid var(--border)`,
+        marginBottom: 'var(--space-4)',
       }}>
         <TabButton
           active={activeTab === 'work'}
@@ -191,7 +188,15 @@ function TabExperienceSection() {
       </div>
 
       {/* Tab Content */}
-      <div className="flex flex-col" style={{ gap: 'var(--space-3)' }}>
+      <div
+        className="flex flex-col"
+        style={{
+          gap: 'var(--space-3)',
+          width: '100%',
+          minHeight: '400px',
+          alignItems: 'flex-start',
+        }}
+      >
         {activeTab === 'work' ? <WorkExperienceList /> : <EducationList />}
       </div>
     </div>
