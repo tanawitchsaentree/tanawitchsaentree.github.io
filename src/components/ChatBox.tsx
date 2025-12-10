@@ -172,7 +172,7 @@ const ChatBox: React.FC = () => {
                       <button
                         key={idx}
                         onClick={() => handleSuggestionClick(suggestion.payload)}
-                        className="px-4 py-2 text-sm border border-[var(--primary)] bg-[var(--background)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition-all duration-200 rounded-none shadow-none focus:outline-none"
+                        className="px-3 py-1.5 text-xs font-medium border border-[var(--primary)] text-[var(--primary)] bg-transparent hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition-colors duration-200 rounded-[var(--radius)] opacity-80 hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
                         disabled={isTyping}
                       >
                         {suggestion.label}
