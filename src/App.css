@@ -252,6 +252,97 @@ body {
   opacity: 0.9;
 }
 
+/* Dark mode toggle */
+.dark-mode-toggle {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 100;
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.1);
+  border-color: var(--foreground);
+}
+
+/* X-ray mode toggle */
+.xray-toggle {
+  position: fixed;
+  top: 2rem;
+  right: 5.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 100;
+}
+
+.xray-toggle:hover {
+  transform: scale(1.1);
+  border-color: var(--foreground);
+}
+
+/* X-ray overlay system */
+.xray-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.xray-section {
+  position: absolute;
+  border: 1px dashed rgba(255, 0, 255, 0.6);
+  background: rgba(255, 0, 255, 0.05);
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.xray-label {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 10px;
+  font-family: 'Courier Prime', monospace;
+  background: rgba(0, 0, 0, 0.9);
+  color: #00ff00;
+  padding: 4px 6px;
+  border-radius: 3px;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.xray-label-name {
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: #00ffff;
+}
+
+.xray-label-value {
+  font-size: 9px;
+  opacity: 0.9;
+}
+
 /* Profile section with centered content */
 .profile-section {
   height: 100vh;
