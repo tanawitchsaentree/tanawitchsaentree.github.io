@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { SmartBot } from '../utils/SmartBot';
+import { RetroButton } from './ui/RetroButton';
 import '../index.css';
 
 interface Message {
@@ -128,9 +129,7 @@ const ChatBox: React.FC = () => {
     handleSend(input);
   };
 
-  const handleSuggestionClick = (payload: string) => {
-    handleSend(payload);
-  };
+
 
   // Auto-scroll
   useEffect(() => {
@@ -167,16 +166,15 @@ const ChatBox: React.FC = () => {
                 msg.suggestions &&
                 msg.suggestions.length > 0 &&
                 (msg.displayingText === msg.text) && (
-                  <div className="flex flex-wrap gap-2 mt-2 max-w-[80%] animate-in fade-in slide-in-from-top-1 duration-500">
+                  <div className="flex flex-wrap gap-2 mt-2 animate-fade-in-up">
                     {msg.suggestions.map((suggestion, idx) => (
-                      <button
+                      <RetroButton
                         key={idx}
-                        onClick={() => handleSuggestionClick(suggestion.payload)}
-                        className="px-3 py-1.5 text-xs font-medium border border-[var(--primary)] text-[var(--primary)] bg-transparent hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition-colors duration-200 rounded-[var(--radius)] opacity-80 hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
-                        disabled={isTyping}
+                        onClick={() => handleSend(suggestion.payload)}
+                        title={suggestion.label}
                       >
                         {suggestion.label}
-                      </button>
+                      </RetroButton>
                     ))}
                   </div>
                 )}
