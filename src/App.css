@@ -9,13 +9,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: background-color var(--transition-duration) ease, 
-              color var(--transition-duration) ease,
-              border-color var(--transition-duration) ease;
+  transition: background-color var(--transition-duration) ease,
+    color var(--transition-duration) ease,
+    border-color var(--transition-duration) ease;
 }
 
 /* Make html and body take full viewport height */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -65,25 +66,30 @@ body {
 
 /* Main content area takes remaining space */
 .main-content {
-  flex: 1 0 auto; /* Grow and shrink as needed, but don't shrink below content */
+  flex: 1 0 auto;
+  /* Grow and shrink as needed, but don't shrink below content */
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 3rem 1rem 1rem; /* Increased top padding from 0 1rem to 3rem 1rem 1rem */
+  padding: 3rem 1rem 1rem;
+  /* Increased top padding from 0 1rem to 3rem 1rem 1rem */
   position: relative;
 }
 
 /* Sections with flexible height */
-.chat-section, .profile-section {
+.chat-section,
+.profile-section {
   flex: 1;
   padding: 0 1rem;
   overflow-y: auto;
-  min-height: 0; /* Allows sections to be smaller than their content */
+  min-height: 0;
+  /* Allows sections to be smaller than their content */
 }
 
-.chat-section > *:first-child,
-.profile-section > *:first-child {
-  margin-top: 1.5rem;  /* Added top margin to first elements */
+.chat-section>*:first-child,
+.profile-section>*:first-child {
+  margin-top: 1.5rem;
+  /* Added top margin to first elements */
 }
 
 /* Chat section */
@@ -236,18 +242,23 @@ body {
 /* Profile section specific styles */
 .profile-section {
   flex: 1;
-  max-width: 500px;  /* Added max-width to make it more compact */
-  margin: 0 auto;    /* Center the content */
+  max-width: 500px;
+  /* Added max-width to make it more compact */
+  margin: 0 auto;
+  /* Center the content */
   padding: 0 1rem;
   overflow-y: auto;
-  padding-top: 100px;  /* Reduced from 200px to 100px */
-  box-sizing: border-box;  /* Include padding in height calculation */
+  padding-top: 100px;
+  /* Reduced from 200px to 100px */
+  box-sizing: border-box;
+  /* Include padding in height calculation */
 }
 
 /* If you need to adjust the chat section as well */
 .chat-section {
   flex: 1;
-  padding: 200px 1rem 0;  /* Match the top padding */
+  padding: 200px 1rem 0;
+  /* Match the top padding */
   overflow-y: auto;
   box-sizing: border-box;
 }
@@ -257,7 +268,7 @@ body {
   .chat-interface {
     padding: 0.5rem;
   }
-  
+
   .chat-message {
     max-width: 90%;
   }
@@ -266,7 +277,8 @@ body {
 /* Responsive Flex Override for main-content */
 @media (max-width: 1023px) {
   .main-content {
-    display: flex !important; /* override earlier grid */
+    display: flex !important;
+    /* override earlier grid */
     flex-direction: column !important;
     gap: 2rem;
   }
@@ -287,13 +299,14 @@ body {
   text-align: center;
   background-color: var(--background);
   border-top: 1px solid var(--border);
-  margin-top: auto; /* Push footer to bottom */
+  margin-top: auto;
+  /* Push footer to bottom */
 }
 
 h1 {
   margin: 0;
   line-height: 1.2;
-  color: #000000 !important;
+  color: var(--foreground);
 }
 
 .card {
@@ -301,7 +314,7 @@ h1 {
 }
 
 .read-the-docs {
-  color: #888;
+  color: var(--muted-foreground);
 }
 
 .swiper {
@@ -342,9 +355,12 @@ h1 {
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.5;
   }
+
   50% {
     opacity: 0.7;
   }
@@ -358,6 +374,7 @@ h1 {
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
@@ -369,7 +386,9 @@ h1 {
 }
 
 @keyframes blink {
-  50% { opacity: 0; }
+  50% {
+    opacity: 0;
+  }
 }
 
 .tooltip-container {
@@ -378,7 +397,8 @@ h1 {
 
 /* Dark mode toggle positioning */
 .dark-mode-toggle {
-  all: unset; /* reset all inherited/button styles */
+  all: unset;
+  /* reset all inherited/button styles */
   position: fixed;
   top: 16px;
   left: 16px;
@@ -403,13 +423,13 @@ h1 {
   .main-content {
     grid-template-columns: 1fr;
   }
-  
+
   .chat-section,
   .profile-section {
     height: auto;
     min-height: 50vh;
   }
-  
+
   .profile-container {
     padding-top: 2rem;
     padding-bottom: 4rem;
