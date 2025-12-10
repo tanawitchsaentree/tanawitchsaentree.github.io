@@ -1,4 +1,13 @@
 {
+  "contact_info": {
+    "email": "tanawitchsaentree@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/tanawitchsaentree/",
+    "github": "https://github.com/tanawitchsaentree",
+    "location": "Bangkok, Thailand",
+    "timezone": "GMT+7 (Bangkok)",
+    "availability": "Open to new opportunities",
+    "preferred_contact": "email"
+  },
   "full_name": {
     "primary_response": "Tanawitch Saentree",
     "extra_notes": [

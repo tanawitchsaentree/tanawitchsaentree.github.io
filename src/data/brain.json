@@ -470,18 +470,19 @@
                 "talk"
             ],
             "responses": [
-                "You can reach him at tanawitchsaentree@gmail.com 📧",
-                "Send him an email at tanawitchsaentree@gmail.com! He's always open to interesting conversations."
+                "📧 Email: tanawitchsaentree@gmail.com | 📍 Bangkok, Thailand | 💼 Open to new opportunities!",
+                "You can reach him at tanawitchsaentree@gmail.com! He's based in Bangkok and always open to interesting conversations. 🐾",
+                "Want to connect? Email works best: tanawitchsaentree@gmail.com. He's also on LinkedIn!"
             ],
             "suggestions": {
                 "en": [
                     {
-                        "label": "Ask about Experience",
+                        "label": "View Experience",
                         "payload": "Experience"
                     },
                     {
-                        "label": "Say Hi to Lumo",
-                        "payload": "Hello Lumo"
+                        "label": "Check Skills",
+                        "payload": "Skills"
                     }
                 ],
                 "th": [

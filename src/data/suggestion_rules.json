@@ -1,0 +1,215 @@
+{
+    "rules": [
+        {
+            "id": "after_contact",
+            "after_intent": "query_contact",
+            "suggestions": {
+                "en": [
+                    {
+                        "label": "View Experience",
+                        "payload": "experience"
+                    },
+                    {
+                        "label": "Check Skills",
+                        "payload": "skills"
+                    },
+                    {
+                        "label": "See Projects",
+                        "payload": "Tell me about your work"
+                    }
+                ],
+                "th": [
+                    {
+                        "label": "ดูประสบการณ์",
+                        "payload": "experience"
+                    },
+                    {
+                        "label": "ดูความสามารถ",
+                        "payload": "skills"
+                    }
+                ]
+            },
+            "reason": "After contact, show value proposition"
+        },
+        {
+            "id": "after_experience",
+            "after_intent": "query_experience_general",
+            "suggestions": {
+                "en": [
+                    {
+                        "label": "Specific Company?",
+                        "payload": "Tell me about Invitrace"
+                    },
+                    {
+                        "label": "What Skills?",
+                        "payload": "Skills"
+                    },
+                    {
+                        "label": "Contact Him",
+                        "payload": "Contact"
+                    }
+                ],
+                "th": [
+                    {
+                        "label": "บริษัทไหนเป็นพิเศษ?",
+                        "payload": "บอกเรื่อง Invitrace"
+                    },
+                    {
+                        "label": "ทักษะอะไร?",
+                        "payload": "ทักษะ"
+                    }
+                ]
+            },
+            "reason": "After experience overview, dive deeper or take action"
+        },
+        {
+            "id": "after_skills",
+            "after_intent": "query_skills_general",
+            "suggestions": {
+                "en": [
+                    {
+                        "label": "See Experience",
+                        "payload": "experience"
+                    },
+                    {
+                        "label": "Any Projects?",
+                        "payload": "Tell me about projects"
+                    },
+                    {
+                        "label": "Get in Touch",
+                        "payload": "contact"
+                    }
+                ],
+                "th": [
+                    {
+                        "label": "ดูประสบการณ์",
+                        "payload": "ประสบการณ์"
+                    },
+                    {
+                        "label": "ติดต่อ",
+                        "payload": "ติดต่อ"
+                    }
+                ]
+            },
+            "reason": "After skills, show proof or enable contact"
+        },
+        {
+            "id": "after_invitrace",
+            "after_entity": "invitrace",
+            "suggestions": {
+                "en": [
+                    {
+                        "label": "Other Experience",
+                        "payload": "What else did he do?"
+                    },
+                    {
+                        "label": "His Skills",
+                        "payload": "Skills"
+                    },
+                    {
+                        "label": "Contact Info",
+                        "payload": "Contact"
+                    }
+                ],
+                "th": [
+                    {
+                        "label": "งานอื่นๆ",
+                        "payload": "เคยทำงานอะไรอีก"
+                    },
+                    {
+                        "label": "ทักษะ",
+                        "payload": "ทักษะ"
+                    }
+                ]
+            },
+            "reason": "After specific company, branch out to other topics"
+        },
+        {
+            "id": "after_greeting",
+            "after_intent": "greeting",
+            "suggestions": {
+                "en": [
+                    {
+                        "label": "Tell me about Nate",
+                        "payload": "Who is Nate?"
+                    },
+                    {
+                        "label": "Show Experience",
+                        "payload": "Experience"
+                    },
+                    {
+                        "label": "Contact Info",
+                        "payload": "Contact"
+                    }
+                ],
+                "th": [
+                    {
+                        "label": "เนทคือใคร",
+                        "payload": "เนทคือใคร"
+                    },
+                    {
+                        "label": "ประสบการณ์",
+                        "payload": "ประสบการณ์"
+                    }
+                ]
+            },
+            "reason": "After greeting, provide entry points"
+        }
+    ],
+    "default_suggestions": {
+        "en": [
+            {
+                "label": "Experience",
+                "payload": "experience"
+            },
+            {
+                "label": "Skills",
+                "payload": "skills"
+            },
+            {
+                "label": "Contact",
+                "payload": "contact"
+            }
+        ],
+        "th": [
+            {
+                "label": "ประสบการณ์",
+                "payload": "ประสบการณ์"
+            },
+            {
+                "label": "ทักษะ",
+                "payload": "ทักษะ"
+            },
+            {
+                "label": "ติดต่อ",
+                "payload": "ติดต่อ"
+            }
+        ]
+    },
+    "fallback_suggestions": {
+        "en": [
+            {
+                "label": "Tell me about Nate",
+                "payload": "Who is Nate?"
+            },
+            {
+                "label": "Show Experience",
+                "payload": "Experience"
+            },
+            {
+                "label": "Contact Info",
+                "payload": "Contact"
+            }
+        ],
+        "th": [
+            {
+                "label": "เนทคือใคร",
+                "payload": "เนทคือใคร"
+            },
+            {
+                "label": "ประสบการณ์",
+                "payload": "ประสบการณ์"
+            }
+        ]
+    }
+}

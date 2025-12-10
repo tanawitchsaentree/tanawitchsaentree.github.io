@@ -1,6 +1,7 @@
 import brainData from '../data/brain.json';
 import dictionaryData from '../data/dictionary.json';
 import graphData from '../data/graph_data.json';
+import suggestionRulesData from '../data/suggestion_rules.json';
 
 // Types based on brain.json structure
 type EntityKey = keyof typeof brainData.entities;
@@ -25,6 +26,29 @@ interface MatchResult {
 
 interface Dictionary {
     concepts: Record<string, string[]>;
+}
+
+interface SuggestionRule {
+    id: string;
+    after_intent?: string;
+    after_entity?: string;
+    suggestions: {
+        en: Suggestion[];
+        th: Suggestion[];
+    };
+    reason: string;
+}
+
+interface SuggestionRules {
+    rules: SuggestionRule[];
+    default_suggestions: {
+        en: Suggestion[];
+        th: Suggestion[];
+    };
+    fallback_suggestions: {
+        en: Suggestion[];
+        th: Suggestion[];
+    };
 }
 
 interface SemanticPattern {
@@ -75,12 +99,14 @@ export class SmartBot {
     private brain: Brain;
     private dictionary: Dictionary;
     private graph: Graph; // New Graph Engine
+    private suggestionRules: SuggestionRules;
     private context: Context;
 
     constructor() {
         this.brain = brainData as any; // Cast for extended structure
         this.dictionary = dictionaryData;
         this.graph = graphData;
+        this.suggestionRules = suggestionRulesData as any;
         this.context = {
             turnCount: 0,
             lastEntityTurn: 0,
@@ -155,6 +181,9 @@ export class SmartBot {
                 this.context.lastEntity = undefined;
             }
         }
+
+        // Track last intent for suggestion context
+        this.context.lastIntent = bestMatch.intentId;
 
         // 5. Generate Response (Dynamic Assembly)
         return this.generateResponse(bestMatch, sentiment);
@@ -485,7 +514,54 @@ export class SmartBot {
         this.addResponseToMemory(coreResponse); // Remember the core fact to avoid repeating it
         // We don't remember the full finalResponse because variations (openers) make it unique enough, but we want to avoid repeating the same FACT.
 
+        // UPDATE: Use context-aware suggestions
+        if (!finalSuggestions || finalSuggestions.length === 0) {
+            finalSuggestions = this.selectSuggestions(match);
+        }
+
+        // Ensure at least 2 suggestions
+        if (finalSuggestions.length < 2) {
+            const defaults = this.suggestionRules.default_suggestions[lang];
+            finalSuggestions = [...finalSuggestions, ...defaults].slice(0, 3);
+        }
+
         return { text: finalResponse, suggestions: finalSuggestions };
+    }
+
+    /**
+     * Select context-aware suggestions based on conversation flow
+     */
+    private selectSuggestions(match: MatchResult): Suggestion[] {
+        const lang = this.context.language;
+
+        // 1. Check context-aware rules first (Intent-based)
+        if (this.context.lastIntent) {
+            const rule = this.suggestionRules.rules.find(r =>
+                r.after_intent === this.context.lastIntent
+            );
+            if (rule && rule.suggestions[lang]) {
+                return rule.suggestions[lang];
+            }
+        }
+
+        // 2. Check entity-based rules
+        if (match.matchedEntity) {
+            const entityRule = this.suggestionRules.rules.find(r =>
+                r.after_entity === match.matchedEntity
+            );
+            if (entityRule && entityRule.suggestions[lang]) {
+                return entityRule.suggestions[lang];
+            }
+        }
+
+        // 3. Check if current intent has static suggestions
+        const intent = this.brain.intents.find(i => i.id === match.intentId);
+        if (intent?.suggestions?.[lang]) {
+            return intent.suggestions[lang];
+        }
+
+        // 4. Default suggestions
+        return this.suggestionRules.default_suggestions[lang] || [];
     }
 
     /**
