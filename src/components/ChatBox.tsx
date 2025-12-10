@@ -10,6 +10,7 @@ interface Message {
   timestamp: Date;
   displayingText?: string;
   suggestions?: { label: string; payload: string }[];
+  suggestionsUsed?: boolean; // Track if suggestions have been clicked
 }
 
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -98,6 +99,11 @@ const ChatBox: React.FC = () => {
   const handleSend = useCallback(async (text: string) => {
     if (!text.trim() || isTyping) return;
 
+    // Hide all suggestion buttons by marking messages as actioned
+    setMessages(prev => prev.map(msg =>
+      msg.suggestions ? { ...msg, suggestionsUsed: true } : msg
+    ));
+
     const userMsg: Message = {
       id: Date.now().toString(),
       sender: 'user',
@@ -161,10 +167,11 @@ const ChatBox: React.FC = () => {
                 )}
               </div>
 
-              {/* Suggestions Rendering - Show only when typing is complete */}
+              {/* Suggestions Rendering - Show only when typing is complete AND not used */}
               {msg.sender === 'bot' &&
                 msg.suggestions &&
                 msg.suggestions.length > 0 &&
+                !msg.suggestionsUsed &&
                 (msg.displayingText === msg.text) && (
                   <div className="suggestion-buttons animate-fade-in-up">
                     {msg.suggestions.map((suggestion, idx) => (
