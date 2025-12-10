@@ -67,7 +67,7 @@ export default function XRayOverlay() {
                     className="xray-section"
                     style={{
                         left: `${section.rect.left}px`,
-                        top: `${section.rect.top + window.scrollY}px`,
+                        top: `${section.rect.top}px`,
                         width: `${section.rect.width}px`,
                         height: `${section.rect.height}px`,
                     }}
