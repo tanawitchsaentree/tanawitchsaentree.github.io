@@ -17,9 +17,9 @@ export const RetroButton: React.FC<RetroButtonProps> = ({
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '8px 16px',
+        padding: 'var(--space-2) var(--space-3)', // 8px 12px from design system
         fontFamily: 'var(--font-mono)',
-        fontSize: '14px',
+        fontSize: 'var(--text-sm)', // 10px - smaller to match message scale
         fontWeight: 'bold',
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
