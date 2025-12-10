@@ -166,7 +166,8 @@
   gap: var(--space-8);
   padding: var(--space-4);
   flex: 1;
-  max-width: 1440px;
+  max-width: 1200px;
+  /* Reduced from 1440px to pull content closer */
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
@@ -176,9 +177,13 @@
 @media (min-width: 1024px) {
   .main-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-6);
-    padding: var(--space-6);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    /* Balanced columns preventing overflow */
+    gap: var(--space-8);
+    /* Increased gap for breathing room */
+    padding: var(--space-6) var(--space-8);
+    align-items: start;
+    /* Align content to top */
   }
 }
 
@@ -288,16 +293,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Center horizontally */
   height: 100vh;
   max-height: 100vh;
   overflow: hidden;
+  width: 100%;
+  /* Ensure it takes full width of grid cell */
 }
 
 .profile-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  /* Center vertically if needed */
+  align-items: flex-start;
+  /* Align content to left of its container */
   width: 100%;
+  max-width: 500px;
+  /* Keep strict max-width for readability */
   margin: 0 auto;
+  /* Center within the grid column */
   color: var(--foreground);
 }
 
