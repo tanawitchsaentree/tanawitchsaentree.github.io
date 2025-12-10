@@ -334,6 +334,9 @@
 }
 
 .chatbox-message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
   line-height: 1.5;
   margin: 0;
   padding: var(--space-1) 0;
