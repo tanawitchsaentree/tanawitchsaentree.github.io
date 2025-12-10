@@ -1,0 +1,25 @@
+/* Custom Cursor System - Loaded Statically */
+html,
+body {
+    cursor: url('/cursors/default.png'), auto;
+}
+
+/* Interactive Elements - Pointer Cursor */
+a,
+button,
+[role="button"],
+input,
+label,
+select,
+.clickable {
+    cursor: url('/cursors/pointer.png'), pointer !important;
+}
+
+/* Active State - Clicked Cursor */
+body:active,
+a:active,
+button:active,
+[role="button"]:active,
+.clickable:active {
+    cursor: url('/cursors/active.png'), auto !important;
+}
