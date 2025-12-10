@@ -1,69 +1,120 @@
-# React + TypeScript + Vite
+# Design System Rules
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚫 ABSOLUTE RULES (Never Break)
 
-Currently, two official plugins are available:
+### 1. No Hardcoded Values
+- ❌ **WRONG:** `padding: 16px`
+- ✅ **RIGHT:** `padding: var(--space-4)`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 2. Theme-First Development
+All CSS must work in **3 themes**: `light`, `dark`, `twilight`
+- Test every change in all themes
+- Colors auto-swap based on theme
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 3. Token Hierarchy
+```
+Design Tokens → Component Schemas → Section Patterns → Implementation
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 4. Component Reuse
+- Check [`ui-schema.json`](docs/design-system/ui-schema.json) before creating new components
+- Use existing patterns from [`patterns/`](docs/design-system/patterns/)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 5. Documentation Updates
+When adding something new:
+- New token → Update [`tokens.md`](docs/design-system/tokens.md)
+- New component → Update [`ui-schema.json`](docs/design-system/ui-schema.json)
+- New pattern → Create/update pattern file in [`patterns/`](docs/design-system/patterns/)
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 📚 Quick Reference
+
+| Resource | Purpose |
+|----------|---------|
+| [Design Tokens](docs/design-system/tokens.md) | All CSS variables (spacing, colors, typography) |
+| [UI Schema](docs/design-system/ui-schema.json) | Component definitions (AI-parseable) |
+| [ChatBox Pattern](docs/design-system/patterns/chatbox.md) | ChatBox section rules |
+| [Button Pattern](docs/design-system/patterns/buttons.md) | Button usage & spacing |
+| [Layout Pattern](docs/design-system/patterns/layout.md) | Grid & container rules |
+| [Typography Pattern](docs/design-system/patterns/typography.md) | Font sizes & families |
+
+---
+
+## 🤖 For AI Assistants
+
+### Before Making ANY CSS Change:
+
+1. **Read** relevant pattern file from `patterns/`
+2. **Check** `ui-schema.json` for existing components
+3. **Use** tokens from `tokens.md`
+4. **Test** in all 3 themes (light, dark, twilight)
+5. **Update** documentation if adding new patterns
+
+### Example Workflow:
+
+**User Request:** "Add a button to the chatbox"
+
+**AI Actions:**
 ```
+Step 1: Read docs/design-system/patterns/chatbox.md
+Step 2: Parse docs/design-system/ui-schema.json → RetroButton component
+Step 3: Apply tokens automatically from schema
+Step 4: Follow spacing rules (gap: var(--space-8))
+Step 5: Implement using pattern guidelines
+Step 6: Test in all themes
+```
+
+### Validation Checklist:
+- [ ] Used design tokens (no hardcoded values)
+- [ ] Checked `ui-schema.json` for existing components
+- [ ] Followed section pattern rules
+- [ ] Tested in light theme
+- [ ] Tested in dark theme
+- [ ] Tested in twilight theme
+- [ ] Updated documentation if needed
+
+---
+
+## 🎨 Design Philosophy
+
+**Token-Based:** Every visual property uses a CSS variable  
+**Theme-Aware:** All colors swap automatically with themes  
+**Modular:** Section patterns are isolated and reusable  
+**AI-Friendly:** JSON schema is machine-readable
+
+---
+
+## 📁 File Structure
+
+```
+/
+├── README.md                           ← You are here (Overall rules)
+├── src/
+│   ├── index.css                       ← Design tokens defined here
+│   └── components/
+│       └── ui/
+│           └── RetroButton.tsx         ← Example component
+└── docs/
+    └── design-system/
+        ├── tokens.md                   ← Token reference
+        ├── ui-schema.json              ← Component schemas
+        └── patterns/
+            ├── chatbox.md              ← ChatBox rules
+            ├── buttons.md              ← Button patterns
+            ├── layout.md               ← Layout patterns
+            └── typography.md           ← Typography patterns
+```
+
+---
+
+## 🚀 Getting Started
+
+1. **New to the project?** Read [`tokens.md`](docs/design-system/tokens.md) first
+2. **Adding a component?** Check [`ui-schema.json`](docs/design-system/ui-schema.json)
+3. **Working on a section?** Read the relevant pattern file
+4. **Breaking a rule?** Don't. Seriously, don't.
+
+---
+
+**Remember:** This design system is a **contract**, not a suggestion.
