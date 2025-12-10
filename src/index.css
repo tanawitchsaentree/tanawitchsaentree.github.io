@@ -7,12 +7,37 @@
 
 @layer base {
   :root {
+    /* Typography */
     --font-sans: 'Courier Prime', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --font-mono: 'Courier Prime', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --font-size: 12px;
     --line-height: 1.5;
     --text-color: var(--foreground);
     --text-muted: var(--muted-foreground);
+
+    /* Spacing Scale (8px base) */
+    --space-1: 4px;
+    /* Micro spacing */
+    --space-2: 8px;
+    /* XS spacing */
+    --space-3: 12px;
+    /* Small spacing */
+    --space-4: 16px;
+    /* Base spacing */
+    --space-5: 20px;
+    /* Medium spacing */
+    --space-6: 24px;
+    /* Large spacing */
+    --space-8: 32px;
+    /* XL spacing */
+    --space-10: 40px;
+    /* 2XL spacing */
+    --space-12: 48px;
+    /* 3XL spacing */
+    --space-16: 64px;
+    /* 4XL spacing */
+
+    /* Colors */
     --background: #FEFCFB;
     --foreground: oklch(0.145 0 0);
     --card: #ffffff;
@@ -131,8 +156,8 @@
 .main-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding: 1rem;
+  gap: var(--space-8);
+  padding: var(--space-4);
   flex: 1;
   max-width: 1440px;
   width: 100%;
@@ -145,8 +170,8 @@
   .main-content {
     display: grid;
     grid-template-columns: 1fr 612px;
-    gap: 24px;
-    padding: 24px;
+    gap: var(--space-6);
+    padding: var(--space-6);
   }
 }
 
@@ -154,7 +179,7 @@
 /* Bio Section */
 .bio-section {
   width: 100%;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto var(--space-6);
   max-width: 600px;
   text-align: left;
   font-size: 0.833rem;
@@ -171,8 +196,8 @@
   display: flex;
   align-items: center;
   width: 100%;
-  margin: 0 0 0.5rem 0;
-  padding: 0.15rem 0;
+  margin: 0 0 var(--space-2) 0;
+  padding: var(--space-1) 0;
   line-height: 1.2;
   font-size: 0.833rem;
   min-height: 1.2em;
@@ -185,7 +210,7 @@
   flex-grow: 1;
   min-width: 0;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   line-height: inherit;
@@ -290,9 +315,9 @@
 .profile-header {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: var(--space-3);
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
 
 /* ChatBox Styles */
@@ -310,18 +335,18 @@
 .chatbox-output {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: var(--space-4);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   min-height: 0;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .chatbox-message {
   line-height: 1.5;
   margin: 0;
-  padding: 0.25rem 0;
+  padding: var(--space-1) 0;
 }
 
 .chatbox-message-user {
@@ -330,7 +355,7 @@
 }
 
 .chatbox-input-container {
-  padding: 1rem;
+  padding: var(--space-4);
   background: var(--background);
   position: sticky;
   bottom: 0;
@@ -341,7 +366,7 @@
 .chatbox-input-wrapper {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .chatbox-input {
@@ -352,5 +377,5 @@
   color: var(--foreground);
   font-family: inherit;
   font-size: var(--font-size);
-  padding: 0.5rem 0;
+  padding: var(--space-2) 0;
 }
