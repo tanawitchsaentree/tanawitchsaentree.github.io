@@ -35,25 +35,10 @@ function XRayToggle({ active, onToggle }: { active: boolean; onToggle: () => voi
       className="xray-toggle"
       aria-label="Toggle X-ray mode"
       style={{
-        opacity: active ? 1 : 0.8,
-        position: 'fixed',
-        top: '2rem',
-        right: '6rem',
-        zIndex: 99999,
-        backgroundColor: active ? 'rgba(255, 0, 255, 0.2)' : 'var(--background)',
-        border: '2px solid red', /* TEMPORARY DEBUG BORDER */
-        width: '40px',
-        height: '40px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '50%',
-        cursor: 'pointer'
+        opacity: active ? 1 : 0.6,
       }}
     >
       <Ruler className="w-5 h-5" />
-      {/* Fallback if icon fails */}
-      {!active && <span style={{ fontSize: '10px', position: 'absolute', bottom: '-15px', background: 'white', color: 'black' }}>X-RAY</span>}
     </button>
   );
 }
