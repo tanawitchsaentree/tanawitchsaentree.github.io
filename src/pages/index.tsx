@@ -172,7 +172,7 @@ function ContactSection() {
         style={{
           color: 'var(--foreground)',
           textDecoration: 'none',
-          fontSize: 'var(--text-lg)',
+          fontSize: 'var(--text-base)',
           borderBottom: '1px solid var(--foreground)',
           paddingBottom: '1px',
           display: 'inline-block',
