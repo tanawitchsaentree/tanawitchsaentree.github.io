@@ -4,6 +4,41 @@
   --transition-duration: 0.2s;
 }
 
+/* Diagonal gradient sweep animation for theme transitions */
+@keyframes theme-swipe {
+  0% {
+    transform: translateX(-150%) translateY(-150%) rotate(45deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(150%) translateY(150%) rotate(45deg);
+    opacity: 1;
+  }
+}
+
+.theme-transition-overlay {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(135deg,
+      transparent 0%,
+      transparent 45%,
+      var(--background) 50%,
+      transparent 55%,
+      transparent 100%);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.theme-transition-overlay.active {
+  animation: theme-swipe 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* Reset and base styles with smooth transitions */
 * {
   margin: 0;

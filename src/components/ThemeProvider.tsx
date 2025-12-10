@@ -34,24 +34,39 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-    const root = document.documentElement;
+    // Trigger transition animation
+    const overlay = document.querySelector('.theme-transition-overlay');
+    if (overlay) {
+      overlay.classList.add('active');
 
-    // Remove all theme classes
-    root.classList.remove('dark', 'twilight');
-
-    // Add appropriate theme class
-    if (newTheme === 'dark') {
-      root.classList.add('dark');
-    } else if (newTheme === 'twilight') {
-      root.classList.add('twilight');
+      // Remove active class after animation completes
+      setTimeout(() => {
+        overlay.classList.remove('active');
+      }, 250);
     }
 
-    localStorage.setItem('theme', newTheme);
+    // Small delay to let animation start before changing theme
+    setTimeout(() => {
+      setThemeState(newTheme);
+      const root = document.documentElement;
+
+      // Remove all theme classes
+      root.classList.remove('dark', 'twilight');
+
+      // Add appropriate theme class
+      if (newTheme === 'dark') {
+        root.classList.add('dark');
+      } else if (newTheme === 'twilight') {
+        root.classList.add('twilight');
+      }
+
+      localStorage.setItem('theme', newTheme);
+    }, 50); // 50ms delay
   };
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
+      <div className="theme-transition-overlay" />
       {children}
     </ThemeContext.Provider>
   );
