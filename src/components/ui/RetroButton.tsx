@@ -21,25 +21,26 @@ export const RetroButton: React.FC<RetroButtonProps> = ({
         px-4 py-2
         font-mono text-sm font-bold uppercase tracking-wider
         
-        /* Solid Fill (PLANT Style) */
-        bg-[var(--primary)] 
-        text-[var(--primary-foreground)]
+        /* OUTLINE STYLE - Transparent BG */
+        bg-transparent
+        text-[var(--foreground)]
         
-        /* Deep Border matching BG or Transparent if filled */
-        border-2 border-[var(--primary)]
+        /* Thick Border */
+        border-2 border-[var(--foreground)]
         
+        /* Sharp Corners */
         rounded-none
+        
         transition-all duration-75
         
-        /* Deep Hard Shadow */
+        /* Hard Shadow */
         shadow-[4px_4px_0px_0px_var(--foreground)]
         
-        /* Hover: Invert or Lift? Let's Lift + Color Shift for "Pop" */
+        /* Hover */
         hover:-translate-y-[1px] hover:-translate-x-[1px]
         hover:shadow-[5px_5px_0px_0px_var(--foreground)]
-        hover:bg-[var(--foreground)] hover:text-[var(--background)] hover:border-[var(--foreground)]
         
-        /* Active: Press down fully */
+        /* Active */
         active:translate-y-[2px] active:translate-x-[2px]
         active:shadow-[1px_1px_0px_0px_var(--foreground)]
         
