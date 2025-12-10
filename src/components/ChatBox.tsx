@@ -59,20 +59,20 @@ function ChatBox() {
     const newMsg: Message = { from, text, displayingText: '' };
     setMessages(prev => [...prev, newMsg]);
     for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        if (i > 0 && char !== ' ' && Math.random() < 0.025) {
-            const wrongChar = 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
-            setMessages(prev => prev.map((msg, index) => index === prev.length - 1 ? { ...msg, displayingText: msg.displayingText + wrongChar } : msg));
-            await sleep(Math.random() * 100 + 150);
-            setMessages(prev => prev.map((msg, index) => index === prev.length - 1 ? { ...msg, displayingText: msg.displayingText!.slice(0, -1) } : msg));
-            await sleep(Math.random() * 80 + 100);
-        }
-        setMessages(prev => prev.map((msg, index) => index === prev.length - 1 ? { ...msg, displayingText: msg.displayingText + char } : msg));
-        let baseDelay = Math.random() * 35 + 20;
-        if (char === ' ') baseDelay += (Math.random() * 50);
-        if (char === ',' || char === '،') baseDelay += (Math.random() * 150 + 100);
-        if (char === '.' || char === '?' || char === '!') baseDelay += (Math.random() * 250 + 200);
-        await sleep(baseDelay);
+      const char = text[i];
+      if (i > 0 && char !== ' ' && Math.random() < 0.025) {
+        const wrongChar = 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)];
+        setMessages(prev => prev.map((msg, index) => index === prev.length - 1 ? { ...msg, displayingText: msg.displayingText + wrongChar } : msg));
+        await sleep(Math.random() * 100 + 150);
+        setMessages(prev => prev.map((msg, index) => index === prev.length - 1 ? { ...msg, displayingText: msg.displayingText!.slice(0, -1) } : msg));
+        await sleep(Math.random() * 80 + 100);
+      }
+      setMessages(prev => prev.map((msg, index) => index === prev.length - 1 ? { ...msg, displayingText: msg.displayingText + char } : msg));
+      let baseDelay = Math.random() * 35 + 20;
+      if (char === ' ') baseDelay += (Math.random() * 50);
+      if (char === ',' || char === '،') baseDelay += (Math.random() * 150 + 100);
+      if (char === '.' || char === '?' || char === '!') baseDelay += (Math.random() * 250 + 200);
+      await sleep(baseDelay);
     }
   };
 
@@ -153,7 +153,7 @@ function ChatBox() {
           <div key={i} className={`chatbox-message ${msg.from === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'}`}>
             {msg.from === 'bot' && (
               <div className="chatbox-avatar">
-                <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover"/>
+                <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
               </div>
             )}
             <div className="chatbox-message-content">
@@ -164,10 +164,10 @@ function ChatBox() {
             </div>
           </div>
         ))}
-        {isTyping && messages[messages.length -1]?.from === 'user' && (
+        {isTyping && messages[messages.length - 1]?.from === 'user' && (
           <div className="chatbox-message chatbox-message-bot">
             <div className="chatbox-avatar">
-              <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover"/>
+              <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
             </div>
             <div className="chatbox-typing-indicator">
               <span className="dot"></span><span className="dot"></span><span className="dot"></span>
@@ -177,7 +177,7 @@ function ChatBox() {
       </div>
       <div className="chatbox-input-container">
         <form onSubmit={handleFormSubmit} className="chatbox-input-wrapper">
-          <input ref={inputRef} type="text" value={input} onChange={e => setInput(e.target.value)} disabled={isTyping} className="chatbox-input" placeholder="Ask me about Nate's skills, experience, or projects..."/>
+          <input ref={inputRef} type="text" value={input} onChange={e => setInput(e.target.value)} className="chatbox-input" placeholder="Ask me about Nate's skills, experience, or projects..." />
         </form>
       </div>
     </div>
