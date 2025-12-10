@@ -172,7 +172,7 @@ const ChatBox: React.FC = () => {
                       <button
                         key={idx}
                         onClick={() => handleSuggestionClick(suggestion.payload)}
-                        className="px-3 py-1 text-xs border border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition-colors bg-transparent opacity-80 hover:opacity-100"
+                        className="px-3 py-1 text-xs border border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] transition-colors bg-transparent opacity-60 hover:opacity-100 rounded-none"
                         disabled={isTyping}
                       >
                         {suggestion.label}
@@ -196,16 +196,19 @@ const ChatBox: React.FC = () => {
       </div>
 
       <form onSubmit={handleFormSubmit} className="chatbox-input-form">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask Lumo anything..."
-          disabled={isTyping}
-        />
-        <button type="submit" disabled={!input.trim() || isTyping}>
-          Send
-        </button>
+        <div className="chatbox-input-container" style={{ borderTop: 'none', background: 'transparent' }}>
+          <div className="chatbox-input-wrapper">
+            <input
+              type="text"
+              className="chatbox-input"
+              style={{ padding: '8px 0', fontSize: '14px' }}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask Lumo..."
+              disabled={isTyping}
+            />
+          </div>
+        </div>
       </form>
     </div>
   );
