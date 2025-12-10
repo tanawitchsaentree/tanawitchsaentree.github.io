@@ -39,7 +39,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     if (overlay) {
       // Capture current background color before changing
-      const oldBg = getComputedStyle(root).getPropertyValue('--background').trim();
+      // const oldBg = getComputedStyle(root).getPropertyValue('--background').trim();
 
       // Temporarily apply new theme to get new color
       root.classList.remove('dark', 'twilight');
