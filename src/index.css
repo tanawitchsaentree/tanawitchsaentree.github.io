@@ -94,7 +94,8 @@
 
   body {
     font-family: var(--font-sans);
-    font-size: var(--font-size); /* 12px */
+    font-size: var(--font-size);
+    /* 12px */
     line-height: var(--line-height);
     color: var(--text-color);
     -webkit-font-smoothing: antialiased;
@@ -156,7 +157,8 @@
   margin: 0 auto 1.5rem;
   max-width: 600px;
   text-align: left;
-  font-size: 0.833rem; /* 10px */
+  font-size: 0.833rem;
+  /* 10px */
   line-height: 1.5;
 }
 
@@ -271,6 +273,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 .profile-section {
@@ -295,6 +300,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  max-height: 85vh;
   width: 100%;
   background: transparent;
   color: var(--foreground);
