@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Linkedin, BookOpenText, ArrowUpRight } from 'lucide-react';
 import nateProfile from '../image/nateprofile.png';
 import profileData from '../../profile_data.json';
@@ -165,20 +165,62 @@ function SocialLinks() {
 }
 
 function ContactSection() {
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const emailAddress = 'tanawitchsaentree@gmail.com';
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(emailAddress).then(() => {
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2000); // Reset after 2 seconds
+    }).catch(err => {
+      console.error('Failed to copy email: ', err);
+    });
+  };
+
   return (
     <div className="w-full mt-4">
       <a
-        href="mailto:tanawitchsaentree@gmail.com"
+        className="contact-link"
+        href={`mailto:${emailAddress}`}
         style={{
-          color: 'var(--foreground)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           textDecoration: 'none',
+          color: 'var(--foreground)',
+          width: '100%',
           fontSize: 'var(--text-base)',
           borderBottom: '1px solid var(--foreground)',
           paddingBottom: '1px',
-          display: 'inline-block',
         }}
       >
-        tanawitchsaentree@gmail.com
+        <span style={{ flex: 1 }}>
+          {emailAddress}
+        </span>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            handleCopyEmail();
+          }}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px 8px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            fontSize: '14px',
+            opacity: copiedEmail ? 1 : 0.6,
+            transition: 'opacity 0.2s',
+            marginLeft: '8px',
+            color: 'inherit', // Inherit color from parent a tag
+          }}
+          title={copiedEmail ? "Copied!" : "Copy email"}
+          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+          onMouseLeave={(e) => e.currentTarget.style.opacity = copiedEmail ? '1' : '0.6'}
+        >
+          {copiedEmail ? '✓' : '📋'}
+        </button>
       </a>
     </div>
   );
