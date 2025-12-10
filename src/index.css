@@ -340,9 +340,10 @@
   height: auto;
   min-height: 100%;
   width: 100%;
-  max-width: 100%;
-  /* FULL WIDTH */
+  max-width: 600px;
+  /* Fixed width - prevents expansion */
   margin: 0 auto;
+  /* Center within grid cell */
   background: transparent;
   color: var(--foreground);
 }
