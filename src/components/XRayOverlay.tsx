@@ -73,9 +73,9 @@ export default function XRayOverlay() {
                     }}
                 >
                     <div className="xray-label">
-                        <div className="xray-label-name">{section.name}</div>
+                        {/* {section.name} removed as requested */}
                         {section.spacing.padding && (
-                            <div className="xray-label-value">p: {section.spacing.padding}</div>
+                            <div className="xray-label-value">p:{section.spacing.padding}</div>
                         )}
                         {section.spacing.margin && (
                             <div className="xray-label-value">m: {section.spacing.margin}</div>

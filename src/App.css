@@ -105,34 +105,28 @@
 
 .xray-section {
   position: absolute;
-  border: 1px dashed rgba(255, 0, 255, 0.6);
-  background: rgba(255, 0, 255, 0.05);
+  border: 1px solid red;
+  background: transparent;
   box-sizing: border-box;
   transition: all 0.3s ease;
+  pointer-events: none;
 }
 
 .xray-label {
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: 0;
+  left: 0;
+  display: flex;
+  gap: 4px;
+  background: red;
+  color: white;
+  padding: 1px 4px;
   font-size: 10px;
-  font-family: 'Courier Prime', monospace;
-  background: rgba(0, 0, 0, 0.9);
-  color: #00ff00;
-  padding: 4px 6px;
-  border-radius: 3px;
-  line-height: 1.3;
-  white-space: nowrap;
+  font-family: monospace;
+  line-height: 1;
   pointer-events: none;
 }
 
-.xray-label-name {
-  font-weight: 600;
-  margin-bottom: 2px;
-  color: #00ffff;
-}
-
 .xray-label-value {
-  font-size: 9px;
-  opacity: 0.9;
+  font-weight: bold;
 }
