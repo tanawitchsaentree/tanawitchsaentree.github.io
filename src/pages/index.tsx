@@ -93,30 +93,106 @@ function ExperienceItem({ year, company, role, link }: { year: string; company: 
   );
 }
 
-function ExperienceSection() {
+function TabButton({
+  active,
+  onClick,
+  children
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="w-full flex flex-col" style={{ gap: 'var(--space-5)' }}>
-      <h2 style={{
+    <button
+      onClick={onClick}
+      style={{
         fontSize: 'var(--text-base)',
         fontWeight: 600,
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
+        background: 'none',
+        border: 'none',
+        padding: `0 0 var(--space-2) 0`,
         margin: 0,
-        marginBottom: 'var(--space-4)',
-        color: 'var(--foreground)',
+        cursor: 'pointer',
+        color: active ? 'var(--foreground)' : 'var(--muted-foreground)',
+        borderBottom: active
+          ? `2px solid var(--foreground)`
+          : '2px solid transparent',
+        transition: 'all 0.2s ease',
+      }}
+      onMouseEnter={(e) => {
+        if (!active) e.currentTarget.style.color = 'var(--foreground)';
+      }}
+      onMouseLeave={(e) => {
+        if (!active) e.currentTarget.style.color = 'var(--muted-foreground)';
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function WorkExperienceList() {
+  return (
+    <>
+      {profileData.work_experience.map((exp, index) => (
+        <ExperienceItem
+          key={index}
+          year={`${new Date(exp.start_date).getFullYear()}-${new Date(exp.end_date).getFullYear()}`}
+          role={exp.role}
+          company={exp.company}
+          link={exp.link}
+        />
+      ))}
+    </>
+  );
+}
+
+function EducationList() {
+  return (
+    <>
+      {profileData.education.map((edu: any, index: number) => (
+        <ExperienceItem
+          key={index}
+          year={`${new Date(edu.start_date).getFullYear()}-${new Date(edu.end_date).getFullYear()}`}
+          role={edu.degree}
+          company={edu.institution}
+          link={edu.link}
+        />
+      ))}
+    </>
+  );
+}
+
+function TabExperienceSection() {
+  const [activeTab, setActiveTab] = useState<'work' | 'education'>('work');
+
+  return (
+    <div className="w-full flex flex-col" style={{ gap: 'var(--space-5)' }}>
+      {/* Tab Headers */}
+      <div style={{
+        display: 'flex',
+        gap: 'var(--space-4)',
+        borderBottom: `1px solid var(--border)`,
       }}>
-        Previously
-      </h2>
+        <TabButton
+          active={activeTab === 'work'}
+          onClick={() => setActiveTab('work')}
+        >
+          Previously
+        </TabButton>
+        <TabButton
+          active={activeTab === 'education'}
+          onClick={() => setActiveTab('education')}
+        >
+          Education
+        </TabButton>
+      </div>
+
+      {/* Tab Content */}
       <div className="flex flex-col" style={{ gap: 'var(--space-3)' }}>
-        {profileData.work_experience.map((exp, index) => (
-          <ExperienceItem
-            key={index}
-            year={`${new Date(exp.start_date).getFullYear()}-${new Date(exp.end_date).getFullYear()}`}
-            role={exp.role}
-            company={exp.company}
-            link={exp.link}
-          />
-        ))}
+        {activeTab === 'work' ? <WorkExperienceList /> : <EducationList />}
       </div>
     </div>
   );
@@ -153,9 +229,9 @@ function SocialIcon({ href, children }: { href: string; children: React.ReactNod
       {showTooltip && (
         <div style={{
           position: 'absolute',
-          bottom: 'calc(-1 * var(--space-8))',
+          top: 'calc(-1 * var(--space-8))',
           left: '50%',
-          transform: 'translateX(-50%)',
+          transform: 'translateX(-50%) translateY(-100%)',
           backgroundColor: 'var(--foreground)',
           color: 'var(--background)',
           padding: 'var(--space-1) var(--space-2)',
@@ -168,14 +244,14 @@ function SocialIcon({ href, children }: { href: string; children: React.ReactNod
           {href}
           <div style={{
             position: 'absolute',
-            top: 'calc(-1 * var(--space-1))',
+            bottom: 'calc(-1 * var(--space-1))',
             left: '50%',
             transform: 'translateX(-50%)',
             width: 0,
             height: 0,
             borderLeft: 'var(--space-1) solid transparent',
             borderRight: 'var(--space-1) solid transparent',
-            borderBottom: 'var(--space-1) solid var(--foreground)',
+            borderTop: 'var(--space-1) solid var(--foreground)',
           }} />
         </div>
       )}
@@ -284,7 +360,7 @@ export default function Index() {
         <BioSection />
       </div>
       <div style={{ marginBottom: '2rem' }}>
-        <ExperienceSection />
+        <TabExperienceSection />
       </div>
       <ContactSection />
       <div style={{ marginTop: '1rem' }}>

@@ -20,6 +20,16 @@
   },
   "current_role": "Lead Product Designer",
   "career_outlook": "I'm open for any role that is meaningful and can make an impact.",
+  "education": [
+    {
+      "institution": "Chulalongkorn University",
+      "degree": "Bachelor of Fine Arts",
+      "field": "Visual Communication Design",
+      "start_date": "2014-08-01",
+      "end_date": "2018-05-01",
+      "location": "Bangkok, Thailand"
+    }
+  ],
   "work_experience": [
     {
       "company": "Invitrace",
