@@ -150,7 +150,7 @@ const ChatBox: React.FC = () => {
     return parts.map((part, index) => {
       if (emailRegex.test(part)) {
         return (
-          <span key={index} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+          <span key={index} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
             <strong>{part}</strong>
             <button
               onClick={() => handleCopyEmail(part)}
@@ -158,18 +158,28 @@ const ChatBox: React.FC = () => {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                padding: '2px 4px',
+                padding: '2px',
                 display: 'inline-flex',
                 alignItems: 'center',
-                fontSize: '14px',
-                opacity: copiedEmail ? 1 : 0.6,
-                transition: 'opacity 0.2s'
+                verticalAlign: 'middle',
+                opacity: copiedEmail ? 1 : 0.5,
+                transition: 'opacity 0.2s',
+                color: 'inherit'
               }}
               title={copiedEmail ? "Copied!" : "Copy email"}
               onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-              onMouseLeave={(e) => e.currentTarget.style.opacity = copiedEmail ? '1' : '0.6'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = copiedEmail ? '1' : '0.5'}
             >
-              {copiedEmail ? '✓' : '📋'}
+              {copiedEmail ? (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              )}
             </button>
           </span>
         );
