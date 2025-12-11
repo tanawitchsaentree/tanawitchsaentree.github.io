@@ -347,6 +347,12 @@
   /* Left-align instead of center */
   background: transparent;
   color: var(--foreground);
+
+  /* Border styling - similar to primary button but with rounded corners */
+  border: 2px solid var(--foreground);
+  border-radius: 12px;
+  box-shadow: none;
+  padding: var(--space-4);
 }
 
 .chatbox-output {
