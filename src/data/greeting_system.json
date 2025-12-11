@@ -1,0 +1,371 @@
+{
+    "version": "1.0",
+    "system_name": "Lumo Greeting Engine",
+    "personality": {
+        "default": "friendly",
+        "modes": {
+            "friendly": {
+                "traits": {
+                    "helpful": 0.9,
+                    "warm": 0.8,
+                    "professional": 0.7
+                }
+            },
+            "professional": {
+                "traits": {
+                    "helpful": 0.95,
+                    "professional": 0.95,
+                    "warm": 0.6
+                }
+            },
+            "casual": {
+                "traits": {
+                    "witty": 0.8,
+                    "helpful": 0.85,
+                    "warm": 0.9
+                }
+            },
+            "enthusiastic": {
+                "traits": {
+                    "warm": 0.95,
+                    "witty": 0.7,
+                    "helpful": 0.85
+                }
+            }
+        }
+    },
+    "time_contexts": {
+        "morning": {
+            "hours": [
+                5,
+                11
+            ],
+            "emoji": "☀️",
+            "variants": [
+                {
+                    "id": "morning_1",
+                    "weight": 30,
+                    "personality": "friendly",
+                    "message": "Good morning! ☀️ I'm Lumo - trained on everything Nate. Here for a job req? Portfolio browse? Just curious?",
+                    "follow_up_id": "morning_f1",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "contact"
+                    ]
+                },
+                {
+                    "id": "morning_2",
+                    "weight": 25,
+                    "personality": "enthusiastic",
+                    "message": "Rise and shine! ☀️ I'm Lumo, Nate's AI companion. I know exactly what you need about his work - just ask 🎯",
+                    "follow_up_id": "morning_f2",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "surprise_me"
+                    ]
+                },
+                {
+                    "id": "morning_3",
+                    "weight": 20,
+                    "personality": "professional",
+                    "message": "Good morning! ☀️ I'm Lumo, your guide to Nate's 8+ years designing health, finance, and productivity tools.",
+                    "follow_up_id": "morning_f3",
+                    "suggestions": [
+                        "experience",
+                        "projects",
+                        "contact"
+                    ]
+                },
+                {
+                    "id": "morning_4",
+                    "weight": 15,
+                    "personality": "casual",
+                    "message": "Hey there! ☀️ I'm Lumo - part librarian, part hype person for Nate's work 📚⚡",
+                    "follow_up_id": "morning_f4",
+                    "suggestions": [
+                        "quick_tour",
+                        "deep_dive",
+                        "surprise_me"
+                    ]
+                },
+                {
+                    "id": "morning_5",
+                    "weight": 10,
+                    "personality": "friendly",
+                    "message": "Good morning! ☀️ Coffee ready? Let's explore what Nate's all about - design systems, healthcare UX, team leadership.",
+                    "follow_up_id": "morning_f5",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "contact"
+                    ]
+                }
+            ]
+        },
+        "afternoon": {
+            "hours": [
+                12,
+                17
+            ],
+            "emoji": "🌤️",
+            "variants": [
+                {
+                    "id": "afternoon_1",
+                    "weight": 30,
+                    "personality": "friendly",
+                    "message": "Good afternoon! 🌤️ I'm Lumo, here to help you discover Nate's work. Pick your path:",
+                    "follow_up_id": "afternoon_f1",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "contact"
+                    ]
+                },
+                {
+                    "id": "afternoon_2",
+                    "weight": 25,
+                    "personality": "professional",
+                    "message": "Good afternoon! 🌤️ I'm Lumo, your portal to Nate's design journey. From healthcare to fintech, I've got the stories.",
+                    "follow_up_id": "afternoon_f2",
+                    "suggestions": [
+                        "experience",
+                        "projects",
+                        "contact"
+                    ]
+                },
+                {
+                    "id": "afternoon_3",
+                    "weight": 20,
+                    "personality": "casual",
+                    "message": "Hey! 🌤️ I'm Lumo - friendly guide to all things Nate. Where should we start?",
+                    "follow_up_id": "afternoon_f3",
+                    "suggestions": [
+                        "quick_tour",
+                        "deep_dive",
+                        "contact"
+                    ]
+                },
+                {
+                    "id": "afternoon_4",
+                    "weight": 15,
+                    "personality": "enthusiastic",
+                    "message": "Perfect timing! 🌤️ I'm Lumo, and I'm excited to show you Nate's design work. Ready?",
+                    "follow_up_id": "afternoon_f4",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "surprise_me"
+                    ]
+                },
+                {
+                    "id": "afternoon_5",
+                    "weight": 10,
+                    "personality": "friendly",
+                    "message": "Good afternoon! 🌤️ I'm Lumo - think of me as Nate's digital storyteller. What interests you?",
+                    "follow_up_id": "afternoon_f5",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "contact"
+                    ]
+                }
+            ]
+        },
+        "evening": {
+            "hours": [
+                18,
+                4
+            ],
+            "emoji": "🌙",
+            "variants": [
+                {
+                    "id": "evening_1",
+                    "weight": 30,
+                    "personality": "friendly",
+                    "message": "Good evening! 🌙 I'm Lumo, Nate's AI companion. What brings you here tonight?",
+                    "follow_up_id": "evening_f1",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "contact"
+                    ]
+                },
+                {
+                    "id": "evening_2",
+                    "weight": 25,
+                    "personality": "casual",
+                    "message": "Hey there! 🌙 I'm Lumo - your after-hours guide to Nate's work. Fancy a tour?",
+                    "follow_up_id": "evening_f2",
+                    "suggestions": [
+                        "quick_tour",
+                        "deep_dive",
+                        "contact"
+                    ]
+                },
+                {
+                    "id": "evening_3",
+                    "weight": 20,
+                    "personality": "professional",
+                    "message": "Good evening! 🌙 I'm Lumo, here to showcase Nate's expertise. What would you like to discover?",
+                    "follow_up_id": "evening_f3",
+                    "suggestions": [
+                        "experience",
+                        "projects",
+                        "contact"
+                    ]
+                },
+                {
+                    "id": "evening_4",
+                    "weight": 15,
+                    "personality": "enthusiastic",
+                    "message": "Evening vibes! 🌙 I'm Lumo, and I love sharing Nate's story. What sparks your curiosity?",
+                    "follow_up_id": "evening_f4",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "surprise_me"
+                    ]
+                },
+                {
+                    "id": "evening_5",
+                    "weight": 10,
+                    "personality": "friendly",
+                    "message": "Good evening! 🌙 I'm Lumo - trained on Nate's 8+ years designing products people rely on. Ready to explore?",
+                    "follow_up_id": "evening_f5",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "contact"
+                    ]
+                }
+            ]
+        }
+    },
+    "follow_ups": {
+        "morning_f1": {
+            "delay_ms": 1200,
+            "text": "I'll match your speed - want the highlights or ready for a deep dive?"
+        },
+        "morning_f2": {
+            "delay_ms": 1000,
+            "text": "His journey: 8+ years across healthtech, fintech, and productivity. Currently leading design at Invitrace Health."
+        },
+        "morning_f3": {
+            "delay_ms": 1500,
+            "text": "From award-winning fintech apps to healthcare tools - he's built products people actually rely on."
+        },
+        "morning_f4": {
+            "delay_ms": 1300,
+            "text": "Real products, real users, real impact. That's Nate's style."
+        },
+        "morning_f5": {
+            "delay_ms": 1100,
+            "text": "I can walk you through his work history, skills, or connect you directly."
+        },
+        "afternoon_f1": {
+            "delay_ms": 1200,
+            "text": "From design systems to team leadership - I've got all the details."
+        },
+        "afternoon_f2": {
+            "delay_ms": 1400,
+            "text": "Award-winning mutual fund apps, COVID vaccine passports, healthcare platforms - he's done it all."
+        },
+        "afternoon_f3": {
+            "delay_ms": 1000,
+            "text": "I've got the highlights, the deep dives, and a few surprises up my sleeve."
+        },
+        "afternoon_f4": {
+            "delay_ms": 1300,
+            "text": "Design systems architect. Team leader. Healthcare + fintech specialist. That's the TL;DR."
+        },
+        "afternoon_f5": {
+            "delay_ms": 1100,
+            "text": "8+ years, 5 companies, multiple industries. Let's dive in."
+        },
+        "evening_f1": {
+            "delay_ms": 1200,
+            "text": "Burning midnight oil? Me too 🌙 Let's talk design, systems, or whatever you're curious about."
+        },
+        "evening_f2": {
+            "delay_ms": 1400,
+            "text": "I've got stories from healthtech, fintech, and everything in between."
+        },
+        "evening_f3": {
+            "delay_ms": 1000,
+            "text": "Lead Product Designer at Invitrace Health. Design systems expert. Team mentor."
+        },
+        "evening_f4": {
+            "delay_ms": 1300,
+            "text": "Fun fact: He studied photography before diving into UX. Visual storytelling runs deep."
+        },
+        "evening_f5": {
+            "delay_ms": 1100,
+            "text": "His work spans healthcare, finance, and productivity - always focused on real user problems."
+        }
+    },
+    "suggestions": {
+        "experience": {
+            "label": "Experience",
+            "payload": "Tell me about Nate's experience",
+            "icon": "💼"
+        },
+        "skills": {
+            "label": "Skills",
+            "payload": "What are Nate's skills?",
+            "icon": "✨"
+        },
+        "contact": {
+            "label": "Contact Info",
+            "payload": "How can I contact Nate?",
+            "icon": "📬"
+        },
+        "projects": {
+            "label": "Projects",
+            "payload": "Show me Nate's projects",
+            "icon": "🎨"
+        },
+        "quick_tour": {
+            "label": "Quick Brief",
+            "payload": "Give me the TL;DR about Nate",
+            "icon": "⚡"
+        },
+        "deep_dive": {
+            "label": "Deep Dive",
+            "payload": "Tell me everything about Nate",
+            "icon": "🔍"
+        },
+        "surprise_me": {
+            "label": "Surprise Me",
+            "payload": "Tell me something unexpected about Nate",
+            "icon": "🎲"
+        }
+    },
+    "easter_eggs": {
+        "late_night": {
+            "trigger": {
+                "hour_min": 23,
+                "hour_max": 4
+            },
+            "prefix": "Late night browsing? ",
+            "suffix": " ☕"
+        },
+        "weekend": {
+            "trigger": {
+                "day": [
+                    "saturday",
+                    "sunday"
+                ]
+            },
+            "prefix": "Weekend vibes! ",
+            "suffix": " 🎯"
+        },
+        "repeated_visit": {
+            "trigger": {
+                "visit_count_min": 2
+            },
+            "message": "Welcome back! Ready to pick up where we left off?"
+        }
+    }
+}

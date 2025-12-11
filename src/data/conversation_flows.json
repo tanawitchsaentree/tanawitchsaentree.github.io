@@ -1,0 +1,226 @@
+{
+    "version": "1.0",
+    "system_name": "Conversation Flow Orchestrator",
+    "flows": {
+        "recruiter_fast_track": {
+            "id": "recruiter_fast_track",
+            "user_type": "recruiter",
+            "priority": "high",
+            "objectives": [
+                "highlight_experience",
+                "showcase_leadership",
+                "facilitate_contact"
+            ],
+            "max_depth": 3,
+            "branching": false,
+            "path": [
+                {
+                    "step": 1,
+                    "action": "greeting",
+                    "template": "professional_intro",
+                    "content": "Understand you're evaluating candidates. Here's what matters:"
+                },
+                {
+                    "step": 2,
+                    "action": "experience_summary",
+                    "template": "impact_focused",
+                    "content": "8+ years, Lead role at Invitrace Health. Built design systems, led teams, shipped award-winning products."
+                },
+                {
+                    "step": 3,
+                    "action": "call_to_action",
+                    "template": "direct_contact",
+                    "content": "Want details on specific areas or ready to connect?",
+                    "suggestions": [
+                        "experience",
+                        "skills",
+                        "contact"
+                    ]
+                }
+            ],
+            "exit_condition": "contact_shared"
+        },
+        "peer_exploration": {
+            "id": "peer_exploration",
+            "user_type": "peer_designer",
+            "priority": "medium",
+            "objectives": [
+                "share_process",
+                "discuss_craft",
+                "build_connection"
+            ],
+            "max_depth": 8,
+            "branching": true,
+            "path": [
+                {
+                    "step": 1,
+                    "action": "greeting",
+                    "template": "peer_to_peer",
+                    "content": "Designer to designer? Let's talk craft 🤝"
+                },
+                {
+                    "step": 2,
+                    "action": "interest_discovery",
+                    "template": "open_ended",
+                    "content": "What aspects of Nate's work catch your eye?",
+                    "suggestions": [
+                        "design_systems",
+                        "research_process",
+                        "leadership",
+                        "projects"
+                    ]
+                },
+                {
+                    "step": 3,
+                    "action": "deep_dive",
+                    "template": "storytelling",
+                    "content": "{{dynamic_based_on_choice}}",
+                    "allow_followup": true
+                }
+            ],
+            "exit_condition": "user_satisfied"
+        },
+        "casual_browse": {
+            "id": "casual_browse",
+            "user_type": "casual_browser",
+            "priority": "low",
+            "objectives": [
+                "spark_interest",
+                "show_highlights",
+                "enable_exploration"
+            ],
+            "max_depth": 5,
+            "branching": true,
+            "path": [
+                {
+                    "step": 1,
+                    "action": "greeting",
+                    "template": "friendly_inviting",
+                    "content": "Stumbled here? Perfect 👀 Let me show you what makes Nate's work stand out."
+                },
+                {
+                    "step": 2,
+                    "action": "quick_hook",
+                    "template": "intriguing_fact",
+                    "content": "{{random_interesting_fact}}",
+                    "suggestions": [
+                        "tell_me_more",
+                        "surprise_me",
+                        "contact"
+                    ]
+                }
+            ],
+            "exit_condition": "engagement_or_timeout"
+        },
+        "surprise_me_adventure": {
+            "id": "surprise_adventure",
+            "trigger": "surprise_me_button",
+            "priority": "fun",
+            "objectives": [
+                "delight",
+                "unexpected_insights",
+                "personality_showcase"
+            ],
+            "max_depth": 6,
+            "branching": true,
+            "surprises": [
+                {
+                    "weight": 30,
+                    "content": "Did you know? Nate studied photography before UX. That eye for composition shows in every pixel 📸",
+                    "followup": "His background in visual storytelling makes his interfaces naturally beautiful."
+                },
+                {
+                    "weight": 25,
+                    "content": "Plot twist: Nate recently studied web dev in Canada to better understand implementation 💻",
+                    "followup": "Designer who codes? That's a powerful combo."
+                },
+                {
+                    "weight": 20,
+                    "content": "Award alert! 🏆 His mutual fund app won for customer experience in Asia.",
+                    "followup": "Real recognition for solving real problems."
+                },
+                {
+                    "weight": 15,
+                    "content": "Speed round: Designed a COVID vaccine passport in record time during the pandemic ⚡",
+                    "followup": "When it matters, he ships fast without sacrificing quality."
+                },
+                {
+                    "weight": 10,
+                    "content": "Location bonus: Based in Bangkok (GMT+7) but fully remote-friendly 🌏",
+                    "followup": "Time zones won't stop good work from happening."
+                }
+            ]
+        }
+    },
+    "conversation_states": {
+        "initial": {
+            "greeting_required": true,
+            "context_detection": true,
+            "flow_selection": "auto"
+        },
+        "engaged": {
+            "greeting_required": false,
+            "remember_context": true,
+            "suggest_depth": "increase"
+        },
+        "deep_dive": {
+            "greeting_required": false,
+            "allow_branching": true,
+            "storytelling_mode": "detailed"
+        },
+        "wrapping_up": {
+            "greeting_required": false,
+            "offer_contact": true,
+            "suggest_next_steps": true
+        }
+    },
+    "dynamic_responses": {
+        "experience_query": {
+            "short": "8+ years across healthtech, fintech, and productivity. Currently Lead at Invitrace Health.",
+            "medium": "Nate's spent 8+ years designing tools people rely on. From award-winning fintech apps at Codefin to healthcare platforms at Invitrace Health. Design systems are his specialty.",
+            "detailed": "{{query_profile_data: experience.timeline, storytelling.detailed}}"
+        },
+        "skills_query": {
+            "short": "Design systems, user research, visual design, team leadership.",
+            "medium": "Expert in design systems, UX strategy, and research. Strong visual design background (photography degree!). Leading teams and mentoring designers.",
+            "detailed": "{{query_profile_data: skills.categories, with_evidence}}"
+        },
+        "contact_query": {
+            "always": "Best way to reach Nate: tanawitchsaentree@gmail.com. Also on LinkedIn, Behance, and exploring on GitHub.",
+            "followup": "He typically responds within 24-48 hours. Worth the wait though 😉"
+        }
+    },
+    "personality_adaptations": {
+        "user_is_formal": {
+            "detect": [
+                "keywords: professional, formal, sir, ma'am"
+            ],
+            "adapt": {
+                "emoji_usage": "minimal",
+                "tone": "professional",
+                "language": "formal"
+            }
+        },
+        "user_is_casual": {
+            "detect": [
+                "keywords: hey, yo, cool, nice"
+            ],
+            "adapt": {
+                "emoji_usage": "moderate",
+                "tone": "friendly",
+                "language": "casual"
+            }
+        },
+        "user_is_enthusiastic": {
+            "detect": [
+                "keywords: amazing, wow, love, awesome, multiple_exclamations"
+            ],
+            "adapt": {
+                "emoji_usage": "high",
+                "tone": "enthusiastic",
+                "language": "energetic",
+                "match_energy": true
+            }
+        }
+    }
+}

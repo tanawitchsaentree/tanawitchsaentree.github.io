@@ -1,0 +1,326 @@
+{
+    "version": "1.0",
+    "system_name": "Context Detection Engine",
+    "user_types": {
+        "recruiter": {
+            "priority": "high",
+            "signals": {
+                "behavior": [
+                    "fast_scroll",
+                    "experience_section_focus",
+                    "contact_immediate"
+                ],
+                "keywords": [
+                    "hiring",
+                    "position",
+                    "team",
+                    "role",
+                    "opportunity",
+                    "candidate"
+                ],
+                "time_on_page": {
+                    "min": 0,
+                    "max": 120
+                },
+                "interaction_pattern": "direct"
+            },
+            "confidence_threshold": 0.7,
+            "response_strategy": {
+                "greeting_tone": "professional",
+                "message_length": "concise",
+                "focus_areas": [
+                    "experience",
+                    "leadership",
+                    "impact"
+                ],
+                "call_to_action": "contact"
+            }
+        },
+        "peer_designer": {
+            "priority": "medium",
+            "signals": {
+                "behavior": [
+                    "deep_read",
+                    "project_hover",
+                    "process_questions",
+                    "skill_exploration"
+                ],
+                "keywords": [
+                    "how",
+                    "approach",
+                    "design system",
+                    "process",
+                    "methodology",
+                    "ux"
+                ],
+                "time_on_page": {
+                    "min": 180,
+                    "max": 999
+                },
+                "interaction_pattern": "exploratory"
+            },
+            "confidence_threshold": 0.6,
+            "response_strategy": {
+                "greeting_tone": "casual",
+                "message_length": "detailed",
+                "focus_areas": [
+                    "process",
+                    "systems",
+                    "craft"
+                ],
+                "call_to_action": "deep_dive"
+            }
+        },
+        "student": {
+            "priority": "low",
+            "signals": {
+                "behavior": [
+                    "explore_all",
+                    "education_section",
+                    "learning_questions"
+                ],
+                "keywords": [
+                    "learn",
+                    "how to",
+                    "beginner",
+                    "guide",
+                    "tutorial",
+                    "advice"
+                ],
+                "time_on_page": {
+                    "min": 120,
+                    "max": 999
+                },
+                "interaction_pattern": "curious"
+            },
+            "confidence_threshold": 0.5,
+            "response_strategy": {
+                "greeting_tone": "friendly",
+                "message_length": "moderate",
+                "focus_areas": [
+                    "journey",
+                    "skills",
+                    "advice"
+                ],
+                "call_to_action": "explore"
+            }
+        },
+        "casual_browser": {
+            "priority": "low",
+            "signals": {
+                "behavior": [
+                    "random_navigation",
+                    "quick_scan"
+                ],
+                "keywords": [],
+                "time_on_page": {
+                    "min": 0,
+                    "max": 60
+                },
+                "interaction_pattern": "passive"
+            },
+            "confidence_threshold": 0.4,
+            "response_strategy": {
+                "greeting_tone": "friendly",
+                "message_length": "short",
+                "focus_areas": [
+                    "highlights",
+                    "quick_tour"
+                ],
+                "call_to_action": "surprise_me"
+            }
+        }
+    },
+    "device_context": {
+        "mobile": {
+            "screen_width": {
+                "max": 768
+            },
+            "adaptations": {
+                "message_style": "concise",
+                "suggest_count": 2,
+                "typing_speed_ms": 15,
+                "follow_up_delay_multiplier": 0.8
+            }
+        },
+        "tablet": {
+            "screen_width": {
+                "min": 769,
+                "max": 1024
+            },
+            "adaptations": {
+                "message_style": "moderate",
+                "suggest_count": 3,
+                "typing_speed_ms": 18,
+                "follow_up_delay_multiplier": 0.9
+            }
+        },
+        "desktop": {
+            "screen_width": {
+                "min": 1025
+            },
+            "adaptations": {
+                "message_style": "detailed",
+                "suggest_count": 3,
+                "typing_speed_ms": 20,
+                "follow_up_delay_multiplier": 1.0
+            }
+        }
+    },
+    "time_context": {
+        "working_hours": {
+            "days": [
+                "mon",
+                "tue",
+                "wed",
+                "thu",
+                "fri"
+            ],
+            "hours": [
+                9,
+                17
+            ],
+            "implication": "professional_browsing",
+            "tone_shift": "professional"
+        },
+        "after_hours": {
+            "days": [
+                "mon",
+                "tue",
+                "wed",
+                "thu",
+                "fri"
+            ],
+            "hours": [
+                18,
+                8
+            ],
+            "implication": "personal_interest",
+            "tone_shift": "casual"
+        },
+        "weekend": {
+            "days": [
+                "sat",
+                "sun"
+            ],
+            "implication": "leisure_browsing",
+            "tone_shift": "friendly",
+            "easter_egg": "Weekend vibes! 🎯"
+        },
+        "late_night": {
+            "hours": [
+                23,
+                4
+            ],
+            "implication": "dedicated_research",
+            "tone_shift": "casual",
+            "easter_egg": "Late night browsing? ☕"
+        }
+    },
+    "interaction_patterns": {
+        "speed_reader": {
+            "triggers": {
+                "scroll_speed": "fast",
+                "time_per_section": {
+                    "max": 5
+                }
+            },
+            "response": "Speed reader detected 👀 Want the TL;DR?",
+            "adapt_message": "short"
+        },
+        "deep_diver": {
+            "triggers": {
+                "scroll_speed": "slow",
+                "time_per_section": {
+                    "min": 15
+                },
+                "multiple_sections_visited": true
+            },
+            "response": "I see you're thorough 🔍 Want me to go deep on any particular area?",
+            "adapt_message": "detailed"
+        },
+        "returner": {
+            "triggers": {
+                "visit_count": {
+                    "min": 2
+                }
+            },
+            "response": "Welcome back! Ready to pick up where we left off?",
+            "remember_context": true
+        }
+    },
+    "sentiment_detection": {
+        "enthusiastic": {
+            "keywords": [
+                "amazing",
+                "love",
+                "wow",
+                "awesome",
+                "great",
+                "excellent"
+            ],
+            "response_tone": "match_energy",
+            "emoji_level": "high"
+        },
+        "professional": {
+            "keywords": [
+                "review",
+                "evaluate",
+                "consider",
+                "assess",
+                "requirements"
+            ],
+            "response_tone": "professional",
+            "emoji_level": "low"
+        },
+        "casual": {
+            "keywords": [
+                "hey",
+                "cool",
+                "nice",
+                "yeah",
+                "sure"
+            ],
+            "response_tone": "friendly",
+            "emoji_level": "medium"
+        },
+        "confused": {
+            "keywords": [
+                "what",
+                "how",
+                "unclear",
+                "don't understand",
+                "?"
+            ],
+            "response_tone": "clarifying",
+            "emoji_level": "low",
+            "offer_help": true
+        }
+    },
+    "surprise_triggers": {
+        "easter_egg_unlocked": {
+            "condition": "specific_keyword",
+            "keywords": [
+                "secret",
+                "easter egg",
+                "hidden"
+            ],
+            "response": "You found it! 🎉 Fun fact: Nate studied photography before UX. Visual storytelling is in his DNA."
+        },
+        "curiosity_rewarded": {
+            "condition": "deep_exploration",
+            "trigger": {
+                "sections_visited": 4,
+                "questions_asked": 3
+            },
+            "response": "You're really diving deep! Here's something cool: Nate's mutual fund app won an award for customer experience in Asia 🏆"
+        },
+        "persistence_recognized": {
+            "condition": "multiple_followups",
+            "trigger": {
+                "followup_count": 5
+            },
+            "response": "I like your persistence! Let me connect you directly with Nate: tanawitchsaentree@gmail.com"
+        }
+    }
+}

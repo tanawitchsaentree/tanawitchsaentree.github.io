@@ -1,0 +1,267 @@
+{
+    "version": "1.0",
+    "system_name": "Knowledge Graph & Entity Relationships",
+    "entities": {
+        "experience": {
+            "type": "work_history",
+            "node_count": 5,
+            "related_to": [
+                "skills",
+                "projects",
+                "companies",
+                "industries"
+            ],
+            "depth_levels": {
+                "summary": "High-level overview, 1 sentence",
+                "medium": "Key highlights, 2-3 sentences",
+                "detailed": "Full story with context and impact"
+            },
+            "talking_points": [
+                "8+ years designing health, finance tools",
+                "Real products, real users, real impact",
+                "Cross-industry expertise",
+                "Led design teams"
+            ],
+            "query_patterns": {
+                "by_industry": "Filter timeline by company.industry",
+                "by_role_level": "Filter timeline by role.level",
+                "by_skill": "Match skills_demonstrated array",
+                "recent_first": "Sort by role.start DESC"
+            }
+        },
+        "skills": {
+            "type": "capabilities",
+            "node_count": 15,
+            "related_to": [
+                "experience",
+                "projects",
+                "education"
+            ],
+            "categories": [
+                "research",
+                "design_craft",
+                "technical",
+                "leadership"
+            ],
+            "presentation_modes": {
+                "list": "Simple bullet list of skill names",
+                "with_evidence": "Skills + where demonstrated",
+                "story_based": "Skills + conversational angle",
+                "filtered": "By category or proficiency level"
+            },
+            "query_patterns": {
+                "by_category": "Filter skills.categories.{category}.competencies",
+                "by_proficiency": "Filter where proficiency = expert|advanced|intermediate",
+                "with_hooks": "Include conversational_angle field"
+            }
+        },
+        "contact": {
+            "type": "connection_point",
+            "priority": "high",
+            "related_to": [
+                "availability",
+                "social_links"
+            ],
+            "always_available": true,
+            "response_variants": [
+                "Best way to reach Nate: {email}",
+                "Email is best: {email}. Also on {social_platforms}",
+                "Let's connect! {email} or find me on {linkedin}"
+            ]
+        },
+        "education": {
+            "type": "academic_background",
+            "node_count": 2,
+            "related_to": [
+                "skills",
+                "career_journey"
+            ],
+            "storytelling_value": "high",
+            "interesting_facts": [
+                "Photography degree → explains visual design excellence",
+                "Recent web dev diploma → understands implementation"
+            ]
+        },
+        "personality_traits": {
+            "type": "character",
+            "inferred_from": [
+                "career_narrative",
+                "conversational_angles"
+            ],
+            "traits": {
+                "impact_driven": "Building tools that solve real problems",
+                "systems_thinker": "I think in systems - not just screens",
+                "mentor": "I love growing designers - their wins are my wins",
+                "curious": "Always learning - lately deep into AI",
+                "collaborative": "Design is a team sport"
+            }
+        }
+    },
+    "relationships": {
+        "experience_to_skills": {
+            "type": "demonstrates",
+            "examples": [
+                {
+                    "experience_id": "invitrace",
+                    "demonstrates_skills": [
+                        "design_leadership",
+                        "design_systems",
+                        "team_management"
+                    ],
+                    "strength": "strong"
+                },
+                {
+                    "experience_id": "cp_origin",
+                    "demonstrates_skills": [
+                        "user_research",
+                        "ia",
+                        "design_systems"
+                    ],
+                    "strength": "strong"
+                },
+                {
+                    "experience_id": "codefin",
+                    "demonstrates_skills": [
+                        "fintech_ux",
+                        "customer_experience"
+                    ],
+                    "strength": "medium",
+                    "note": "Award-winning work"
+                }
+            ]
+        },
+        "skills_to_projects": {
+            "type": "applied_in",
+            "examples": [
+                {
+                    "skill": "Design Systems",
+                    "applied_in": [
+                        "invitrace",
+                        "cp_origin"
+                    ],
+                    "result": "Scalable, consistent products"
+                },
+                {
+                    "skill": "User Research",
+                    "applied_in": [
+                        "cp_origin"
+                    ],
+                    "method": "Card sorting with users"
+                }
+            ]
+        },
+        "education_to_skills": {
+            "type": "foundation_for",
+            "examples": [
+                {
+                    "education_id": "rmutt",
+                    "field": "Photography",
+                    "enables_skills": [
+                        "Visual Design",
+                        "Composition",
+                        "Attention to detail"
+                    ]
+                },
+                {
+                    "education_id": "fanshawe",
+                    "field": "Web development",
+                    "enables_skills": [
+                        "Prototyping",
+                        "Technical understanding",
+                        "Developer empathy"
+                    ]
+                }
+            ]
+        }
+    },
+    "query_strategies": {
+        "experience_summary": {
+            "data_sources": [
+                "experience.summary",
+                "career_narrative.headline"
+            ],
+            "format": "short",
+            "include": [
+                "total_years",
+                "industries",
+                "current_role"
+            ]
+        },
+        "deep_dive_experience": {
+            "data_sources": [
+                "experience.timeline"
+            ],
+            "format": "detailed",
+            "include": [
+                "storytelling.detailed",
+                "conversational_hooks",
+                "skills_demonstrated"
+            ],
+            "sort": "recent_first"
+        },
+        "skill_showcase": {
+            "data_sources": [
+                "skills.categories"
+            ],
+            "format": "with_evidence",
+            "include": [
+                "proficiency",
+                "evidence",
+                "conversational_angle"
+            ],
+            "group_by": "category"
+        },
+        "surprise_facts": {
+            "data_sources": [
+                "education",
+                "experience.timeline",
+                "personality_traits"
+            ],
+            "format": "intriguing",
+            "select": "random_weighted",
+            "pool": [
+                {
+                    "weight": 30,
+                    "fact": "photography_background",
+                    "source": "education.rmutt"
+                },
+                {
+                    "weight": 25,
+                    "fact": "recent_web_dev_study",
+                    "source": "education.fanshawe"
+                },
+                {
+                    "weight": 20,
+                    "fact": "award_winning_app",
+                    "source": "experience.codefin.achievements"
+                },
+                {
+                    "weight": 15,
+                    "fact": "covid_passport_speed",
+                    "source": "experience.doctoranywhere"
+                },
+                {
+                    "weight": 10,
+                    "fact": "bangkok_based_remote",
+                    "source": "identity.location"
+                }
+            ]
+        }
+    },
+    "conversation_memory": {
+        "track": {
+            "topics_discussed": [],
+            "depth_level_reached": {},
+            "user_preferences": {
+                "response_length": "auto",
+                "detail_level": "adaptive",
+                "emoji_preference": "moderate"
+            }
+        },
+        "use_for": {
+            "avoid_repetition": true,
+            "suggest_next_topics": true,
+            "personalize_responses": true
+        }
+    }
+}

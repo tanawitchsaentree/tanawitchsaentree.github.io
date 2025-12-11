@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { SmartBot } from '../utils/SmartBot';
+import { LumoAI } from '../utils/LumoAI';
 import { RetroButton } from './ui/RetroButton';
 import '../index.css';
 
@@ -9,7 +9,7 @@ interface Message {
   sender: 'user' | 'bot';
   timestamp: Date;
   displayingText?: string;
-  suggestions?: { label: string; payload: string }[];
+  suggestions?: { label: string; payload: string; icon?: string }[];
   suggestionsUsed?: boolean; // Track if suggestions have been clicked
 }
 
@@ -22,7 +22,7 @@ const ChatBox: React.FC = () => {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const outputRef = useRef<HTMLDivElement>(null);
 
-  const smartBot = useMemo(() => new SmartBot(), []);
+  const lumoAI = useMemo(() => new LumoAI(), []);
   const hasStarted = useRef(false);
 
   // Function to display text with typing effect
@@ -68,7 +68,7 @@ const ChatBox: React.FC = () => {
     });
   }, []);
 
-  // Initial Greeting
+  // Initial Greeting - Championship AI Style
   useEffect(() => {
     if (hasStarted.current) return;
     hasStarted.current = true;
@@ -77,25 +77,27 @@ const ChatBox: React.FC = () => {
       setIsTyping(true);
       await sleep(500);
 
-      const hour = new Date().getHours();
-      let intro = "Good evening! 🌙";
-      if (hour < 12) intro = "Good morning! ☀️";
-      else if (hour < 18) intro = "Good afternoon! 🌤️";
+      // Get smart greeting from LumoAI
+      const greeting = lumoAI.selectGreeting();
 
-      await displayHumanizedMessage(intro);
+      // Add easter egg if applicable
+      const easterEgg = lumoAI.addEasterEgg();
+      const greetingText = easterEgg ? `${easterEgg}\n${greeting.message}` : greeting.message;
 
-      await sleep(1000);
-      await displayHumanizedMessage("Ask me about his Experience, Skills, or Contact Info! 🦴", 'bot', [
-        { label: "Experience", payload: "Tell me about Nate's experience" },
-        { label: "Skills", payload: "What are Nate's skills?" },
-        { label: "Contact Info", payload: "How can I contact Nate?" }
-      ]);
+      await displayHumanizedMessage(greetingText, 'bot', greeting.suggestions);
+
+      // Optional follow-up message
+      const followUp = lumoAI.getFollowUp(greeting.followUpId);
+      if (followUp) {
+        await sleep(followUp.delay);
+        await displayHumanizedMessage(followUp.text);
+      }
 
       setIsTyping(false);
     };
 
     startChat();
-  }, [displayHumanizedMessage]);
+  }, [displayHumanizedMessage, lumoAI]);
 
   const handleSend = useCallback(async (text: string) => {
     if (!text.trim() || isTyping) return;
@@ -120,16 +122,19 @@ const ChatBox: React.FC = () => {
     await sleep(600 + Math.random() * 500);
 
     try {
-      // Get response from SmartBot engine
-      const botResponse = smartBot.process(text);
-      await displayHumanizedMessage(botResponse.text, 'bot', botResponse.suggestions);
+      // Get response from LumoAI engine - Championship intelligence!
+      const aiResponse = lumoAI.generateResponse(text);
+      await displayHumanizedMessage(aiResponse.text, 'bot', aiResponse.suggestions);
+
+      // Track topic for conversation context
+      lumoAI.trackTopic(text);
     } catch (err) {
       console.error("AI Error:", err);
       await displayHumanizedMessage("My brain froze! 🥶 Can you say that again?");
     } finally {
       setIsTyping(false);
     }
-  }, [isTyping, smartBot, displayHumanizedMessage]);
+  }, [isTyping, lumoAI, displayHumanizedMessage]);
 
   // Handle email copy to clipboard
   const handleCopyEmail = async (email: string) => {

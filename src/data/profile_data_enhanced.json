@@ -1,0 +1,496 @@
+{
+    "meta": {
+        "version": "2.0",
+        "last_updated": "2025-12-11",
+        "data_type": "knowledge_graph",
+        "confidence_level": "high"
+    },
+    "identity": {
+        "full_name": {
+            "value": "Tanawitch Saentree",
+            "pronunciation": "Tah-nah-witch Sai-tree",
+            "nickname": "Nate",
+            "cultural_note": "Thai name",
+            "conversational_variants": [
+                "You can call me Nate for short!",
+                "I know it's a mouthful - it's a Thai name!",
+                "Friends call me Nate"
+            ],
+            "formality": {
+                "formal": "Tanawitch Saentree",
+                "casual": "Nate",
+                "friendly": "Nate"
+            }
+        },
+        "current_title": {
+            "value": "Lead Product Designer",
+            "seniority": "lead",
+            "industry": "healthtech",
+            "alternate_titles": [
+                "Product Design Lead",
+                "Senior Product Designer"
+            ]
+        },
+        "location": {
+            "city": "Bangkok",
+            "country": "Thailand",
+            "timezone": "GMT+7",
+            "remote_friendly": true
+        },
+        "availability": {
+            "status": "open",
+            "types": [
+                "full-time",
+                "contract",
+                "consulting"
+            ],
+            "preferences": "meaningful work with real impact"
+        }
+    },
+    "career_narrative": {
+        "headline": "8+ years designing health, finance, and productivity tools people actually rely on",
+        "elevator_pitch": "Product designer who cares about making things work well for real people and real problems. Currently leading design at Invitrace Health, previously built award-winning fintech apps.",
+        "unique_value": [
+            "Cross-industry expertise (health, finance, tech)",
+            "Design systems architect",
+            "Team leadership and mentorship",
+            "AI-curious and future-focused"
+        ],
+        "career_themes": {
+            "impact": "Building tools that solve real problems for real people",
+            "craftsmanship": "Deep care for quality, consistency, and thoughtful design",
+            "growth": "Always learning - lately deep into AI and how it changes design",
+            "collaboration": "Cross-functional leadership and team mentorship"
+        }
+    },
+    "experience": {
+        "summary": {
+            "total_years": "8+",
+            "industries": [
+                "healthcare",
+                "fintech",
+                "productivity"
+            ],
+            "company_count": 5,
+            "notable_achievements": [
+                "Led design teams",
+                "Built scalable design systems",
+                "Shipped award-winning products"
+            ]
+        },
+        "timeline": [
+            {
+                "id": "invitrace",
+                "company": {
+                    "name": "Invitrace",
+                    "industry": "healthtech",
+                    "url": "https://www.invitracehealth.com/"
+                },
+                "role": {
+                    "title": "Lead Product Designer",
+                    "level": "lead",
+                    "start": "2022-11",
+                    "end": "present",
+                    "duration_years": 2.1
+                },
+                "impact": {
+                    "headline": "Leading design at a health tech startup",
+                    "responsibilities": [
+                        "Manage team of designers",
+                        "Build scalable design systems",
+                        "Explore new technologies",
+                        "Shape user flows for seamless experiences"
+                    ],
+                    "skills_demonstrated": [
+                        "design_leadership",
+                        "design_systems",
+                        "team_management",
+                        "healthcare_ux"
+                    ]
+                },
+                "storytelling": {
+                    "short": "Leading design at Invitrace Health, building healthcare solutions that bring real value",
+                    "medium": "As Lead at Invitrace Health, I manage a design team, build scalable systems, and shape user flows for seamless healthcare experiences",
+                    "detailed": "As Lead Product Designer at Invitrace Health, I believe our solutions bring real value to healthcare. I manage a team of designers, build scalable design systems, explore new technologies, and shape user flows to create seamless experiences. I'm passionate about mentoring my team and driving meaningful impact through thoughtful design."
+                },
+                "conversational_hooks": [
+                    "Currently leading design in healthtech",
+                    "Building tools that help healthcare professionals",
+                    "Managing and mentoring a design team"
+                ]
+            },
+            {
+                "id": "cp_origin",
+                "company": {
+                    "name": "CP Origin",
+                    "industry": "productivity",
+                    "url": "https://www.cp-origin.com/"
+                },
+                "role": {
+                    "title": "Senior Product Designer",
+                    "level": "senior",
+                    "start": "2021-06",
+                    "end": "2022-10",
+                    "duration_years": 1.3
+                },
+                "impact": {
+                    "headline": "Full product lifecycle design - research to ship",
+                    "responsibilities": [
+                        "End-to-end product design",
+                        "User research and testing",
+                        "Information architecture (card sorting)",
+                        "Design system creation"
+                    ],
+                    "skills_demonstrated": [
+                        "user_research",
+                        "ia",
+                        "design_systems",
+                        "testing"
+                    ]
+                },
+                "storytelling": {
+                    "short": "Designed productivity tools from research through launch",
+                    "medium": "Led full design lifecycle - research, IA, wireframes, testing, and design system for mobile + web",
+                    "detailed": "Collaborated with multiple teams from start to finish, conducting research to create a seamless experience. Designed information architecture by conducting card sorting with users. Utilized user information to create wireframes and conduct testing with the target user personas. Defined a style guide, components, and colors to ensure consistency across both the mobile app and web app."
+                },
+                "conversational_hooks": [
+                    "Built design systems from scratch",
+                    "Ran card sorting with real users",
+                    "Full-stack designer (mobile + web)"
+                ]
+            },
+            {
+                "id": "doctoranywhere",
+                "company": {
+                    "name": "DoctorAnywhere",
+                    "industry": "healthtech",
+                    "url": "https://www.doctoranywhere.co.th/"
+                },
+                "role": {
+                    "title": "Senior UX/UI Designer",
+                    "level": "senior",
+                    "start": "2021-01",
+                    "end": "2021-05",
+                    "duration_months": 5
+                },
+                "impact": {
+                    "headline": "Rapid COVID vaccine passport design",
+                    "highlight": "Shipped critical public health tool under tight deadlines",
+                    "skills_demonstrated": [
+                        "rapid_prototyping",
+                        "healthcare_ux",
+                        "crisis_design"
+                    ]
+                },
+                "storytelling": {
+                    "short": "Rapidly shipped COVID vaccine passport during pandemic",
+                    "medium": "Designed and shipped COVID vaccine passport in record time to meet urgent public health needs",
+                    "detailed": "As a Senior UX/UI Designer at Doctor Anywhere, I was involved in a fast-paced project to design and ship a COVID vaccine passport. The focus was on rapid development and deployment to meet urgent public health needs."
+                },
+                "conversational_hooks": [
+                    "Worked on pandemic response tools",
+                    "Designed under extreme time pressure",
+                    "Public health impact work"
+                ]
+            },
+            {
+                "id": "codefin",
+                "company": {
+                    "name": "Codefin",
+                    "industry": "fintech",
+                    "url": "https://codefin.io/"
+                },
+                "role": {
+                    "title": "Senior Designer",
+                    "level": "senior",
+                    "start": "2020-08",
+                    "end": "2020-12",
+                    "duration_months": 5
+                },
+                "impact": {
+                    "headline": "Award-winning mutual fund app",
+                    "achievements": [
+                        "Awarded for customer experience in Asia"
+                    ],
+                    "highlight": "Designed fintech app recognized for excellence",
+                    "skills_demonstrated": [
+                        "fintech_ux",
+                        "customer_experience",
+                        "award_winning_design"
+                    ]
+                },
+                "storytelling": {
+                    "short": "Built award-winning mutual fund app",
+                    "medium": "Designed mutual fund application that won Asia customer experience award",
+                    "detailed": "As a Senior Designer at Codefin, a finance company, I was contracted to build a mutual fund application. This project was recognized for its excellence, receiving an award for customer experience in Asia."
+                },
+                "conversational_hooks": [
+                    "Award-winning fintech work",
+                    "Designed for financial services",
+                    "Customer experience excellence"
+                ]
+            },
+            {
+                "id": "peakaccount",
+                "company": {
+                    "name": "Peakaccount",
+                    "industry": "fintech",
+                    "url": "https://www.peakaccount.com/"
+                },
+                "role": {
+                    "title": "UX/UI Designer",
+                    "level": "mid",
+                    "start": "2018-11",
+                    "end": "2020-07",
+                    "duration_years": 1.7
+                },
+                "impact": {
+                    "headline": "Foundation years in UX/UI",
+                    "highlight": "Entered the real world of UX design in fintech",
+                    "skills_demonstrated": [
+                        "foundational_ux",
+                        "fintech_basics"
+                    ]
+                },
+                "storytelling": {
+                    "short": "Started UX career in financial sector",
+                    "medium": "Cut my teeth in UX/UI design working on financial tools",
+                    "detailed": "At Peakaccount, I began my journey as a UX/UI Designer, gaining hands-on experience in the financial industry. This role provided foundational knowledge and practical skills in designing user experiences and interfaces within a real-world business context."
+                },
+                "conversational_hooks": [
+                    "Where I started in UX",
+                    "Learned fintech from the ground up",
+                    "First real-world design job"
+                ]
+            }
+        ],
+        "patterns": {
+            "industry_rotation": [
+                "fintech",
+                "healthtech",
+                "productivity"
+            ],
+            "progression": [
+                "UX/UI Designer",
+                "Senior",
+                "Lead"
+            ],
+            "specializations": [
+                "design_systems",
+                "healthcare",
+                "finance",
+                "team_leadership"
+            ]
+        }
+    },
+    "skills": {
+        "categories": {
+            "research": {
+                "label": "User Research & Strategy",
+                "competencies": [
+                    {
+                        "name": "User Research",
+                        "proficiency": "expert",
+                        "description": "Deep insights through interviews, surveys, field studies, usability testing",
+                        "evidence": [
+                            "CP Origin card sorting",
+                            "Multiple user testing projects"
+                        ],
+                        "conversational_angle": "I love talking to users - it's where the best ideas come from"
+                    },
+                    {
+                        "name": "Problem Framing",
+                        "proficiency": "expert",
+                        "description": "Identifying real problems before ideation",
+                        "conversational_angle": "Half of good design is asking the right questions first"
+                    },
+                    {
+                        "name": "UX Strategy",
+                        "proficiency": "expert",
+                        "description": "Aligning UX with business objectives",
+                        "evidence": [
+                            "Lead role at Invitrace"
+                        ],
+                        "conversational_angle": "Design isn't just pretty - it's business strategy"
+                    }
+                ]
+            },
+            "design_craft": {
+                "label": "Design Execution",
+                "competencies": [
+                    {
+                        "name": "Information Architecture",
+                        "proficiency": "expert",
+                        "description": "Structuring content into clear hierarchies",
+                        "evidence": [
+                            "Card sorting at CP Origin"
+                        ],
+                        "conversational_angle": "Organization is invisible until it's broken"
+                    },
+                    {
+                        "name": "Interaction Design",
+                        "proficiency": "expert",
+                        "description": "User flows, microinteractions, system behavior",
+                        "conversational_angle": "The magic is in the details"
+                    },
+                    {
+                        "name": "Visual Design",
+                        "proficiency": "expert",
+                        "description": "High-quality UI with brand identity",
+                        "background": [
+                            "Photography degree"
+                        ],
+                        "conversational_angle": "Visual design is my first love - studied photography originally"
+                    },
+                    {
+                        "name": "Design Systems",
+                        "proficiency": "expert",
+                        "description": "Scalable, consistent design at speed",
+                        "evidence": [
+                            "Invitrace",
+                            "CP Origin systems"
+                        ],
+                        "conversational_angle": "I think in systems - not just screens"
+                    }
+                ]
+            },
+            "technical": {
+                "label": "Technical Skills",
+                "competencies": [
+                    {
+                        "name": "Prototyping",
+                        "proficiency": "advanced",
+                        "description": "Interactive prototypes for testing",
+                        "conversational_angle": "Show, don't tell - prototypes speak louder"
+                    },
+                    {
+                        "name": "Accessibility",
+                        "proficiency": "advanced",
+                        "description": "WCAG-compliant inclusive design",
+                        "conversational_angle": "Good design works for everyone"
+                    },
+                    {
+                        "name": "Data-Informed Design",
+                        "proficiency": "advanced",
+                        "description": "Analytics, A/B tests, heatmaps",
+                        "conversational_angle": "Data guides, intuition leads"
+                    }
+                ]
+            },
+            "leadership": {
+                "label": "Leadership & Collaboration",
+                "competencies": [
+                    {
+                        "name": "Design Leadership",
+                        "proficiency": "expert",
+                        "description": "Team guidance, mentorship, strategic influence",
+                        "evidence": [
+                            "Lead role managing team at Invitrace"
+                        ],
+                        "conversational_angle": "I love growing designers - their wins are my wins"
+                    },
+                    {
+                        "name": "Cross-functional Collaboration",
+                        "proficiency": "expert",
+                        "description": "Working with PMs, engineers, stakeholders",
+                        "conversational_angle": "Design is a team sport"
+                    },
+                    {
+                        "name": "Communication & Storytelling",
+                        "proficiency": "expert",
+                        "description": "Explaining rationale, building empathy",
+                        "conversational_angle": "If you can't explain it, you don't understand it"
+                    }
+                ]
+            }
+        },
+        "skill_relationships": {
+            "design_systems": {
+                "enables": [
+                    "faster_development",
+                    "consistency",
+                    "scalability"
+                ],
+                "requires": [
+                    "visual_design",
+                    "component_thinking",
+                    "documentation"
+                ],
+                "showcased_in": [
+                    "invitrace",
+                    "cp_origin"
+                ]
+            },
+            "user_research": {
+                "enables": [
+                    "problem_framing",
+                    "informed_decisions",
+                    "user_validation"
+                ],
+                "pairs_with": [
+                    "usability_testing",
+                    "data_analysis"
+                ],
+                "showcased_in": [
+                    "cp_origin",
+                    "multiple_companies"
+                ]
+            }
+        }
+    },
+    "contact": {
+        "primary": {
+            "method": "email",
+            "value": "tanawitchsaentree@gmail.com",
+            "response_time": "24-48 hours",
+            "conversational": "Best way to reach me is email"
+        },
+        "social": {
+            "linkedin": {
+                "url": "https://www.linkedin.com/in/tanawitchsaentree/",
+                "purpose": "professional_network",
+                "activity_level": "active"
+            },
+            "behance": {
+                "url": "https://www.behance.net/tanawitchsaentree",
+                "purpose": "portfolio",
+                "activity_level": "occasional"
+            },
+            "medium": {
+                "url": "https://medium.com/@thenutlpkl",
+                "purpose": "writing",
+                "activity_level": "occasional"
+            },
+            "github": {
+                "url": "https://github.com/tanawitchsaentree",
+                "purpose": "code_exploration",
+                "note": "Exploring code and AI lately"
+            }
+        }
+    },
+    "education": [
+        {
+            "id": "fanshawe",
+            "institution": "Fanshawe College - Canada",
+            "degree_type": "diploma",
+            "field": "Web development and Mobile application",
+            "start": "2022-01",
+            "end": "2023-12",
+            "location": "Canada",
+            "relevance": "Recent upskilling in technical development",
+            "conversational": "Recently studied web and mobile dev to understand implementation better"
+        },
+        {
+            "id": "rmutt",
+            "institution": "RMUTT - Thailand",
+            "degree_type": "bachelor",
+            "field": "Photography and Cinematography",
+            "start": "2009-08",
+            "end": "2013-05",
+            "location": "Thailand",
+            "credentials": "WES confirmed",
+            "relevance": "Visual foundation for design",
+            "conversational": "Started with photography - taught me to see composition and light"
+        }
+    ]
+}
