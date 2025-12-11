@@ -38,7 +38,7 @@
             "remote_friendly": true
         },
         "availability": {
-            "status": "open",
+            "status": "available",
             "types": [
                 "full-time",
                 "contract",
@@ -49,7 +49,7 @@
     },
     "career_narrative": {
         "headline": "8+ years designing health, finance, and productivity tools people actually rely on",
-        "elevator_pitch": "Product designer who cares about making things work well for real people and real problems. Currently leading design at Invitrace Health, previously built award-winning fintech apps.",
+        "elevator_pitch": "Product designer who cares about making things work well for real people and real problems. Most recently led design at Invitrace Health, built award-winning fintech apps.",
         "unique_value": [
             "Cross-industry expertise (health, finance, tech)",
             "Design systems architect",
@@ -90,8 +90,8 @@
                     "title": "Lead Product Designer",
                     "level": "lead",
                     "start": "2022-11",
-                    "end": "present",
-                    "duration_years": 2.1
+                    "end": "2025-08",
+                    "duration_years": 2.75
                 },
                 "impact": {
                     "headline": "Leading design at a health tech startup",
@@ -109,14 +109,14 @@
                     ]
                 },
                 "storytelling": {
-                    "short": "Leading design at Invitrace Health, building healthcare solutions that bring real value",
-                    "medium": "As Lead at Invitrace Health, I manage a design team, build scalable systems, and shape user flows for seamless healthcare experiences",
-                    "detailed": "As Lead Product Designer at Invitrace Health, I believe our solutions bring real value to healthcare. I manage a team of designers, build scalable design systems, explore new technologies, and shape user flows to create seamless experiences. I'm passionate about mentoring my team and driving meaningful impact through thoughtful design."
+                    "short": "Led design at Invitrace Health, built healthcare solutions that brought real value",
+                    "medium": "As Lead at Invitrace Health, I managed a design team, built scalable systems, and shaped user flows for seamless healthcare experiences",
+                    "detailed": "As Lead Product Designer at Invitrace Health, I led the design team to build healthcare solutions that bring real value. I built scalable design systems, explored new technologies, and shaped user flows to create seamless experiences. I'm passionate about mentoring teams and driving meaningful impact through thoughtful design."
                 },
                 "conversational_hooks": [
-                    "Currently leading design in healthtech",
-                    "Building tools that help healthcare professionals",
-                    "Managing and mentoring a design team"
+                    "Previously led design in healthtech",
+                    "Built tools that help healthcare professionals",
+                    "Managed and mentored a design team"
                 ]
             },
             {
