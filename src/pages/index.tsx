@@ -167,13 +167,12 @@ function TabExperienceSection() {
   const [activeTab, setActiveTab] = useState<'work' | 'education'>('work');
 
   return (
-    <div className="w-full" style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 'var(--space-4)',
-    }}>
+    <div className="w-full flex flex-col" style={{ alignItems: 'flex-start' }}>
       {/* Tab Headers */}
-      <div style={{ display: 'flex' }}>
+      <div style={{
+        display: 'flex',
+        marginBottom: 'var(--space-4)',
+      }}>
         <TabButton
           active={activeTab === 'work'}
           onClick={() => setActiveTab('work')}
@@ -189,11 +188,15 @@ function TabExperienceSection() {
       </div>
 
       {/* Tab Content */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--space-3)',
-      }}>
+      <div
+        className="flex flex-col"
+        style={{
+          gap: 'var(--space-3)',
+          width: '100%',
+          minHeight: '200px',
+          alignItems: 'flex-start',
+        }}
+      >
         {activeTab === 'work' ? <WorkExperienceList /> : <EducationList />}
       </div>
     </div>
@@ -202,14 +205,6 @@ function TabExperienceSection() {
 
 function SocialIcon({ href, children }: { href: string; children: React.ReactNode }) {
   const [showTooltip, setShowTooltip] = useState(false);
-
-  // Get clean label instead of showing full URL
-  const getLabel = () => {
-    if (href.includes('linkedin')) return 'LinkedIn';
-    if (href.includes('medium')) return 'Medium';
-    if (href.includes('behance')) return 'Behance';
-    return 'Social';
-  };
 
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -228,17 +223,20 @@ function SocialIcon({ href, children }: { href: string; children: React.ReactNod
         }}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        aria-label={getLabel()}
+        aria-label={
+          href.includes('linkedin') ? 'LinkedIn' :
+            href.includes('medium') ? 'Medium' :
+              href.includes('behance') ? 'Behance' : 'Social'
+        }
       >
         {children}
       </a>
       {showTooltip && (
         <div style={{
           position: 'absolute',
-          bottom: '100%',
+          top: 'calc(-1 * var(--space-8))',
           left: '50%',
-          transform: 'translateX(-50%)',
-          marginBottom: 'var(--space-2)',
+          transform: 'translateX(-50%) translateY(-100%)',
           backgroundColor: 'var(--foreground)',
           color: 'var(--background)',
           padding: 'var(--space-1) var(--space-2)',
@@ -248,10 +246,10 @@ function SocialIcon({ href, children }: { href: string; children: React.ReactNod
           zIndex: 1000,
           pointerEvents: 'none',
         }}>
-          {getLabel()}
+          {href}
           <div style={{
             position: 'absolute',
-            top: '100%',
+            bottom: 'calc(-1 * var(--space-1))',
             left: '50%',
             transform: 'translateX(-50%)',
             width: 0,
@@ -362,19 +360,26 @@ export default function Index() {
       minHeight: '100%',
       boxSizing: 'border-box',
     }}>
-      <ProfileHeader />
-      <div style={{ height: 'var(--space-8)' }} />
+      {/* Section 1: Profile + Title */}
+      <div style={{ marginBottom: 'var(--space-8)' }}>
+        <ProfileHeader />
+      </div>
 
-      <BioSection />
-      <div style={{ height: 'var(--space-8)' }} />
+      {/* Section 2: Bio/Summary */}
+      <div style={{ marginBottom: 'var(--space-8)' }}>
+        <BioSection />
+      </div>
 
-      <TabExperienceSection />
-      <div style={{ height: 'var(--space-8)' }} />
+      {/* Section 3: Previously + Education (with tabs and listing) */}
+      <div style={{ marginBottom: 'var(--space-8)' }}>
+        <TabExperienceSection />
+      </div>
 
+      {/* Section 4: Email + Social Icons */}
       <ContactSection />
-      <div style={{ height: 'var(--space-4)' }} />
-
-      <SocialLinks />
+      <div style={{ marginTop: 'var(--space-4)' }}>
+        <SocialLinks />
+      </div>
     </div>
   );
 }
