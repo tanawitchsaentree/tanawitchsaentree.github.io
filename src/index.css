@@ -338,9 +338,8 @@
 .chatbox-container {
   display: flex;
   flex-direction: column;
-  height: auto;
-  max-height: 90vh;
-  /* Viewport-aware max height to prevent overflow */
+  height: min(700px, 85vh);
+  /* Fixed 700px on large screens, scales to 85vh on small screens */
   width: 600px;
   /* Fixed width - no shrinking to content */
   margin: 0;
