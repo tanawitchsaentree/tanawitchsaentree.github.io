@@ -193,6 +193,7 @@ function TabExperienceSection() {
         style={{
           gap: 'var(--space-3)',
           width: '100%',
+          minHeight: '400px',
           alignItems: 'flex-start',
         }}
       >
@@ -370,7 +371,7 @@ export default function Index() {
       </div>
 
       {/* Section 3: Previously + Education (with tabs and listing) */}
-      <div style={{ marginBottom: 'var(--space-8)', minHeight: '400px' }}>
+      <div style={{ marginBottom: 'var(--space-8)' }}>
         <TabExperienceSection />
       </div>
 
