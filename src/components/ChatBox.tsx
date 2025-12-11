@@ -265,7 +265,7 @@ const ChatBox: React.FC = () => {
             <input
               type="text"
               className="chatbox-input"
-              style={{ padding: '8px 0', fontSize: '14px' }}
+              style={{ fontSize: '14px' }}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask Lumo..."
