@@ -361,6 +361,8 @@
   flex-direction: column;
   justify-content: flex-end;
   min-height: 0;
+  max-height: 600px;
+  overflow-y: auto;
   gap: var(--space-2);
 }
 
@@ -401,7 +403,7 @@
   color: var(--foreground);
   font-family: inherit;
   font-size: var(--font-size);
-  padding: var(--space-2) 0;
+  padding: var(--space-2) var(--space-3);
   transition: all 0.2s ease;
 }
 
@@ -409,7 +411,6 @@
 .chatbox-input:focus {
   background: var(--muted);
   border-radius: var(--radius);
-  padding: var(--space-2) var(--space-3);
 }
 
 /* Animations */
