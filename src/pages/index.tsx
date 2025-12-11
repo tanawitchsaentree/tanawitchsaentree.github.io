@@ -193,7 +193,6 @@ function TabExperienceSection() {
         style={{
           gap: 'var(--space-3)',
           width: '100%',
-          minHeight: '400px',
           alignItems: 'flex-start',
         }}
       >
@@ -360,15 +359,24 @@ export default function Index() {
       minHeight: '100%',
       boxSizing: 'border-box',
     }}>
-      <ProfileHeader />
-      <div style={{ marginBottom: '2rem' }}>
+      {/* Section 1: Profile + Title */}
+      <div style={{ marginBottom: 'var(--space-8)' }}>
+        <ProfileHeader />
+      </div>
+
+      {/* Section 2: Bio/Summary */}
+      <div style={{ marginBottom: 'var(--space-8)' }}>
         <BioSection />
       </div>
-      <div style={{ marginBottom: '2rem' }}>
+
+      {/* Section 3: Previously + Education (with tabs and listing) */}
+      <div style={{ marginBottom: 'var(--space-8)' }}>
         <TabExperienceSection />
       </div>
+
+      {/* Section 4: Email + Social Icons */}
       <ContactSection />
-      <div style={{ marginTop: '1rem' }}>
+      <div style={{ marginTop: 'var(--space-4)' }}>
         <SocialLinks />
       </div>
     </div>
