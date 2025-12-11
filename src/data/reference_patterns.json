@@ -1,0 +1,170 @@
+{
+    "version": "1.0",
+    "system_name": "Reference Resolution & Follow-Up Detection",
+    "reference_patterns": {
+        "pronouns": {
+            "subject_references": [
+                "it",
+                "that",
+                "this",
+                "these",
+                "those",
+                "them"
+            ],
+            "patterns": [
+                "^(tell me |what about |more about )?(it|that|this)$",
+                "^(and |what about )?(it|that|this|these|those)\\??$"
+            ]
+        },
+        "follow_up_more": {
+            "phrases": [
+                "tell me more",
+                "more details",
+                "elaborate",
+                "go on",
+                "continue",
+                "keep going",
+                "more about that",
+                "tell me about that",
+                "what else",
+                "anything else"
+            ],
+            "patterns": [
+                "^(tell me )?more( about (it|that|this))?$",
+                "^(can you )?(elaborate|continue|go on)$",
+                "^what else",
+                "^(any|anything) else"
+            ]
+        },
+        "follow_up_previous": {
+            "phrases": [
+                "before that",
+                "what was before",
+                "and before",
+                "previous",
+                "prior to that",
+                "earlier"
+            ],
+            "patterns": [
+                "^(what was |and )?before( that)?$",
+                "^(what about |tell me about )?(the )?previous",
+                "^(what did he do )?earlier"
+            ]
+        },
+        "follow_up_next": {
+            "phrases": [
+                "after that",
+                "what happened next",
+                "and then",
+                "next",
+                "what's next",
+                "then what"
+            ],
+            "patterns": [
+                "^(what happened |and )?then",
+                "^(after|next)( that)?$",
+                "^what'?s next"
+            ]
+        },
+        "context_switch": {
+            "phrases": [
+                "what about",
+                "how about",
+                "tell me about"
+            ],
+            "patterns": [
+                "^(what|how) about (.+)$",
+                "^(tell me|what) (about|of) (.+)$"
+            ],
+            "extract_topic": true
+        }
+    },
+    "resolution_rules": {
+        "reference_types": {
+            "last_topic": {
+                "triggers": [
+                    "it",
+                    "that",
+                    "this",
+                    "tell me more"
+                ],
+                "resolve_to": "last_topic",
+                "action": "expand_on_last_response"
+            },
+            "last_entity": {
+                "triggers": [
+                    "there",
+                    "that place",
+                    "that company"
+                ],
+                "resolve_to": "last_company_entity",
+                "action": "query_specific_entity"
+            },
+            "chronological_previous": {
+                "triggers": [
+                    "before that",
+                    "previous",
+                    "earlier"
+                ],
+                "resolve_to": "previous_timeline_item",
+                "action": "navigate_backward"
+            },
+            "chronological_next": {
+                "triggers": [
+                    "after that",
+                    "next",
+                    "then"
+                ],
+                "resolve_to": "next_timeline_item",
+                "action": "navigate_forward"
+            }
+        }
+    },
+    "context_tracking": {
+        "max_history_turns": 10,
+        "reference_window_turns": 3,
+        "trackable_entities": [
+            "company_name",
+            "skill_name",
+            "time_period",
+            "role_title"
+        ],
+        "trackable_topics": [
+            "experience",
+            "skills",
+            "contact",
+            "company_specific",
+            "skill_specific",
+            "surprise",
+            "quick_summary",
+            "deep_dive"
+        ]
+    },
+    "follow_up_responses": {
+        "more_details_intros": [
+            "Let me dive deeper into that...",
+            "Here's more detail on that:",
+            "Great question - let me expand on that:",
+            "Absolutely, here's the full story:",
+            "Sure thing! More about that:"
+        ],
+        "chronological_previous": [
+            "Before that, he was at",
+            "Prior to that, Nate worked at",
+            "Going back, he spent time at",
+            "Earlier in his career, he was at"
+        ],
+        "chronological_next": [
+            "After that, he moved to",
+            "Following that, he joined",
+            "Next up was",
+            "Then he went to"
+        ],
+        "context_switch": [
+            "Switching gears -",
+            "Let's talk about",
+            "Good question about",
+            "Ah yes,"
+        ]
+    }
+}

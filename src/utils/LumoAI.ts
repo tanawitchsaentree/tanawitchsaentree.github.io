@@ -8,7 +8,7 @@ import greetingSystem from '../data/greeting_system.json';
 import conversationFlows from '../data/conversation_flows.json';
 import suggestionEngine from '../data/suggestion_engine.json';
 import { IntentClassifier } from './IntentClassifier';
-import { EntityExtractor } from './EntityExtractor';
+import { EntityExtractor, type ExtractedEntity } from './EntityExtractor';
 
 // Types
 interface Suggestion {
@@ -17,12 +17,26 @@ interface Suggestion {
     icon?: string;
 }
 
+interface ConversationTurn {
+    userQuery: string;
+    intent: string;
+    entities: ExtractedEntity[];
+    response: string;
+    timestamp: number;
+}
+
 interface ConversationState {
     topicsDiscussed: string[];
     userType: string | null;
     responseLength: 'short' | 'medium' | 'detailed';
     emojiLevel: 'low' | 'medium' | 'high';
     conversationDepth: number;
+    // Phase 2: Conversation memory
+    conversationHistory: ConversationTurn[];
+    lastIntent: string | null;
+    lastEntities: ExtractedEntity[];
+    lastTopic: string | null;
+    lastResponse: string | null;
 }
 
 export class LumoAI {
@@ -31,7 +45,13 @@ export class LumoAI {
         userType: null,
         responseLength: 'medium',
         emojiLevel: 'medium',
-        conversationDepth: 0
+        conversationDepth: 0,
+        // Phase 2: Initialize conversation memory
+        conversationHistory: [],
+        lastIntent: null,
+        lastEntities: [],
+        lastTopic: null,
+        lastResponse: null
     };
 
     // Advanced AI components
