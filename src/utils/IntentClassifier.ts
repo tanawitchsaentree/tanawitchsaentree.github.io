@@ -133,10 +133,15 @@ export class IntentClassifier {
             return true;
         }
 
-        // Fuzzy match
+        // Fuzzy match with LOWER threshold for better typo tolerance
         const words = query.split(/\s+/);
         for (const word of words) {
-            if (this.fuzzyMatcher.matches(word, keyword, 0.8)) {
+            // More forgiving threshold: 0.65 instead of 0.8
+            if (this.fuzzyMatcher.matches(word, keyword, 0.65)) {
+                return true;
+            }
+            // Also check if keyword contains the word (partial match)
+            if (keyword.toLowerCase().includes(word.toLowerCase()) && word.length >= 3) {
                 return true;
             }
         }
