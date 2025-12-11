@@ -40,11 +40,11 @@
   animation: theme-swipe 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark mode toggle */
+/* Dark mode toggle - Inline in profile header */
 .dark-mode-toggle {
   position: static;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--background);
@@ -56,78 +56,11 @@
   transition: all 0.2s;
   z-index: 10;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .dark-mode-toggle:hover {
   transform: scale(1.1);
   border-color: var(--foreground);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* X-ray mode toggle */
-.xray-toggle {
-  position: static;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--background);
-  color: var(--foreground);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.xray-toggle.active {
-  background: var(--muted);
-  /* customized active bg if needed */
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.xray-toggle:hover {
-  transform: scale(1.1);
-  border-color: var(--foreground);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* X-ray overlay system */
-.xray-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 999;
-  overflow: hidden;
-}
-
-.xray-section {
-  position: absolute;
-  border: 1px solid red;
-  background: transparent;
-  box-sizing: border-box;
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-
-.xray-label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  gap: 4px;
-  background: red;
-  color: white;
-  padding: 1px 4px;
-  font-size: 10px;
-  font-family: monospace;
-  line-height: 1;
-  pointer-events: none;
-}
-
-.xray-label-value {
-  font-weight: bold;
 }

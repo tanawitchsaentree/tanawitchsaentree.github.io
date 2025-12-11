@@ -3,7 +3,7 @@ import { ArrowUpRight, Copy, Check } from 'lucide-react';
 import nateProfile from '../image/nateprofile.png';
 import profileData from '../../profile_data.json';
 
-function ProfileHeader() {
+function ProfileHeader({ DarkModeToggle }: { DarkModeToggle: () => JSX.Element }) {
   return (
     <div className="profile-header" style={{
       display: 'flex',
@@ -33,21 +33,29 @@ function ProfileHeader() {
         flexDirection: 'column',
         justifyContent: 'center',
         height: '62px',
+        flex: 1,
       }}>
-        <h2 style={{
-          fontSize: 'var(--text-lg)',
-          fontWeight: 600,
-          margin: 0,
-          lineHeight: '1.2',
-          marginBottom: 'var(--space-1)',
+        <div className="profile-title-row" style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--space-3)',
         }}>
-          Hey, I'm Nate
-        </h2>
+          <h2 style={{
+            fontSize: 'var(--text-lg)',
+            fontWeight: 600,
+            margin: 0,
+            lineHeight: '1.2',
+          }}>
+            Hey, I'm Nate
+          </h2>
+          <DarkModeToggle />
+        </div>
         <p style={{
           fontSize: 'var(--text-lg)',
           margin: 0,
           lineHeight: '1.2',
           color: 'var(--muted-foreground)',
+          marginTop: 'var(--space-1)',
         }}>
           Product Designer
         </p>
@@ -349,7 +357,7 @@ function ContactSection() {
   );
 }
 
-export default function Index() {
+export default function Index({ DarkModeToggle }: { DarkModeToggle: () => JSX.Element }) {
   return (
     <div style={{
       display: 'flex',
@@ -362,7 +370,7 @@ export default function Index() {
     }}>
       {/* Section 1: Profile + Title */}
       <div style={{ marginBottom: 'var(--space-8)' }}>
-        <ProfileHeader />
+        <ProfileHeader DarkModeToggle={DarkModeToggle} />
       </div>
 
       {/* Section 2: Bio/Summary */}

@@ -172,12 +172,12 @@
   box-sizing: border-box;
 }
 
-/* 2. Desktop Style (Switches to 3 Columns on large screens) */
+/* 2. Desktop Style (Switches to 2 Columns on large screens) */
 @media (min-width: 1024px) {
   .main-content {
     display: grid;
-    grid-template-columns: minmax(300px, 1fr) minmax(400px, 1.2fr) auto;
-    /* Profile ~40%, Chat ~50%, Sidebar ~10% */
+    grid-template-columns: 2fr 3fr;
+    /* Profile ~40%, Chat ~60% for balanced visual weight */
     gap: var(--space-8);
     padding: var(--space-8);
     align-items: start;
@@ -418,42 +418,4 @@
 
 .animate-fade-in-up {
   animation: fadeInUp 0.3s ease-out forwards;
-}
-
-/* Sidebar Section - Vertical Controls */
-.sidebar-section {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  padding: var(--space-4);
-  width: 100%;
-}
-
-.theme-controls {
-  display: flex;
-  flex-direction: row;
-  gap: var(--space-3);
-}
-
-/* Desktop: Vertical Sidebar */
-@media (min-width: 1024px) {
-  .sidebar-section {
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 0;
-    /* Align with other sections at top */
-    min-width: 56px;
-    /* Roughly button size + small padding */
-    max-width: 60px;
-    /* Compact sidebar for icon buttons */
-  }
-
-  .theme-controls {
-    flex-direction: column;
-    gap: var(--space-4);
-    position: sticky;
-    top: var(--space-8);
-  }
 }
