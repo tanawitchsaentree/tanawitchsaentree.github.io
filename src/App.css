@@ -42,9 +42,7 @@
 
 /* Dark mode toggle */
 .dark-mode-toggle {
-  position: fixed;
-  top: var(--space-6);
-  right: var(--space-8);
+  position: static;
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
@@ -56,8 +54,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  z-index: 10001;
-  /* Ensure above transition overlay */
+  z-index: 10;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -69,10 +66,7 @@
 
 /* X-ray mode toggle */
 .xray-toggle {
-  position: fixed;
-  top: var(--space-6);
-  right: calc(var(--space-8) + 48px);
-  /* Space for dark mode toggle */
+  position: static;
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
@@ -84,8 +78,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  z-index: 10001;
-  /* Ensure above transition overlay */
+  z-index: 10;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 

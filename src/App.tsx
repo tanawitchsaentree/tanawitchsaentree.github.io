@@ -45,23 +45,28 @@ export default function App() {
 
   return (
     <div className="app">
-      <DarkModeToggle />
-      <XRayToggle active={xrayMode} onToggle={() => setXrayMode(!xrayMode)} />
-
       {xrayMode && <XRayOverlay />}
 
       <main className="main-content">
-        {/* Profile Content */}
+        {/* 1. Profile Section - Left */}
         <section className="profile-section">
           <div className="profile-container">
             <Index />
           </div>
         </section>
 
-        {/* Chat Interface */}
+        {/* 2. Chat Section - Middle */}
         <section className="chat-section">
           <div className="chat-container">
             <ChatBox />
+          </div>
+        </section>
+
+        {/* 3. Sidebar Section - Right */}
+        <section className="sidebar-section">
+          <div className="theme-controls">
+            <XRayToggle active={xrayMode} onToggle={() => setXrayMode(!xrayMode)} />
+            <DarkModeToggle />
           </div>
         </section>
       </main>
