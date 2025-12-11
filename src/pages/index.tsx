@@ -370,7 +370,7 @@ export default function Index() {
       </div>
 
       {/* Section 3: Previously + Education (with tabs and listing) */}
-      <div style={{ marginBottom: 'var(--space-8)' }}>
+      <div style={{ marginBottom: 'var(--space-8)', minHeight: '400px' }}>
         <TabExperienceSection />
       </div>
 
