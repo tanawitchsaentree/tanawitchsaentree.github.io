@@ -340,9 +340,8 @@
   flex-direction: column;
   height: auto;
   min-height: 100%;
-  width: 100%;
-  max-width: 600px;
-  /* Fixed width - prevents expansion */
+  width: 600px;
+  /* Fixed width - no shrinking to content */
   margin: 0;
   /* Left-align instead of center */
   background: transparent;
