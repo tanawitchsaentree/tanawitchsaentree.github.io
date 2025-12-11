@@ -22,12 +22,21 @@
   "career_outlook": "I'm open for any role that is meaningful and can make an impact.",
   "education": [
     {
-      "institution": "Chulalongkorn University",
-      "degree": "Bachelor of Fine Arts",
-      "field": "Visual Communication Design",
-      "start_date": "2014-08-01",
-      "end_date": "2018-05-01",
-      "location": "Bangkok, Thailand"
+      "institution": "Fanshawe College - Canada",
+      "degree": "Diploma",
+      "field": "Web development and Mobile application",
+      "start_date": "2022-01-01",
+      "end_date": "2023-12-01",
+      "location": "Canada"
+    },
+    {
+      "institution": "RMUTT - Thailand",
+      "degree": "Bachelor's degree",
+      "field": "Photography and Cinematography",
+      "start_date": "2009-08-01",
+      "end_date": "2013-05-01",
+      "location": "Thailand",
+      "notes": "WES confirms"
     }
   ],
   "work_experience": [
