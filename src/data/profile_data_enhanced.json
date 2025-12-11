@@ -23,12 +23,13 @@
             }
         },
         "current_title": {
-            "value": "Lead Product Designer",
-            "seniority": "lead",
-            "industry": "healthtech",
+            "value": "Senior Designer",
+            "seniority": "senior",
+            "industry": "insurance_tech",
+            "company": "Allianz Technology Thailand",
             "alternate_titles": [
-                "Product Design Lead",
-                "Senior Product Designer"
+                "Senior Product Designer",
+                "Senior UX/UI Designer"
             ]
         },
         "location": {
@@ -38,18 +39,17 @@
             "remote_friendly": true
         },
         "availability": {
-            "status": "available",
+            "status": "employed",
             "types": [
-                "full-time",
-                "contract",
-                "consulting"
+                "full-time"
             ],
-            "preferences": "meaningful work with real impact"
+            "preferences": "meaningful work with real impact",
+            "open_to": "interesting opportunities"
         }
     },
     "career_narrative": {
-        "headline": "8+ years designing health, finance, and productivity tools people actually rely on",
-        "elevator_pitch": "Product designer who cares about making things work well for real people and real problems. Most recently led design at Invitrace Health, built award-winning fintech apps.",
+        "headline": "8+ years designing health, finance, insurance tech, and productivity tools people actually rely on",
+        "elevator_pitch": "Product designer who cares about making things work well for real people and real problems. Currently Senior Designer at Allianz Technology Thailand. Previously led design at Invitrace Health and built award-winning fintech apps.",
         "unique_value": [
             "Cross-industry expertise (health, finance, tech)",
             "Design systems architect",
@@ -79,6 +79,44 @@
             ]
         },
         "timeline": [
+            {
+                "id": "allianz",
+                "company": {
+                    "name": "Allianz Technology Thailand",
+                    "industry": "insurance_tech",
+                    "url": "https://www.allianz.com/"
+                },
+                "role": {
+                    "title": "Senior Designer",
+                    "level": "senior",
+                    "start": "2025-09",
+                    "end": "present",
+                    "duration_months": 3
+                },
+                "impact": {
+                    "headline": "Designing insurance tech solutions",
+                    "responsibilities": [
+                        "Design insurance technology products",
+                        "Create user-centered solutions",
+                        "Collaborate with cross-functional teams"
+                    ],
+                    "skills_demonstrated": [
+                        "insurance_tech_ux",
+                        "enterprise_design",
+                        "design_systems"
+                    ]
+                },
+                "storytelling": {
+                    "short": "Currently designing insurance tech at Allianz Technology Thailand",
+                    "medium": "As Senior Designer at Allianz Technology Thailand, I'm designing insurance technology solutions that serve real users",
+                    "detailed": "As Senior Designer at Allianz Technology Thailand, I'm focused on creating user-centered insurance technology products. I collaborate with cross-functional teams to design solutions that make insurance more accessible and easier to use."
+                },
+                "conversational_hooks": [
+                    "Currently at Allianz Technology Thailand",
+                    "Working on insurance tech solutions",
+                    "Designing for enterprise insurance platform"
+                ]
+            },
             {
                 "id": "invitrace",
                 "company": {
