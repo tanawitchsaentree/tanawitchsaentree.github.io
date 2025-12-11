@@ -402,6 +402,14 @@
   font-family: inherit;
   font-size: var(--font-size);
   padding: var(--space-2) 0;
+  transition: all 0.2s ease;
+}
+
+.chatbox-input:hover,
+.chatbox-input:focus {
+  background: var(--muted);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
 }
 
 /* Animations */
