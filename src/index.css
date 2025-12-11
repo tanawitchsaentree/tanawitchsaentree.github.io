@@ -442,9 +442,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-top: var(--space-8);
-    min-width: 80px;
-    max-width: 120px;
+    padding-top: 0;
+    /* Align with other sections at top */
+    min-width: 56px;
+    /* Roughly button size + small padding */
+    max-width: 60px;
+    /* Compact sidebar for icon buttons */
   }
 
   .theme-controls {
