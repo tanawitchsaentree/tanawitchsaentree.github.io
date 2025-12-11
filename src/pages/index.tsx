@@ -203,6 +203,14 @@ function TabExperienceSection() {
 function SocialIcon({ href, children }: { href: string; children: React.ReactNode }) {
   const [showTooltip, setShowTooltip] = useState(false);
 
+  // Get clean label instead of showing full URL
+  const getLabel = () => {
+    if (href.includes('linkedin')) return 'LinkedIn';
+    if (href.includes('medium')) return 'Medium';
+    if (href.includes('behance')) return 'Behance';
+    return 'Social';
+  };
+
   return (
     <div style={{ position: 'relative', display: 'inline-block' }}>
       <a
@@ -220,20 +228,17 @@ function SocialIcon({ href, children }: { href: string; children: React.ReactNod
         }}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        aria-label={
-          href.includes('linkedin') ? 'LinkedIn' :
-            href.includes('medium') ? 'Medium' :
-              href.includes('behance') ? 'Behance' : 'Social'
-        }
+        aria-label={getLabel()}
       >
         {children}
       </a>
       {showTooltip && (
         <div style={{
           position: 'absolute',
-          top: 'calc(-1 * var(--space-8))',
+          bottom: '100%',
           left: '50%',
-          transform: 'translateX(-50%) translateY(-100%)',
+          transform: 'translateX(-50%)',
+          marginBottom: 'var(--space-2)',
           backgroundColor: 'var(--foreground)',
           color: 'var(--background)',
           padding: 'var(--space-1) var(--space-2)',
@@ -243,10 +248,10 @@ function SocialIcon({ href, children }: { href: string; children: React.ReactNod
           zIndex: 1000,
           pointerEvents: 'none',
         }}>
-          {href}
+          {getLabel()}
           <div style={{
             position: 'absolute',
-            bottom: 'calc(-1 * var(--space-1))',
+            top: '100%',
             left: '50%',
             transform: 'translateX(-50%)',
             width: 0,
