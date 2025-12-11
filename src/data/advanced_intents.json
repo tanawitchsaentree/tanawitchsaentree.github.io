@@ -1,0 +1,368 @@
+{
+    "version": "2.0",
+    "system_name": "Advanced Intent Classification",
+    "intents": {
+        "experience_query": {
+            "id": "experience_query",
+            "priority": "high",
+            "confidence_threshold": 0.6,
+            "primary_keywords": [
+                "experience",
+                "work",
+                "job",
+                "career",
+                "history",
+                "background"
+            ],
+            "secondary_keywords": [
+                "worked",
+                "employed",
+                "position",
+                "role",
+                "companies"
+            ],
+            "synonyms": {
+                "experience": [
+                    "background",
+                    "history",
+                    "track record",
+                    "resume",
+                    "cv"
+                ],
+                "work": [
+                    "job",
+                    "employment",
+                    "position",
+                    "career",
+                    "profession"
+                ],
+                "job": [
+                    "role",
+                    "position",
+                    "employment",
+                    "occupation"
+                ]
+            },
+            "semantic_patterns": [
+                "tell me about {his|your|nate's|their} {work|career|job|experience|background}",
+                "what {did|does|has} {he|nate|you} {do|work|worked} {at|for|in}",
+                "where {has|did} {he|nate|you} {work|worked}",
+                "{show|give} me {his|your|the} {experience|work history|background}",
+                "what's {his|your|nate's} professional {background|experience}",
+                "companies {he|nate|you} worked {at|for}"
+            ],
+            "context_boosters": {
+                "after_greeting": 1.3,
+                "after_skills": 1.2,
+                "recruiter_user": 1.5
+            },
+            "negative_keywords": [
+                "not",
+                "don't",
+                "never"
+            ],
+            "entity_hints": [
+                "company_name",
+                "time_period"
+            ]
+        },
+        "skills_query": {
+            "id": "skills_query",
+            "priority": "high",
+            "confidence_threshold": 0.6,
+            "primary_keywords": [
+                "skill",
+                "skills",
+                "competenc",
+                "ability",
+                "expertise",
+                "can"
+            ],
+            "secondary_keywords": [
+                "good at",
+                "knows",
+                "proficient",
+                "expert",
+                "experienced in"
+            ],
+            "synonyms": {
+                "skills": [
+                    "abilities",
+                    "competencies",
+                    "expertise",
+                    "proficiencies",
+                    "capabilities"
+                ],
+                "good at": [
+                    "skilled in",
+                    "expert in",
+                    "proficient in",
+                    "knows"
+                ]
+            },
+            "semantic_patterns": [
+                "what {are|is} {his|your|nate's} {skills|abilities|expertise}",
+                "{is he|are you|is nate} good at {skill}",
+                "{does he|do you|does nate} know {skill}",
+                "what can {he|you|nate} do",
+                "{show|tell} me {his|your} {skills|competencies|abilities}",
+                "what {is he|are you|is nate} {skilled|proficient|experienced} in"
+            ],
+            "context_boosters": {
+                "after_experience": 1.4,
+                "peer_user": 1.3
+            },
+            "entity_hints": [
+                "skill_name"
+            ]
+        },
+        "contact_query": {
+            "id": "contact_query",
+            "priority": "high",
+            "confidence_threshold": 0.7,
+            "primary_keywords": [
+                "contact",
+                "email",
+                "reach",
+                "connect",
+                "linkedin",
+                "message"
+            ],
+            "secondary_keywords": [
+                "get in touch",
+                "talk to",
+                "speak with",
+                "meet"
+            ],
+            "synonyms": {
+                "contact": [
+                    "reach",
+                    "get in touch",
+                    "connect with",
+                    "message"
+                ],
+                "email": [
+                    "mail",
+                    "send email",
+                    "e-mail"
+                ]
+            },
+            "semantic_patterns": [
+                "how {can|do} I {contact|reach|message|email} {him|you|nate}",
+                "what's {his|your|nate's} {email|contact|linkedin}",
+                "how to {get in touch|connect|reach out}",
+                "{give|show} me {his|your|the} contact {info|information|details}",
+                "I want to {hire|talk to|reach|contact} {him|you|nate}"
+            ],
+            "context_boosters": {
+                "recruiter_user": 2.0,
+                "after_experience": 1.5,
+                "after_skills": 1.3
+            },
+            "entity_hints": [
+                "contact_method"
+            ]
+        },
+        "company_specific": {
+            "id": "company_specific",
+            "priority": "medium",
+            "confidence_threshold": 0.65,
+            "primary_keywords": [
+                "allianz",
+                "invitrace",
+                "codefin",
+                "doctoranywhere",
+                "peakaccount",
+                "cp origin"
+            ],
+            "secondary_keywords": [
+                "at",
+                "worked at",
+                "time at",
+                "experience at"
+            ],
+            "semantic_patterns": [
+                "{tell|what} {about|was} {his|your|nate's} {time|work|experience|role} at {company}",
+                "what did {he|you|nate} do at {company}",
+                "{company} {experience|work|role|position}"
+            ],
+            "context_boosters": {
+                "after_experience": 1.5
+            },
+            "entity_hints": [
+                "company_name",
+                "role",
+                "time_period"
+            ]
+        },
+        "skill_specific": {
+            "id": "skill_specific",
+            "priority": "medium",
+            "confidence_threshold": 0.65,
+            "primary_keywords": [
+                "design systems",
+                "ux",
+                "ui",
+                "figma",
+                "research",
+                "prototyping",
+                "leadership"
+            ],
+            "secondary_keywords": [
+                "good at",
+                "knows",
+                "experience with",
+                "skilled in"
+            ],
+            "semantic_patterns": [
+                "{is he|are you|is nate} good at {skill}",
+                "{does he|do you|does nate} know {skill}",
+                "experience with {skill}",
+                "{his|your|nate's} {skill} {skills|experience|expertise}"
+            ],
+            "entity_hints": [
+                "skill_name"
+            ]
+        },
+        "surprise_query": {
+            "id": "surprise_query",
+            "priority": "low",
+            "confidence_threshold": 0.7,
+            "primary_keywords": [
+                "surprise",
+                "random",
+                "fun",
+                "interesting",
+                "cool",
+                "fact"
+            ],
+            "secondary_keywords": [
+                "tell me something",
+                "anything else",
+                "what else"
+            ],
+            "semantic_patterns": [
+                "surprise me",
+                "tell me something {interesting|cool|fun|random}",
+                "what else {can you tell|should I know}",
+                "{any|something} {interesting|cool|fun}"
+            ]
+        },
+        "quick_summary": {
+            "id": "quick_summary",
+            "priority": "medium",
+            "confidence_threshold": 0.65,
+            "primary_keywords": [
+                "quick",
+                "brief",
+                "summary",
+                "tldr",
+                "overview",
+                "short"
+            ],
+            "secondary_keywords": [
+                "in brief",
+                "quickly",
+                "highlights"
+            ],
+            "semantic_patterns": [
+                "{give|show} me {a|the} {quick|brief|short} {summary|overview}",
+                "tldr",
+                "in {brief|short}",
+                "{quick|brief} {intro|introduction|overview}",
+                "what's the {tldr|summary|gist}"
+            ]
+        },
+        "deep_dive": {
+            "id": "deep_dive",
+            "priority": "medium",
+            "confidence_threshold": 0.65,
+            "primary_keywords": [
+                "detail",
+                "detailed",
+                "deep",
+                "more",
+                "everything",
+                "all",
+                "full"
+            ],
+            "secondary_keywords": [
+                "tell me more",
+                "go deeper",
+                "elaborate"
+            ],
+            "semantic_patterns": [
+                "tell me {more|everything|all}",
+                "{give|show} me {more|all|full} {details|information}",
+                "{detailed|deep|in-depth} {info|information|look}",
+                "go {deeper|into detail}",
+                "elaborate {on|about}"
+            ]
+        },
+        "clarification_needed": {
+            "id": "clarification_needed",
+            "priority": "fallback",
+            "confidence_threshold": 0.3,
+            "triggers": [
+                "low_confidence_all_intents",
+                "ambiguous_query",
+                "too_short_query"
+            ]
+        }
+    },
+    "context_rules": {
+        "user_types": {
+            "recruiter": {
+                "boost_intents": [
+                    "experience_query",
+                    "contact_query",
+                    "quick_summary"
+                ],
+                "boost_factor": 1.5
+            },
+            "peer_designer": {
+                "boost_intents": [
+                    "skills_query",
+                    "company_specific",
+                    "deep_dive"
+                ],
+                "boost_factor": 1.3
+            },
+            "student": {
+                "boost_intents": [
+                    "skills_query",
+                    "surprise_query"
+                ],
+                "boost_factor": 1.2
+            }
+        },
+        "conversation_flow": {
+            "greeting": {
+                "likely_next": [
+                    "experience_query",
+                    "skills_query",
+                    "quick_summary"
+                ]
+            },
+            "experience_query": {
+                "likely_next": [
+                    "skills_query",
+                    "company_specific",
+                    "contact_query"
+                ]
+            },
+            "skills_query": {
+                "likely_next": [
+                    "experience_query",
+                    "skill_specific",
+                    "contact_query"
+                ]
+            }
+        }
+    },
+    "fuzzy_matching": {
+        "enabled": true,
+        "threshold": 0.75,
+        "phonetic_matching": true
+    }
+}

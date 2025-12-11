@@ -6,6 +6,8 @@
 import profileData from '../data/profile_data_enhanced.json';
 import greetingSystem from '../data/greeting_system.json';
 import conversationFlows from '../data/conversation_flows.json';
+import { IntentClassifier } from './IntentClassifier';
+import { EntityExtractor } from './EntityExtractor';
 
 // Types
 interface Suggestion {
@@ -30,6 +32,15 @@ export class LumoAI {
         emojiLevel: 'medium',
         conversationDepth: 0
     };
+
+    // Advanced AI components
+    private intentClassifier: IntentClassifier;
+    private entityExtractor: EntityExtractor;
+
+    constructor() {
+        this.intentClassifier = new IntentClassifier();
+        this.entityExtractor = new EntityExtractor();
+    }
 
     /**
      * Select greeting using weighted randomization
@@ -96,58 +107,89 @@ export class LumoAI {
     }
 
     /**
-     * Generate intelligent response based on query
+     * Generate intelligent response based on query - ADVANCED AI VERSION
      */
     generateResponse(query: string): { text: string; suggestions?: Suggestion[] } {
-        const lowerQuery = query.toLowerCase();
+        // Step 1: Use advanced intent classification
+        const intentScores = this.intentClassifier.classify(query, {
+            userType: this.conversationState.userType,
+            conversationDepth: this.conversationState.conversationDepth
+        });
 
-        // Experience query
-        if (this.matchesKeywords(lowerQuery, ['experience', 'work', 'job', 'career', 'history'])) {
-            return this.handleExperienceQuery();
+        // Step 2: Extract entities for context
+        const entities = this.entityExtractor.extract(query);
+
+        // Step 3: Get best intent
+        const bestIntent = intentScores[0];
+
+        // Step 4: Check if we have good confidence
+        if (!bestIntent || !this.intentClassifier.meetsThreshold(bestIntent)) {
+            // Low confidence - offer helpful suggestions
+            return {
+                text: "I'm not quite sure what you're asking. Here's what I can help with:",
+                suggestions: [
+                    { label: 'Experience', payload: "Tell me about Nate's experience" },
+                    { label: 'Skills', payload: "What are Nate's skills?" },
+                    { label: 'Contact', payload: 'How can I contact Nate?' }
+                ]
+            };
         }
 
-        // Skills query
-        if (this.matchesKeywords(lowerQuery, ['skill', 'competenc', 'ability', 'expertise'])) {
-            return this.handleSkillsQuery();
+        // Step 5: Route to handler based on intent
+        switch (bestIntent.intent) {
+            case 'experience_query':
+            case 'company_specific':
+                return this.handleExperienceQuery(entities);
+            case 'skills_query':
+            case 'skill_specific':
+                return this.handleSkillsQuery();
+            case 'contact_query':
+                return this.handleContactQuery();
+            case 'surprise_query':
+                return this.handleSurpriseQuery();
+            case 'quick_summary':
+                return this.handleQuickTour();
+            case 'deep_dive':
+                return this.handleDeepDive();
+            default:
+                // Fallback
+                return {
+                    text: "I can tell you about Nate's experience, skills, or how to contact him. What interests you?",
+                    suggestions: [
+                        { label: 'Experience', payload: "Tell me about Nate's experience" },
+                        { label: 'Skills', payload: "What are Nate's skills?" },
+                        { label: 'Contact', payload: 'How can I contact Nate?' }
+                    ]
+                };
         }
-
-        // Contact query
-        if (this.matchesKeywords(lowerQuery, ['contact', 'email', 'reach', 'connect', 'linkedin'])) {
-            return this.handleContactQuery();
-        }
-
-        // Surprise me query
-        if (this.matchesKeywords(lowerQuery, ['surprise', 'random', 'fun', 'interesting'])) {
-            return this.handleSurpriseQuery();
-        }
-
-        // Quick tour
-        if (this.matchesKeywords(lowerQuery, ['quick', 'brief', 'tldr', 'summary', 'overview'])) {
-            return this.handleQuickTour();
-        }
-
-        // Deep dive
-        if (this.matchesKeywords(lowerQuery, ['detail', 'deep', 'more', 'tell me everything'])) {
-            return this.handleDeepDive();
-        }
-
-        // Default fallback
-        return {
-            text: "I can tell you about Nate's experience, skills, or how to contact him. What interests you?",
-            suggestions: [
-                { label: 'Experience', payload: "Tell me about Nate's experience" },
-                { label: 'Skills', payload: "What are Nate's skills?" },
-                { label: 'Contact', payload: 'How can I contact Nate?' }
-            ]
-        };
     }
 
     /**
-     * Handle experience query
+     * Handle experience query - with entity awareness
      */
-    private handleExperienceQuery(): { text: string; suggestions?: Suggestion[] } {
+    private handleExperienceQuery(entities: any[] = []): { text: string; suggestions?: Suggestion[] } {
         const summary = profileData.experience.summary;
         const currentRole = profileData.experience.timeline[0]; // Most recent
+
+        // Check for specific company mention
+        const companyEntity = entities.find(e => e.type === 'company_name');
+        if (companyEntity) {
+            // Find the company in timeline
+            const companyExp = profileData.experience.timeline.find(
+                exp => exp.company.name.toLowerCase().includes(companyEntity.value.toLowerCase())
+            );
+
+            if (companyExp) {
+                return {
+                    text: companyExp.storytelling.medium,
+                    suggestions: [
+                        { label: 'Other companies', payload: 'Where else did he work?' },
+                        { label: 'Skills', payload: 'What are his skills?' },
+                        { label: 'Contact', payload: 'How can I reach him?' }
+                    ]
+                };
+            }
+        }
 
         const text = `Nate's got ${summary.total_years} experience across ${summary.industries.join(', ')}. Currently ${currentRole.role.title} at ${currentRole.company.name}, where he's ${currentRole.storytelling.short}. Before that: award-winning fintech apps, COVID vaccine passports, and design systems across multiple companies.`;
 
@@ -249,13 +291,6 @@ export class LumoAI {
         }
 
         return items[0]; // Fallback
-    }
-
-    /**
-     * Check if query matches keywords
-     */
-    private matchesKeywords(query: string, keywords: string[]): boolean {
-        return keywords.some(keyword => query.includes(keyword));
     }
 
     /**
