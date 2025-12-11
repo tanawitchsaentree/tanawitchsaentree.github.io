@@ -214,10 +214,11 @@ const ChatBox: React.FC = () => {
             )}
             <div className="chatbox-message-content">
               <div
-                className={`max-w-[80%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.sender === 'user'
+                className={`p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.sender === 'user'
                   ? 'bg-[var(--primary)] text-[var(--primary-foreground)] rounded-tr-none'
                   : 'bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]'
                   }`}
+                style={{ maxWidth: '420px' }}
               >
                 {msg.sender === 'bot' ? renderMessageWithEmailCopy(msg.displayingText !== undefined ? msg.displayingText : msg.text) : (msg.displayingText !== undefined ? msg.displayingText : msg.text)}
                 {msg.sender === 'bot' && msg.displayingText && msg.displayingText.length < msg.text.length && (
@@ -251,7 +252,7 @@ const ChatBox: React.FC = () => {
             <div className="chatbox-avatar">
               <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
             </div>
-            <div className="max-w-[80%] p-3 rounded-2xl bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]">
+            <div className="max-w-[80%] p-3 rounded-2xl bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]" style={{ maxWidth: '420px' }}>
               <span className="animate-pulse">...</span>
             </div>
           </div>
