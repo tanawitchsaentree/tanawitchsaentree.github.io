@@ -39,7 +39,7 @@ function ProfileHeader() {
           fontWeight: 600,
           margin: 0,
           lineHeight: '1.2',
-          marginBottom: '2px',
+          marginBottom: 'var(--space-1)',
         }}>
           Hey, I'm Nate
         </h2>
@@ -268,8 +268,8 @@ function SocialLinks() {
   return (
     <div style={{
       display: 'flex',
-      gap: '1.5rem',
-      marginTop: '1rem',
+      gap: 'var(--space-6)',
+      marginTop: 'var(--space-4)',
     }}>
       {/* LinkedIn */}
       <SocialIcon href={profileData.contact_info.linkedin}>
@@ -313,7 +313,7 @@ function ContactSection() {
       <div style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '6px',
+        gap: 'var(--space-2)',
         fontSize: 'var(--text-base)',
       }}>
         <a
