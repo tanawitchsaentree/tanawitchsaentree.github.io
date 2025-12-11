@@ -193,7 +193,7 @@ function TabExperienceSection() {
         style={{
           gap: 'var(--space-3)',
           width: '100%',
-          minHeight: '400px',
+          minHeight: '200px',
           alignItems: 'flex-start',
         }}
       >
