@@ -3,7 +3,7 @@ import { ArrowUpRight, Copy, Check } from 'lucide-react';
 import nateProfile from '../image/nateprofile.png';
 import profileData from '../../profile_data.json';
 
-function ProfileHeader({ DarkModeToggle }: { DarkModeToggle: () => JSX.Element }) {
+function ProfileHeader({ DarkModeToggle }: { DarkModeToggle: () => React.ReactElement }) {
   return (
     <div className="profile-header" style={{
       display: 'flex',
@@ -357,7 +357,7 @@ function ContactSection() {
   );
 }
 
-export default function Index({ DarkModeToggle }: { DarkModeToggle: () => JSX.Element }) {
+export default function Index({ DarkModeToggle }: { DarkModeToggle: () => React.ReactElement }) {
   return (
     <div style={{
       display: 'flex',
