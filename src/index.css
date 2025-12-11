@@ -299,15 +299,16 @@
 /* Chat & Profile Sections (Containers) */
 .chat-section {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  /* Top-align to prevent overflow on icons */
   justify-content: flex-start;
   /* Left-align chatbox */
   height: 100vh;
   max-height: 100vh;
   overflow: hidden;
   width: 100%;
-  padding-left: var(--space-8);
-  /* Add left padding for breathing room */
+  padding: var(--space-8);
+  /* Add padding all around for breathing room */
 }
 
 .profile-section {
@@ -338,8 +339,8 @@
 .chatbox-container {
   display: flex;
   flex-direction: column;
-  height: min(700px, 85vh);
-  /* Fixed 700px on large screens, scales to 85vh on small screens */
+  height: min(550px, 75vh);
+  /* Fixed 550px on large screens, scales to 75vh on small screens */
   width: 600px;
   /* Fixed width - no shrinking to content */
   margin: 0;
