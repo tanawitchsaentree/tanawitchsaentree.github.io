@@ -16,6 +16,27 @@ export interface IntentScore {
 export class IntentClassifier {
     private fuzzyMatcher: FuzzyMatcher;
 
+    // Common slang/abbreviation mappings
+    private slangMap: { [key: string]: string } = {
+        'sklz': 'skills',
+        'skil': 'skill',
+        'wat': 'what',
+        'wut': 'what',
+        'wrk': 'work',
+        'exp': 'experience',
+        'xp': 'experience',
+        'pls': 'please',
+        'thx': 'thanks',
+        'thnx': 'thanks',
+        'u': 'you',
+        'ur': 'your',
+        'r': 'are',
+        'y': 'why',
+        'bc': 'because',
+        'gud': 'good',
+        'gd': 'good'
+    };
+
     constructor() {
         this.fuzzyMatcher = new FuzzyMatcher(0.75);
     }
@@ -25,7 +46,13 @@ export class IntentClassifier {
      */
     classify(query: string, context?: any): IntentScore[] {
         const scores: IntentScore[] = [];
-        const normalizedQuery = query.toLowerCase().trim();
+
+        // Normalize query by replacing common slang
+        let normalizedQuery = query.toLowerCase().trim();
+        for (const [slang, proper] of Object.entries(this.slangMap)) {
+            const slangRegex = new RegExp(`\\b${slang}\\b`, 'gi');
+            normalizedQuery = normalizedQuery.replace(slangRegex, proper);
+        }
 
         // Score each intent
         for (const [intentId, intentData] of Object.entries(advancedIntents.intents)) {
