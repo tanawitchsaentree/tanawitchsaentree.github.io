@@ -6,6 +6,7 @@
 import profileData from '../data/profile_data_enhanced.json';
 import greetingSystem from '../data/greeting_system.json';
 import conversationFlows from '../data/conversation_flows.json';
+import suggestionEngine from '../data/suggestion_engine.json';
 import { IntentClassifier } from './IntentClassifier';
 import { EntityExtractor } from './EntityExtractor';
 
@@ -124,14 +125,10 @@ export class LumoAI {
 
         // Step 4: Check if we have good confidence
         if (!bestIntent || !this.intentClassifier.meetsThreshold(bestIntent)) {
-            // Low confidence - offer helpful suggestions
+            // Low confidence - offer dynamic suggestions
             return {
                 text: "I'm not quite sure what you're asking. Here's what I can help with:",
-                suggestions: [
-                    { label: 'Experience', payload: "Tell me about Nate's experience" },
-                    { label: 'Skills', payload: "What are Nate's skills?" },
-                    { label: 'Contact', payload: 'How can I contact Nate?' }
-                ]
+                suggestions: this.generateSuggestions(undefined, 3)
             };
         }
 
@@ -152,14 +149,10 @@ export class LumoAI {
             case 'deep_dive':
                 return this.handleDeepDive();
             default:
-                // Fallback
+                // Fallback with dynamic suggestions
                 return {
                     text: "I can tell you about Nate's experience, skills, or how to contact him. What interests you?",
-                    suggestions: [
-                        { label: 'Experience', payload: "Tell me about Nate's experience" },
-                        { label: 'Skills', payload: "What are Nate's skills?" },
-                        { label: 'Contact', payload: 'How can I contact Nate?' }
-                    ]
+                    suggestions: this.generateSuggestions(undefined, 3)
                 };
         }
     }
@@ -182,11 +175,7 @@ export class LumoAI {
             if (companyExp) {
                 return {
                     text: companyExp.storytelling.medium,
-                    suggestions: [
-                        { label: 'Other companies', payload: 'Where else did he work?' },
-                        { label: 'Skills', payload: 'What are his skills?' },
-                        { label: 'Contact', payload: 'How can I reach him?' }
-                    ]
+                    suggestions: this.generateSuggestions('company_specific', 3)
                 };
             }
         }
@@ -195,11 +184,7 @@ export class LumoAI {
 
         return {
             text,
-            suggestions: [
-                { label: 'Tell me more', payload: 'Tell me more about his experience' },
-                { label: 'Skills', payload: "What are his skills?" },
-                { label: 'Contact', payload: 'How can I contact him?' }
-            ]
+            suggestions: this.generateSuggestions('experience', 3)
         };
     }
 
@@ -211,11 +196,7 @@ export class LumoAI {
 
         return {
             text,
-            suggestions: [
-                { label: 'Experience', payload: "Tell me about his experience" },
-                { label: 'Projects', payload: 'Show me his projects' },
-                { label: 'Contact', payload: 'How can I contact him?' }
-            ]
+            suggestions: this.generateSuggestions('skills', 3)
         };
     }
 
@@ -321,6 +302,59 @@ export class LumoAI {
             this.conversationState.topicsDiscussed.push(topic);
             this.conversationState.conversationDepth++;
         }
+    }
+
+    /**
+     * Generate context-aware suggestions
+     */
+    private generateSuggestions(currentIntent?: string, maxCount: number = 3): Suggestion[] {
+        const pool = (suggestionEngine as any).suggestion_engine.suggestion_pool;
+        const candidates: Array<{ suggestion: Suggestion; score: number }> = [];
+
+        // Get user type preferences
+        const userType = this.conversationState.userType || 'casual_browser';
+        const userPrefs = (suggestionEngine as any).suggestion_engine.user_type_preferences[userType] || {};
+        const prioritizedTopics = userPrefs.prioritize || [];
+
+        for (const [key, suggestionData] of Object.entries(pool)) {
+            const data = suggestionData as any;
+            let score = 10; // Base score
+
+            // Already discussed? Skip or lower priority
+            if (this.conversationState.topicsDiscussed.includes(key)) {
+                if (data.hide_after?.includes(currentIntent || '')) {
+                    continue; // Skip completely
+                }
+                score -= 20; // Lower priority
+            }
+
+            // Should show after current topic?
+            if (currentIntent && data.show_after?.includes(currentIntent)) {
+                score += 15;
+            }
+
+            // User type priority boost
+            if (prioritizedTopics.includes(key)) {
+                score += 10;
+            }
+
+            // Priority level boost
+            if (data.priority === 'high') score += 5;
+            if (data.priority === 'low') score -= 5;
+
+            candidates.push({
+                suggestion: {
+                    label: data.label,
+                    payload: data.payload,
+                    icon: data.icon
+                },
+                score
+            });
+        }
+
+        // Sort by score and return top N
+        candidates.sort((a, b) => b.score - a.score);
+        return candidates.slice(0, maxCount).map(c => c.suggestion);
     }
 
     /**

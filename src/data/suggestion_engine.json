@@ -1,0 +1,219 @@
+{
+    "version": "1.0",
+    "suggestion_engine": {
+        "description": "Dynamic suggestion generation based on conversation context",
+        "suggestion_pool": {
+            "experience": {
+                "label": "Experience",
+                "payload": "Tell me about Nate's experience",
+                "icon": "💼",
+                "priority": "high",
+                "show_after": [],
+                "hide_after": [
+                    "experience",
+                    "deep_dive"
+                ]
+            },
+            "skills": {
+                "label": "Skills",
+                "payload": "What are Nate's skills?",
+                "icon": "🎯",
+                "priority": "high",
+                "show_after": [
+                    "experience"
+                ],
+                "hide_after": [
+                    "skills"
+                ]
+            },
+            "contact": {
+                "label": "Contact",
+                "payload": "How can I contact Nate?",
+                "icon": "📧",
+                "priority": "high",
+                "show_after": [
+                    "experience",
+                    "skills"
+                ],
+                "hide_after": [
+                    "contact"
+                ]
+            },
+            "allianz": {
+                "label": "Allianz Work",
+                "payload": "Tell me about his time at Allianz",
+                "icon": "🏢",
+                "priority": "medium",
+                "show_after": [
+                    "experience"
+                ],
+                "hide_after": [
+                    "company_specific"
+                ]
+            },
+            "invitrace": {
+                "label": "Invitrace Work",
+                "payload": "What did he do at Invitrace?",
+                "icon": "🏥",
+                "priority": "medium",
+                "show_after": [
+                    "experience"
+                ],
+                "hide_after": [
+                    "company_specific"
+                ]
+            },
+            "design_systems": {
+                "label": "Design Systems",
+                "payload": "Tell me about design systems expertise",
+                "icon": "🎨",
+                "priority": "medium",
+                "show_after": [
+                    "skills"
+                ],
+                "hide_after": [
+                    "skill_specific"
+                ]
+            },
+            "projects": {
+                "label": "Projects",
+                "payload": "Show me his best projects",
+                "icon": "🚀",
+                "priority": "medium",
+                "show_after": [
+                    "skills",
+                    "experience"
+                ],
+                "hide_after": []
+            },
+            "surprise": {
+                "label": "Surprise Me",
+                "payload": "Tell me something unexpected",
+                "icon": "✨",
+                "priority": "low",
+                "show_after": [
+                    "experience",
+                    "skills"
+                ],
+                "hide_after": [
+                    "surprise"
+                ]
+            },
+            "deep_dive": {
+                "label": "Deep Dive",
+                "payload": "Tell me everything",
+                "icon": "🔍",
+                "priority": "medium",
+                "show_after": [],
+                "hide_after": [
+                    "deep_dive"
+                ]
+            },
+            "quick_summary": {
+                "label": "Quick Summary",
+                "payload": "Give me the highlights",
+                "icon": "⚡",
+                "priority": "medium",
+                "show_after": [],
+                "hide_after": [
+                    "quick_summary"
+                ]
+            }
+        },
+        "user_type_preferences": {
+            "recruiter": {
+                "prioritize": [
+                    "experience",
+                    "contact",
+                    "quick_summary"
+                ],
+                "max_suggestions": 3,
+                "prefer_direct": true
+            },
+            "peer_designer": {
+                "prioritize": [
+                    "skills",
+                    "projects",
+                    "design_systems",
+                    "deep_dive"
+                ],
+                "max_suggestions": 4,
+                "prefer_direct": false
+            },
+            "student": {
+                "prioritize": [
+                    "skills",
+                    "experience",
+                    "surprise"
+                ],
+                "max_suggestions": 4,
+                "prefer_direct": false
+            },
+            "casual_browser": {
+                "prioritize": [
+                    "quick_summary",
+                    "surprise",
+                    "experience"
+                ],
+                "max_suggestions": 3,
+                "prefer_direct": false
+            }
+        },
+        "conversation_flow_rules": {
+            "after_greeting": {
+                "always_show": [
+                    "experience",
+                    "skills",
+                    "quick_summary"
+                ],
+                "never_show": [
+                    "contact"
+                ]
+            },
+            "after_experience": {
+                "always_show": [
+                    "skills"
+                ],
+                "prefer": [
+                    "allianz",
+                    "invitrace",
+                    "contact"
+                ],
+                "avoid": [
+                    "experience"
+                ]
+            },
+            "after_skills": {
+                "always_show": [
+                    "experience"
+                ],
+                "prefer": [
+                    "design_systems",
+                    "projects",
+                    "contact"
+                ],
+                "avoid": [
+                    "skills"
+                ]
+            },
+            "after_contact": {
+                "prefer": [
+                    "experience",
+                    "skills",
+                    "projects"
+                ],
+                "avoid": [
+                    "contact"
+                ]
+            },
+            "low_confidence": {
+                "always_show": [
+                    "experience",
+                    "skills",
+                    "contact"
+                ],
+                "max_suggestions": 3
+            }
+        }
+    }
+}
