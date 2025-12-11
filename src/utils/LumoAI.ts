@@ -9,6 +9,7 @@ import conversationFlows from '../data/conversation_flows.json';
 import suggestionEngine from '../data/suggestion_engine.json';
 import { IntentClassifier } from './IntentClassifier';
 import { EntityExtractor, type ExtractedEntity } from './EntityExtractor';
+import { ReferenceResolver } from './ReferenceResolver';
 
 // Types
 interface Suggestion {
@@ -57,10 +58,12 @@ export class LumoAI {
     // Advanced AI components
     private intentClassifier: IntentClassifier;
     private entityExtractor: EntityExtractor;
+    private referenceResolver: ReferenceResolver;
 
     constructor() {
         this.intentClassifier = new IntentClassifier();
         this.entityExtractor = new EntityExtractor();
+        this.referenceResolver = new ReferenceResolver();
     }
 
     /**
@@ -131,6 +134,19 @@ export class LumoAI {
      * Generate intelligent response based on query - ADVANCED AI VERSION
      */
     generateResponse(query: string): { text: string; suggestions?: Suggestion[] } {
+        // PHASE 2: Check for references/follow-ups FIRST
+        const reference = this.referenceResolver.detectReference(query);
+
+        if (reference.hasReference && reference.type) {
+            // Handle follow-up based on type
+            const response = this.handleFollowUp(reference.type);
+
+            // Record this turn
+            this.recordTurn(query, 'follow_up', [], response.text);
+
+            return response;
+        }
+
         // Step 1: Use advanced intent classification
         const intentScores = this.intentClassifier.classify(query, {
             userType: this.conversationState.userType,
@@ -146,35 +162,50 @@ export class LumoAI {
         // Step 4: Check if we have good confidence
         if (!bestIntent || !this.intentClassifier.meetsThreshold(bestIntent)) {
             // Low confidence - offer dynamic suggestions
-            return {
+            const response = {
                 text: "I'm not quite sure what you're asking. Here's what I can help with:",
                 suggestions: this.generateSuggestions(undefined, 3)
             };
+
+            this.recordTurn(query, 'low_confidence', entities, response.text);
+            return response;
         }
 
         // Step 5: Route to handler based on intent
+        let response;
         switch (bestIntent.intent) {
             case 'experience_query':
             case 'company_specific':
-                return this.handleExperienceQuery(entities);
+                response = this.handleExperienceQuery(entities);
+                break;
             case 'skills_query':
             case 'skill_specific':
-                return this.handleSkillsQuery();
+                response = this.handleSkillsQuery();
+                break;
             case 'contact_query':
-                return this.handleContactQuery();
+                response = this.handleContactQuery();
+                break;
             case 'surprise_query':
-                return this.handleSurpriseQuery();
+                response = this.handleSurpriseQuery();
+                break;
             case 'quick_summary':
-                return this.handleQuickTour();
+                response = this.handleQuickTour();
+                break;
             case 'deep_dive':
-                return this.handleDeepDive();
+                response = this.handleDeepDive();
+                break;
             default:
                 // Fallback with dynamic suggestions
-                return {
+                response = {
                     text: "I can tell you about Nate's experience, skills, or how to contact him. What interests you?",
                     suggestions: this.generateSuggestions(undefined, 3)
                 };
         }
+
+        // Record this turn in conversation history
+        this.recordTurn(query, bestIntent.intent, entities, response.text);
+
+        return response;
     }
 
     /**
@@ -300,6 +331,67 @@ export class LumoAI {
         }
 
         return null;
+    }
+
+    /**
+     * Record conversation turn in history
+     */
+    private recordTurn(query: string, intent: string, entities: ExtractedEntity[], response: string): void {
+        const turn: ConversationTurn = {
+            userQuery: query,
+            intent,
+            entities,
+            response,
+            timestamp: Date.now()
+        };
+
+        this.conversationState.conversationHistory.push(turn);
+        this.conversationState.lastIntent = intent;
+        this.conversationState.lastEntities = entities;
+        this.conversationState.lastTopic = intent;
+        this.conversationState.lastResponse = response;
+
+        // Keep only last 10 turns
+        if (this.conversationState.conversationHistory.length > 10) {
+            this.conversationState.conversationHistory.shift();
+        }
+    }
+
+    /**
+     * Handle follow-up queries based on conversation history
+     */
+    private handleFollowUp(referenceType: string): { text: string; suggestions?: Suggestion[] } {
+        const lastIntent = this.conversationState.lastIntent;
+        const lastResponse = this.conversationState.lastResponse;
+
+        if (referenceType === 'follow_up_more') {
+            // User wants more details on last topic
+            const intro = this.referenceResolver.getFollowUpIntro('follow_up_more');
+
+            switch (lastIntent) {
+                case 'experience_query':
+                    return {
+                        text: `${intro} ${profileData.career_narrative.elevator_pitch}`,
+                        suggestions: this.generateSuggestions('experience', 3)
+                    };
+                case 'skills_query':
+                    return {
+                        text: `${intro} Nate excels in Design Systems, User Research, Visual Design, and Leadership. Each skill is backed by 8+ years of hands-on experience.`,
+                        suggestions: this.generateSuggestions('skills', 3)
+                    };
+                default:
+                    return {
+                        text: lastResponse || "I don't have more details on that at the moment.",
+                        suggestions: this.generateSuggestions(lastIntent || undefined, 3)
+                    };
+            }
+        }
+
+        // Default fallback
+        return {
+            text: "I'm not sure what you'd like to know more about. Could you be more specific?",
+            suggestions: this.generateSuggestions(undefined, 3)
+        };
     }
 
     /**
