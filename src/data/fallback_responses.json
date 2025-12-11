@@ -1,0 +1,190 @@
+{
+    "version": "1.0",
+    "system_name": "Intelligent Fallback Strategies",
+    "no_context": {
+        "description": "When user references something without context (e.g., 'tell me more' as first message)",
+        "responses": [
+            {
+                "text": "I'd love to tell you more! What would you like to know about?",
+                "style": "friendly"
+            },
+            {
+                "text": "Happy to share more! What interests you most?",
+                "style": "casual"
+            },
+            {
+                "text": "Sure! What aspect would you like me to elaborate on?",
+                "style": "professional"
+            }
+        ],
+        "suggestions_type": "starter_pack",
+        "starter_suggestions": [
+            "Experience",
+            "Skills",
+            "Quick Summary"
+        ]
+    },
+    "vague_query": {
+        "description": "When query is too vague to understand (e.g., 'something good?', 'anything?')",
+        "triggers": [
+            "something",
+            "anything",
+            "whatever",
+            "dunno",
+            "idk"
+        ],
+        "responses": [
+            {
+                "text": "Something good about Nate? Here's a fun fact:",
+                "action": "surprise_query"
+            },
+            {
+                "text": "How about I surprise you with something interesting?",
+                "action": "surprise_query"
+            },
+            {
+                "text": "Let me share something cool:",
+                "action": "random_highlight"
+            }
+        ]
+    },
+    "low_confidence": {
+        "description": "When intent confidence is below threshold",
+        "responses": [
+            {
+                "text": "Hmm, I can help you with several things! What sounds interesting?",
+                "style": "helpful"
+            },
+            {
+                "text": "Not quite sure what you need - but I've got info on:",
+                "style": "casual"
+            },
+            {
+                "text": "Let me help you find what you're looking for. I can share:",
+                "style": "professional"
+            }
+        ],
+        "offer_categories": true
+    },
+    "gibberish": {
+        "description": "When query is random characters or makes no sense",
+        "detection": {
+            "min_vowel_ratio": 0.1,
+            "max_consonant_streak": 5,
+            "common_gibberish": [
+                "asdf",
+                "qwer",
+                "zxcv",
+                "jkl",
+                "fdsa"
+            ]
+        },
+        "responses": [
+            {
+                "text": "Not quite sure what that means! 😅 But I can help with:",
+                "style": "friendly"
+            },
+            {
+                "text": "Hmm, that's a bit cryptic! How about we try:",
+                "style": "playful"
+            },
+            {
+                "text": "Let's start fresh - what would you like to know?",
+                "style": "reset"
+            }
+        ]
+    },
+    "too_broad": {
+        "description": "When query is too broad (e.g., 'tell me everything', 'all of it')",
+        "triggers": [
+            "everything",
+            "all",
+            "complete",
+            "full"
+        ],
+        "responses": [
+            {
+                "text": "That's a lot to cover! Let's start with what interests you most:",
+                "action": "offer_categories"
+            },
+            {
+                "text": "I've got tons to share! What's your priority?",
+                "action": "quick_summary"
+            }
+        ]
+    },
+    "ambiguous_pronoun": {
+        "description": "When pronoun reference is unclear",
+        "triggers": [
+            "it",
+            "that",
+            "this",
+            "those"
+        ],
+        "responses": [
+            {
+                "text": "Sorry, what do you mean by '{pronoun}'? Could you be more specific?",
+                "style": "clarifying"
+            },
+            {
+                "text": "Not sure what you're referring to - could you clarify?",
+                "style": "polite"
+            }
+        ]
+    },
+    "helpful_defaults": {
+        "description": "Always-helpful fallback responses",
+        "categories": [
+            {
+                "label": "Work Experience",
+                "description": "8+ years across healthcare & fintech",
+                "trigger": "experience"
+            },
+            {
+                "label": "Skills & Expertise",
+                "description": "Design Systems, UX, Leadership",
+                "trigger": "skills"
+            },
+            {
+                "label": "Projects",
+                "description": "Award-winning apps, design systems",
+                "trigger": "projects"
+            },
+            {
+                "label": "Contact Info",
+                "description": "How to reach Nate",
+                "trigger": "contact"
+            }
+        ]
+    },
+    "personality_variants": {
+        "casual": {
+            "prefix": [
+                "Yo!",
+                "Hey!",
+                "Alright!",
+                "Cool!"
+            ],
+            "emoji_level": "high"
+        },
+        "professional": {
+            "prefix": [
+                "Certainly",
+                "Of course",
+                "Absolutely",
+                "I'd be happy to"
+            ],
+            "emoji_level": "low"
+        },
+        "excited": {
+            "prefix": [
+                "YES!",
+                "Oh wow!",
+                "Absolutely!",
+                "Hell yeah!"
+            ],
+            "emoji_level": "high",
+            "punctuation": "exclamation"
+        }
+    }
+}

@@ -10,6 +10,9 @@ import suggestionEngine from '../data/suggestion_engine.json';
 import { IntentClassifier } from './IntentClassifier';
 import { EntityExtractor, type ExtractedEntity } from './EntityExtractor';
 import { ReferenceResolver } from './ReferenceResolver';
+import { SmallTalkHandler } from './SmallTalkHandler';
+import { ContextValidator } from './ContextValidator';
+import { FallbackStrategy } from './FallbackStrategy';
 
 // Types
 interface Suggestion {
@@ -59,11 +62,19 @@ export class LumoAI {
     private intentClassifier: IntentClassifier;
     private entityExtractor: EntityExtractor;
     private referenceResolver: ReferenceResolver;
+    // Phase 3: Cerebro modules
+    private smallTalkHandler: SmallTalkHandler;
+    private contextValidator: ContextValidator;
+    private fallbackStrategy: FallbackStrategy;
 
     constructor() {
         this.intentClassifier = new IntentClassifier();
         this.entityExtractor = new EntityExtractor();
         this.referenceResolver = new ReferenceResolver();
+        // Phase 3: Initialize Cerebro
+        this.smallTalkHandler = new SmallTalkHandler();
+        this.contextValidator = new ContextValidator();
+        this.fallbackStrategy = new FallbackStrategy();
     }
 
     /**
@@ -131,19 +142,58 @@ export class LumoAI {
     }
 
     /**
-     * Generate intelligent response based on query - ADVANCED AI VERSION
+     * Generate intelligent response based on query - CEREBRO ORCHESTRATION
      */
     generateResponse(query: string): { text: string; suggestions?: Suggestion[] } {
-        // PHASE 2: Check for references/follow-ups FIRST
+        // 🧠 CEREBRO LAYER 1: Check for small talk/social cues FIRST
+        const smallTalk = this.smallTalkHandler.detect(query);
+        if (smallTalk.isSmallTalk && smallTalk.response) {
+            const response = {
+                text: smallTalk.response,
+                suggestions: this.generateSuggestions(undefined, 3)
+            };
+            this.recordTurn(query, `smalltalk_${smallTalk.type}`, [], response.text);
+            return response;
+        }
+
+        // 🧠 CEREBRO LAYER 2: Check for gibberish
+        if (this.contextValidator.isGibberish(query)) {
+            const response = this.fallbackStrategy.handleGibberish();
+            this.recordTurn(query, 'gibberish', [], response.text);
+            return response;
+        }
+
+        // 🧠 CEREBRO LAYER 3: Check for vague queries
+        if (this.contextValidator.isVague(query)) {
+            const fallback = this.fallbackStrategy.handleVagueQuery();
+            // Execute the action (e.g., surprise_query)
+            if (fallback.action === 'surprise_query') {
+                const response = this.handleSurpriseQuery();
+                this.recordTurn(query, 'vague_to_surprise', [], response.text);
+                return response;
+            }
+        }
+
+        // PHASE 2: Check for references/follow-ups
         const reference = this.referenceResolver.detectReference(query);
 
         if (reference.hasReference && reference.type) {
-            // Handle follow-up based on type
+            // 🧠 CEREBRO LAYER 4: Validate context before handling follow-up
+            const validation = this.contextValidator.validateFollowUp(
+                reference.type,
+                this.conversationState.conversationHistory
+            );
+
+            if (!validation.isValid) {
+                // No context for "tell me more" - use intelligent fallback
+                const response = this.fallbackStrategy.handleNoContext();
+                this.recordTurn(query, 'follow_up_no_context', [], response.text);
+                return response;
+            }
+
+            // Valid context - handle follow-up
             const response = this.handleFollowUp(reference.type);
-
-            // Record this turn
             this.recordTurn(query, 'follow_up', [], response.text);
-
             return response;
         }
 
@@ -161,12 +211,8 @@ export class LumoAI {
 
         // Step 4: Check if we have good confidence
         if (!bestIntent || !this.intentClassifier.meetsThreshold(bestIntent)) {
-            // Low confidence - offer dynamic suggestions
-            const response = {
-                text: "I'm not quite sure what you're asking. Here's what I can help with:",
-                suggestions: this.generateSuggestions(undefined, 3)
-            };
-
+            // 🧠 CEREBRO LAYER 5: Intelligent low confidence fallback
+            const response = this.fallbackStrategy.handleLowConfidence();
             this.recordTurn(query, 'low_confidence', entities, response.text);
             return response;
         }
@@ -195,11 +241,8 @@ export class LumoAI {
                 response = this.handleDeepDive();
                 break;
             default:
-                // Fallback with dynamic suggestions
-                response = {
-                    text: "I can tell you about Nate's experience, skills, or how to contact him. What interests you?",
-                    suggestions: this.generateSuggestions(undefined, 3)
-                };
+                // 🧠 CEREBRO LAYER 6: Graceful fallback (should rarely hit)
+                response = this.fallbackStrategy.handleNoContext();
         }
 
         // Record this turn in conversation history

@@ -1,0 +1,153 @@
+{
+    "version": "1.0",
+    "system_name": "SmallTalk & Social Cues Handler",
+    "greetings": {
+        "triggers": [
+            "hi",
+            "hello",
+            "hey",
+            "sup",
+            "yo",
+            "greetings",
+            "hiya"
+        ],
+        "responses": [
+            "Hey there! 👋 What can I help you learn about Nate?",
+            "Hello! Ready to explore Nate's work?",
+            "Hi! What interests you most about Nate?",
+            "Hey! What would you like to know?",
+            "Hello! I can tell you about experience, skills, or projects. What sounds interesting?"
+        ]
+    },
+    "gratitude": {
+        "triggers": [
+            "thanks",
+            "thank you",
+            "thx",
+            "ty",
+            "appreciate it",
+            "appreciated"
+        ],
+        "responses": [
+            "You're welcome! 😊 Anything else?",
+            "Happy to help! What else can I share?",
+            "My pleasure! Want to know more about something?",
+            "Anytime! What else interests you?",
+            "Glad I could help! Feel free to ask more."
+        ]
+    },
+    "reactions": {
+        "positive": {
+            "triggers": [
+                "cool",
+                "nice",
+                "awesome",
+                "great",
+                "wow",
+                "amazing",
+                "impressive",
+                "neat"
+            ],
+            "responses": [
+                "Right? What catches your interest?",
+                "Glad you think so! Want to dig deeper?",
+                "I know, right? What else would you like to explore?",
+                "Yeah! What sounds interesting to learn more about?"
+            ]
+        },
+        "laughter": {
+            "triggers": [
+                "lol",
+                "haha",
+                "hehe",
+                "lmao",
+                "😂",
+                "😄"
+            ],
+            "responses": [
+                "😄 Glad you're enjoying this! What else can I help with?",
+                "Haha! What else would you like to know?",
+                "😊 What can I tell you about next?"
+            ]
+        },
+        "surprise": {
+            "triggers": [
+                "what",
+                "really",
+                "seriously",
+                "no way",
+                "whoa"
+            ],
+            "responses": [
+                "Yep! Want to hear more?",
+                "Really! What else interests you?",
+                "I know! What would you like to explore?"
+            ]
+        }
+    },
+    "affirmations": {
+        "triggers": [
+            "ok",
+            "okay",
+            "sure",
+            "alright",
+            "got it",
+            "understood",
+            "k",
+            "kk"
+        ],
+        "responses": [
+            "Great! What else can I help with?",
+            "Cool! Anything else you'd like to know?",
+            "Perfect! What's next?",
+            "Awesome! What interests you?"
+        ]
+    },
+    "farewells": {
+        "triggers": [
+            "bye",
+            "goodbye",
+            "see ya",
+            "later",
+            "cya",
+            "peace",
+            "catch you later"
+        ],
+        "responses": [
+            "See you later! Feel free to come back anytime! 👋",
+            "Bye! Hope I was helpful! 😊",
+            "Take care! Come back if you have more questions!",
+            "Later! Good luck with everything! 🎯"
+        ]
+    },
+    "confusion": {
+        "triggers": [
+            "what?",
+            "huh",
+            "confused",
+            "don't understand",
+            "???"
+        ],
+        "responses": [
+            "Let me clarify! What specifically confused you?",
+            "My bad! What can I explain better?",
+            "Happy to explain! What part wasn't clear?",
+            "Let me help - what would you like me to clarify?"
+        ]
+    },
+    "encouragement": {
+        "triggers": [
+            "tell me",
+            "show me",
+            "let's go",
+            "hit me",
+            "bring it"
+        ],
+        "responses": [
+            "Alright! What would you like to know?",
+            "You got it! Experience, skills, or projects?",
+            "Let's do it! What interests you?",
+            "Here we go! What catches your eye?"
+        ]
+    }
+}
