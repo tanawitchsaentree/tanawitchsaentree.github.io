@@ -167,12 +167,13 @@ function TabExperienceSection() {
   const [activeTab, setActiveTab] = useState<'work' | 'education'>('work');
 
   return (
-    <div className="w-full flex flex-col" style={{ alignItems: 'flex-start' }}>
+    <div className="w-full" style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 'var(--space-4)',
+    }}>
       {/* Tab Headers */}
-      <div style={{
-        display: 'flex',
-        marginBottom: 'var(--space-4)',
-      }}>
+      <div style={{ display: 'flex' }}>
         <TabButton
           active={activeTab === 'work'}
           onClick={() => setActiveTab('work')}
@@ -188,15 +189,11 @@ function TabExperienceSection() {
       </div>
 
       {/* Tab Content */}
-      <div
-        className="flex flex-col"
-        style={{
-          gap: 'var(--space-3)',
-          width: '100%',
-          minHeight: '200px',
-          alignItems: 'flex-start',
-        }}
-      >
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'var(--space-3)',
+      }}>
         {activeTab === 'work' ? <WorkExperienceList /> : <EducationList />}
       </div>
     </div>
@@ -360,26 +357,19 @@ export default function Index() {
       minHeight: '100%',
       boxSizing: 'border-box',
     }}>
-      {/* Section 1: Profile + Title */}
-      <div style={{ marginBottom: 'var(--space-8)' }}>
-        <ProfileHeader />
-      </div>
+      <ProfileHeader />
+      <div style={{ height: 'var(--space-8)' }} />
 
-      {/* Section 2: Bio/Summary */}
-      <div style={{ marginBottom: 'var(--space-8)' }}>
-        <BioSection />
-      </div>
+      <BioSection />
+      <div style={{ height: 'var(--space-8)' }} />
 
-      {/* Section 3: Previously + Education (with tabs and listing) */}
-      <div style={{ marginBottom: 'var(--space-8)' }}>
-        <TabExperienceSection />
-      </div>
+      <TabExperienceSection />
+      <div style={{ height: 'var(--space-8)' }} />
 
-      {/* Section 4: Email + Social Icons */}
       <ContactSection />
-      <div style={{ marginTop: 'var(--space-4)' }}>
-        <SocialLinks />
-      </div>
+      <div style={{ height: 'var(--space-4)' }} />
+
+      <SocialLinks />
     </div>
   );
 }
