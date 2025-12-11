@@ -155,7 +155,7 @@
 
 /*
  ============================================
-  MAIN CONTENT LAYOUT - CORRECTED
+  MAIN CONTENT LAYOUT - REFACTORED
  ============================================
 */
 
@@ -164,11 +164,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
-  padding: var(--space-4);
+  padding: var(--space-6);
   flex: 1;
   width: 100%;
   max-width: 100%;
-  /* FULL WIDTH as requested */
   margin: 0;
   box-sizing: border-box;
 }
@@ -179,9 +178,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     /* Strict 50/50 Split */
-    gap: 0;
-    /* Remove gap to ensure true 50/50 split appearance if needed, or keep small */
-    padding: var(--space-6);
+    gap: var(--space-8);
+    padding: var(--space-8);
     align-items: start;
   }
 }
@@ -296,33 +294,24 @@
 }
 
 
-/* Chat & Profile Sections (Containers) */
+/* Chat & Profile Sections (Grid Items) */
 .chat-section {
   display: flex;
   align-items: flex-start;
-  /* Top-align to prevent overflow on icons */
   justify-content: flex-start;
-  /* Left-align chatbox */
-  height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
   width: 100%;
-  padding: var(--space-8);
-  /* Add padding all around for breathing room */
+  height: auto;
+  max-height: 100vh;
+  padding: 0;
 }
 
 .profile-section {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  /* Center horizontally in the left column */
+  justify-content: flex-start;
   width: 100%;
   height: 100%;
-  /* Full height to match chat */
-  padding: 0 var(--space-8);
-  /* Add padding to prevent edge sticking */
-  box-sizing: border-box;
+  padding: 0;
   color: var(--foreground);
 }
 
