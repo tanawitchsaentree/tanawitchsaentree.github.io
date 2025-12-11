@@ -220,11 +220,7 @@ export class LumoAI {
 
         return {
             text: `${selected.content}\n\n${selected.followup}`,
-            suggestions: [
-                { label: 'Another!', payload: 'Tell me something else unexpected' },
-                { label: 'Experience', payload: "Tell me about his experience" },
-                { label: 'Contact', payload: 'Contact info' }
-            ]
+            suggestions: this.generateSuggestions('surprise', 3)
         };
     }
 
@@ -234,11 +230,7 @@ export class LumoAI {
     private handleQuickTour(): { text: string; suggestions?: Suggestion[] } {
         return {
             text: `TL;DR: Nate's a Lead Product Designer with 8+ years. Specializes in design systems, healthcare & fintech. Currently at Invitrace Health leading a design team. Built award-winning apps. Loves mentoring. Open to meaningful work. 🎯`,
-            suggestions: [
-                { label: 'Deep Dive', payload: 'Tell me everything' },
-                { label: 'Skills', payload: 'What are his skills?' },
-                { label: 'Contact', payload: 'How do I reach him?' }
-            ]
+            suggestions: this.generateSuggestions('quick_summary', 3)
         };
     }
 
@@ -251,11 +243,7 @@ export class LumoAI {
 
         return {
             text: `${narrative.elevator_pitch}\n\n${currentExp.storytelling.detailed}\n\nHis unique value: ${narrative.unique_value.join(', ')}. Career themes: always focused on ${narrative.career_themes.impact}.`,
-            suggestions: [
-                { label: 'Specific projects', payload: 'Tell me about specific projects' },
-                { label: 'Skills breakdown', payload: 'Break down his skills' },
-                { label: 'Contact', payload: 'How can I reach him?' }
-            ]
+            suggestions: this.generateSuggestions('deep_dive', 3)
         };
     }
 
