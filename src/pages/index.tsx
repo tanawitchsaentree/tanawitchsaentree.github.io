@@ -185,7 +185,7 @@ function TabExperienceSection() {
           active={activeTab === 'work'}
           onClick={() => setActiveTab('work')}
         >
-          Previously
+          Work
         </TabButton>
         <TabButton
           active={activeTab === 'education'}
