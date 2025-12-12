@@ -103,6 +103,26 @@ export class SmallTalkHandler {
     }
 
     /**
+     * Detect if user wants AI to auto-pick content (not ask questions)
+     */
+    detectAutoExecute(query: string): boolean {
+        const triggers = [
+            'just tell me',
+            'tell me something',
+            'surprise me',
+            'you pick',
+            'you choose',
+            'you decide',
+            'bring it',
+            'whatever',
+            'anything is fine'
+        ];
+
+        const normalized = query.toLowerCase().trim();
+        return triggers.some(trigger => normalized.includes(trigger));
+    }
+
+    /**
      * Check if query matches any trigger
      */
     private matchesAny(query: string, triggers: string[]): boolean {

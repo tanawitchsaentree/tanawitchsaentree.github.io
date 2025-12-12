@@ -77,6 +77,28 @@
                 "^(tell me|what) (about|of) (.+)$"
             ],
             "extract_topic": true
+        },
+        "auto_execute": {
+            "description": "User wants AI to pick content, not ask questions",
+            "phrases": [
+                "just tell me",
+                "tell me something",
+                "surprise me",
+                "you pick",
+                "you choose",
+                "you decide",
+                "dealer's choice",
+                "whatever",
+                "anything is fine",
+                "bring it"
+            ],
+            "patterns": [
+                "^(just )?tell me( something)?",
+                "^(you )?(pick|choose|decide)",
+                "^surprise me",
+                "^bring it"
+            ],
+            "action": "auto_pick_content"
         }
     },
     "resolution_rules": {

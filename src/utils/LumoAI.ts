@@ -13,6 +13,9 @@ import { ReferenceResolver } from './ReferenceResolver';
 import { SmallTalkHandler } from './SmallTalkHandler';
 import { ContextValidator } from './ContextValidator';
 import { FallbackStrategy } from './FallbackStrategy';
+import { UserProfiler, type UserProfile } from './UserProfiler';
+import { SmartRecommender } from './SmartRecommender';
+import { SessionManager } from './SessionManager';
 
 // Types
 interface Suggestion {
@@ -66,6 +69,11 @@ export class LumoAI {
     private smallTalkHandler: SmallTalkHandler;
     private contextValidator: ContextValidator;
     private fallbackStrategy: FallbackStrategy;
+    // Phase 4: Memory & Learning modules
+    private userProfiler: UserProfiler;
+    private smartRecommender: SmartRecommender;
+    private sessionManager: SessionManager;
+    private userProfile: UserProfile | null = null;
 
     constructor() {
         this.intentClassifier = new IntentClassifier();
@@ -75,6 +83,42 @@ export class LumoAI {
         this.smallTalkHandler = new SmallTalkHandler();
         this.contextValidator = new ContextValidator();
         this.fallbackStrategy = new FallbackStrategy();
+        // Phase 4: Initialize Memory System
+        this.userProfiler = new UserProfiler();
+        this.smartRecommender = new SmartRecommender();
+        this.sessionManager = new SessionManager();
+
+        // Load existing session if available
+        this.loadSession();
+    }
+
+    /**
+     * Load session from localStorage
+     */
+    private loadSession(): void {
+        const session = this.sessionManager.loadSession();
+        if (session) {
+            this.userProfile = this.sessionManager.incrementVisit(session.profile);
+            this.conversationState.conversationHistory = session.conversationHistory;
+
+            // Show welcome back message in console
+            const welcomeMsg = this.sessionManager.getWelcomeMessage(this.userProfile);
+            if (welcomeMsg) {
+                console.log('[LumoAI] ' + welcomeMsg);
+            }
+        }
+    }
+
+    /**
+     * Save current session
+     */
+    private saveSession(): void {
+        if (this.userProfile) {
+            this.sessionManager.saveSession(
+                this.userProfile,
+                this.conversationState.conversationHistory
+            );
+        }
     }
 
     /**
@@ -153,6 +197,14 @@ export class LumoAI {
                 suggestions: this.generateSuggestions(undefined, 3)
             };
             this.recordTurn(query, `smalltalk_${smallTalk.type}`, [], response.text);
+            return response;
+        }
+
+        // 🧠 CEREBRO LAYER 1.5: Auto-Execute Intent (CRITICAL FIX)
+        // User says "just tell me" = wants content NOW, not questions!
+        if (this.smallTalkHandler.detectAutoExecute(query)) {
+            const response = this.handleSurpriseQuery();
+            this.recordTurn(query, 'auto_execute', [], response.text);
             return response;
         }
 
@@ -398,6 +450,15 @@ export class LumoAI {
         if (this.conversationState.conversationHistory.length > 10) {
             this.conversationState.conversationHistory.shift();
         }
+
+        // Phase 4: Build user profile from conversation
+        this.userProfile = this.userProfiler.buildProfile(
+            this.conversationState.conversationHistory,
+            this.userProfile || undefined
+        );
+
+        // Phase 4: Save session to localStorage
+        this.saveSession();
     }
 
     /**
@@ -497,7 +558,17 @@ export class LumoAI {
 
         // Sort by score and return top N
         candidates.sort((a, b) => b.score - a.score);
-        return candidates.slice(0, maxCount).map(c => c.suggestion);
+        let finalSuggestions = candidates.slice(0, maxCount).map(c => c.suggestion);
+
+        // Phase 4: Personalize based on profile
+        if (this.userProfile) {
+            finalSuggestions = this.smartRecommender.personalizeOrder(
+                finalSuggestions,
+                this.userProfile
+            );
+        }
+
+        return finalSuggestions;
     }
 
     /**
