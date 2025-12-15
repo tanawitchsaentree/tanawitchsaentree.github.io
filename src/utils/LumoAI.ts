@@ -44,6 +44,7 @@ interface ConversationState {
     lastEntities: ExtractedEntity[];
     lastTopic: string | null;
     lastResponse: string | null;
+    lastSurpriseContent: string | null; // Track last surprise content to avoid repeats
 }
 
 export class LumoAI {
@@ -58,7 +59,8 @@ export class LumoAI {
         lastIntent: null,
         lastEntities: [],
         lastTopic: null,
-        lastResponse: null
+        lastResponse: null,
+        lastSurpriseContent: null
     };
 
     // Advanced AI components
@@ -362,7 +364,19 @@ export class LumoAI {
      */
     private handleSurpriseQuery(): { text: string; suggestions?: Suggestion[] } {
         const surprises = conversationFlows.flows.surprise_me_adventure.surprises;
-        const selected = this.weightedRandom(surprises);
+
+        // Filter out the last shown surprise to prevent immediate repetition
+        const candidates = this.conversationState.lastSurpriseContent
+            ? surprises.filter(s => s.content !== this.conversationState.lastSurpriseContent)
+            : surprises;
+
+        // Fallback to full list if filter leaves nothing (unlikely)
+        const pool = candidates.length > 0 ? candidates : surprises;
+
+        const selected = this.weightedRandom(pool);
+
+        // Track this surprise
+        this.conversationState.lastSurpriseContent = selected.content;
 
         return {
             text: `${selected.content}\n\n${selected.followup}`,

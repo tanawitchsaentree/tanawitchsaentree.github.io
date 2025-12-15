@@ -45,21 +45,15 @@ export class SmartRecommender {
      * Recommend related companies
      */
     private recommendRelatedCompanies(company: string): Recommendation {
-        const otherCompanies: Record<string, string> = {
-            'Allianz': 'Invitrace',
-            'Invitrace': 'Allianz',
-            'allianz': 'Invitrace',
-            'invitrace': 'Allianz'
-        };
-
-        const related = otherCompanies[company] || 'other companies';
+        // Fix: Stay on topic! Don't jump to another company immediately.
+        // User wants to know more about THIS company.
 
         return {
-            message: `Since you're interested in ${company}, you might also want to know about his work at ${related}!`,
+            message: `Interested in his time at ${company}? There's deeper work to explore there.`,
             suggestions: [
-                { label: `${related} Work`, payload: `Tell me about ${related}` },
-                { label: 'Skills Used', payload: 'What skills did he use?' },
-                { label: 'Projects', payload: 'Show me projects' }
+                { label: `Projects at ${company}`, payload: `Show me projects at ${company}` },
+                { label: `My Role at ${company}`, payload: `What was his role at ${company}?` },
+                { label: `Challenges`, payload: `What challenges did he face at ${company}?` }
             ]
         };
     }
