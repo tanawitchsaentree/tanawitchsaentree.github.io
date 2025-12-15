@@ -322,13 +322,18 @@ export class LumoAI {
 
             if (companyExp) {
                 return {
-                    text: companyExp.storytelling.medium,
+                    text: `**${companyExp.role.title}** at **${companyExp.company.name}**
+${companyExp.storytelling.medium}`,
                     suggestions: this.generateSuggestions('company_specific', 3)
                 };
             }
         }
 
-        const text = `Nate's got ${summary.total_years} experience across ${summary.industries.join(', ')}. Currently ${currentRole.role.title} at ${currentRole.company.name}, where he's ${currentRole.storytelling.short}. Before that: award-winning fintech apps, COVID vaccine passports, and design systems across multiple companies.`;
+        const text = `Nate has **${summary.total_years} experience** across ${summary.industries.join(', ')}.
+
+- **Current:** **${currentRole.role.title}** at **${currentRole.company.name}**
+- **Focus:** ${currentRole.storytelling.short}
+- **Past:** Award-winning fintech apps & COVID vaccine passports.`;
 
         return {
             text,
@@ -340,7 +345,12 @@ export class LumoAI {
      * Handle skills query
      */
     private handleSkillsQuery(): { text: string; suggestions?: Suggestion[] } {
-        const text = `Nate's expertise spans: Design Systems (he thinks in systems, not just screens), User Research (loves talking to users), Visual Design (photography background!), and Design Leadership (loves growing designers). He's expert-level in UX Strategy, IA, Interaction Design, and Cross-functional Collaboration.`;
+        const text = `Nate's expertise spans key areas:
+
+- **Design Systems:** Thinks in systems, not just screens
+- **User Research:** Loves talking to users (validation over assumptions)
+- **Visual Design:** Photography background = strong composition
+- **Leadership:** Growing designers & leading cross-functional teams`;
 
         return {
             text,
@@ -355,7 +365,13 @@ export class LumoAI {
         const contact = profileData.contact;
 
         return {
-            text: `Best way to reach Nate: ${contact.primary.value}. Also on LinkedIn (${contact.social.linkedin.url}), Behance, and exploring on GitHub. He typically responds within 24-48 hours. Worth the wait though 😉`
+            text: `**Let's connect!**
+
+- **Email:** ${contact.primary.value}
+- **LinkedIn:** [Nate's Profile](${contact.social.linkedin.url})
+- **Other:** Behance & GitHub
+
+He typically responds within **24-48 hours**. Worth the wait! 😉`
         };
     }
 
@@ -389,7 +405,14 @@ export class LumoAI {
      */
     private handleQuickTour(): { text: string; suggestions?: Suggestion[] } {
         return {
-            text: `TL;DR: Nate's a Lead Product Designer with 8+ years. Specializes in design systems, healthcare & fintech. Currently at Invitrace Health leading a design team. Built award-winning apps. Loves mentoring. Open to meaningful work. 🎯`,
+            text: `**TL;DR:** Nate's a **Lead Product Designer** with 8+ years experience.
+
+- **Specialties:** Design Systems, Healthcare, Fintech
+- **Current Role:** Lead at **Invitrace Health**
+- **Achievements:** Built award-winning apps & scaleable systems
+- **Passion:** Mentoring & inclusive design
+
+Open to meaningful work. 🎯`,
             suggestions: this.generateSuggestions('quick_summary', 3)
         };
     }
@@ -402,7 +425,12 @@ export class LumoAI {
         const currentExp = profileData.experience.timeline[0];
 
         return {
-            text: `${narrative.elevator_pitch}\n\n${currentExp.storytelling.detailed}\n\nHis unique value: ${narrative.unique_value.join(', ')}. Career themes: always focused on ${narrative.career_themes.impact}.`,
+            text: `**${narrative.elevator_pitch}**
+
+${currentExp.storytelling.detailed}
+
+- **Unique Value:** ${narrative.unique_value.join(', ')}
+- **Career Theme:** Always focused on **${narrative.career_themes.impact}**`,
             suggestions: this.generateSuggestions('deep_dive', 3)
         };
     }

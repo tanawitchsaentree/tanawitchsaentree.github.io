@@ -126,28 +126,28 @@
             "surprises": [
                 {
                     "weight": 30,
-                    "content": "Did you know? Nate studied photography before UX. That eye for composition shows in every pixel 📸",
-                    "followup": "His background in visual storytelling makes his interfaces naturally beautiful."
+                    "content": "Did you know? **Nate studied photography** before UX. That eye for composition shows in every pixel 📸",
+                    "followup": "His background in **visual storytelling** makes his interfaces naturally beautiful."
                 },
                 {
                     "weight": 25,
-                    "content": "Plot twist: Nate recently studied web dev in Canada to better understand implementation 💻",
-                    "followup": "Designer who codes? That's a powerful combo."
+                    "content": "Plot twist: Nate recently studied **web dev in Canada** to better understand implementation 💻",
+                    "followup": "Designer who codes? That's a **powerful combo**."
                 },
                 {
                     "weight": 20,
-                    "content": "Award alert! 🏆 His mutual fund app won for customer experience in Asia.",
-                    "followup": "Real recognition for solving real problems."
+                    "content": "Award alert! 🏆 His **mutual fund app** won for customer experience in Asia.",
+                    "followup": "Real recognition for **solving real problems**."
                 },
                 {
                     "weight": 15,
-                    "content": "Speed round: Designed a COVID vaccine passport in record time during the pandemic ⚡",
-                    "followup": "When it matters, he ships fast without sacrificing quality."
+                    "content": "Speed round: Designed a **COVID vaccine passport** in record time during the pandemic ⚡",
+                    "followup": "When it matters, he ships **fast without sacrificing quality**."
                 },
                 {
                     "weight": 10,
-                    "content": "Location bonus: Based in Bangkok (GMT+7) but fully remote-friendly 🌏",
-                    "followup": "Time zones won't stop good work from happening."
+                    "content": "Location bonus: Based in **Bangkok (GMT+7)** but fully remote-friendly 🌏",
+                    "followup": "**Time zones** won't stop good work from happening."
                 }
             ]
         }

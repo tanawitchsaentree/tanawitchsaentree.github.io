@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { LumoAI } from '../utils/LumoAI';
 import { RetroButton } from './ui/RetroButton';
+import { ExternalLink, Check, Copy } from 'lucide-react';
 import '../index.css';
+
+// ... (previous code)
+
+
 
 interface Message {
   id: string;
@@ -147,49 +152,102 @@ const ChatBox: React.FC = () => {
     }
   };
 
-  // Render message with email copy icons
-  const renderMessageWithEmailCopy = (text: string) => {
-    const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g;
-    const parts = text.split(emailRegex);
+  // Rich Text Rendering Engine
+  const renderRichText = (text: string) => {
+    // 1. Handle Bullet Points (Split by newline)
+    const lines = text.split('\n');
 
-    return parts.map((part, index) => {
-      if (emailRegex.test(part)) {
+    return lines.map((line, lineIdx) => {
+      // Check for bullet point
+      const isBullet = line.trim().startsWith('- ');
+      const content = isBullet ? line.trim().substring(2) : line;
+
+      // 2. Parse Inline Styles (Bold, Link, Email)
+      // Regex explanation:
+      // (\*\*[^*]+\*\*) -> Bold: **text**
+      // (\[.*?\]\(.*?\)) -> Link: [text](url)
+      // ([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+) -> Email
+      const parts = content.split(/(\*\*[^*]+\*\*|\[.*?\]\(.*?\)|[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g);
+
+      const renderedParts = parts.map((part, partIdx) => {
+        // Handle Bold
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={partIdx} className="font-bold text-[var(--foreground)]">{part.substring(2, part.length - 2)}</strong>;
+        }
+
+        // Handle Link
+        if (part.startsWith('[') && part.includes('](') && part.endsWith(')')) {
+          const [label, url] = part.match(/\[(.*?)\]\((.*?)\)/)?.slice(1) || [];
+          if (label && url) {
+            return (
+              <a
+                key={partIdx}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-bold text-blue-600 hover:underline hover:text-blue-500 transition-colors"
+              >
+                {label}
+                <ExternalLink size={12} strokeWidth={3} />
+              </a>
+            );
+          }
+        }
+
+        // Handle Email
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+$/;
+        if (emailRegex.test(part)) {
+          return (
+            <span key={partIdx} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
+              <strong className="text-[var(--foreground)]">{part}</strong>
+              <button
+                onClick={() => handleCopyEmail(part)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  verticalAlign: 'middle',
+                  opacity: copiedEmail ? 1 : 0.5,
+                  transition: 'opacity 0.2s',
+                  color: 'inherit'
+                }}
+                title={copiedEmail ? "Copied!" : "Copy email"}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = copiedEmail ? '1' : '0.5'}
+              >
+                {copiedEmail ? (
+                  <Check size={14} />
+                ) : (
+                  <Copy size={14} />
+                )}
+              </button>
+            </span>
+          );
+        }
+
+        return part;
+      });
+
+      // Return wrapped line
+      if (isBullet) {
         return (
-          <span key={index} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}>
-            <strong>{part}</strong>
-            <button
-              onClick={() => handleCopyEmail(part)}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '2px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                verticalAlign: 'middle',
-                opacity: copiedEmail ? 1 : 0.5,
-                transition: 'opacity 0.2s',
-                color: 'inherit'
-              }}
-              title={copiedEmail ? "Copied!" : "Copy email"}
-              onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-              onMouseLeave={(e) => e.currentTarget.style.opacity = copiedEmail ? '1' : '0.5'}
-            >
-              {copiedEmail ? (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              ) : (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-              )}
-            </button>
-          </span>
+          <div key={lineIdx} className="flex gap-2 mb-1 ml-1">
+            <span className="text-[var(--muted-foreground)]">•</span>
+            <span>{renderedParts}</span>
+          </div>
         );
       }
-      return part;
+
+      // Normal line (preserve newlines if not last)
+      return (
+        <React.Fragment key={lineIdx}>
+          {renderedParts}
+          {lineIdx < lines.length - 1 && <br />}
+        </React.Fragment>
+      );
     });
   };
 
@@ -225,7 +283,7 @@ const ChatBox: React.FC = () => {
                   }`}
                 style={{ maxWidth: '420px' }}
               >
-                {msg.sender === 'bot' ? renderMessageWithEmailCopy(msg.displayingText !== undefined ? msg.displayingText : msg.text) : (msg.displayingText !== undefined ? msg.displayingText : msg.text)}
+                {msg.sender === 'bot' ? renderRichText(msg.displayingText !== undefined ? msg.displayingText : msg.text) : (msg.displayingText !== undefined ? msg.displayingText : msg.text)}
                 {msg.sender === 'bot' && msg.displayingText && msg.displayingText.length < msg.text.length && (
                   <span className="animate-pulse">_</span>
                 )}
