@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { LumoAI } from '../utils/LumoAI';
+import { useTheme } from 'next-themes';
 import { RetroButton } from './ui/RetroButton';
 import { ExternalLink, Check, Copy } from 'lucide-react';
 import '../index.css';
@@ -21,6 +22,7 @@ interface Message {
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 const ChatBox: React.FC = () => {
+  const { setTheme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -125,6 +127,12 @@ const ChatBox: React.FC = () => {
     try {
       // Get response from LumoAI engine - Championship intelligence!
       const aiResponse = lumoAI.generateResponse(text);
+
+      // Execute commands (Magic Layer)
+      if (aiResponse.command && aiResponse.command.type === 'set_theme') {
+        setTheme(aiResponse.command.value);
+      }
+
       await displayHumanizedMessage(aiResponse.text, 'bot', aiResponse.suggestions);
 
       // Track topic for conversation context

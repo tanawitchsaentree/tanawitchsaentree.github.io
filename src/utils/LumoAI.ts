@@ -184,7 +184,7 @@ export class LumoAI {
     /**
      * Generate intelligent response based on query - CEREBRO ORCHESTRATION
      */
-    generateResponse(query: string): { text: string; suggestions?: Suggestion[] } {
+    generateResponse(query: string): { text: string; suggestions?: Suggestion[]; command?: { type: string; value: string } } {
         // 🧠 CEREBRO LAYER 0.5: Auto-Execute Intent (Priority Command)
         if (this.smallTalkHandler.detectAutoExecute(query)) {
             const response = this.handleSurpriseQuery();
@@ -203,7 +203,7 @@ export class LumoAI {
 
         // High Confidence Shortcut (>0.6) -> Bypass heuristics if we are sure
         if (bestIntent && bestIntent.confidence > 0.6 && bestIntent.intent !== 'clarification_needed') {
-            const response = this.executeIntent(bestIntent.intent, entities);
+            const response = this.executeIntent(bestIntent.intent, entities, query);
             if (response) {
                 this.recordTurn(query, bestIntent.intent, entities, response.text);
                 return response;
@@ -267,7 +267,7 @@ export class LumoAI {
 
         // Step 4: Check if we have decent confidence (Medium Confidence > threshold)
         if (bestIntent && this.intentClassifier.meetsThreshold(bestIntent)) {
-            const response = this.executeIntent(bestIntent.intent, entities);
+            const response = this.executeIntent(bestIntent.intent, entities, query);
             if (response) {
                 this.recordTurn(query, bestIntent.intent, entities, response.text);
                 return response;
@@ -283,7 +283,7 @@ export class LumoAI {
     /**
      * Router to execute specific intents
      */
-    private executeIntent(intent: string, entities: any[]): { text: string; suggestions?: Suggestion[] } | null {
+    private executeIntent(intent: string, entities: any[], query?: string): { text: string; suggestions?: Suggestion[]; command?: { type: string; value: string } } | null {
         switch (intent) {
             case 'experience_query':
             case 'company_specific':
@@ -299,6 +299,8 @@ export class LumoAI {
                 return this.handleQuickTour();
             case 'deep_dive':
                 return this.handleDeepDive();
+            case 'theme_change':
+                return this.handleThemeChange(entities, query || '');
             default:
                 return null;
         }
@@ -431,6 +433,26 @@ ${currentExp.storytelling.detailed}
 - **Unique Value:** ${narrative.unique_value.join(', ')}
 - **Career Theme:** Always focused on **${narrative.career_themes.impact}**`,
             suggestions: this.generateSuggestions('deep_dive', 3)
+        };
+    }
+
+    /**
+     * Handle theme change
+     */
+    private handleThemeChange(_entities: ExtractedEntity[], query: string): { text: string; suggestions?: Suggestion[]; command?: { type: string; value: string } } {
+        let theme = 'dark';
+        const lowerQuery = query.toLowerCase();
+
+        if (lowerQuery.includes('twilight')) theme = 'twilight';
+        else if (lowerQuery.includes('light')) theme = 'light';
+        else if (lowerQuery.includes('dark')) theme = 'dark';
+
+        const emoji = theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '🌇';
+
+        return {
+            text: `Switching to **${theme} mode**... ${emoji}`,
+            command: { type: 'set_theme', value: theme },
+            suggestions: []
         };
     }
 

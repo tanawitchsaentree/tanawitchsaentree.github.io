@@ -302,9 +302,8 @@
                 "full"
             ],
             "secondary_keywords": [
-                "tell me more",
-                "go deeper",
-                "elaborate"
+                "tell me everything about {him|you|nate}",
+                "do a deep dive"
             ],
             "semantic_patterns": [
                 "tell me {more|everything|all}",
@@ -312,6 +311,33 @@
                 "{detailed|deep|in-depth} {info|information|look}",
                 "go {deeper|into detail}",
                 "elaborate {on|about}"
+            ]
+        },
+        "theme_change": {
+            "id": "theme_change",
+            "priority": "high",
+            "confidence_threshold": 0.5,
+            "primary_keywords": [
+                "theme",
+                "mode",
+                "dark",
+                "light",
+                "twilight",
+                "switch",
+                "change"
+            ],
+            "semantic_patterns": [
+                "switch to {dark|light|twilight} mode",
+                "change {theme|mode} to {dark|light|twilight}",
+                "turn on {dark|light|twilight} mode",
+                "make it {dark|light|twilight}",
+                "can you make it {dark|light|twilight}",
+                "can you change the theme",
+                "set theme to {dark|light|twilight}",
+                "i want {dark|light|twilight} mode"
+            ],
+            "entity_hints": [
+                "theme_name"
             ]
         },
         "clarification_needed": {
