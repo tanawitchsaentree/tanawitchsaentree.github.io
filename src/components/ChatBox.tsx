@@ -271,8 +271,8 @@ const ChatBox: React.FC = () => {
 
   return (
     <div className="chatbox-container">
-      <div ref={outputRef} className="chatbox-output">
-        <div className="flex-1" />
+      <div ref={outputRef} className="chatbox-output" style={{ display: 'flex', flexDirection: 'column', flex: 1, overflowY: 'auto' }}>
+        <div style={{ flexGrow: 1, minHeight: 0 }} />
         {messages.map((msg) => (
           <div key={msg.id} className={`chatbox-message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'}`}>
             {msg.sender === 'bot' && (
