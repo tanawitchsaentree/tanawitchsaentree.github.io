@@ -11,6 +11,28 @@ interface Recommendation {
 
 export class SmartRecommender {
     /**
+     * Get strictly contextual suggestions (bypassing generic pool)
+     */
+    getContextualSuggestions(context: string): { label: string; payload: string; icon?: string }[] | null {
+        switch (context) {
+            case 'surprise':
+                return [
+                    { label: 'Another One!', payload: 'Tell me another surprise', icon: '🎲' },
+                    { label: 'Quick Summary', payload: 'Give me a quick summary', icon: '⚡' },
+                    { label: 'Contact', payload: 'How can I contact Nate?', icon: '👋' }
+                ];
+            case 'quick_summary':
+                return [
+                    { label: 'Deep Dive', payload: 'Tell me everything', icon: '🔍' },
+                    { label: 'Specific Project', payload: 'Show me a specific project', icon: '🚀' },
+                    { label: 'Contact', payload: 'How can I contact Nate?', icon: '📧' }
+                ];
+            default:
+                return null;
+        }
+    }
+
+    /**
      * Get smart recommendation based on user profile
      */
     getRecommendation(profile: UserProfile): Recommendation | null {

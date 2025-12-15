@@ -526,6 +526,15 @@ export class LumoAI {
      * Generate context-aware suggestions
      */
     private generateSuggestions(currentIntent?: string, maxCount: number = 3): Suggestion[] {
+        // Phase 5 Refactor: Check for strict contextual overrides first
+        // If SmartRecommender has a specific set for this context, use it exclusively.
+        if (currentIntent && this.smartRecommender) {
+            const strictSuggestions = this.smartRecommender.getContextualSuggestions(currentIntent);
+            if (strictSuggestions) {
+                return strictSuggestions;
+            }
+        }
+
         const pool = (suggestionEngine as any).suggestion_engine.suggestion_pool;
         const candidates: Array<{ suggestion: Suggestion; score: number }> = [];
 
