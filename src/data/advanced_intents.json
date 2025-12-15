@@ -184,7 +184,14 @@
             "semantic_patterns": [
                 "{tell|what} {about|was} {his|your|nate's} {time|work|experience|role} at {company}",
                 "what did {he|you|nate} do at {company}",
-                "{company} {experience|work|role|position}"
+                "{tell|what} {about|was} {his|your|nate's} {time|work|experience|role} at {company}",
+                "what did {he|you|nate} do at {company}",
+                "{company} {experience|work|role|position}",
+                "tell me about {his|your|nate's} time at {company}",
+                "tell me about {company}",
+                "tell me about allianz",
+                "tell me about your time at allianz",
+                "experience at allianz"
             ],
             "context_boosters": {
                 "after_experience": 1.5
@@ -270,7 +277,13 @@
                 "tldr",
                 "in {brief|short}",
                 "{quick|brief} {intro|introduction|overview}",
-                "what's the {tldr|summary|gist}"
+                "{give|show} me {a|the} {quick|brief|short} {summary|overview}",
+                "tldr",
+                "in {brief|short}",
+                "{quick|brief} {intro|introduction|overview}",
+                "what's the {tldr|summary|gist}",
+                "quick summary",
+                "quick overview"
             ]
         },
         "deep_dive": {

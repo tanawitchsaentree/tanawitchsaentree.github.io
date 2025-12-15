@@ -6,7 +6,7 @@
 import profileData from '../data/profile_data_enhanced.json';
 import greetingSystem from '../data/greeting_system.json';
 import conversationFlows from '../data/conversation_flows.json';
-import suggestionEngine from '../data/suggestion_engine.json';
+
 import { IntentClassifier } from './IntentClassifier';
 import { EntityExtractor, type ExtractedEntity } from './EntityExtractor';
 import { ReferenceResolver } from './ReferenceResolver';
@@ -140,18 +140,12 @@ export class LumoAI {
         const selected = this.weightedRandom(variants);
 
         // Get suggestions
-        const suggestions = selected.suggestions.map((key: string) => {
-            const suggestion = (greetingSystem.suggestions as any)[key];
-            return {
-                label: suggestion.label,
-                payload: suggestion.payload,
-                icon: suggestion.icon || ''
-            };
-        });
+        // Force smart greeting suggestions (Contextual Menu)
+        const smartSuggestions = this.generateSuggestions('greeting');
 
         return {
             message: selected.message,
-            suggestions,
+            suggestions: smartSuggestions,
             followUpId: selected.follow_up_id
         };
     }
@@ -191,7 +185,32 @@ export class LumoAI {
      * Generate intelligent response based on query - CEREBRO ORCHESTRATION
      */
     generateResponse(query: string): { text: string; suggestions?: Suggestion[] } {
-        // 🧠 CEREBRO LAYER 1: Check for small talk/social cues FIRST
+        // 🧠 CEREBRO LAYER 0.5: Auto-Execute Intent (Priority Command)
+        if (this.smallTalkHandler.detectAutoExecute(query)) {
+            const response = this.handleSurpriseQuery();
+            this.recordTurn(query, 'auto_execute', [], response.text);
+            return response;
+        }
+
+        // 🧠 CEREBRO LAYER 1: Deep Understanding (Intent Classification)
+        // Check intents deeply first - if we are sure, act on it.
+        const intentScores = this.intentClassifier.classify(query, {
+            userType: this.conversationState.userType,
+            conversationDepth: this.conversationState.conversationDepth
+        });
+        const entities = this.entityExtractor.extract(query);
+        const bestIntent = intentScores[0];
+
+        // High Confidence Shortcut (>0.6) -> Bypass heuristics if we are sure
+        if (bestIntent && bestIntent.confidence > 0.6 && bestIntent.intent !== 'clarification_needed') {
+            const response = this.executeIntent(bestIntent.intent, entities);
+            if (response) {
+                this.recordTurn(query, bestIntent.intent, entities, response.text);
+                return response;
+            }
+        }
+
+        // 🧠 CEREBRO LAYER 2: Check for small talk/social cues
         const smallTalk = this.smallTalkHandler.detect(query);
         if (smallTalk.isSmallTalk && smallTalk.response) {
             const response = {
@@ -202,35 +221,30 @@ export class LumoAI {
             return response;
         }
 
-        // 🧠 CEREBRO LAYER 1.5: Auto-Execute Intent (CRITICAL FIX)
-        // User says "just tell me" = wants content NOW, not questions!
-        if (this.smallTalkHandler.detectAutoExecute(query)) {
-            const response = this.handleSurpriseQuery();
-            this.recordTurn(query, 'auto_execute', [], response.text);
-            return response;
-        }
-
-        // 🧠 CEREBRO LAYER 2: Check for gibberish
+        // 🧠 CEREBRO LAYER 3: Check for gibberish
         if (this.contextValidator.isGibberish(query)) {
             const response = this.fallbackStrategy.handleGibberish();
             this.recordTurn(query, 'gibberish', [], response.text);
             return response;
         }
 
-        // 🧠 CEREBRO LAYER 3: Check for vague queries
+        // 🧠 CEREBRO LAYER 4: Check for vague queries
         if (this.contextValidator.isVague(query)) {
             const fallback = this.fallbackStrategy.handleVagueQuery();
-            // Execute the action (e.g., surprise_query)
             if (fallback.action === 'surprise_query') {
                 const response = this.handleSurpriseQuery();
                 this.recordTurn(query, 'vague_to_surprise', [], response.text);
                 return response;
             }
+            // For other fallback actions, return the fallback text
+            return {
+                text: fallback.text,
+                suggestions: this.generateSuggestions(undefined, 3)
+            };
         }
 
         // PHASE 2: Check for references/follow-ups
         const reference = this.referenceResolver.detectReference(query);
-
         if (reference.hasReference && reference.type) {
             // 🧠 CEREBRO LAYER 4: Validate context before handling follow-up
             const validation = this.contextValidator.validateFollowUp(
@@ -251,58 +265,43 @@ export class LumoAI {
             return response;
         }
 
-        // Step 1: Use advanced intent classification
-        const intentScores = this.intentClassifier.classify(query, {
-            userType: this.conversationState.userType,
-            conversationDepth: this.conversationState.conversationDepth
-        });
-
-        // Step 2: Extract entities for context
-        const entities = this.entityExtractor.extract(query);
-
-        // Step 3: Get best intent
-        const bestIntent = intentScores[0];
-
-        // Step 4: Check if we have good confidence
-        if (!bestIntent || !this.intentClassifier.meetsThreshold(bestIntent)) {
-            // 🧠 CEREBRO LAYER 5: Intelligent low confidence fallback
-            const response = this.fallbackStrategy.handleLowConfidence();
-            this.recordTurn(query, 'low_confidence', entities, response.text);
-            return response;
+        // Step 4: Check if we have decent confidence (Medium Confidence > threshold)
+        if (bestIntent && this.intentClassifier.meetsThreshold(bestIntent)) {
+            const response = this.executeIntent(bestIntent.intent, entities);
+            if (response) {
+                this.recordTurn(query, bestIntent.intent, entities, response.text);
+                return response;
+            }
         }
 
-        // Step 5: Route to handler based on intent
-        let response;
-        switch (bestIntent.intent) {
+        // 🧠 CEREBRO LAYER 5: Intelligent low confidence fallback
+        const response = this.fallbackStrategy.handleLowConfidence();
+        this.recordTurn(query, 'low_confidence', entities, response.text);
+        return response;
+    }
+
+    /**
+     * Router to execute specific intents
+     */
+    private executeIntent(intent: string, entities: any[]): { text: string; suggestions?: Suggestion[] } | null {
+        switch (intent) {
             case 'experience_query':
             case 'company_specific':
-                response = this.handleExperienceQuery(entities);
-                break;
+                return this.handleExperienceQuery(entities);
             case 'skills_query':
             case 'skill_specific':
-                response = this.handleSkillsQuery();
-                break;
+                return this.handleSkillsQuery();
             case 'contact_query':
-                response = this.handleContactQuery();
-                break;
+                return this.handleContactQuery();
             case 'surprise_query':
-                response = this.handleSurpriseQuery();
-                break;
+                return this.handleSurpriseQuery();
             case 'quick_summary':
-                response = this.handleQuickTour();
-                break;
+                return this.handleQuickTour();
             case 'deep_dive':
-                response = this.handleDeepDive();
-                break;
+                return this.handleDeepDive();
             default:
-                // 🧠 CEREBRO LAYER 6: Graceful fallback (should rarely hit)
-                response = this.fallbackStrategy.handleNoContext();
+                return null;
         }
-
-        // Record this turn in conversation history
-        this.recordTurn(query, bestIntent.intent, entities, response.text);
-
-        return response;
     }
 
     /**
@@ -553,73 +552,25 @@ ${currentExp.storytelling.detailed}
     /**
      * Generate context-aware suggestions
      */
-    private generateSuggestions(currentIntent?: string, maxCount: number = 3): Suggestion[] {
-        // Phase 5 Refactor: Check for strict contextual overrides first
-        // If SmartRecommender has a specific set for this context, use it exclusively.
+    /**
+     * Generate context-aware suggestions
+     */
+    private generateSuggestions(currentIntent?: string, _maxCount: number = 3): Suggestion[] {
+        // Phase 6: Smart Silence Strategy
+        // Only return suggestions if SmartRecommender has a specific context-aware set.
         if (currentIntent && this.smartRecommender) {
             const strictSuggestions = this.smartRecommender.getContextualSuggestions(currentIntent);
-            if (strictSuggestions) {
+            if (strictSuggestions && strictSuggestions.length > 0) {
+                // Determine if we need to personalize/reorder based on user profile
+                // For now, strict suggestions are manually curated, so we keep them as is.
                 return strictSuggestions;
             }
         }
 
-        const pool = (suggestionEngine as any).suggestion_engine.suggestion_pool;
-        const candidates: Array<{ suggestion: Suggestion; score: number }> = [];
-
-        // Get user type preferences
-        const userType = this.conversationState.userType || 'casual_browser';
-        const userPrefs = (suggestionEngine as any).suggestion_engine.user_type_preferences[userType] || {};
-        const prioritizedTopics = userPrefs.prioritize || [];
-
-        for (const [key, suggestionData] of Object.entries(pool)) {
-            const data = suggestionData as any;
-            let score = 10; // Base score
-
-            // Already discussed? Skip or lower priority
-            if (this.conversationState.topicsDiscussed.includes(key)) {
-                if (data.hide_after?.includes(currentIntent || '')) {
-                    continue; // Skip completely
-                }
-                score -= 20; // Lower priority
-            }
-
-            // Should show after current topic?
-            if (currentIntent && data.show_after?.includes(currentIntent)) {
-                score += 15;
-            }
-
-            // User type priority boost
-            if (prioritizedTopics.includes(key)) {
-                score += 10;
-            }
-
-            // Priority level boost
-            if (data.priority === 'high') score += 5;
-            if (data.priority === 'low') score -= 5;
-
-            candidates.push({
-                suggestion: {
-                    label: data.label,
-                    payload: data.payload,
-                    icon: data.icon
-                },
-                score
-            });
-        }
-
-        // Sort by score and return top N
-        candidates.sort((a, b) => b.score - a.score);
-        let finalSuggestions = candidates.slice(0, maxCount).map(c => c.suggestion);
-
-        // Phase 4: Personalize based on profile
-        if (this.userProfile) {
-            finalSuggestions = this.smartRecommender.personalizeOrder(
-                finalSuggestions,
-                this.userProfile
-            );
-        }
-
-        return finalSuggestions;
+        // Default to SILENCE (Empty array)
+        // We no longer fallback to the generic suggestion pool to avoid "button spam".
+        // If the AI has nothing specific to suggest, it should remain silent and let the chat content stand alone.
+        return [];
     }
 
     /**

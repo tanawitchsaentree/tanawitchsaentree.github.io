@@ -96,7 +96,9 @@
                 "^(just )?tell me( something)?",
                 "^(you )?(pick|choose|decide)",
                 "^surprise me",
-                "^bring it"
+                "^bring it",
+                "tell me something good",
+                "something good"
             ],
             "action": "auto_pick_content"
         }

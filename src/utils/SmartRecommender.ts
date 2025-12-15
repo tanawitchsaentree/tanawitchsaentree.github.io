@@ -15,17 +15,27 @@ export class SmartRecommender {
      */
     getContextualSuggestions(context: string): { label: string; payload: string; icon?: string }[] | null {
         switch (context) {
-            case 'surprise':
+            case 'greeting':
                 return [
-                    { label: 'Another One!', payload: 'Tell me another surprise', icon: '🎲' },
-                    { label: 'Quick Summary', payload: 'Give me a quick summary', icon: '⚡' },
-                    { label: 'Contact', payload: 'How can I contact Nate?', icon: '👋' }
+                    { label: 'Quick Summary', payload: 'Give me the highlights', icon: '⚡' },
+                    { label: 'Work Experience', payload: 'Tell me about Nate\'s experience', icon: '💼' },
+                    { label: 'Surprise Me', payload: 'Tell me something good', icon: '🎲' }
                 ];
             case 'quick_summary':
                 return [
                     { label: 'Deep Dive', payload: 'Tell me everything', icon: '🔍' },
-                    { label: 'Specific Project', payload: 'Show me a specific project', icon: '🚀' },
                     { label: 'Contact', payload: 'How can I contact Nate?', icon: '📧' }
+                ];
+            case 'company_specific':
+                // User already saw experience, don't ask "Experience?" again.
+                // Offer deeper content or contact.
+                return [
+                    { label: 'Contact', payload: 'How can I contact Nate?', icon: '📧' }
+                ];
+            case 'surprise':
+                return [
+                    { label: 'Another One!', payload: 'Tell me another surprise', icon: '🎲' },
+                    { label: 'Quick Summary', payload: 'Give me the highlights', icon: '⚡' }
                 ];
             default:
                 return null;
