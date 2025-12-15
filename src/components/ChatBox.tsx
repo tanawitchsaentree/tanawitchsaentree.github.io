@@ -92,11 +92,7 @@ const ChatBox: React.FC = () => {
       await displayHumanizedMessage(greetingText, 'bot', greeting.suggestions);
 
       // Optional follow-up message
-      const followUp = lumoAI.getFollowUp(greeting.followUpId);
-      if (followUp) {
-        await sleep(followUp.delay);
-        await displayHumanizedMessage(followUp.text);
-      }
+
 
       setIsTyping(false);
     };
