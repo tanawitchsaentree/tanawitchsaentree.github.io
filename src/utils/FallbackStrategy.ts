@@ -21,9 +21,9 @@ export class FallbackStrategy {
         return {
             text: selected.text,
             suggestions: [
-                { label: 'Experience', payload: "Tell me about Nate's experience" },
-                { label: 'Skills', payload: "What are Nate's skills?" },
-                { label: 'Quick Summary', payload: 'Give me a quick summary' }
+                { label: 'Experience', payload: "Experience" },
+                { label: 'Skills', payload: "Skills" },
+                { label: 'Quick Summary', payload: 'Quick Summary' }
             ]
         };
     }
@@ -56,9 +56,9 @@ export class FallbackStrategy {
 
 What interests you?`,
             suggestions: [
-                { label: 'Experience', payload: "Tell me about his experience" },
-                { label: 'Skills', payload: "What are his skills?" },
-                { label: 'Contact', payload: 'How can I contact him?' }
+                { label: 'Experience', payload: "Experience" },
+                { label: 'Skills', payload: "Skills" },
+                { label: 'Contact', payload: 'Contact' }
             ]
         };
     }
@@ -76,9 +76,9 @@ What interests you?`,
 • Skills & Expertise
 • Contact Info`,
             suggestions: [
-                { label: 'Experience', payload: "Tell me about his work" },
-                { label: 'Skills', payload: "What can he do?" },
-                { label: 'Quick Tour', payload: 'Give me the highlights' }
+                { label: 'Experience', payload: "Experience" },
+                { label: 'Skills', payload: "Skills" },
+                { label: 'Quick Tour', payload: 'Quick Summary' }
             ]
         };
     }
@@ -90,9 +90,9 @@ What interests you?`,
         return {
             text: "That's a lot to cover! Let's start with what interests you most:",
             suggestions: [
-                { label: 'Quick Summary', payload: 'Give me the highlights first' },
-                { label: 'Experience', payload: 'Start with experience' },
-                { label: 'Skills', payload: 'Start with skills' }
+                { label: 'Quick Summary', payload: 'Quick Summary' },
+                { label: 'Experience', payload: 'Experience' },
+                { label: 'Skills', payload: 'Skills' }
             ]
         };
     }

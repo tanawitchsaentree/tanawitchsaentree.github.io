@@ -283,7 +283,9 @@
                 "{quick|brief} {intro|introduction|overview}",
                 "what's the {tldr|summary|gist}",
                 "quick summary",
-                "quick overview"
+                "quick overview",
+                "highlights",
+                "give me the highlights"
             ]
         },
         "deep_dive": {

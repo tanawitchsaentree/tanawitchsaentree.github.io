@@ -17,25 +17,25 @@ export class SmartRecommender {
         switch (context) {
             case 'greeting':
                 return [
-                    { label: 'Quick Summary', payload: 'Give me the highlights', icon: '⚡' },
-                    { label: 'Work Experience', payload: 'Tell me about Nate\'s experience', icon: '💼' },
-                    { label: 'Surprise Me', payload: 'Tell me something good', icon: '🎲' }
+                    { label: 'Quick Summary', payload: 'Quick Summary', icon: '⚡' },
+                    { label: 'Work Experience', payload: 'Experience', icon: '💼' },
+                    { label: 'Surprise Me', payload: 'Surprise Me', icon: '🎲' }
                 ];
             case 'quick_summary':
                 return [
-                    { label: 'Deep Dive', payload: 'Tell me everything', icon: '🔍' },
-                    { label: 'Contact', payload: 'How can I contact Nate?', icon: '📧' }
+                    { label: 'Deep Dive', payload: 'Deep Dive', icon: '🔍' },
+                    { label: 'Contact', payload: 'Contact', icon: '📧' }
                 ];
             case 'company_specific':
                 // User already saw experience, don't ask "Experience?" again.
                 // Offer deeper content or contact.
                 return [
-                    { label: 'Contact', payload: 'How can I contact Nate?', icon: '📧' }
+                    { label: 'Contact', payload: 'Contact', icon: '📧' }
                 ];
             case 'surprise':
                 return [
-                    { label: 'Another One!', payload: 'Tell me another surprise', icon: '🎲' },
-                    { label: 'Quick Summary', payload: 'Give me the highlights', icon: '⚡' }
+                    { label: 'Another One!', payload: 'Surprise Me', icon: '🎲' },
+                    { label: 'Quick Summary', payload: 'Quick Summary', icon: '⚡' }
                 ];
             default:
                 return null;
