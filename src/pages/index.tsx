@@ -114,6 +114,7 @@ function TabButton({
     <button
       onClick={onClick}
       style={{
+        fontFamily: 'inherit',
         fontSize: 'var(--text-base)',
         fontWeight: 600,
         textTransform: 'uppercase',
