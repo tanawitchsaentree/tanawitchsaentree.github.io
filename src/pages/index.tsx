@@ -145,7 +145,7 @@ function WorkExperienceList() {
       {profileData.work_experience.map((exp, index) => (
         <ExperienceItem
           key={index}
-          year={`${new Date(exp.start_date).getFullYear()}-${new Date(exp.end_date).getFullYear()}`}
+          year={`${new Date(exp.start_date).getFullYear()} - ${exp.end_date === 'Present' ? 'Present' : new Date(exp.end_date).getFullYear()}`}
           role={exp.role}
           company={exp.company}
           link={exp.link}
