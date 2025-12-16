@@ -9,6 +9,7 @@ import conversationFlows from '../data/conversation_flows.json';
 
 import { IntentClassifier } from './IntentClassifier';
 import { EntityExtractor, type ExtractedEntity } from './EntityExtractor';
+import { AnalyticsManager } from './AnalyticsManager';
 import { ReferenceResolver } from './ReferenceResolver';
 import { SmallTalkHandler } from './SmallTalkHandler';
 import { ContextValidator } from './ContextValidator';
@@ -202,6 +203,7 @@ export class LumoAI {
         // Intercepts known button commands to bypass fuzzy classification
         const directResponse = this.executePayload(query);
         if (directResponse) {
+            AnalyticsManager.trackCommand(query); // Track button click
             this.recordTurn(query, 'direct_command', [], directResponse.text);
             return directResponse;
         }
@@ -276,6 +278,7 @@ export class LumoAI {
 
         // Step 4: Check if we have decent confidence (Medium Confidence > threshold)
         if (bestIntent && this.intentClassifier.meetsThreshold(bestIntent)) {
+            AnalyticsManager.trackIntent(bestIntent.intent, bestIntent.score, entities.map(e => e.value)); // Track Intent
             const response = this.executeIntent(bestIntent.intent, entities, query);
             if (response) {
                 this.recordTurn(query, bestIntent.intent, entities, response.text);
@@ -404,6 +407,7 @@ ${companyExp.storytelling.medium}`,
      * Handle contact query
      */
     private handleContactQuery(): { text: string } {
+        AnalyticsManager.trackLead('chat_inquiry'); // Track Lead
         const contact = profileData.contact;
 
         return {
