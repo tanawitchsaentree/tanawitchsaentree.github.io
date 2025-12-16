@@ -152,7 +152,9 @@
                 "what's {his|your|nate's} {email|contact|linkedin}",
                 "how to {get in touch|connect|reach out}",
                 "{give|show} me {his|your|the} contact {info|information|details}",
-                "I want to {hire|talk to|reach|contact} {him|you|nate}"
+                "I want to {hire|talk to|reach|contact} {him|you|nate}",
+                "contact",
+                "contact info"
             ],
             "context_boosters": {
                 "recruiter_user": 2.0,
@@ -310,7 +312,8 @@
                 "{give|show} me {more|all|full} {details|information}",
                 "{detailed|deep|in-depth} {info|information|look}",
                 "go {deeper|into detail}",
-                "elaborate {on|about}"
+                "elaborate {on|about}",
+                "deep dive"
             ]
         },
         "theme_change": {
