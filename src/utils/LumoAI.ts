@@ -11,6 +11,7 @@ import { IntentClassifier } from './IntentClassifier';
 import { EntityExtractor, type ExtractedEntity } from './EntityExtractor';
 import { AnalyticsManager } from './AnalyticsManager';
 import { searchEngine } from './SearchEngine';
+import { knowledgeGraph } from './KnowledgeGraph';
 import { ReferenceResolver } from './ReferenceResolver';
 import { SmallTalkHandler } from './SmallTalkHandler';
 import { ContextValidator } from './ContextValidator';
@@ -319,7 +320,7 @@ export class LumoAI {
                 return this.handleExperienceQuery(entities);
             case 'skills_query':
             case 'skill_specific':
-                return this.handleSkillsQuery();
+                return this.handleSkillsQuery(entities);
             case 'contact_query':
                 return this.handleContactQuery();
             case 'surprise_query':
@@ -444,7 +445,25 @@ ${companyExp.storytelling.medium}`,
     /**
      * Handle skills query
      */
-    private handleSkillsQuery(): { text: string; suggestions?: Suggestion[] } {
+    /**
+     * Handle skills query - GRAPH ENHANCED 🧠
+     */
+    private handleSkillsQuery(entities: ExtractedEntity[] = []): { text: string; suggestions?: Suggestion[] } {
+        // 1. CORTEX GRAPH LOOKUP
+        if (entities.length > 0) {
+            const skill = entities[0].value;
+            const graphResults = knowledgeGraph.findSkillUsage(skill);
+
+            if (graphResults.length > 0) {
+                const places = graphResults.map(r => `**${r.target}** (${r.context})`).join(', ');
+                // Dynamic Narrative
+                return {
+                    text: `Nate demonstrated **${skill}** at ${places}.\n\nIt was a key lever for his success in those roles.`,
+                    suggestions: [{ label: `Experience at ${graphResults[0].target}`, payload: `Experience at ${graphResults[0].target}` }]
+                };
+            }
+        }
+
         const text = `Nate's expertise spans key areas:
 
 - **Design Systems:** Thinks in systems, not just screens
