@@ -10,6 +10,7 @@ import conversationFlows from '../data/conversation_flows.json';
 import { IntentClassifier } from './IntentClassifier';
 import { EntityExtractor, type ExtractedEntity } from './EntityExtractor';
 import { AnalyticsManager } from './AnalyticsManager';
+import { searchEngine } from './SearchEngine';
 import { ReferenceResolver } from './ReferenceResolver';
 import { SmallTalkHandler } from './SmallTalkHandler';
 import { ContextValidator } from './ContextValidator';
@@ -67,6 +68,7 @@ export class LumoAI {
     // Advanced AI components
     private intentClassifier: IntentClassifier;
     private entityExtractor: EntityExtractor;
+    // searchEngine is imported as singleton
     private referenceResolver: ReferenceResolver;
     // Phase 3: Cerebro modules
     private smallTalkHandler: SmallTalkHandler;
@@ -286,7 +288,22 @@ export class LumoAI {
             }
         }
 
-        // 🧠 CEREBRO LAYER 5: Intelligent low confidence fallback
+        // Step 5: CORTEX FALLBACK - Semantic Search for unknown queries
+        // If we didn't understand the intent, maybe we can find keywords in the database?
+        const searchResults = searchEngine.search(query);
+        if (searchResults.length > 0 && searchResults[0].score > 1.5) {
+            const bestMatch = searchResults[0];
+            AnalyticsManager.trackEvent('lumo_search_fallback', { query, match: bestMatch.title });
+
+            return {
+                text: `I'm not 100% sure what you're asking, but I found this related to **"${query}"**:\n\n` +
+                    `**${bestMatch.title}** (${bestMatch.company || bestMatch.type})\n${bestMatch.description}\n\n` +
+                    `Is that what you were looking for?`,
+                suggestions: this.smartRecommender ? this.smartRecommender.getContextualSuggestions('fallback') || [] : []
+            };
+        }
+
+        // Step 6: Smart Fallback Strategylligent low confidence fallback
         const response = this.fallbackStrategy.handleLowConfidence();
         this.recordTurn(query, 'low_confidence', entities, response.text);
         return response;
@@ -373,6 +390,12 @@ ${companyExp.storytelling.medium}`,
                 };
             }
         }
+        // 2. Check for Specific Entity (Company)
+        // ... existing entity check ...
+
+        // 3. CORTEX SEARCH: Integration Point
+        // If we want to use search here, we would instantiate searchEngine.search()
+        // For now, we rely on the generic summary fallback.
 
         const text = `Nate has **${summary.total_years} experience** across ${summary.industries.join(', ')}.
 
@@ -589,7 +612,7 @@ ${currentExp.storytelling.detailed}
                 case 'skills_query':
                     return {
                         text: `${intro} Nate excels in Design Systems, User Research, Visual Design, and Leadership. Each skill is backed by 8+ years of hands-on experience.`,
-                        suggestions: this.generateSuggestions('skills', 3)
+                        suggestions: this.smartRecommender ? this.smartRecommender.getContextualSuggestions('fallback') || [] : []
                     };
                 default:
                     return {

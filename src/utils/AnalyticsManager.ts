@@ -26,6 +26,13 @@ export const AnalyticsManager = {
     },
 
     /**
+     * Alias for logEvent (Backward compatibility)
+     */
+    trackEvent: (eventName: string, params: Record<string, any> = {}) => {
+        AnalyticsManager.logEvent(eventName, params);
+    },
+
+    /**
      * Track a user intent (Question asked)
      */
     trackIntent: (intent: string, confidence: number, entities: string[]) => {

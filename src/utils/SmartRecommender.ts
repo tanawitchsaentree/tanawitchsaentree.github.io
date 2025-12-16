@@ -37,6 +37,11 @@ export class SmartRecommender {
                     { label: 'Another One!', payload: 'Surprise Me', icon: '🎲' },
                     { label: 'Quick Summary', payload: 'Quick Summary', icon: '⚡' }
                 ];
+            case 'fallback':
+                return [
+                    { label: 'Try "Experience"', payload: 'Experience', icon: '💼' },
+                    { label: 'Try "Skills"', payload: 'Skills', icon: '🛠️' }
+                ];
             default:
                 return null;
         }
