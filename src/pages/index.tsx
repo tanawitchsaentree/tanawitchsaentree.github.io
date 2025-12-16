@@ -370,22 +370,24 @@ export default function Index({ DarkModeToggle }: { DarkModeToggle: () => React.
       boxSizing: 'border-box',
     }}>
       {/* Section 1: Profile + Title */}
-      <div style={{ marginBottom: 'var(--space-8)' }}>
+      <div id="profile-section" style={{ marginBottom: 'var(--space-8)' }}>
         <ProfileHeader DarkModeToggle={DarkModeToggle} />
       </div>
 
       {/* Section 2: Bio/Summary */}
-      <div style={{ marginBottom: 'var(--space-8)' }}>
+      <div id="about-section" style={{ marginBottom: 'var(--space-8)' }}>
         <BioSection />
       </div>
 
       {/* Section 3: Previously + Education (with tabs and listing) */}
-      <div style={{ marginBottom: 'var(--space-8)' }}>
+      <div id="experience-section" style={{ marginBottom: 'var(--space-8)' }}>
         <TabExperienceSection />
       </div>
 
       {/* Section 4: Email + Social Icons */}
-      <ContactSection />
+      <div id="contact-section">
+        <ContactSection />
+      </div>
       <div style={{ marginTop: 'var(--space-4)' }}>
         <SocialLinks />
       </div>

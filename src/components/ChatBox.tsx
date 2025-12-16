@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { Send, Sparkles, User, Bot, Copy, Check, ExternalLink } from 'lucide-react';
 import { LumoAI } from '../utils/LumoAI';
+import { UIController } from '../utils/UIController';
 import { useTheme } from 'next-themes';
 import { RetroButton } from './ui/RetroButton';
-import { ExternalLink, Check, Copy } from 'lucide-react';
 import '../index.css';
-
-// ... (previous code)
-
-
 
 interface Message {
   id: string;
@@ -89,7 +86,7 @@ const ChatBox: React.FC = () => {
 
       // Add easter egg if applicable
       const easterEgg = lumoAI.addEasterEgg();
-      const greetingText = easterEgg ? `${easterEgg}\n${greeting.message}` : greeting.message;
+      const greetingText = easterEgg ? `${easterEgg} \n${greeting.message} ` : greeting.message;
 
       await displayHumanizedMessage(greetingText, 'bot', greeting.suggestions);
 
@@ -128,9 +125,20 @@ const ChatBox: React.FC = () => {
       // Get response from LumoAI engine - Championship intelligence!
       const aiResponse = lumoAI.generateResponse(text);
 
-      // Execute commands (Magic Layer)
-      if (aiResponse.command && aiResponse.command.type === 'set_theme') {
-        setTheme(aiResponse.command.value);
+      // Execute commands (Magic Layer - Cortex Module 2)
+      if (aiResponse.command) {
+        console.log('[🧠 Cortex] Executing command:', aiResponse.command);
+        switch (aiResponse.command.type) {
+          case 'scroll':
+            UIController.scrollTo(aiResponse.command.value);
+            break;
+          case 'download':
+            UIController.downloadCV();
+            break;
+          case 'theme':
+            UIController.dispatchThemeChange('toggle');
+            break;
+        }
       }
 
       await displayHumanizedMessage(aiResponse.text, 'bot', aiResponse.suggestions);
@@ -262,6 +270,19 @@ const ChatBox: React.FC = () => {
 
 
 
+  // Theme listener for Cortex Control
+  useEffect(() => {
+    const handleThemeChange = (e: CustomEvent) => {
+      if (e.detail.mode === 'toggle') {
+        setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+      } else {
+        setTheme(e.detail.mode);
+      }
+    };
+    window.addEventListener('lumo-theme-change', handleThemeChange as EventListener);
+    return () => window.removeEventListener('lumo-theme-change', handleThemeChange as EventListener);
+  }, [setTheme]);
+
   // Auto-scroll
   useEffect(() => {
     if (outputRef.current) {
@@ -274,7 +295,7 @@ const ChatBox: React.FC = () => {
       <div ref={outputRef} className="chatbox-output" style={{ display: 'flex', flexDirection: 'column', flex: 1, overflowY: 'auto' }}>
         <div style={{ flexGrow: 1, minHeight: 0 }} />
         {messages.map((msg) => (
-          <div key={msg.id} className={`chatbox-message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'}`}>
+          <div key={msg.id} className={`chatbox - message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'} `}>
             {msg.sender === 'bot' && (
               <div className="chatbox-avatar">
                 <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
@@ -282,10 +303,10 @@ const ChatBox: React.FC = () => {
             )}
             <div className="chatbox-message-content">
               <div
-                className={`p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.sender === 'user'
+                className={`p - 3 rounded - 2xl text - sm leading - relaxed shadow - sm ${msg.sender === 'user'
                   ? 'bg-[var(--primary)] text-[var(--primary-foreground)] rounded-tr-none'
                   : 'bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]'
-                  }`}
+                  } `}
                 style={{ maxWidth: '420px' }}
               >
                 {msg.sender === 'bot' ? renderRichText(msg.displayingText !== undefined ? msg.displayingText : msg.text) : (msg.displayingText !== undefined ? msg.displayingText : msg.text)}

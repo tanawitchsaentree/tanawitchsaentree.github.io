@@ -344,10 +344,17 @@ export class LumoAI {
         switch (normalized) {
             case 'contact':
             case 'contact info':
-                return this.handleContactQuery();
+            case 'email':
+                return {
+                    ...this.handleContactQuery(),
+                    command: { type: 'scroll', value: 'contact-section' }
+                };
             case 'experience':
             case 'work experience':
-                return this.handleExperienceQuery();
+                return {
+                    ...this.handleExperienceQuery(),
+                    command: { type: 'scroll', value: 'experience-section' }
+                };
             case 'skills':
             case 'other skills':
                 return this.handleSkillsQuery();
@@ -362,6 +369,31 @@ export class LumoAI {
                 return this.handleSurpriseQuery();
             case 'projects':
                 return this.handleExperienceQuery(); // Route projects to experience
+
+            // UI COMMANDS
+            case 'scroll to top':
+            case 'go to top':
+            case 'start over':
+                return {
+                    text: "Back to the top!",
+                    command: { type: 'scroll', value: 'profile-section' }
+                };
+            case 'download cv':
+            case 'download resume':
+            case 'get resume':
+                return {
+                    text: "Downloading my resume now...",
+                    command: { type: 'download', value: 'resume' }
+                };
+            case 'toggle theme':
+            case 'switch theme':
+            case 'dark mode':
+            case 'light mode':
+                return {
+                    text: "Switching visual mode.",
+                    command: { type: 'theme', value: 'toggle' }
+                };
+
             default:
                 return null;
         }
