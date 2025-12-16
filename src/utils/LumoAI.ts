@@ -198,6 +198,15 @@ export class LumoAI {
             userType: this.conversationState.userType,
             conversationDepth: this.conversationState.conversationDepth
         });
+        // 🧠 CEREBRO LAYER 0: Direct Payload Router (Systemic Brain Repair)
+        // Intercepts known button commands to bypass fuzzy classification
+        const directResponse = this.executePayload(query);
+        if (directResponse) {
+            this.recordTurn(query, 'direct_command', [], directResponse.text);
+            return directResponse;
+        }
+
+        // 🧠 CEREBRO LAYER 1: Extract Entities
         const entities = this.entityExtractor.extract(query);
         const bestIntent = intentScores[0];
 
@@ -301,6 +310,38 @@ export class LumoAI {
                 return this.handleDeepDive();
             case 'theme_change':
                 return this.handleThemeChange(entities, query || '');
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Direct Payload Router - Deterministic execution for known buttons
+     */
+    private executePayload(query: string): { text: string; suggestions?: Suggestion[]; command?: { type: string; value: string } } | null {
+        const normalized = query.toLowerCase().trim();
+
+        switch (normalized) {
+            case 'contact':
+            case 'contact info':
+                return this.handleContactQuery();
+            case 'experience':
+            case 'work experience':
+                return this.handleExperienceQuery();
+            case 'skills':
+            case 'other skills':
+                return this.handleSkillsQuery();
+            case 'quick summary':
+            case 'give me the highlights':
+                return this.handleQuickTour();
+            case 'deep dive':
+            case 'tell me everything':
+                return this.handleDeepDive();
+            case 'surprise me':
+            case 'fun facts':
+                return this.handleSurpriseQuery();
+            case 'projects':
+                return this.handleExperienceQuery(); // Route projects to experience
             default:
                 return null;
         }

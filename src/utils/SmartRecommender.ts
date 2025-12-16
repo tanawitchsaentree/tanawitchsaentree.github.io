@@ -97,9 +97,9 @@ export class SmartRecommender {
         return {
             message: `Diving into ${skill}? Check out the award-winning projects he's built!`,
             suggestions: [
-                { label: 'Projects', payload: 'Show me his projects' },
-                { label: 'Experience', payload: 'Where has he worked?' },
-                { label: 'Other Skills', payload: 'What else can he do?' }
+                { label: 'Projects', payload: 'Projects' },
+                { label: 'Experience', payload: 'Experience' },
+                { label: 'Other Skills', payload: 'Skills' }
             ]
         };
     }
@@ -111,9 +111,9 @@ export class SmartRecommender {
         return {
             message: "You seem interested in the full story - want a comprehensive overview?",
             suggestions: [
-                { label: 'Deep Dive', payload: 'Tell me everything' },
-                { label: 'Quick Summary', payload: 'Give me the highlights' },
-                { label: 'Specific Projects', payload: 'Show me specific projects' }
+                { label: 'Deep Dive', payload: 'Deep Dive' },
+                { label: 'Quick Summary', payload: 'Quick Summary' },
+                { label: 'Specific Projects', payload: 'Projects' }
             ]
         };
     }
@@ -125,9 +125,9 @@ export class SmartRecommender {
         return {
             message: "Want to hear something unexpected?",
             suggestions: [
-                { label: 'Surprise Me', payload: 'Tell me something surprising' },
-                { label: 'Fun Facts', payload: 'Any fun facts?' },
-                { label: 'Projects', payload: 'Show me cool projects' }
+                { label: 'Surprise Me', payload: 'Surprise Me' },
+                { label: 'Fun Facts', payload: 'Surprise Me' },
+                { label: 'Projects', payload: 'Projects' }
             ]
         };
     }
