@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { Copy, Check, ExternalLink } from 'lucide-react';
+import { Copy, Check, ExternalLink, Bot } from 'lucide-react';
 import { LumoAI } from '../utils/LumoAI';
 import { UIController } from '../utils/UIController';
 import { useTheme } from 'next-themes';
@@ -14,6 +14,12 @@ interface Message {
   displayingText?: string;
   suggestions?: { label: string; payload: string; icon?: string }[];
   suggestionsUsed?: boolean; // Track if suggestions have been clicked
+  media?: {
+    type: 'image' | 'video';
+    url: string;
+    alt: string;
+    caption?: string;
+  };
 }
 
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -141,7 +147,20 @@ const ChatBox: React.FC = () => {
         }
       }
 
+      // Display Message + Media
       await displayHumanizedMessage(aiResponse.text, 'bot', aiResponse.suggestions);
+
+      // If media exists, we need to append it or handle it. 
+      // Current displayHumanizedMessage only takes text.
+      // We need to update displayHumanizedMessage signature OR update state directly.
+      if (aiResponse.media) {
+        setMessages(prev => {
+          const updated = [...prev];
+          const lastMsg = updated[updated.length - 1];
+          updated[updated.length - 1] = { ...lastMsg, media: aiResponse.media };
+          return updated;
+        });
+      }
 
       // Track topic for conversation context
       lumoAI.trackTopic(text);
@@ -152,6 +171,41 @@ const ChatBox: React.FC = () => {
       setIsTyping(false);
     }
   }, [isTyping, lumoAI, displayHumanizedMessage]);
+
+  // IDLE TIMER LOGIC (Charm Module)
+  useEffect(() => {
+    const IDLE_TIMEOUT = 30000; // 30 seconds
+    let timer: ReturnType<typeof setTimeout>;
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        // Only nudge if not typing and last message wasn't a nudge (simple check)
+        if (!isTyping && messages.length > 0) {
+          const lastMsg = messages[messages.length - 1];
+          if (lastMsg.sender === 'bot') { // Don't interrupt user
+            // Trigger Nudge
+            const nudge = lumoAI.getProactiveNudge();
+            displayHumanizedMessage(nudge.text, 'bot', nudge.suggestions);
+          }
+        }
+      }, IDLE_TIMEOUT);
+    };
+
+    // Listeners
+    window.addEventListener('mousemove', resetTimer);
+    window.addEventListener('keydown', resetTimer);
+    window.addEventListener('touchstart', resetTimer);
+
+    resetTimer(); // Start
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('mousemove', resetTimer);
+      window.removeEventListener('keydown', resetTimer);
+      window.removeEventListener('touchstart', resetTimer);
+    };
+  }, [messages, isTyping, lumoAI, displayHumanizedMessage]);
 
   // Handle email copy to clipboard
   const handleCopyEmail = async (email: string) => {
@@ -294,25 +348,42 @@ const ChatBox: React.FC = () => {
     <div className="chatbox-container">
       <div ref={outputRef} className="chatbox-output" style={{ display: 'flex', flexDirection: 'column', flex: 1, overflowY: 'auto' }}>
         <div style={{ flexGrow: 1, minHeight: 0 }} />
-        {messages.map((msg) => (
-          <div key={msg.id} className={`chatbox - message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'} `}>
+        {messages.map((msg, idx) => (
+          <div key={msg.id} className={`chatbox-message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'} `}>
             {msg.sender === 'bot' && (
               <div className="chatbox-avatar">
-                <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
+                <div className="w-8 h-8 rounded-full object-cover bg-[var(--primary)] text-[var(--primary-foreground)] flex items-center justify-center">
+                  <Bot size={18} />
+                </div>
               </div>
             )}
             <div className="chatbox-message-content">
               <div
-                className={`p - 3 rounded - 2xl text - sm leading - relaxed shadow - sm ${msg.sender === 'user'
-                  ? 'bg-[var(--primary)] text-[var(--primary-foreground)] rounded-tr-none'
-                  : 'bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]'
-                  } `}
-                style={{ maxWidth: '420px' }}
+                className={`max-w-[85%] rounded-[20px] px-5 py-3 shadow-sm ${msg.sender === 'user'
+                  ? 'bg-[var(--foreground)] text-[var(--background)] rounded-br-[4px]'
+                  : 'bg-[var(--card)] text-[var(--card-foreground)] border border-[var(--border)] rounded-bl-[4px]'
+                  }`}
               >
-                {msg.sender === 'bot' ? renderRichText(msg.displayingText !== undefined ? msg.displayingText : msg.text) : (msg.displayingText !== undefined ? msg.displayingText : msg.text)}
-                {msg.sender === 'bot' && msg.displayingText && msg.displayingText.length < msg.text.length && (
-                  <span className="animate-pulse">_</span>
+                {/* Media Rendering (Charm Module) */}
+                {msg.media && msg.media.type === 'image' && (
+                  <div className="mb-3 rounded-lg overflow-hidden border border-[var(--border)]">
+                    <img
+                      src={msg.media.url}
+                      alt={msg.media.alt}
+                      className="w-full h-auto object-cover max-h-[200px]"
+                      loading="lazy"
+                    />
+                    {msg.media.caption && (
+                      <p className="text-[var(--muted-foreground)] text-xs p-2 bg-[var(--background)] m-0 border-t border-[var(--border)]">
+                        {msg.media.caption}
+                      </p>
+                    )}
+                  </div>
                 )}
+
+                <div className={`text-sm leading-relaxed ${isTyping && idx === messages.length - 1 && msg.sender === 'bot' ? 'typing-effect' : ''}`}>
+                  {renderRichText(msg.displayingText || msg.text)}
+                </div>
               </div>
 
               {/* Suggestions Rendering - Show only when typing is complete AND not used */}

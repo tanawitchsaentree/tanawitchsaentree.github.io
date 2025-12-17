@@ -367,5 +367,77 @@
             },
             "message": "Welcome back! Ready to pick up where we left off?"
         }
+    },
+    "idle_nudges": [
+        {
+            "id": "nudge_location",
+            "text": "So... where in the world are you tuning in from? 🌍",
+            "suggestions": [
+                "Bangkok 🇹🇭",
+                "Canada 🇨🇦",
+                "USA 🇺🇸",
+                "Europe 🇪🇺"
+            ]
+        },
+        {
+            "id": "nudge_face",
+            "text": "It's kinda quiet... wanna see my 'serious' face? 🤨",
+            "suggestions": [
+                "Show me the face!",
+                "No thanks"
+            ]
+        },
+        {
+            "id": "nudge_recruiter",
+            "text": "Just checking - are you scouting for a Product Designer? 🕵️‍♂️",
+            "suggestions": [
+                "Yes, I'm hiring",
+                "Just browsing"
+            ]
+        }
+    ],
+    "location_contexts": {
+        "bangkok": {
+            "text": "Sawasdee krub! 🇹🇭 Living the BKK traffic life? I can tell you about Nate's work in Thai tech (Invitrace, CP Origin).",
+            "suggestions": [
+                "Show Thai Projects",
+                "Work Experience"
+            ]
+        },
+        "canada": {
+            "text": "Oh, Canada! 🇨🇦 Nate lived there. Fun fact: He has a **valid work visa until Nov 2026**! He's ready to fly back.",
+            "suggestions": [
+                "Download Resume",
+                "Contact Info"
+            ]
+        },
+        "usa": {
+            "text": "Hello to the US! 🇺🇸 Nate works with global standards and his English is fluent. Remote or relocation? He's open.",
+            "suggestions": [
+                "Remote Work?",
+                "Portfolio"
+            ]
+        },
+        "europe": {
+            "text": "Hello, Europe! 🇪🇺 Nate admires the design culture there. He's open to international opportunities.",
+            "suggestions": [
+                "Portfolio",
+                "Contact"
+            ]
+        },
+        "general": {
+            "text": "Hello from across the world! 🌍 Design speaks every language.",
+            "suggestions": [
+                "See Portfolio"
+            ]
+        }
+    },
+    "rich_media": {
+        "joke_face": {
+            "type": "image",
+            "url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWdzY2lkYmZ6YmZ6YmZ6YmZ6YmZ6YmZ6YmZ6YmZ6YmZ6YmZ6/3o7TKr3nzbh5WgCFxe/giphy.gif",
+            "alt": "Nate's Joke Face (Placeholder)",
+            "caption": "This is my 'I found a bug in production' face. 🐛"
+        }
     }
 }

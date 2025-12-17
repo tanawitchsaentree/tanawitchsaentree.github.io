@@ -27,6 +27,20 @@ interface Suggestion {
     icon?: string;
 }
 
+interface MediaContent {
+    type: 'image' | 'video';
+    url: string;
+    alt: string;
+    caption?: string;
+}
+
+interface LumoResponse {
+    text: string;
+    suggestions?: Suggestion[];
+    command?: { type: string; value: string };
+    media?: MediaContent;
+}
+
 interface ConversationTurn {
     userQuery: string;
     intent: string;
@@ -188,7 +202,7 @@ export class LumoAI {
     /**
      * Generate intelligent response based on query - CEREBRO ORCHESTRATION
      */
-    generateResponse(query: string): { text: string; suggestions?: Suggestion[]; command?: { type: string; value: string } } {
+    generateResponse(query: string): LumoResponse {
         // 🧠 CEREBRO LAYER 0.5: Auto-Execute Intent (Priority Command)
         if (this.smallTalkHandler.detectAutoExecute(query)) {
             const response = this.handleSurpriseQuery();
@@ -379,6 +393,27 @@ export class LumoAI {
                     text: "Back to the top!",
                     command: { type: 'scroll', value: 'profile-section' }
                 };
+
+            // CHARM & CONTEXT
+            case 'bangkok 🇹🇭':
+            case 'bangkok':
+            case 'thailand':
+                return this.handleLocationQuery('bangkok');
+            case 'canada 🇨🇦':
+            case 'canada':
+                return this.handleLocationQuery('canada');
+            case 'usa 🇺🇸':
+            case 'usa':
+                return this.handleLocationQuery('usa');
+            case 'europe 🇪🇺':
+            case 'europe':
+                return this.handleLocationQuery('europe');
+
+            case 'show me the face!':
+            case 'show face':
+            case 'joke face':
+                return this.handleMediaRequest('joke_face');
+
             case 'download cv':
             case 'download resume':
             case 'get resume':
@@ -553,6 +588,58 @@ ${currentExp.storytelling.detailed}
 - **Career Theme:** Always focused on **${narrative.career_themes.impact}**`,
             suggestions: this.generateSuggestions('deep_dive', 3)
         };
+    }
+
+    /**
+     * Handle location query (Charm Module)
+     */
+    private handleLocationQuery(location: string): LumoResponse {
+        const contexts = greetingSystem.location_contexts as any;
+        const normalized = location.toLowerCase().includes('bangkok') ? 'bangkok' :
+            location.toLowerCase().includes('canada') ? 'canada' :
+                location.toLowerCase().includes('usa') ? 'usa' :
+                    location.toLowerCase().includes('europe') ? 'europe' : 'general';
+
+        const data = contexts[normalized] || contexts.general;
+
+        return {
+            text: data.text,
+            suggestions: data.suggestions.map((s: string) => ({ label: s, payload: s, icon: '🌍' }))
+        };
+    }
+
+    /**
+     * Get a proactive nudge for idle users (Charm Module)
+     */
+    getProactiveNudge(): LumoResponse {
+        const nudges = greetingSystem.idle_nudges;
+        // Random selection
+        const selected = this.weightedRandom(nudges.map(n => ({ ...n, weight: 1 })));
+
+        return {
+            text: selected.text,
+            suggestions: selected.suggestions.map((s: string) => ({ label: s, payload: s, icon: '👉' }))
+        };
+    }
+
+    /**
+     * Handle media request (Charm Module)
+     */
+    private handleMediaRequest(type: string): LumoResponse {
+        if (type === 'joke_face') {
+            const media = greetingSystem.rich_media.joke_face;
+            return {
+                text: media.caption,
+                media: {
+                    type: 'image',
+                    url: media.url,
+                    alt: media.alt,
+                    caption: media.caption
+                },
+                suggestions: [{ label: 'Back to serious', payload: 'quick_summary', icon: '👔' }]
+            };
+        }
+        return { text: "I can't find that image right now.", suggestions: [] };
     }
 
     /**
