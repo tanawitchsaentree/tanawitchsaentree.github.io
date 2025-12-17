@@ -151,6 +151,8 @@
   flex-direction: column;
   background-color: var(--background);
   color: var(--foreground);
+  width: 100%;
+  /* Ensure full width */
 }
 
 /*
@@ -181,6 +183,11 @@
     gap: var(--space-8);
     padding: var(--space-8);
     align-items: start;
+    max-width: 1440px;
+    /* Limit max width */
+    margin: 0 auto;
+    /* Center horizontally */
+    width: 100%;
   }
 }
 
