@@ -1,0 +1,19 @@
+{
+    "en": {
+        "professional": [
+            "At {entity}, Nate {action_past} a {subject} that reduced {impact_area} by {impact_metric} for {impact_context}.",
+            "He served as {role} at {entity}, where he {action_past} the {subject}.",
+            "Notable Achievement: {action_continuous_capitalize} a {subject} at {entity}, achieving {impact_metric} in {impact_area}."
+        ],
+        "casual": [
+            "Imagine {action_continuous} a {subject} that hits {impact_metric} in {impact_area}. That's what he did at {entity}.",
+            "At {entity}? Yeah, he {action_past} their {subject}.",
+            "He was the {role} at {entity}. Did you know he {action_past} the whole {subject}?"
+        ],
+        "recruiter": [
+            "**Key Impact**: {action_past_capitalize} {subject} at {entity} ({impact_context}).",
+            "**Results**: {impact_metric} improvement in {impact_area} via {subject}.",
+            "As {role}, he {action_past} the {subject} for {impact_context}."
+        ]
+    }
+}

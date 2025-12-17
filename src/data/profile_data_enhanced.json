@@ -63,6 +63,35 @@
             "collaboration": "Cross-functional leadership and team mentorship"
         }
     },
+    "nlg_factors": {
+        "invitrace": {
+            "entity": "Invitrace Health",
+            "role": "Lead Product Designer",
+            "action": "created",
+            "subject": "patient monitoring dashboard",
+            "impact_metric": "40%",
+            "impact_area": "data entry time",
+            "impact_context": "50+ clinics"
+        },
+        "peakaccount": {
+            "entity": "Peakaccount",
+            "role": "Senior UX/UI Designer",
+            "action": "redesigned",
+            "subject": "mobile app",
+            "impact_metric": "4.8/5",
+            "impact_area": "app store rating",
+            "impact_context": "fintech users"
+        },
+        "cp_origin": {
+            "entity": "CP Origin",
+            "role": "Senior UX/UI Designer",
+            "action": "standardized",
+            "subject": "design system",
+            "impact_metric": "100%",
+            "impact_area": "component reuse",
+            "impact_context": "property platforms"
+        }
+    },
     "experience": {
         "summary": {
             "total_years": "8+",

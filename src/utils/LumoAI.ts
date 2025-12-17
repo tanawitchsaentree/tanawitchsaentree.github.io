@@ -1,17 +1,21 @@
 /**
  * LumoAI - Championship AI Engine
- * Connects all JSON brain files into intelligent, context-aware conversations
+ * Connects all JSON brain files
  */
 
 import profileData from '../data/profile_data_enhanced.json';
 import greetingSystem from '../data/greeting_system.json';
 import conversationFlows from '../data/conversation_flows.json';
+import { FlowEngine, type SessionToken } from './FlowEngine';
+import { EnglishGrammarEngine } from './GrammarEngine';
+import templates from '../data/templates.json';
+import { knowledgeGraph } from './KnowledgeGraph';
 
 import { IntentClassifier } from './IntentClassifier';
 import { EntityExtractor, type ExtractedEntity } from './EntityExtractor';
 import { AnalyticsManager } from './AnalyticsManager';
 import { SearchEngine } from './SearchEngine'; // Changed from singleton import to class import
-import { knowledgeGraph } from './KnowledgeGraph';
+
 import { ReferenceResolver } from './ReferenceResolver';
 import { SmallTalkHandler } from './SmallTalkHandler';
 import { ContextValidator } from './ContextValidator';
@@ -19,7 +23,7 @@ import { FallbackStrategy } from './FallbackStrategy';
 import { UserProfiler, type UserProfile } from './UserProfiler';
 import { SmartRecommender } from './SmartRecommender';
 import { SessionManager } from './SessionManager';
-import { FlowEngine, type SessionToken } from './FlowEngine'; // Added FlowEngine import
+
 
 // Types
 interface Suggestion {
@@ -92,6 +96,7 @@ export class LumoAI {
     private analytics: typeof AnalyticsManager; // Added AnalyticsManager instance
     private flowEngine: FlowEngine; // Added FlowEngine
     private sessionToken: SessionToken; // Added SessionToken
+    private grammarEngine: EnglishGrammarEngine; // Module 6: Bard
 
     // searchEngine is imported as singleton
     private referenceResolver: ReferenceResolver;
@@ -114,6 +119,9 @@ export class LumoAI {
         // Module 5: Flow Engine
         this.flowEngine = new FlowEngine();
         this.sessionToken = this.flowEngine.createToken();
+
+        // Module 6: Grammar Engine
+        this.grammarEngine = new EnglishGrammarEngine();
 
         this.referenceResolver = new ReferenceResolver();
         // Phase 3: Initialize Cerebro
@@ -489,6 +497,23 @@ export class LumoAI {
      * Handle experience query - with entity awareness
      */
     private handleExperienceQuery(entities: any[] = []): { text: string; suggestions?: Suggestion[] } {
+        // Module 6: Check for NLG Factors
+        // If entity provided, try to generate unique text
+        if (entities.length > 0) {
+            const company = entities[0].value.toLowerCase();
+            const factors = (profileData as any).nlg_factors;
+
+            // Map common names to keys
+            const key = Object.keys(factors).find(k => company.includes(k));
+
+            if (key && factors[key]) {
+                return {
+                    text: this.generateDynamicContent(key, 'professional'), // Default vibe
+                    suggestions: [{ label: 'Back to Menu', payload: 'experience', icon: '🔙' }]
+                };
+            }
+        }
+
         const summary = profileData.experience.summary;
         const currentRole = profileData.experience.timeline[0]; // Most recent
 
@@ -578,6 +603,20 @@ ${companyExp.storytelling.medium}`,
 
 He typically responds within **24-48 hours**. Worth the wait! 😉`
         };
+    }
+
+    /**
+     * Module 6: Dynamic Content Generation
+     */
+    private generateDynamicContent(factorKey: string, vibe: 'professional' | 'casual' | 'recruiter' = 'professional'): string {
+        const factors = (profileData as any).nlg_factors[factorKey];
+        if (!factors) return "I don't have atomic details on that yet.";
+
+        const vibeTemplates = (templates as any).en[vibe];
+        // Random template
+        const template = this.weightedRandom(vibeTemplates.map((t: string) => ({ content: t, weight: 1 }))) as any;
+
+        return this.grammarEngine.fillTemplate(template.content, factors);
     }
 
     /**
