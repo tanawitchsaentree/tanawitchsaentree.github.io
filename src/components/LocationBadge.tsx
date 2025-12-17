@@ -12,13 +12,14 @@ export default function LocationBadge() {
                 timeZone: 'Asia/Bangkok',
                 hour: '2-digit',
                 minute: '2-digit',
+                second: '2-digit', // Added seconds
                 hour12: false
             };
             setTime(now.toLocaleTimeString('en-US', options));
         };
 
         updateTime();
-        const interval = setInterval(updateTime, 10000); // Update every 10s is enough
+        const interval = setInterval(updateTime, 1000); // Update every 1s
 
         return () => clearInterval(interval);
     }, []);
@@ -50,7 +51,7 @@ export default function LocationBadge() {
                 color: 'var(--muted-foreground)',
                 marginTop: '2px', // Micro spacing
             }}>
-                {time} • 32°C
+                {time}
             </div>
         </div>
     );

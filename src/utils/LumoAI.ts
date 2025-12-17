@@ -440,6 +440,19 @@ export class LumoAI {
             case 'remote work':
                 return this.handleContactQuery();
 
+            // NUDGE RESPONSES
+            case 'just browsing':
+            case 'no thanks':
+                return {
+                    text: "No problem! Take your time. If you get curious, try 'Surprise Me' for a random fact. 🎲",
+                    suggestions: [{ label: 'Surprise Me', payload: 'surprise me', icon: '🎲' }]
+                };
+            case "yes, i'm hiring":
+                return {
+                    text: "Music to my ears! 🎵 \n\nNate is open to opportunities. Here's how to reach him directly:",
+                    ...this.handleContactQuery()
+                };
+
 
             // UI COMMANDS
             case 'scroll to top':
