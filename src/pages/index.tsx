@@ -8,7 +8,7 @@ function ProfileHeader({ DarkModeToggle }: { DarkModeToggle: () => React.ReactEl
   return (
     <div className="profile-header" style={{
       display: 'flex',
-      alignItems: 'flex-start',
+      alignItems: 'center', // Changed to center for vertical alignment
       gap: 'var(--space-3)',
       width: '100%',
     }}>
