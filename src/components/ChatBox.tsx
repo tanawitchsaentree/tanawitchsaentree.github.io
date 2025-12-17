@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { Send, Sparkles, User, Bot, Copy, Check, ExternalLink } from 'lucide-react';
+import { Copy, Check, ExternalLink } from 'lucide-react';
 import { LumoAI } from '../utils/LumoAI';
 import { UIController } from '../utils/UIController';
 import { useTheme } from 'next-themes';

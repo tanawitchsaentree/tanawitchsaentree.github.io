@@ -1,7 +1,7 @@
 import graphData from '../data/knowledge_graph.json';
 import profileData from '../../profile_data.json';
 
-type RelationshipType = 'demonstrates' | 'applied_in' | 'foundation_for';
+// type RelationshipType = 'demonstrates' | 'applied_in' | 'foundation_for';
 
 interface GraphResult {
     entity: string;

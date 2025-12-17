@@ -30,7 +30,7 @@ export class SearchEngine {
     private init() {
         if (this.isInitialized) return;
 
-        const documents = [];
+        const documents: any[] = [];
 
         // 1. Index Work Experience
         profileData.work_experience.forEach((exp, index) => {
