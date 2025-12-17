@@ -448,9 +448,9 @@ export class LumoAI {
                     suggestions: [{ label: 'Surprise Me', payload: 'surprise me', icon: '🎲' }]
                 };
             case "yes, i'm hiring":
+                const contactInfo = this.handleContactQuery();
                 return {
-                    text: "Music to my ears! 🎵 \n\nNate is open to opportunities. Here's how to reach him directly:",
-                    ...this.handleContactQuery()
+                    text: "Music to my ears! 🎵 \n\n" + contactInfo.text
                 };
 
 
