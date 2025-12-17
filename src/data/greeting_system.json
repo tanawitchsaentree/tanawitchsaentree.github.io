@@ -308,37 +308,37 @@
     "suggestions": {
         "experience": {
             "label": "Experience",
-            "payload": "Tell me about Nate's experience",
+            "payload": "experience",
             "icon": "💼"
         },
         "skills": {
             "label": "Skills",
-            "payload": "What are Nate's skills?",
+            "payload": "skills",
             "icon": "✨"
         },
         "contact": {
             "label": "Contact Info",
-            "payload": "How can I contact Nate?",
+            "payload": "contact",
             "icon": "📬"
         },
         "projects": {
             "label": "Projects",
-            "payload": "Show me Nate's projects",
+            "payload": "projects",
             "icon": "🎨"
         },
         "quick_tour": {
             "label": "Quick Brief",
-            "payload": "Give me the TL;DR about Nate",
+            "payload": "quick summary",
             "icon": "⚡"
         },
         "deep_dive": {
             "label": "Deep Dive",
-            "payload": "Tell me everything about Nate",
+            "payload": "deep dive",
             "icon": "🔍"
         },
         "surprise_me": {
             "label": "Surprise Me",
-            "payload": "Tell me something unexpected about Nate",
+            "payload": "surprise me",
             "icon": "🎲"
         }
     },

@@ -387,7 +387,14 @@ export class LumoAI {
             case 'projects':
                 return this.handleExperienceQuery(); // Route projects to experience
             case 'portfolio':
+            case 'see portfolio':
                 return this.handleExperienceQuery();
+            case 'show thai projects':
+                // Ideally filter by Thailand, but for now show all projects
+                return this.handleExperienceQuery();
+            case 'remote work?':
+            case 'remote work':
+                return this.handleContactQuery();
             case 'contact':
             case 'contact info':
                 return this.handleContactQuery();
