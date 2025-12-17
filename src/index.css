@@ -169,10 +169,11 @@
   flex-direction: column;
   gap: var(--space-8);
   padding: var(--space-6);
-  flex: 1;
+  /* flex: 1; Removed to allow vertical centering */
   width: 100%;
   max-width: 100%;
-  margin: 0;
+  margin: auto;
+  /* Magic centering */
   box-sizing: border-box;
 }
 
@@ -187,8 +188,8 @@
     align-items: start;
     max-width: 1440px;
     /* Limit max width */
-    margin: 0 auto;
-    /* Center horizontally */
+    margin: auto;
+    /* Center horizontally & vertically */
     width: 100%;
   }
 }
