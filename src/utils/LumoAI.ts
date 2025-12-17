@@ -386,6 +386,11 @@ export class LumoAI {
                 return this.handleSurpriseQuery();
             case 'projects':
                 return this.handleExperienceQuery(); // Route projects to experience
+            case 'portfolio':
+                return this.handleExperienceQuery();
+            case 'contact':
+            case 'contact info':
+                return this.handleContactQuery();
 
             // UI COMMANDS
             case 'scroll to top':
