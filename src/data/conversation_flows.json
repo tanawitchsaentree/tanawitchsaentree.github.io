@@ -105,6 +105,42 @@
                     "target": "root"
                 }
             ]
+        },
+        "node_project_peakaccount": {
+            "id": "node_project_peakaccount",
+            "message": "**Peakaccount**: Redesigned the mobile app for fintech users, achieving a 4.8/5 App Store rating.",
+            "suggestions": [
+                "Next Project",
+                "Contact Nate"
+            ],
+            "transitions": [
+                {
+                    "trigger": "next project",
+                    "target": "node_project_cporigin"
+                },
+                {
+                    "trigger": "contact nate",
+                    "target": "node_contact_card"
+                }
+            ]
+        },
+        "node_project_cporigin": {
+            "id": "node_project_cporigin",
+            "message": "**CP Origin**: Standardized a design system across multiple property platforms, achieving 100% component reuse.",
+            "suggestions": [
+                "Back to Projects",
+                "Contact Nate"
+            ],
+            "transitions": [
+                {
+                    "trigger": "back to projects",
+                    "target": "node_projects_list"
+                },
+                {
+                    "trigger": "contact nate",
+                    "target": "node_contact_card"
+                }
+            ]
         }
     },
     "extras": {

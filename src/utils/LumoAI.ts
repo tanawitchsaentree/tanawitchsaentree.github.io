@@ -505,9 +505,33 @@ export class LumoAI {
             const key = Object.keys(factors).find(k => company.includes(k));
 
             if (key && factors[key]) {
+                // Dynamic Suggestion Logic
+                // Default fallback
+                let suggestions = [{ label: 'Back to Menu', payload: 'experience', icon: '🔙' }];
+
+                // Map entity key to node ID logic
+                const nodeIdMap: Record<string, string> = {
+                    'invitrace': 'node_project_invitrace',
+                    'peakaccount': 'node_project_peakaccount',
+                    'cp_origin': 'node_project_cporigin'
+                };
+
+                const flowNodeId = nodeIdMap[key];
+
+                if (flowNodeId && (conversationFlows.nodes as any)[flowNodeId]) {
+                    const node = (conversationFlows.nodes as any)[flowNodeId];
+                    if (node.suggestions && node.suggestions.length > 0) {
+                        suggestions = node.suggestions.map((s: string) => ({
+                            label: s,
+                            payload: s.toLowerCase(),
+                            icon: s.includes('Back') ? '🔙' : '👉'
+                        }));
+                    }
+                }
+
                 return {
-                    text: this.generateDynamicContent(key, 'professional'), // Default vibe
-                    suggestions: [{ label: 'Back to Menu', payload: 'experience', icon: '🔙' }]
+                    text: this.generateDynamicContent(key, 'professional'),
+                    suggestions: suggestions
                 };
             }
         }
