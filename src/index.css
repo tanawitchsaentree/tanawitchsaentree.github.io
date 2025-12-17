@@ -338,6 +338,24 @@
   margin-bottom: var(--space-6);
 }
 
+/* Location Badge */
+.location-badge {
+  display: none;
+  /* Hidden on mobile */
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  font-family: var(--font-mono);
+  margin-left: auto;
+  /* Pushes to right if flex parent doesn't handle it */
+}
+
+@media (min-width: 640px) {
+  .location-badge {
+    display: flex;
+  }
+}
+
 /* ChatBox Styles */
 .chatbox-container {
   display: flex;

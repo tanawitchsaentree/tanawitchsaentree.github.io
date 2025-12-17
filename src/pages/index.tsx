@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowUpRight, Copy, Check } from 'lucide-react';
 import nateProfile from '../image/nateprofile.png';
 import profileData from '../../profile_data.json';
+import LocationBadge from '../components/LocationBadge';
 
 function ProfileHeader({ DarkModeToggle }: { DarkModeToggle: () => React.ReactElement }) {
   return (
@@ -60,7 +61,9 @@ function ProfileHeader({ DarkModeToggle }: { DarkModeToggle: () => React.ReactEl
           Product Designer
         </p>
       </div>
+      <LocationBadge />
     </div>
+
   );
 }
 
