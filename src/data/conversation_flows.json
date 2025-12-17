@@ -1,226 +1,134 @@
 {
-    "version": "1.0",
-    "system_name": "Conversation Flow Orchestrator",
-    "flows": {
-        "recruiter_fast_track": {
-            "id": "recruiter_fast_track",
-            "user_type": "recruiter",
-            "priority": "high",
-            "objectives": [
-                "highlight_experience",
-                "showcase_leadership",
-                "facilitate_contact"
-            ],
-            "max_depth": 3,
-            "branching": false,
-            "path": [
+    "version": "2.0",
+    "system_name": "Lumo Flow Engine (Token Based)",
+    "nodes": {
+        "root": {
+            "id": "root",
+            "message": "I'm listening. Where should we go?",
+            "transitions": [
                 {
-                    "step": 1,
-                    "action": "greeting",
-                    "template": "professional_intro",
-                    "content": "Understand you're evaluating candidates. Here's what matters:"
+                    "trigger": "experience",
+                    "target": "node_experience_summary"
                 },
                 {
-                    "step": 2,
-                    "action": "experience_summary",
-                    "template": "impact_focused",
-                    "content": "8+ years, Lead role at Invitrace Health. Built design systems, led teams, shipped award-winning products."
+                    "trigger": "skills",
+                    "target": "node_skills_overview"
                 },
                 {
-                    "step": 3,
-                    "action": "call_to_action",
-                    "template": "direct_contact",
-                    "content": "Want details on specific areas or ready to connect?",
-                    "suggestions": [
-                        "experience",
-                        "skills",
-                        "contact"
-                    ]
+                    "trigger": "contact",
+                    "target": "node_contact_card"
                 }
-            ],
-            "exit_condition": "contact_shared"
+            ]
         },
-        "peer_exploration": {
-            "id": "peer_exploration",
-            "user_type": "peer_designer",
-            "priority": "medium",
-            "objectives": [
-                "share_process",
-                "discuss_craft",
-                "build_connection"
+        "node_experience_summary": {
+            "id": "node_experience_summary",
+            "message": "Nate has 8+ years of experience, leading design at Invitrace Health and building systems at Peakaccount.",
+            "suggestions": [
+                "Show Projects",
+                "Deep Dive"
             ],
-            "max_depth": 8,
-            "branching": true,
-            "path": [
+            "transitions": [
                 {
-                    "step": 1,
-                    "action": "greeting",
-                    "template": "peer_to_peer",
-                    "content": "Designer to designer? Let's talk craft 🤝"
+                    "trigger": "projects",
+                    "target": "node_projects_list"
                 },
                 {
-                    "step": 2,
-                    "action": "interest_discovery",
-                    "template": "open_ended",
-                    "content": "What aspects of Nate's work catch your eye?",
-                    "suggestions": [
-                        "design_systems",
-                        "research_process",
-                        "leadership",
-                        "projects"
-                    ]
-                },
-                {
-                    "step": 3,
-                    "action": "deep_dive",
-                    "template": "storytelling",
-                    "content": "{{dynamic_based_on_choice}}",
-                    "allow_followup": true
+                    "trigger": "deep dive",
+                    "target": "node_deep_dive"
                 }
-            ],
-            "exit_condition": "user_satisfied"
+            ]
         },
-        "casual_browse": {
-            "id": "casual_browse",
-            "user_type": "casual_browser",
-            "priority": "low",
-            "objectives": [
-                "spark_interest",
-                "show_highlights",
-                "enable_exploration"
+        "node_projects_list": {
+            "id": "node_projects_list",
+            "message": "Here are some highlights: \n- **Invitrace**: Healthcare Dashboard\n- **Peakaccount**: Fintech App\n- **CP Origin**: Property Platform",
+            "suggestions": [
+                "Invitrace Details",
+                "Back to Menu"
             ],
-            "max_depth": 5,
-            "branching": true,
-            "path": [
+            "transitions": [
                 {
-                    "step": 1,
-                    "action": "greeting",
-                    "template": "friendly_inviting",
-                    "content": "Stumbled here? Perfect 👀 Let me show you what makes Nate's work stand out."
+                    "trigger": "invitrace details",
+                    "target": "node_project_invitrace"
                 },
                 {
-                    "step": 2,
-                    "action": "quick_hook",
-                    "template": "intriguing_fact",
-                    "content": "{{random_interesting_fact}}",
-                    "suggestions": [
-                        "tell_me_more",
-                        "surprise_me",
-                        "contact"
-                    ]
+                    "trigger": "back to menu",
+                    "target": "root"
                 }
-            ],
-            "exit_condition": "engagement_or_timeout"
+            ]
         },
-        "surprise_me_adventure": {
-            "id": "surprise_adventure",
-            "trigger": "surprise_me_button",
-            "priority": "fun",
-            "objectives": [
-                "delight",
-                "unexpected_insights",
-                "personality_showcase"
+        "node_project_invitrace": {
+            "id": "node_project_invitrace",
+            "message": "**Invitrace Health**: Created a unified patient monitoring dashboard used by 50+ clinics. Reduced data entry time by 40%.",
+            "suggestions": [
+                "Next Project",
+                "Contact Nate"
             ],
-            "max_depth": 6,
-            "branching": true,
-            "surprises": [
+            "transitions": [
                 {
-                    "weight": 30,
-                    "content": "Did you know? **Nate studied photography** before UX. That eye for composition shows in every pixel 📸",
-                    "followup": "His background in **visual storytelling** makes his interfaces naturally beautiful."
+                    "trigger": "next project",
+                    "target": "node_project_peakaccount"
                 },
                 {
-                    "weight": 25,
-                    "content": "Plot twist: Nate recently studied **web dev in Canada** to better understand implementation 💻",
-                    "followup": "Designer who codes? That's a **powerful combo**."
+                    "trigger": "contact nate",
+                    "target": "node_contact_card"
+                }
+            ]
+        },
+        "node_contact_card": {
+            "id": "node_contact_card",
+            "message": "You can reach Nate at **tanawitch.s@gmail.com** or connect on LinkedIn.",
+            "suggestions": [
+                "Download Resume",
+                "Back to Start"
+            ],
+            "transitions": [
+                {
+                    "trigger": "download resume",
+                    "target": "node_download_cv"
                 },
                 {
-                    "weight": 20,
-                    "content": "Award alert! 🏆 His **mutual fund app** won for customer experience in Asia.",
-                    "followup": "Real recognition for **solving real problems**."
-                },
+                    "trigger": "back to start",
+                    "target": "root"
+                }
+            ]
+        },
+        "node_download_cv": {
+            "id": "node_download_cv",
+            "message": "Downloading resume now... 📄",
+            "command": {
+                "type": "download",
+                "value": "resume"
+            },
+            "transitions": [
                 {
-                    "weight": 15,
-                    "content": "Speed round: Designed a **COVID vaccine passport** in record time during the pandemic ⚡",
-                    "followup": "When it matters, he ships **fast without sacrificing quality**."
-                },
-                {
-                    "weight": 10,
-                    "content": "Location bonus: Based in **Bangkok (GMT+7)** but fully remote-friendly 🌏",
-                    "followup": "**Time zones** won't stop good work from happening."
+                    "trigger": "*",
+                    "target": "root"
                 }
             ]
         }
     },
-    "conversation_states": {
-        "initial": {
-            "greeting_required": true,
-            "context_detection": true,
-            "flow_selection": "auto"
-        },
-        "engaged": {
-            "greeting_required": false,
-            "remember_context": true,
-            "suggest_depth": "increase"
-        },
-        "deep_dive": {
-            "greeting_required": false,
-            "allow_branching": true,
-            "storytelling_mode": "detailed"
-        },
-        "wrapping_up": {
-            "greeting_required": false,
-            "offer_contact": true,
-            "suggest_next_steps": true
-        }
-    },
-    "dynamic_responses": {
-        "experience_query": {
-            "short": "8+ years across healthtech, fintech, and productivity. Currently Lead at Invitrace Health.",
-            "medium": "Nate's spent 8+ years designing tools people rely on. From award-winning fintech apps at Codefin to healthcare platforms at Invitrace Health. Design systems are his specialty.",
-            "detailed": "{{query_profile_data: experience.timeline, storytelling.detailed}}"
-        },
-        "skills_query": {
-            "short": "Design systems, user research, visual design, team leadership.",
-            "medium": "Expert in design systems, UX strategy, and research. Strong visual design background (photography degree!). Leading teams and mentoring designers.",
-            "detailed": "{{query_profile_data: skills.categories, with_evidence}}"
-        },
-        "contact_query": {
-            "always": "Best way to reach Nate: tanawitchsaentree@gmail.com. Also on LinkedIn, Behance, and exploring on GitHub.",
-            "followup": "He typically responds within 24-48 hours. Worth the wait though 😉"
-        }
-    },
-    "personality_adaptations": {
-        "user_is_formal": {
-            "detect": [
-                "keywords: professional, formal, sir, ma'am"
-            ],
-            "adapt": {
-                "emoji_usage": "minimal",
-                "tone": "professional",
-                "language": "formal"
+    "extras": {
+        "surprises": [
+            {
+                "content": "Fun Fact: Nate once designed a font based on Bangkok street signs.",
+                "followup": "Typography is his secret weapon.",
+                "weight": 20
+            },
+            {
+                "content": "Surprise: He cooks a mean Pad Thai (verified by mom).",
+                "followup": "Recipe available upon request (maybe).",
+                "weight": 15
+            },
+            {
+                "content": "Did you know? He started coding at age 12 to modify game UIs.",
+                "followup": "The obsession with UI started early.",
+                "weight": 25
+            },
+            {
+                "content": "He collects vintage cameras.",
+                "followup": "Analog photography teaches patience, he says.",
+                "weight": 10
             }
-        },
-        "user_is_casual": {
-            "detect": [
-                "keywords: hey, yo, cool, nice"
-            ],
-            "adapt": {
-                "emoji_usage": "moderate",
-                "tone": "friendly",
-                "language": "casual"
-            }
-        },
-        "user_is_enthusiastic": {
-            "detect": [
-                "keywords: amazing, wow, love, awesome, multiple_exclamations"
-            ],
-            "adapt": {
-                "emoji_usage": "high",
-                "tone": "enthusiastic",
-                "language": "energetic",
-                "match_energy": true
-            }
-        }
+        ]
     }
 }

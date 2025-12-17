@@ -10,7 +10,7 @@ import conversationFlows from '../data/conversation_flows.json';
 import { IntentClassifier } from './IntentClassifier';
 import { EntityExtractor, type ExtractedEntity } from './EntityExtractor';
 import { AnalyticsManager } from './AnalyticsManager';
-import { searchEngine } from './SearchEngine';
+import { SearchEngine } from './SearchEngine'; // Changed from singleton import to class import
 import { knowledgeGraph } from './KnowledgeGraph';
 import { ReferenceResolver } from './ReferenceResolver';
 import { SmallTalkHandler } from './SmallTalkHandler';
@@ -19,6 +19,7 @@ import { FallbackStrategy } from './FallbackStrategy';
 import { UserProfiler, type UserProfile } from './UserProfiler';
 import { SmartRecommender } from './SmartRecommender';
 import { SessionManager } from './SessionManager';
+import { FlowEngine, type SessionToken } from './FlowEngine'; // Added FlowEngine import
 
 // Types
 interface Suggestion {
@@ -85,29 +86,41 @@ export class LumoAI {
     // Advanced AI components
     private intentClassifier: IntentClassifier;
     private entityExtractor: EntityExtractor;
+    private smartRecommender: SmartRecommender;
+    private smallTalkHandler: SmallTalkHandler;
+    private searchEngine: SearchEngine; // Changed from singleton to instance
+    private analytics: typeof AnalyticsManager; // Added AnalyticsManager instance
+    private flowEngine: FlowEngine; // Added FlowEngine
+    private sessionToken: SessionToken; // Added SessionToken
+
     // searchEngine is imported as singleton
     private referenceResolver: ReferenceResolver;
     // Phase 3: Cerebro modules
-    private smallTalkHandler: SmallTalkHandler;
     private contextValidator: ContextValidator;
     private fallbackStrategy: FallbackStrategy;
     // Phase 4: Memory & Learning modules
     private userProfiler: UserProfiler;
-    private smartRecommender: SmartRecommender;
     private sessionManager: SessionManager;
     private userProfile: UserProfile | null = null;
 
     constructor() {
         this.intentClassifier = new IntentClassifier();
         this.entityExtractor = new EntityExtractor();
+        this.smartRecommender = new SmartRecommender();
+        this.smallTalkHandler = new SmallTalkHandler();
+        this.searchEngine = new SearchEngine(); // Instantiated SearchEngine
+        this.analytics = AnalyticsManager; // Assigned AnalyticsManager
+
+        // Module 5: Flow Engine
+        this.flowEngine = new FlowEngine();
+        this.sessionToken = this.flowEngine.createToken();
+
         this.referenceResolver = new ReferenceResolver();
         // Phase 3: Initialize Cerebro
-        this.smallTalkHandler = new SmallTalkHandler();
         this.contextValidator = new ContextValidator();
         this.fallbackStrategy = new FallbackStrategy();
         // Phase 4: Initialize Memory System
         this.userProfiler = new UserProfiler();
-        this.smartRecommender = new SmartRecommender();
         this.sessionManager = new SessionManager();
 
         // Load existing session if available
@@ -205,6 +218,27 @@ export class LumoAI {
      * Generate intelligent response based on query - CEREBRO ORCHESTRATION
      */
     generateResponse(query: string): LumoResponse {
+        // 🧠 CEREBRO LAYER 0: Flow Engine (The Architect) - Highest Priority
+        const flowResult = this.flowEngine.process(this.sessionToken, query);
+        if (flowResult.response) {
+            // Update Token State
+            this.sessionToken = flowResult.nextToken;
+            console.log('[🏗️ Architect] Flow Engine took control. Node:', this.sessionToken.currentNodeId);
+
+            // Map simple strings to Suggestion objects
+            const suggestions = flowResult.response.suggestions?.map(s => ({
+                label: s,
+                payload: s.toLowerCase(),
+                icon: '👉'
+            }));
+
+            return {
+                text: flowResult.response.text,
+                suggestions,
+                command: flowResult.response.command
+            };
+        }
+
         // 🧠 CEREBRO LAYER 0.5: Auto-Execute Intent (Priority Command)
         if (this.smallTalkHandler.detectAutoExecute(query)) {
             const response = this.handleSurpriseQuery();
@@ -305,19 +339,21 @@ export class LumoAI {
             }
         }
 
-        // Step 5: CORTEX FALLBACK - Semantic Search for unknown queries
-        // If we didn't understand the intent, maybe we can find keywords in the database?
-        const searchResults = searchEngine.search(query);
-        if (searchResults.length > 0 && searchResults[0].score > 1.5) {
+        // 🧠 CEREBRO LAYER 4: MEMORY (Search Engine) - The "Fall-Through" Safety Net
+        // If classification is low confidence OR intent is unknown, try to find a semantic match
+        const searchResults = this.searchEngine.search(query);
+        if (searchResults.length > 0) {
             const bestMatch = searchResults[0];
-            AnalyticsManager.trackEvent('lumo_search_fallback', { query, match: bestMatch.title });
+            if (bestMatch.score > 3) { // Threshold for auto-suggestion
+                AnalyticsManager.trackEvent('lumo_search_fallback', { query, match: bestMatch.title });
 
-            return {
-                text: `I'm not 100% sure what you're asking, but I found this related to **"${query}"**:\n\n` +
-                    `**${bestMatch.title}** (${bestMatch.company || bestMatch.type})\n${bestMatch.description}\n\n` +
-                    `Is that what you were looking for?`,
-                suggestions: this.smartRecommender ? this.smartRecommender.getContextualSuggestions('fallback') || [] : []
-            };
+                return {
+                    text: `I'm not 100% sure what you're asking, but I found this related to **"${query}"**:\n\n` +
+                        `**${bestMatch.title}** (${bestMatch.company || bestMatch.type})\n${bestMatch.description}\n\n` +
+                        `Is that what you were looking for?`,
+                    suggestions: this.smartRecommender ? this.smartRecommender.getContextualSuggestions('fallback') || [] : []
+                };
+            }
         }
 
         // Step 6: Smart Fallback Strategylligent low confidence fallback
@@ -548,17 +584,18 @@ He typically responds within **24-48 hours**. Worth the wait! 😉`
      * Handle surprise query
      */
     private handleSurpriseQuery(): { text: string; suggestions?: Suggestion[] } {
-        const surprises = conversationFlows.flows.surprise_me_adventure.surprises;
+        // Access 'extras' from the new JSON structure
+        const surprises = (conversationFlows as any).extras.surprises;
 
         // Filter out the last shown surprise to prevent immediate repetition
         const candidates = this.conversationState.lastSurpriseContent
-            ? surprises.filter(s => s.content !== this.conversationState.lastSurpriseContent)
+            ? surprises.filter((s: any) => s.content !== this.conversationState.lastSurpriseContent)
             : surprises;
 
         // Fallback to full list if filter leaves nothing (unlikely)
         const pool = candidates.length > 0 ? candidates : surprises;
 
-        const selected = this.weightedRandom(pool);
+        const selected = this.weightedRandom(pool) as any;
 
         // Track this surprise
         this.conversationState.lastSurpriseContent = selected.content;
@@ -632,9 +669,9 @@ ${currentExp.storytelling.detailed}
             return { text: '', suggestions: [] }; // Silent response
         }
 
-        const nudges = greetingSystem.idle_nudges;
+        const nudges: any[] = greetingSystem.idle_nudges;
         // Random selection
-        const selected = this.weightedRandom(nudges.map(n => ({ ...n, weight: 1 })));
+        const selected = this.weightedRandom(nudges.map(n => ({ ...n, weight: 1 }))) as any;
 
         // Track Nudge
         this.conversationState.nudgeCount++;
