@@ -61,7 +61,8 @@ interface ConversationState {
     lastEntities: ExtractedEntity[];
     lastTopic: string | null;
     lastResponse: string | null;
-    lastSurpriseContent: string | null; // Track last surprise content to avoid repeats
+    lastSurpriseContent: string | null;
+    nudgeCount: number;
 }
 
 export class LumoAI {
@@ -77,7 +78,8 @@ export class LumoAI {
         lastEntities: [],
         lastTopic: null,
         lastResponse: null,
-        lastSurpriseContent: null
+        lastSurpriseContent: null,
+        nudgeCount: 0 // Track nudges for politeness
     };
 
     // Advanced AI components
@@ -610,11 +612,20 @@ ${currentExp.storytelling.detailed}
 
     /**
      * Get a proactive nudge for idle users (Charm Module)
+     * "Polite Mode": Only nudge once per session.
      */
     getProactiveNudge(): LumoResponse {
+        // Strict Politeness: If already nudged, stay silent.
+        if (this.conversationState.nudgeCount > 0) {
+            return { text: '', suggestions: [] }; // Silent response
+        }
+
         const nudges = greetingSystem.idle_nudges;
         // Random selection
         const selected = this.weightedRandom(nudges.map(n => ({ ...n, weight: 1 })));
+
+        // Track Nudge
+        this.conversationState.nudgeCount++;
 
         return {
             text: selected.text,

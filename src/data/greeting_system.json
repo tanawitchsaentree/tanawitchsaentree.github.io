@@ -370,13 +370,30 @@
     },
     "idle_nudges": [
         {
-            "id": "nudge_location",
+            "id": "nudge_location_1",
             "text": "So... where in the world are you tuning in from? 🌍",
             "suggestions": [
                 "Bangkok 🇹🇭",
                 "Canada 🇨🇦",
                 "USA 🇺🇸",
                 "Europe 🇪🇺"
+            ]
+        },
+        {
+            "id": "nudge_location_2",
+            "text": "Sending signals to...? I'm curious about your time zone! ⏰",
+            "suggestions": [
+                "Asia 🌏",
+                "Americas 🌎",
+                "Europe 🌍"
+            ]
+        },
+        {
+            "id": "nudge_location_3",
+            "text": "Just checking connections... where are you visiting from today? 📍",
+            "suggestions": [
+                "Bangkok 🇹🇭",
+                "Global 🌍"
             ]
         },
         {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { Copy, Check, ExternalLink, Bot } from 'lucide-react';
+import { Copy, Check, ExternalLink } from 'lucide-react';
 import { LumoAI } from '../utils/LumoAI';
 import { UIController } from '../utils/UIController';
 import { useTheme } from 'next-themes';
@@ -186,7 +186,9 @@ const ChatBox: React.FC = () => {
           if (lastMsg.sender === 'bot') { // Don't interrupt user
             // Trigger Nudge
             const nudge = lumoAI.getProactiveNudge();
-            displayHumanizedMessage(nudge.text, 'bot', nudge.suggestions);
+            if (nudge.text) {
+              displayHumanizedMessage(nudge.text, 'bot', nudge.suggestions);
+            }
           }
         }
       }, IDLE_TIMEOUT);
@@ -352,9 +354,7 @@ const ChatBox: React.FC = () => {
           <div key={msg.id} className={`chatbox-message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'} `}>
             {msg.sender === 'bot' && (
               <div className="chatbox-avatar">
-                <div className="w-8 h-8 rounded-full object-cover bg-[var(--primary)] text-[var(--primary-foreground)] flex items-center justify-center">
-                  <Bot size={18} />
-                </div>
+                <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
               </div>
             )}
             <div className="chatbox-message-content">
