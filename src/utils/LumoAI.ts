@@ -93,7 +93,7 @@ export class LumoAI {
     private smartRecommender: SmartRecommender;
     private smallTalkHandler: SmallTalkHandler;
     private searchEngine: SearchEngine; // Changed from singleton to instance
-    private analytics: typeof AnalyticsManager; // Added AnalyticsManager instance
+
     private flowEngine: FlowEngine; // Added FlowEngine
     private sessionToken: SessionToken; // Added SessionToken
     private grammarEngine: EnglishGrammarEngine; // Module 6: Bard
@@ -114,7 +114,7 @@ export class LumoAI {
         this.smartRecommender = new SmartRecommender();
         this.smallTalkHandler = new SmallTalkHandler();
         this.searchEngine = new SearchEngine(); // Instantiated SearchEngine
-        this.analytics = AnalyticsManager; // Assigned AnalyticsManager
+
 
         // Module 5: Flow Engine
         this.flowEngine = new FlowEngine();
@@ -439,9 +439,7 @@ export class LumoAI {
             case 'remote work?':
             case 'remote work':
                 return this.handleContactQuery();
-            case 'contact':
-            case 'contact info':
-                return this.handleContactQuery();
+
 
             // UI COMMANDS
             case 'scroll to top':
