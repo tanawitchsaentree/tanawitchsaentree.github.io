@@ -1,5 +1,5 @@
 import graphData from '../data/knowledge_graph.json';
-import profileData from '../../profile_data.json';
+import profileData from '../data/profile_data_enhanced.json';
 
 // type RelationshipType = 'demonstrates' | 'applied_in' | 'foundation_for';
 
@@ -77,8 +77,8 @@ export class KnowledgeGraph {
         // We need to map IDs to profile_data array
         // Simple heuristic: search company name in profile_data
         const companyName = this.getRealCompanyName(id);
-        const exp = profileData.work_experience.find(e => e.company.includes(companyName));
-        return exp ? exp.role : 'Product Designer';
+        const exp = profileData.experience.timeline.find(e => e.company.name.includes(companyName));
+        return exp ? exp.role.title : 'Product Designer';
     }
 }
 

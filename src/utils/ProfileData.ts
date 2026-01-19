@@ -1,4 +1,4 @@
-import profileData from '../../profile_data.json';
+import profileData from '../data/profile_data_enhanced.json';
 
 /**
  * ProfileData - Clean data access layer for profile information
@@ -8,29 +8,31 @@ export class ProfileData {
      * Get all work experience entries
      */
     static getWorkExperience() {
-        return profileData.work_experience;
+        return profileData.experience.timeline;
     }
 
     /**
      * Get all competencies/skills
+     * Flattens the categories from enhanced data
      */
     static getCompetencies() {
-        return profileData.competencies;
+        const categories = Object.values(profileData.skills.categories);
+        return categories.flatMap((cat: any) => cat.competencies);
     }
 
     /**
      * Get contact information
      */
     static getContactInfo() {
-        return profileData.contact_info;
+        return profileData.contact;
     }
 
     /**
      * Get a specific company by name (case-insensitive)
      */
     static getCompanyByName(name: string) {
-        return profileData.work_experience.find(
-            (job: any) => job.company.toLowerCase() === name.toLowerCase()
+        return profileData.experience.timeline.find(
+            (job) => job.company.name.toLowerCase() === name.toLowerCase()
         );
     }
 
@@ -38,7 +40,8 @@ export class ProfileData {
      * Get a specific competency by name (case-insensitive)
      */
     static getCompetencyByName(name: string) {
-        return profileData.competencies.find(
+        const allSkills = this.getCompetencies();
+        return allSkills.find(
             (skill: any) => skill.name.toLowerCase() === name.toLowerCase()
         );
     }
@@ -47,9 +50,11 @@ export class ProfileData {
      * Get work experience sorted by date (most recent first)
      */
     static getWorkExperienceSorted() {
-        return [...profileData.work_experience].sort((a, b) => {
-            const dateA = new Date(a.start_date);
-            const dateB = new Date(b.start_date);
+        return [...profileData.experience.timeline].sort((a, b) => {
+            // Handle "present" or date strings
+            const getDate = (d: string) => d.toLowerCase() === 'present' ? new Date() : new Date(d);
+            const dateA = getDate(a.role.start);
+            const dateB = getDate(b.role.start);
             return dateB.getTime() - dateA.getTime();
         });
     }
@@ -58,20 +63,20 @@ export class ProfileData {
      * Get top N competencies
      */
     static getTopCompetencies(count: number = 5) {
-        return profileData.competencies.slice(0, count);
+        return this.getCompetencies().slice(0, count);
     }
 
     /**
      * Get full name data
      */
     static getFullName() {
-        return profileData.full_name;
+        return profileData.identity.full_name;
     }
 
     /**
      * Get current role
      */
     static getCurrentRole() {
-        return profileData.current_role;
+        return profileData.identity.current_title;
     }
 }

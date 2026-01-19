@@ -1,5 +1,5 @@
 import MiniSearch from 'minisearch';
-import profileData from '../../profile_data.json';
+import profileData from '../data/profile_data_enhanced.json';
 
 interface SearchResult {
     id: string;
@@ -33,46 +33,52 @@ export class SearchEngine {
         const documents: any[] = [];
 
         // 1. Index Work Experience
-        profileData.work_experience.forEach((exp, index) => {
+        profileData.experience.timeline.forEach((exp, index) => {
             documents.push({
                 id: `exp-${index}`,
                 type: 'experience',
-                title: exp.role,
-                company: exp.company,
-                role: exp.role,
-                description: exp.description || exp.summary,
-                keywords: `${exp.company} ${exp.role} ${exp.description}`,
-                link: exp.link,
-                start_date: exp.start_date,
-                end_date: exp.end_date
+                title: exp.role.title,
+                company: exp.company.name,
+                role: exp.role.title,
+                description: exp.storytelling.detailed || exp.storytelling.medium,
+                keywords: `${exp.company.name} ${exp.role.title} ${exp.impact.headline}`,
+                link: exp.company.url,
+                start_date: exp.role.start,
+                end_date: exp.role.end
             });
         });
 
         // 2. Index Skills
         // Flatten skills from categories
-        if (profileData.competencies) {
-            profileData.competencies.forEach((comp: any, index: number) => { // Use 'any' or define interface to avoid TS error
-                documents.push({
-                    id: `skill-cat-${index}`,
-                    type: 'skill',
-                    title: comp.name,
-                    description: comp.description,
-                    category: 'Competency',
-                    keywords: `${comp.name} ${comp.description}`
-                });
+        if (profileData.skills && profileData.skills.categories) {
+            const categories = Object.values(profileData.skills.categories);
+            categories.forEach((cat: any, catIndex: number) => {
+                if (cat.competencies) {
+                    cat.competencies.forEach((comp: any, compIndex: number) => {
+                        documents.push({
+                            id: `skill-${catIndex}-${compIndex}`,
+                            type: 'skill',
+                            title: comp.name,
+                            description: comp.description,
+                            category: cat.label,
+                            keywords: `${comp.name} ${comp.description} ${cat.label}`
+                        });
+                    });
+                }
             });
         }
 
         // 3. Index Education
         if (profileData.education) {
             profileData.education.forEach((edu, index) => {
+                // Ensure edu.field exists in the new structure (it is 'field' in enhanced)
                 documents.push({
                     id: `edu-${index}`,
                     type: 'education',
-                    title: edu.degree,
+                    title: edu.degree_type === 'bachelor' ? "Bachelor's Degree" : "Diploma",
                     company: edu.institution,
                     description: `${edu.field} at ${edu.location}`,
-                    keywords: `${edu.institution} ${edu.field}`
+                    keywords: `${edu.institution} ${edu.field} ${edu.degree_type}`
                 });
             });
         }

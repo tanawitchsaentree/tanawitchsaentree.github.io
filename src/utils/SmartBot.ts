@@ -561,8 +561,8 @@ export class SmartBot {
         const companies = ProfileData.getWorkExperienceSorted();
 
         return companies.slice(0, max).map(job => ({
-            label: job.company,
-            payload: `Tell me about ${job.company}`
+            label: job.company.name,
+            payload: `Tell me about ${job.company.name}`
         }));
     }
 
