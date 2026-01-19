@@ -371,7 +371,7 @@ export default function Index({ DarkModeToggle }: { DarkModeToggle: () => React.
       flexDirection: 'column',
       width: '100%', /* Full width */
       margin: '0 auto',
-      padding: '2rem 1rem',
+      padding: '0 var(--space-4)', /* Align with design system spacing */
       minHeight: '100%',
       boxSizing: 'border-box',
     }}>
