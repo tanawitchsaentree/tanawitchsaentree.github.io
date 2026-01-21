@@ -52,13 +52,26 @@ function ProfileHeader({ DarkModeToggle }: { DarkModeToggle: () => React.ReactEl
           <DarkModeToggle />
         </div>
         <p style={{
-          fontSize: 'var(--text-lg)',
+          fontSize: 'var(--text-base)',
           margin: 0,
           lineHeight: '1.2',
           color: 'var(--muted-foreground)',
           marginTop: 'var(--space-1)',
         }}>
-          {profileData.identity.current_title.value}
+          Design <span style={{ opacity: 0.7 }}>@</span> <a
+            href={profileData.experience.timeline.find((exp: any) => exp.id === 'allianz')?.company.url || "https://www.allianz.com/"}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: 'inherit',
+              textDecoration: 'none',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.fontWeight = '700'}
+            onMouseLeave={(e) => e.currentTarget.style.fontWeight = '400'}
+          >
+            Allianz
+          </a>
         </p>
       </div>
       <LocationBadge />
