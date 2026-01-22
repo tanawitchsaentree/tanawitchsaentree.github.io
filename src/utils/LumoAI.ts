@@ -8,6 +8,7 @@ import greetingSystem from '../data/greeting_system.json';
 import conversationFlows from '../data/conversation_flows.json';
 import { FlowEngine, type SessionToken } from './FlowEngine';
 import { EnglishGrammarEngine } from './GrammarEngine';
+import { ResponseCoordinator, type ResponseComponent } from './ResponseCoordinator';
 import templates from '../data/templates.json';
 import { knowledgeGraph } from './KnowledgeGraph';
 
@@ -21,6 +22,8 @@ import { SmallTalkHandler } from './SmallTalkHandler';
 import { ContextValidator } from './ContextValidator';
 import { FallbackStrategy } from './FallbackStrategy';
 import { UserProfiler, type UserProfile } from './UserProfiler';
+import { ContextManager } from './ContextManager';
+import { ContextResolver } from './ContextResolver';
 import { SmartRecommender } from './SmartRecommender';
 import { SessionManager } from './SessionManager';
 
@@ -98,8 +101,13 @@ export class LumoAI {
     private sessionToken: SessionToken; // Added SessionToken
     private grammarEngine: EnglishGrammarEngine; // Module 6: Bard
 
-    // searchEngine is imported as singleton
-    private referenceResolver: ReferenceResolver;
+    // v2.1 Context Modules
+    private contextManager: ContextManager;
+    private contextResolver: ContextResolver;
+
+    // Legacy Support (Phase out later or keeping for specific needs)
+    private referenceResolver: ReferenceResolver; // KEEPING for now as bridge
+
     // Phase 3: Cerebro modules
     private contextValidator: ContextValidator;
     private fallbackStrategy: FallbackStrategy;
@@ -120,8 +128,11 @@ export class LumoAI {
         this.flowEngine = new FlowEngine();
         this.sessionToken = this.flowEngine.createToken();
 
-        // Module 6: Grammar Engine
         this.grammarEngine = new EnglishGrammarEngine();
+
+        // v2.1 Context System
+        this.contextManager = new ContextManager();
+        this.contextResolver = new ContextResolver(this.contextManager);
 
         this.referenceResolver = new ReferenceResolver();
         // Phase 3: Initialize Cerebro
@@ -225,149 +236,310 @@ export class LumoAI {
     /**
      * Generate intelligent response based on query - CEREBRO ORCHESTRATION
      */
-    generateResponse(query: string): LumoResponse {
-        // 🧠 CEREBRO LAYER 0: Flow Engine (The Architect) - Highest Priority
-        const flowResult = this.flowEngine.process(this.sessionToken, query);
-        if (flowResult.response) {
-            // Update Token State
-            this.sessionToken = flowResult.nextToken;
-            console.log('[🏗️ Architect] Flow Engine took control. Node:', this.sessionToken.currentNodeId);
+    /**
+     * Check for Global Interrupts (Escape Hatch)
+     */
+    private isGlobalInterrupt(query: string): boolean {
+        const triggers = ['stop', 'restart', 'start over', 'home', 'main menu', 'help'];
+        const normalized = query.toLowerCase().trim();
+        return triggers.includes(normalized) || triggers.some(t => normalized === t);
+    }
 
-            // Map simple strings to Suggestion objects
-            const suggestions = flowResult.response.suggestions?.map(s => ({
-                label: s,
-                payload: s.toLowerCase(),
-                icon: '👉'
-            }));
+    /**
+     * Handle Global Interrupt
+     */
+    private handleGlobalInterrupt(_query: string): LumoResponse {
+        // Reset Flow Engine State
+        this.sessionToken = this.flowEngine.createToken();
 
-            return {
-                text: flowResult.response.text,
-                suggestions,
-                command: flowResult.response.command
-            };
-        }
+        return {
+            text: "🛑 I've stopped the current topic. What would you like to do next?",
+            suggestions: [
+                { label: 'Start Over', payload: 'start over', icon: '🔄' },
+                { label: 'Experience', payload: 'experience', icon: '💼' },
+                { label: 'Chat', payload: 'hello', icon: '👋' }
+            ]
+        };
+    }
 
-        // 🧠 CEREBRO LAYER 0.5: Auto-Execute Intent (Priority Command)
-        if (this.smallTalkHandler.detectAutoExecute(query)) {
-            const response = this.handleSurpriseQuery();
-            this.recordTurn(query, 'auto_execute', [], response.text);
-            return response;
-        }
+    /**
+     * Handle Debug Command
+     */
+    private handleDebug(): LumoResponse {
+        const context = this.contextManager.getContext();
+        const state = this.conversationState;
 
-        // 🧠 CEREBRO LAYER 1: Deep Understanding (Intent Classification)
-        // Check intents deeply first - if we are sure, act on it.
-        const intentScores = this.intentClassifier.classify(query, {
-            userType: this.conversationState.userType,
-            conversationDepth: this.conversationState.conversationDepth
+        const debugInfo = `
+**🕷️ LumoAI Debug Console**
+
+**🧠 Memory (Context v2.1)**
+- **Active Topic:** ${context.activeTopic ? `**${context.activeTopic.name}** (${context.activeTopic.confidence.toFixed(2)})` : 'None'}
+- **Entity Stack:** ${context.entityStack.length > 0 ? context.entityStack.map(e => `${e.value} (${e.expiresAfterTurns}t)`).join(', ') : 'Empty'}
+- **History Depth:** ${context.history.length}/10
+
+**📊 Logic State**
+- **Last Intent:** ${context.recentIntents.length > 0 ? context.recentIntents[0].intent : 'None'}
+- **Conversation Depth:** ${state.conversationDepth}
+- **Session Token:** ${this.sessionToken?.currentNodeId || 'N/A'}
+
+**📈 Health**
+- **Latency Avg:** ${AnalyticsManager.getSessionMetrics().averageLatency.toFixed(0)}ms
+- **Fallback Rate:** ${(AnalyticsManager.getSessionMetrics().fallbackRate * 100).toFixed(0)}%
+        `.trim();
+
+        return {
+            text: debugInfo,
+            suggestions: []
+        };
+    }
+
+    /**
+     * Parallel Check for Intent and SmallTalk (Async Wrapper)
+     */
+    private async parallelCheck(query: string): Promise<{ intent: any | null; smallTalk: any | null }> {
+        // Wrap synchronous calls in Promises to allow future async expansion (v3.0)
+        // and to treat them as independent parallel tasks.
+
+        const checkIntent = new Promise<any>((resolve) => {
+            try {
+                const scores = this.intentClassifier.classify(query, {
+                    userType: this.conversationState.userType,
+                    conversationDepth: this.conversationState.conversationDepth
+                });
+                resolve(scores.length > 0 ? scores[0] : null);
+            } catch (e) {
+                console.error('Intent Classifier Error:', e);
+                resolve(null);
+            }
         });
-        // 🧠 CEREBRO LAYER 0: Direct Payload Router (Systemic Brain Repair)
-        // Intercepts known button commands to bypass fuzzy classification
-        const directResponse = this.executePayload(query);
-        if (directResponse) {
-            AnalyticsManager.trackCommand(query); // Track button click
-            this.recordTurn(query, 'direct_command', [], directResponse.text);
-            return directResponse;
-        }
 
-        // 🧠 CEREBRO LAYER 1: Extract Entities
-        const entities = this.entityExtractor.extract(query);
-        const bestIntent = intentScores[0];
-
-        // High Confidence Shortcut (>0.6) -> Bypass heuristics if we are sure
-        if (bestIntent && bestIntent.confidence > 0.6 && bestIntent.intent !== 'clarification_needed') {
-            const response = this.executeIntent(bestIntent.intent, entities, query);
-            if (response) {
-                this.recordTurn(query, bestIntent.intent, entities, response.text);
-                return response;
+        const checkSmallTalk = new Promise<any>((resolve) => {
+            try {
+                resolve(this.smallTalkHandler.detect(query));
+            } catch (e) {
+                console.error('SmallTalk Handler Error:', e);
+                resolve(null);
             }
-        }
+        });
 
-        // 🧠 CEREBRO LAYER 2: Check for small talk/social cues
-        const smallTalk = this.smallTalkHandler.detect(query);
-        if (smallTalk.isSmallTalk && smallTalk.response) {
-            const response = {
-                text: smallTalk.response,
-                suggestions: this.generateSuggestions(undefined, 3)
-            };
-            this.recordTurn(query, `smalltalk_${smallTalk.type}`, [], response.text);
-            return response;
-        }
+        // Use Promise.allSettled to ensure individual failures don't crash the logic
+        const [intentResult, smallTalkResult] = await Promise.allSettled([checkIntent, checkSmallTalk]);
 
-        // 🧠 CEREBRO LAYER 3: Check for gibberish
-        if (this.contextValidator.isGibberish(query)) {
-            const response = this.fallbackStrategy.handleGibberish();
-            this.recordTurn(query, 'gibberish', [], response.text);
-            return response;
-        }
+        return {
+            intent: intentResult.status === 'fulfilled' ? intentResult.value : null,
+            smallTalk: smallTalkResult.status === 'fulfilled' ? smallTalkResult.value : null
+        };
+    }
 
-        // 🧠 CEREBRO LAYER 4: Check for vague queries
-        if (this.contextValidator.isVague(query)) {
-            const fallback = this.fallbackStrategy.handleVagueQuery();
-            if (fallback.action === 'surprise_query') {
-                const response = this.handleSurpriseQuery();
-                this.recordTurn(query, 'vague_to_surprise', [], response.text);
-                return response;
-            }
-            // For other fallback actions, return the fallback text
-            return {
-                text: fallback.text,
-                suggestions: this.generateSuggestions(undefined, 3)
-            };
-        }
-
-        // PHASE 2: Check for references/follow-ups
-        const reference = this.referenceResolver.detectReference(query);
-        if (reference.hasReference && reference.type) {
-            // 🧠 CEREBRO LAYER 4: Validate context before handling follow-up
-            const validation = this.contextValidator.validateFollowUp(
-                reference.type,
-                this.conversationState.conversationHistory
+    /**
+     * Generate intelligent response based on query - CEREBRO ORCHESTRATION v2.1
+     * With Error Handling & Timeout Protection
+     */
+    async generateResponse(query: string): Promise<LumoResponse> {
+        try {
+            // TIMEOUT PROTECTION (1.5s limit)
+            const timeoutPromise = new Promise<LumoResponse>((_, reject) =>
+                setTimeout(() => reject(new Error("Timeout")), 1500)
             );
 
-            if (!validation.isValid) {
-                // No context for "tell me more" - use intelligent fallback
-                const response = this.fallbackStrategy.handleNoContext();
-                this.recordTurn(query, 'follow_up_no_context', [], response.text);
-                return response;
-            }
+            const startTime = Date.now();
 
-            // Valid context - handle follow-up
-            const response = this.handleFollowUp(reference.type);
-            this.recordTurn(query, 'follow_up', [], response.text);
+            // CORE LOGIC WRAPPER
+            const logicPromise = (async () => {
+                // 1. Global Interrupts (Highest Priority)
+                if (this.isGlobalInterrupt(query)) {
+                    this.contextManager.reset(); // Reset Context
+                    return this.handleGlobalInterrupt(query);
+                }
+
+                // DEBUG MODE (Phase 4.1)
+                if (query.toLowerCase().trim() === '/debug') {
+                    return this.handleDebug();
+                }
+
+                // 2. Flow Engine (Scripted Conversations)
+                const flowResult = this.flowEngine.process(this.sessionToken, query);
+                if (flowResult.response) {
+                    this.sessionToken = flowResult.nextToken;
+
+                    // Track in Context Manager
+                    this.contextManager.addMessage('user', query);
+                    this.contextManager.addMessage('bot', flowResult.response.text);
+
+                    return {
+                        text: flowResult.response.text,
+                        suggestions: flowResult.response.suggestions?.map(s => ({
+                            label: s,
+                            payload: s.toLowerCase(),
+                            icon: '👉'
+                        })),
+                        command: flowResult.response.command
+                    };
+                }
+
+                // 3. Direct Payload Router
+                const directResponse = this.executePayload(query);
+                if (directResponse) {
+                    AnalyticsManager.trackCommand(query);
+                    this.recordTurn(query, 'direct_command', [], directResponse.text);
+                    this.contextManager.addMessage('user', query);
+                    this.contextManager.addMessage('bot', directResponse.text);
+                    return directResponse;
+                }
+
+                // 4. Parallel Check (Intent + Small Talk)
+                const { intent, smallTalk } = await this.parallelCheck(query);
+                const entities = this.entityExtractor.extract(query);
+
+                // --- v2.1 CONTEXT RESOLUTION START ---
+                // Try to resolve ambiguous pronouns "it", "that"
+                const resolution = this.contextResolver.resolve(query);
+
+                // 1. Handle Ambiguity (Clarification Strategy)
+                if (resolution.isAmbiguous && resolution.candidates && resolution.candidates.length > 1) {
+                    const c1 = resolution.candidates[0].entity.value;
+                    const c2 = resolution.candidates[1].entity.value;
+
+                    AnalyticsManager.trackEvent('context_ambiguity_triggered', { query, c1, c2 });
+
+                    return {
+                        text: `I'm not quite sure if you're referring to **${c1}** or **${c2}**. Could you clarify?`,
+                        suggestions: [
+                            { label: c1, payload: c1.toLowerCase(), icon: '👉' },
+                            { label: c2, payload: c2.toLowerCase(), icon: '👉' }
+                        ]
+                    };
+                }
+
+                // 2. Apply Resolved Context
+                // If we have a resolved entity and current intent is vague or specific "tell me more"
+                if (resolution.resolvedEntity && resolution.confidence > 0.6) {
+                    console.log('[Context] Resolved Entity:', resolution.resolvedEntity.value);
+                    // Add to entities if not present
+                    if (!entities.some(e => e.value === resolution.resolvedEntity!.value)) {
+                        entities.push({
+                            type: resolution.resolvedEntity.type,
+                            value: resolution.resolvedEntity.value,
+                            confidence: resolution.confidence,
+                            position: 0
+                        });
+                    }
+                }
+                // --- v2.1 CONTEXT RESOLUTION END ---
+
+                const components: ResponseComponent[] = [];
+
+                if (smallTalk && smallTalk.isSmallTalk && smallTalk.response) {
+                    components.push({ type: 'greeting', text: smallTalk.response });
+                }
+
+                if (intent && this.intentClassifier.meetsThreshold(intent)) {
+                    const intentResponse = this.executeIntent(intent.intent, entities, query);
+                    if (intentResponse) {
+                        components.push({
+                            type: 'intent',
+                            text: intentResponse.text,
+                            suggestions: intentResponse.suggestions,
+                            command: intentResponse.command
+                        });
+
+                        // Track Intent in Context Manager
+                        this.contextManager.trackIntent(intent.intent, intent.confidence);
+                        // If intent relates to a specific topic (entity), set it as active topic
+                        if (entities.length > 0) {
+                            this.contextManager.setTopic(entities[0].value);
+                            this.contextManager.addEntity(entities[0].type, entities[0].value);
+                        }
+                    }
+                }
+
+                if (components.length > 0) {
+                    const coordinated = ResponseCoordinator.compose(components);
+                    if (intent && this.intentClassifier.meetsThreshold(intent)) {
+                        AnalyticsManager.trackIntent(intent.intent, intent.score, entities.map(e => e.value));
+                    }
+
+                    this.recordTurn(query, intent?.intent || 'small_talk', entities, coordinated.text);
+                    this.contextManager.addMessage('user', query);
+                    this.contextManager.addMessage('bot', coordinated.text);
+
+                    return {
+                        text: coordinated.text,
+                        suggestions: coordinated.suggestions || this.generateSuggestions(undefined, 3),
+                        command: coordinated.command
+                    };
+                }
+
+                // SAFETY NETS
+                if (this.contextValidator.isGibberish(query)) {
+                    return this.fallbackStrategy.handleGibberish();
+                }
+
+                if (this.contextValidator.isVague(query)) {
+                    const fallback = this.fallbackStrategy.handleVagueQuery();
+                    if (fallback.action === 'surprise_query') {
+                        return this.handleSurpriseQuery();
+                    }
+                    return { text: fallback.text, suggestions: this.generateSuggestions(undefined, 3) };
+                }
+
+                // Legacy Follow-up Check
+                const reference = this.referenceResolver.detectReference(query);
+                if (reference.hasReference && reference.type) {
+                    // Check v2 Context First
+                    if (resolution.resolvedEntity) {
+                        // Prefer v2 resolution over legacy referenceResolver if possible
+                        // But for now, let's keep legacy route as fallback for "more"
+                    }
+
+                    const validation = this.contextValidator.validateFollowUp(
+                        reference.type,
+                        this.conversationState.conversationHistory
+                    );
+                    if (validation.isValid) {
+                        const response = this.handleFollowUp(reference.type);
+                        this.recordTurn(query, 'follow_up', [], response.text);
+                        return response;
+                    }
+                }
+
+                // Fuzzy Search
+                const searchResults = this.searchEngine.search(query);
+                if (searchResults.length > 0) {
+                    const bestMatch = searchResults[0];
+                    if (bestMatch.score > 1) { // Adjusted to be safer (usually >1 is good for MiniSearch)
+                        AnalyticsManager.trackEvent('lumo_search_fallback', { query, match: bestMatch.title });
+                        return {
+                            text: `I'm not 100% sure, but I found this related to **"${query}"**:\n\n` +
+                                `**${bestMatch.title}**\n${bestMatch.description}\n\n` +
+                                `Is that helpful?`,
+                            suggestions: [{ label: 'Yes', payload: 'yes', icon: '👍' }, { label: 'No', payload: 'no', icon: '👎' }]
+                        };
+                    }
+                }
+
+                // Final Fallback
+                const response = this.fallbackStrategy.handleLowConfidence();
+                this.recordTurn(query, 'low_confidence', entities, response.text);
+                return response;
+
+            })();
+
+            // RACE: Logic vs Timeout
+            const response = await Promise.race([logicPromise, timeoutPromise]);
+
+            AnalyticsManager.trackLatency(Date.now() - startTime);
+
             return response;
+
+        } catch (error) {
+            console.error('[LumoAI] Critical Error:', error);
+            // GRACEFUL DEGRADATION
+            return {
+                text: "My brain hiccupped! 🤯 I encountered an unexpected error. Could we try that again?",
+                suggestions: this.generateSuggestions(undefined, 3)
+            };
         }
-
-        // Step 4: Check if we have decent confidence (Medium Confidence > threshold)
-        if (bestIntent && this.intentClassifier.meetsThreshold(bestIntent)) {
-            AnalyticsManager.trackIntent(bestIntent.intent, bestIntent.score, entities.map(e => e.value)); // Track Intent
-            const response = this.executeIntent(bestIntent.intent, entities, query);
-            if (response) {
-                this.recordTurn(query, bestIntent.intent, entities, response.text);
-                return response;
-            }
-        }
-
-        // 🧠 CEREBRO LAYER 4: MEMORY (Search Engine) - The "Fall-Through" Safety Net
-        // If classification is low confidence OR intent is unknown, try to find a semantic match
-        const searchResults = this.searchEngine.search(query);
-        if (searchResults.length > 0) {
-            const bestMatch = searchResults[0];
-            if (bestMatch.score > 3) { // Threshold for auto-suggestion
-                AnalyticsManager.trackEvent('lumo_search_fallback', { query, match: bestMatch.title });
-
-                return {
-                    text: `I'm not 100% sure what you're asking, but I found this related to **"${query}"**:\n\n` +
-                        `**${bestMatch.title}** (${bestMatch.company || bestMatch.type})\n${bestMatch.description}\n\n` +
-                        `Is that what you were looking for?`,
-                    suggestions: this.smartRecommender ? this.smartRecommender.getContextualSuggestions('fallback') || [] : []
-                };
-            }
-        }
-
-        // Step 6: Smart Fallback Strategylligent low confidence fallback
-        const response = this.fallbackStrategy.handleLowConfidence();
-        this.recordTurn(query, 'low_confidence', entities, response.text);
-        return response;
     }
 
     /**
@@ -626,7 +798,7 @@ ${companyExp.storytelling.medium}`,
      * Handle contact query
      */
     private handleContactQuery(): { text: string } {
-        AnalyticsManager.trackLead('chat_inquiry'); // Track Lead
+        AnalyticsManager.trackEvent('contact_inquiry_viewed'); // Track Lead Interest
         const contact = profileData.contact;
 
         return {
@@ -915,30 +1087,59 @@ ${currentExp.storytelling.detailed}
      * Generate context-aware suggestions
      */
     /**
-     * Generate context-aware suggestions
+     * Generate dynamic suggestions based on context
      */
-    private generateSuggestions(currentIntent?: string, _maxCount: number = 3): Suggestion[] {
-        // Phase 6: Smart Silence Strategy
-        // Only return suggestions if SmartRecommender has a specific context-aware set.
-        if (currentIntent && this.smartRecommender) {
-            const strictSuggestions = this.smartRecommender.getContextualSuggestions(currentIntent);
-            if (strictSuggestions && strictSuggestions.length > 0) {
-                // Determine if we need to personalize/reorder based on user profile
-                // For now, strict suggestions are manually curated, so we keep them as is.
-                return strictSuggestions;
+    private generateSuggestions(type?: string, count: number = 3): Suggestion[] {
+        // Phase 4.2: Context-Aware Generic Suggestions
+        if (!type) {
+            const context = this.contextManager.getContext();
+            const activeTopic = context.activeTopic?.name;
+
+            // If we have an active topic, suggest things related to it
+            if (activeTopic) {
+                return [
+                    { label: `More about ${activeTopic}`, payload: `tell me more about ${activeTopic}`, icon: '👀' },
+                    { label: 'Related Skills', payload: 'skills', icon: '⚡' },
+                    { label: 'Main Menu', payload: 'main menu', icon: '🏠' }
+                ];
             }
         }
 
-        // Default to SILENCE (Empty array)
-        // We no longer fallback to the generic suggestion pool to avoid "button spam".
-        // If the AI has nothing specific to suggest, it should remain silent and let the chat content stand alone.
-        return [];
+        const pool = type ? (templates.suggestions as any)[type] || [] : [];
+
+        if (pool.length === 0) {
+            // Fallback default suggestions
+            return [
+                { label: 'Experience', payload: 'experience', icon: '💼' },
+                { label: 'Skills', payload: 'skills', icon: '⚡' },
+                { label: 'Contact', payload: 'contact', icon: '📫' }
+            ];
+        }
+
+        // Randomize
+        return this.shuffleArray(pool).slice(0, count).map((s: any) => ({
+            label: s.label,
+            payload: s.payload,
+            icon: s.icon
+        }));
+    }
+
+    /**
+     * Helper: Shuffle Array
+     */
+    private shuffleArray<T>(array: T[]): T[] {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
     }
 
     /**
      * Get conversation state
      */
-    getState(): ConversationState {
+    public getState(): ConversationState {
         return { ...this.conversationState };
     }
 }

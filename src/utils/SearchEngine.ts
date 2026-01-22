@@ -91,9 +91,37 @@ export class SearchEngine {
     /**
      * Search the memory bank for relevant info
      */
+    /**
+     * Search the memory bank for relevant info
+     * Phase 2.1: Added Post-Filtering for higher quality matches
+     */
     public search(query: string, limit: number = 3): SearchResult[] {
+        if (!query || query.trim().length < 2) return [];
+
         const results = this.miniSearch.search(query);
-        return results.slice(0, limit) as any as SearchResult[];
+
+        // Post-Filter: Quality Check
+        const filtered = results.filter((result: any) => {
+            // 1. Score Threshold (MiniSearch score is arbitrary, but usually >1 is decent for relevant terms)
+            if (result.score < 1) return false;
+
+            // 2. Length Ratio Check (Prevents "C" matching "CSS" or "Java" matching "Javascript" if unwanted)
+            // We want to ensure the specific search term represents a significant portion of the matched target OR vice versa.
+            // For MiniSearch, 'match' info isn't always easy to extract without configuration.
+            // Simplified Logic: If query is very short (<= 3 chars), require exact match or high score.
+
+            if (query.length <= 3) {
+                // Stricter check for short queries
+                const matchRatio = query.length / result.title.length;
+                // If query is "css" (3) and title is "css" (3) -> 1.0 (Good)
+                // If query is "c" (1) and title is "css" (3) -> 0.33 (Bad)
+                if (matchRatio < 0.5 && result.score < 10) return false;
+            }
+
+            return true;
+        });
+
+        return filtered.slice(0, limit) as any as SearchResult[];
     }
 }
 

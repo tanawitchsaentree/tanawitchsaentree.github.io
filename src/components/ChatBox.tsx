@@ -129,7 +129,7 @@ const ChatBox: React.FC = () => {
 
     try {
       // Get response from LumoAI engine - Championship intelligence!
-      const aiResponse = lumoAI.generateResponse(text);
+      const aiResponse = await lumoAI.generateResponse(text);
 
       // Execute commands (Magic Layer - Cortex Module 2)
       if (aiResponse.command) {

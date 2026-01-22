@@ -15,5 +15,87 @@
             "**Results**: {impact_metric} improvement in {impact_area} via {subject}.",
             "As {role}, he {action_past} the {subject} for {impact_context}."
         ]
+    },
+    "suggestions": {
+        "greeting": [
+            {
+                "label": "Experience",
+                "payload": "experience",
+                "icon": "💼"
+            },
+            {
+                "label": "Skills",
+                "payload": "skills",
+                "icon": "⚡"
+            },
+            {
+                "label": "Contact",
+                "payload": "contact",
+                "icon": "📫"
+            }
+        ],
+        "experience": [
+            {
+                "label": "Tech Stack",
+                "payload": "skills",
+                "icon": "💻"
+            },
+            {
+                "label": "Leadership",
+                "payload": "leadership",
+                "icon": "👥"
+            },
+            {
+                "label": "Contact",
+                "payload": "contact",
+                "icon": "📫"
+            }
+        ],
+        "skills": [
+            {
+                "label": "Projects",
+                "payload": "projects",
+                "icon": "🚀"
+            },
+            {
+                "label": "Experience",
+                "payload": "experience",
+                "icon": "💼"
+            },
+            {
+                "label": "Home",
+                "payload": "home",
+                "icon": "🏠"
+            }
+        ],
+        "contact": [
+            {
+                "label": "Email",
+                "payload": "email",
+                "icon": "📧"
+            },
+            {
+                "label": "LinkedIn",
+                "payload": "linkedin",
+                "icon": "🔗"
+            },
+            {
+                "label": "Home",
+                "payload": "home",
+                "icon": "🏠"
+            }
+        ],
+        "company_specific": [
+            {
+                "label": "Other Experience",
+                "payload": "experience",
+                "icon": "💼"
+            },
+            {
+                "label": "Skills Used",
+                "payload": "skills",
+                "icon": "⚡"
+            }
+        ]
     }
 }
