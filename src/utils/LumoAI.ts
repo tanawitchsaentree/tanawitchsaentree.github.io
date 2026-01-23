@@ -389,7 +389,7 @@ export class LumoAI {
                             title: 'System Override',
                             body: "Dynamic UI Engine is online.\n\nThis component was generated purely from JSON data. No hardcoded React components were used for this specific instance.\n\nWe can now render:\n- Images/Videos\n- Markdown Text\n- Interactive Buttons",
                             media: {
-                                type: 'image',
+                                type: 'image' as const,
                                 url: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1000&auto=format&fit=crop', // Cyberpunk code image
                                 alt: 'System Core',
                                 caption: 'Visualizing Neural Network'
