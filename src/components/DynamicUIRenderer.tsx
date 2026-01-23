@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RetroModal } from './ui/RetroModal';
-import { UIComponent, UIAction } from '../utils/LumoAI';
+import type { UIComponent, UIAction } from '../utils/LumoAI';
 import { UIController } from '../utils/UIController';
 
 export const DynamicUIRenderer: React.FC = () => {
