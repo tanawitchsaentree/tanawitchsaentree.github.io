@@ -395,8 +395,8 @@ export class LumoAI {
                                 caption: 'Visualizing Neural Network'
                             },
                             actions: [
-                                { label: 'Acknowledge', type: 'button', variant: 'primary', payload: 'close' },
-                                { label: 'View Source', type: 'link', variant: 'secondary', payload: 'https://github.com/tanawitchsaentree' }
+                                { label: 'Acknowledge', type: 'button' as const, variant: 'primary' as const, payload: 'close' },
+                                { label: 'View Source', type: 'link' as const, variant: 'secondary' as const, payload: 'https://github.com/tanawitchsaentree' }
                             ]
                         }
                     };
