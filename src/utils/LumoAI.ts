@@ -385,7 +385,7 @@ export class LumoAI {
                     return {
                         text: "Initiating Dynamic UI sequence... Rendering Component [ID: MODAL-DEMO-01].",
                         ui: {
-                            type: 'modal',
+                            type: 'modal' as const,
                             title: 'System Override',
                             body: "Dynamic UI Engine is online.\n\nThis component was generated purely from JSON data. No hardcoded React components were used for this specific instance.\n\nWe can now render:\n- Images/Videos\n- Markdown Text\n- Interactive Buttons",
                             media: {
