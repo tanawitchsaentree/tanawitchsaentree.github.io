@@ -367,6 +367,8 @@ export class LumoAI {
 
             // CORE LOGIC WRAPPER
             const logicPromise = (async () => {
+                console.log('[🧠 LumoAI] Processing Query:', query);
+
                 // 1. Global Interrupts (Highest Priority)
                 if (this.isGlobalInterrupt(query)) {
                     this.contextManager.reset(); // Reset Context
@@ -379,7 +381,7 @@ export class LumoAI {
                 }
 
                 // Phase 6: Dynamic UI Demo Trigger
-                if (query.toLowerCase().includes('render modal')) {
+                if (/\brender\s+modal\b/i.test(query)) {
                     return {
                         text: "Initiating Dynamic UI sequence... Rendering Component [ID: MODAL-DEMO-01].",
                         ui: {
