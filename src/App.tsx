@@ -2,6 +2,7 @@ import { useTheme } from 'next-themes';
 import { Moon, Sun, Sunset } from 'lucide-react';
 import Index from "./pages/index";
 import ChatBox from "./components/ChatBox";
+import { DynamicUIRenderer } from './components/DynamicUIRenderer';
 import './index.css';
 import './App.css';
 
@@ -29,6 +30,7 @@ function DarkModeToggle() {
 export default function App() {
   return (
     <div className="app">
+      <DynamicUIRenderer />
       <main className="main-content">
         {/* 1. Profile Section - Left */}
         <section className="profile-section">

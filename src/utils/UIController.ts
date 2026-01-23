@@ -49,12 +49,22 @@ export const UIController = {
         return true;
     },
 
+
     /**
-     * Open a modal (e.g. Contact, Project Details)
+     * Render a Dynamic UI Component
+     * Phase 6: Dynamic UI Engine
      */
-    openModal: (modalId: string) => {
+    renderUI: (component: any) => { // Type as any here to avoid circle dep, or import type
         // Dispatch event for React to handle
-        window.dispatchEvent(new CustomEvent('lumo-open-modal', { detail: { modalId } }));
+        window.dispatchEvent(new CustomEvent('lumo-render-ui', { detail: { component } }));
+        return true;
+    },
+
+    /**
+     * Close the current modal/UI
+     */
+    closeUI: () => {
+        window.dispatchEvent(new CustomEvent('lumo-close-ui'));
         return true;
     }
 };

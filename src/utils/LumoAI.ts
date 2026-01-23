@@ -40,6 +40,26 @@ interface MediaContent {
     url: string;
     alt: string;
     caption?: string;
+    thumbnail?: string; // Added for video poster
+}
+
+// Phase 6: Dynamic UI Schema
+export interface UIAction {
+    label: string;
+    type: 'button' | 'link' | 'copy';
+    payload: string; // URL, command, or text to copy
+    variant: 'primary' | 'secondary' | 'ghost';
+    icon?: string; // Lucide icon name
+}
+
+export interface UIComponent {
+    type: 'modal' | 'card' | 'notification' | 'toast';
+    title?: string;
+    subtitle?: string;
+    body?: string; // Markdown supported
+    media?: MediaContent;
+    actions?: UIAction[];
+    data?: any; // Flexible payload for specific components (e.g., chart data)
 }
 
 interface LumoResponse {
@@ -47,6 +67,7 @@ interface LumoResponse {
     suggestions?: Suggestion[];
     command?: { type: string; value: string };
     media?: MediaContent;
+    ui?: UIComponent; // Phase 6: Dynamic UI Payload
 }
 
 interface ConversationTurn {

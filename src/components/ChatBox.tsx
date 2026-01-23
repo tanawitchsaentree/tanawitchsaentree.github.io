@@ -147,6 +147,12 @@ const ChatBox: React.FC = () => {
         }
       }
 
+      // Phase 6: Dynamic UI Rendering
+      if (aiResponse.ui) {
+        console.log('[🧠 Cortex] Rendering Dynamic UI:', aiResponse.ui.type);
+        UIController.renderUI(aiResponse.ui);
+      }
+
       // Display Message + Media
       await displayHumanizedMessage(aiResponse.text, 'bot', aiResponse.suggestions);
 
