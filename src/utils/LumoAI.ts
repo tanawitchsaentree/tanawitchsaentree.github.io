@@ -378,6 +378,28 @@ export class LumoAI {
                     return this.handleDebug();
                 }
 
+                // Phase 6: Dynamic UI Demo Trigger
+                if (query.toLowerCase().includes('render modal')) {
+                    return {
+                        text: "Initiating Dynamic UI sequence... Rendering Component [ID: MODAL-DEMO-01].",
+                        ui: {
+                            type: 'modal',
+                            title: 'System Override',
+                            body: "Dynamic UI Engine is online.\n\nThis component was generated purely from JSON data. No hardcoded React components were used for this specific instance.\n\nWe can now render:\n- Images/Videos\n- Markdown Text\n- Interactive Buttons",
+                            media: {
+                                type: 'image',
+                                url: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1000&auto=format&fit=crop', // Cyberpunk code image
+                                alt: 'System Core',
+                                caption: 'Visualizing Neural Network'
+                            },
+                            actions: [
+                                { label: 'Acknowledge', type: 'button', variant: 'primary', payload: 'close' },
+                                { label: 'View Source', type: 'link', variant: 'secondary', payload: 'https://github.com/tanawitchsaentree' }
+                            ]
+                        }
+                    };
+                }
+
                 // 2. Flow Engine (Scripted Conversations)
                 const flowResult = this.flowEngine.process(this.sessionToken, query);
                 if (flowResult.response) {
