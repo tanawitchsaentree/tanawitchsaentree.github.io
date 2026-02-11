@@ -360,8 +360,24 @@ const ChatBox: React.FC = () => {
     }
   };
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Click outside listener
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node) && isExpanded) {
+        setIsExpanded(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isExpanded]);
+
   return (
-    <div className={`chat-overlay-wrapper ${isExpanded ? 'expanded' : 'minimized'}`}>
+    <div ref={containerRef} className={`chat-overlay-wrapper ${isExpanded ? 'expanded' : 'minimized'}`}>
       {/* Detached Close Button (Top-Right) */}
       {isExpanded && (
         <button

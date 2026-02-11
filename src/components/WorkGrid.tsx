@@ -22,13 +22,10 @@ export default function WorkGrid() {
                     // The blurred background fixes that whitespace.
 
                     return (
-                        <a
+                        <div
                             key={item.id}
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
                             className={`work-item work-item-${item.size}`}
-                            aria-label={`View project: ${item.title}`}
+                            aria-label={`Project: ${item.title}`}
                             style={{
                                 position: 'relative',
                                 overflow: 'hidden',
@@ -128,7 +125,7 @@ export default function WorkGrid() {
                                 <span className="work-item-title" style={{ color: 'white', fontWeight: 'bold', display: 'block' }}>{item.title}</span>
                                 <span className="work-item-type" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9em' }}>{item.type}</span>
                             </div>
-                        </a>
+                        </div>
                     );
                 })}
             </div>
