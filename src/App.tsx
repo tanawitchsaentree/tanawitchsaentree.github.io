@@ -3,6 +3,7 @@ import { Moon, Sun, Sunset } from 'lucide-react';
 import Index from "./pages/index";
 import ChatBox from "./components/ChatBox";
 import { DynamicUIRenderer } from './components/DynamicUIRenderer';
+import WorkGrid from './components/WorkGrid';
 import './index.css';
 import './App.css';
 
@@ -40,8 +41,12 @@ export default function App() {
         </section>
 
         {/* 2. Chat Section - Right */}
-        <section className="chat-section">
-          <div className="chat-container">
+        <section className="chat-section" style={{ position: 'relative' }}>
+          <div className="chat-container" style={{ width: '100%', height: '100%' }}>
+            {/* Base Content: Work Grid */}
+            <WorkGrid />
+
+            {/* Overlay: Floating Chat */}
             <ChatBox />
           </div>
         </section>

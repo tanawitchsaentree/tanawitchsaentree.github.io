@@ -1,0 +1,56 @@
+[
+    {
+        "id": 1,
+        "title": "Payroll",
+        "type": "SaaS",
+        "image": "https://cdn.dribbble.com/userupload/46676464/file/f644e1c73f3cf2c6397d1cd5aa78b611.mp4",
+        "link": "https://www.behance.net/gallery/202531751/Payroll-management",
+        "size": "large",
+        "aspect": "21/9",
+        "position": "center"
+    },
+    {
+        "id": 2,
+        "title": "Project Beta",
+        "type": "Mobile App",
+        "image": "https://cdn.dribbble.com/userupload/46458491/file/f1993b5a8943a1a621ed4915f0f75949.mp4",
+        "link": "https://www.behance.net/",
+        "size": "small",
+        "position": "center"
+    },
+    {
+        "id": 3,
+        "title": "Project Gamma",
+        "type": "Branding",
+        "image": "https://cdn.dribbble.com/userupload/46458567/file/2e9b49bd89bb72ede2e693cfd6e94c0c.mp4",
+        "link": "https://www.behance.net/",
+        "size": "small",
+        "position": "center"
+    },
+    {
+        "id": 4,
+        "title": "Project Delta",
+        "type": "Web Development",
+        "image": "https://cdn.dribbble.com/userupload/46685888/file/d36c2f3bf2aeed283bba61783269967e.mp4",
+        "link": "https://www.behance.net/",
+        "size": "large",
+        "aspect": "21/9",
+        "position": "center"
+    },
+    {
+        "id": 5,
+        "title": "Project Epsilon",
+        "type": "UX Research",
+        "image": "https://cdn.dribbble.com/userupload/31837398/file/original-f50fb11aa5f74102a85d78ca1f897857.png?resize=1504x1086&vertical=center",
+        "link": "https://www.behance.net/",
+        "size": "small"
+    },
+    {
+        "id": 6,
+        "title": "Project Zeta",
+        "type": "Illustration",
+        "image": "https://cdn.dribbble.com/userupload/23810044/file/original-56f165ed04f2f68b7c8efbb86c0d7142.png?resize=2048x1536&vertical=center",
+        "link": "https://www.behance.net/",
+        "size": "small"
+    }
+]

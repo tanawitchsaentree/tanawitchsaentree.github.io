@@ -345,101 +345,131 @@ const ChatBox: React.FC = () => {
     return () => window.removeEventListener('lumo-theme-change', handleThemeChange as EventListener);
   }, [setTheme]);
 
+  const [isExpanded, setIsExpanded] = useState(false);
+
   // Auto-scroll
   useEffect(() => {
-    if (outputRef.current) {
+    if (outputRef.current && isExpanded) {
       outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
-  }, [messages, isTyping]);
+  }, [messages, isTyping, isExpanded]);
+
+  const handleInputFocus = () => {
+    if (!isExpanded) {
+      setIsExpanded(true);
+    }
+  };
 
   return (
-    <div className="chatbox-container">
-      <div ref={outputRef} className="chatbox-output" style={{ display: 'flex', flexDirection: 'column', flex: 1, overflowY: 'auto' }}>
-        <div style={{ flexGrow: 1, minHeight: 0 }} />
-        {messages.map((msg, idx) => (
-          <div key={msg.id} className={`chatbox-message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'} `}>
-            {msg.sender === 'bot' && (
+    <div className={`chat-overlay-wrapper ${isExpanded ? 'expanded' : 'minimized'}`}>
+      {/* Detached Close Button (Top-Right) */}
+      {isExpanded && (
+        <button
+          onClick={(e) => { e.stopPropagation(); setIsExpanded(false); }}
+          className="chat-close-button"
+          aria-label="Close chat"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      )}
+
+      <div
+        className={`chat-overlay-box ${isExpanded ? 'expanded' : 'minimized'}`}
+        onClick={() => !isExpanded && setIsExpanded(true)}
+      >
+        {/* Header removed from inside */}
+
+        <div ref={outputRef} className="chatbox-output" style={{ display: isExpanded ? 'flex' : 'none', flexDirection: 'column', flex: 1, overflowY: 'auto' }}>
+          <div style={{ flexGrow: 1, minHeight: 0 }} />
+          {messages.map((msg, idx) => (
+            <div key={msg.id} className={`chatbox-message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'} `}>
+              {msg.sender === 'bot' && (
+                <div className="chatbox-avatar">
+                  <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
+                </div>
+              )}
+              <div className="chatbox-message-content">
+                <div
+                  className={`max-w-[85%] rounded-[20px] px-5 py-3 shadow-sm ${msg.sender === 'user'
+                    ? 'bg-[var(--foreground)] text-[var(--background)] rounded-br-[4px]'
+                    : 'bg-[var(--card)] text-[var(--card-foreground)] border border-[var(--border)] rounded-bl-[4px]'
+                    }`}
+                >
+                  {/* Media Rendering (Charm Module) */}
+                  {msg.media && msg.media.type === 'image' && (
+                    <div className="mb-3 rounded-lg overflow-hidden border border-[var(--border)]">
+                      <img
+                        src={msg.media.url}
+                        alt={msg.media.alt}
+                        className="w-full h-auto object-cover max-h-[200px]"
+                        loading="lazy"
+                      />
+                      {msg.media.caption && (
+                        <p className="text-[var(--muted-foreground)] text-xs p-2 bg-[var(--background)] m-0 border-t border-[var(--border)]">
+                          {msg.media.caption}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  <div className={`text-sm leading-relaxed ${isTyping && idx === messages.length - 1 && msg.sender === 'bot' ? 'typing-effect' : ''}`}>
+                    {renderRichText(msg.displayingText || msg.text)}
+                  </div>
+                </div>
+
+                {/* Suggestions Rendering - Show only when typing is complete AND not used */}
+                {msg.sender === 'bot' &&
+                  msg.suggestions &&
+                  msg.suggestions.length > 0 &&
+                  !msg.suggestionsUsed &&
+                  (msg.displayingText === msg.text) && (
+                    <div className="suggestion-buttons animate-fade-in-up">
+                      {msg.suggestions.map((suggestion, idx) => (
+                        <RetroButton
+                          key={idx}
+                          onClick={() => handleSend(suggestion.payload)}
+                          title={suggestion.label}
+                        >
+                          {suggestion.label}
+                        </RetroButton>
+                      ))}
+                    </div>
+                  )}
+              </div>
+            </div>
+          ))}
+          {isTyping && messages[messages.length - 1]?.sender === 'user' && (
+            <div className="chatbox-message chatbox-message-bot">
               <div className="chatbox-avatar">
                 <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
               </div>
-            )}
-            <div className="chatbox-message-content">
-              <div
-                className={`max-w-[85%] rounded-[20px] px-5 py-3 shadow-sm ${msg.sender === 'user'
-                  ? 'bg-[var(--foreground)] text-[var(--background)] rounded-br-[4px]'
-                  : 'bg-[var(--card)] text-[var(--card-foreground)] border border-[var(--border)] rounded-bl-[4px]'
-                  }`}
-              >
-                {/* Media Rendering (Charm Module) */}
-                {msg.media && msg.media.type === 'image' && (
-                  <div className="mb-3 rounded-lg overflow-hidden border border-[var(--border)]">
-                    <img
-                      src={msg.media.url}
-                      alt={msg.media.alt}
-                      className="w-full h-auto object-cover max-h-[200px]"
-                      loading="lazy"
-                    />
-                    {msg.media.caption && (
-                      <p className="text-[var(--muted-foreground)] text-xs p-2 bg-[var(--background)] m-0 border-t border-[var(--border)]">
-                        {msg.media.caption}
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                <div className={`text-sm leading-relaxed ${isTyping && idx === messages.length - 1 && msg.sender === 'bot' ? 'typing-effect' : ''}`}>
-                  {renderRichText(msg.displayingText || msg.text)}
-                </div>
+              <div className="max-w-[80%] p-3 rounded-2xl bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]" style={{ maxWidth: '420px' }}>
+                <span className="animate-pulse">...</span>
               </div>
-
-              {/* Suggestions Rendering - Show only when typing is complete AND not used */}
-              {msg.sender === 'bot' &&
-                msg.suggestions &&
-                msg.suggestions.length > 0 &&
-                !msg.suggestionsUsed &&
-                (msg.displayingText === msg.text) && (
-                  <div className="suggestion-buttons animate-fade-in-up">
-                    {msg.suggestions.map((suggestion, idx) => (
-                      <RetroButton
-                        key={idx}
-                        onClick={() => handleSend(suggestion.payload)}
-                        title={suggestion.label}
-                      >
-                        {suggestion.label}
-                      </RetroButton>
-                    ))}
-                  </div>
-                )}
             </div>
-          </div>
-        ))}
-        {isTyping && messages[messages.length - 1]?.sender === 'user' && (
-          <div className="chatbox-message chatbox-message-bot">
-            <div className="chatbox-avatar">
-              <img src="/lumo_favicon.svg" alt="Lumo Avatar" className="w-8 h-8 rounded-full object-cover" />
-            </div>
-            <div className="max-w-[80%] p-3 rounded-2xl bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]" style={{ maxWidth: '420px' }}>
-              <span className="animate-pulse">...</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <form onSubmit={handleFormSubmit} className="chatbox-input-form">
-        <div className="chatbox-input-container" style={{ borderTop: 'none', background: 'transparent' }}>
-          <div className="chatbox-input-wrapper">
-            <input
-              type="text"
-              className="chatbox-input"
-              style={{ fontSize: '14px' }}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask Lumo..."
-              disabled={isTyping}
-            />
-          </div>
+          )}
         </div>
-      </form>
+
+        <form onSubmit={handleFormSubmit} className="chatbox-input-form" onClick={(e) => e.stopPropagation()}>
+          <div className="chatbox-input-container">
+            <div className="chatbox-input-wrapper">
+              <input
+                type="text"
+                className="chatbox-input"
+                style={{ fontSize: '14px' }}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onFocus={handleInputFocus}
+                placeholder="Ask Lumo..."
+                disabled={isTyping}
+              />
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
