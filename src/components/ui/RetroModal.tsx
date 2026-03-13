@@ -1,7 +1,7 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import { RetroButton } from './RetroButton';
-import type { UIComponent, UIAction } from '../../utils/LumoAI';
+import type { UIComponent, UIAction } from '../../utils/UIController';
 
 interface RetroModalProps {
     component: UIComponent;

@@ -27,6 +27,7 @@
             "seniority": "senior",
             "industry": "insurance_tech",
             "company": "Allianz Technology Thailand",
+            "company_short": "Allianz",
             "alternate_titles": [
                 "Senior Product Designer",
                 "Senior UX/UI Designer"
@@ -36,6 +37,8 @@
             "city": "Bangkok",
             "country": "Thailand",
             "timezone": "GMT+7",
+            "timezone_iana": "Asia/Bangkok",
+            "location_display": "Bangkok, THA",
             "remote_friendly": true
         },
         "availability": {

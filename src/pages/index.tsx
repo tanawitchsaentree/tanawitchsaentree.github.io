@@ -70,7 +70,7 @@ function ProfileHeader({ DarkModeToggle }: { DarkModeToggle: () => React.ReactEl
             onMouseEnter={(e) => e.currentTarget.style.fontWeight = '700'}
             onMouseLeave={(e) => e.currentTarget.style.fontWeight = '400'}
           >
-            Allianz
+            {profileData.identity.current_title.company_short}
           </a>
         </p>
       </div>

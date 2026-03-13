@@ -1,26 +1,26 @@
 import { useState, useEffect } from 'react';
 import { MapPin } from 'lucide-react';
+import profileData from '../data/profile_data_enhanced.json';
 
 export default function LocationBadge() {
     const [time, setTime] = useState('');
+    const { location } = profileData.identity;
 
     useEffect(() => {
         const updateTime = () => {
             const now = new Date();
-            // Force Bangkok Time (GMT+7)
             const options: Intl.DateTimeFormatOptions = {
-                timeZone: 'Asia/Bangkok',
+                timeZone: location.timezone_iana,
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit', // Added seconds
+                second: '2-digit',
                 hour12: false
             };
             setTime(now.toLocaleTimeString('en-US', options));
         };
 
         updateTime();
-        const interval = setInterval(updateTime, 1000); // Update every 1s
-
+        const interval = setInterval(updateTime, 1000);
         return () => clearInterval(interval);
     }, []);
 
@@ -32,7 +32,6 @@ export default function LocationBadge() {
             textAlign: 'right',
             fontFamily: 'var(--font-mono)',
         }}>
-            {/* Location Row */}
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -42,14 +41,12 @@ export default function LocationBadge() {
                 color: 'var(--foreground)',
             }}>
                 <MapPin size={14} className="location-icon" />
-                <span>Bangkok, THA</span>
+                <span>{location.location_display}</span>
             </div>
-
-            {/* Details Row */}
             <div style={{
                 fontSize: 'var(--text-sm)',
                 color: 'var(--muted-foreground)',
-                marginTop: '2px', // Micro spacing
+                marginTop: '2px',
             }}>
                 {time}
             </div>

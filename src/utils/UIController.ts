@@ -3,6 +3,20 @@
  * Executes physical actions on the page
  */
 
+export interface UIAction {
+    type: 'link' | 'copy' | 'button';
+    payload: string;
+    label?: string;
+}
+
+export interface UIComponent {
+    type: 'modal' | 'card' | 'toast';
+    title?: string;
+    content?: string;
+    actions?: UIAction[];
+    [key: string]: any;
+}
+
 export const UIController = {
     /**
      * Smooth scroll to a specific section ID
