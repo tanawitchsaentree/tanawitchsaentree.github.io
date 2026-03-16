@@ -184,8 +184,8 @@ export class RuleBasedEngine implements ChatEngine {
                 return this.buildEducationResponse();
             case 'challenges':
                 return this.buildStaticResponse('challenges', [
-                    { label: 'His strengths', payload: "What are his skills?" },
-                    { label: 'Work history', payload: "What's his experience?" },
+                    { label: 'His strengths ⚡', payload: "What are his skills?" },
+                    { label: 'Career timeline →', payload: "What's his experience?" },
                 ]);
             case 'personal_trivia':
                 return this.buildPersonalTriviaResponse();
@@ -203,11 +203,17 @@ export class RuleBasedEngine implements ChatEngine {
                 .map(s => s.replace(/_/g, ' '))
                 .join(', ');
 
+            // Suggest 2 other companies dynamically
+            const otherCompanies = (profile.experience.timeline as any[])
+                .filter(e => e.id !== (entity as any).data_ref)
+                .slice(0, 2)
+                .map(e => ({ label: e.company.name, payload: `Tell me about ${e.company.name}` }));
+
             return {
                 text: `${exp.storytelling.medium}\n\nSkills applied: ${skillList}`,
                 suggestions: [
-                    { label: 'Other companies', payload: "What's his work experience?" },
-                    { label: 'His skills', payload: "What are his skills?" },
+                    ...otherCompanies,
+                    { label: 'Core skills ⚡', payload: "What are his skills?" },
                 ]
             };
         }
@@ -225,8 +231,8 @@ export class RuleBasedEngine implements ChatEngine {
             return {
                 text: `${skill.name}: ${skill.description}.${evidenceNote}\n\n"${skill.conversational_angle}"`,
                 suggestions: [
-                    { label: 'Other skills', payload: "What are his skills?" },
-                    { label: 'Where applied', payload: "What's his experience?" },
+                    { label: 'More skills ⚡', payload: "What are his skills?" },
+                    { label: 'See it in practice →', payload: "What's his experience?" },
                 ]
             };
         }
@@ -237,12 +243,14 @@ export class RuleBasedEngine implements ChatEngine {
     private buildAskNateResponse(): BotResponse {
         const id = profile.identity;
         const loc = id.location;
+        const totalYears = profile.experience.summary.total_years;
+        const companyCount = profile.experience.summary.company_count;
         return {
             text: `${id.full_name.nickname} (${id.full_name.value}) is a ${id.current_title.value} at ${id.current_title.company}, based in ${loc.city}.\n\n${profile.career_narrative.elevator_pitch}`,
             suggestions: [
-                { label: 'Experience', payload: "What's his experience?" },
-                { label: 'Skills', payload: "What are his skills?" },
-                { label: 'Contact', payload: 'How to contact?' },
+                { label: `${totalYears} yrs, ${companyCount} companies →`, payload: "What's his experience?" },
+                { label: "What's he expert at?", payload: "What are his skills?" },
+                { label: 'Say hi 👋', payload: 'How to contact?' },
             ]
         };
     }
@@ -274,9 +282,9 @@ export class RuleBasedEngine implements ChatEngine {
         return {
             text: `Nate's core strengths:\n\n${expertSkills.join('\n')}`,
             suggestions: [
-                { label: 'Design Systems', payload: 'Tell me about design systems' },
-                { label: 'User Research', payload: 'Tell me about user research' },
-                { label: 'UX Strategy', payload: 'Tell me about UX strategy' },
+                { label: 'Design Systems deep dive', payload: 'Tell me about design systems' },
+                { label: 'User research side', payload: 'Tell me about user research' },
+                { label: 'Where he applied them →', payload: "What's his experience?" },
             ]
         };
     }
@@ -286,8 +294,8 @@ export class RuleBasedEngine implements ChatEngine {
         return {
             text: `Email: ${c.primary.value}\nLinkedIn: ${c.social.linkedin.url}\nBehance: ${c.social.behance.url}\n\nBest way to reach him: ${c.primary.conversational}. Response time: ${c.primary.response_time}.`,
             suggestions: [
-                { label: 'Experience', payload: "What's his experience?" },
-                { label: 'Skills', payload: "What are his skills?" },
+                { label: 'His career story →', payload: "What's his experience?" },
+                { label: 'Core skills ⚡', payload: "What are his skills?" },
             ]
         };
     }
@@ -301,8 +309,8 @@ export class RuleBasedEngine implements ChatEngine {
         return {
             text: `Nate's education:\n\n${lines.join('\n')}\n\n${profile.education[0].conversational}`,
             suggestions: [
-                { label: 'Work experience', payload: "What's his work experience?" },
-                { label: 'Skills', payload: "What are his skills?" },
+                { label: 'Career timeline →', payload: "What's his work experience?" },
+                { label: 'Design skills ⚡', payload: "What are his skills?" },
             ]
         };
     }
@@ -313,8 +321,8 @@ export class RuleBasedEngine implements ChatEngine {
         return {
             text: `Nate is based in ${loc.city}, ${loc.country}${loc.remote_friendly ? ' (open to remote)' : ''}. Outside of work: photography, complex board games, and exploring new tech. In his own words — "${themes.growth}"`,
             suggestions: [
-                { label: 'Experience', payload: "What's his experience?" },
-                { label: 'Contact', payload: 'How to contact?' },
+                { label: 'His design career →', payload: "What's his experience?" },
+                { label: 'Say hi 👋', payload: 'How to contact?' },
             ]
         };
     }
@@ -334,11 +342,26 @@ export class RuleBasedEngine implements ChatEngine {
     }
 
     private defaultSuggestions(): Suggestion[] {
-        return [
-            { label: 'Experience', payload: "What's his experience?" },
-            { label: 'Skills', payload: "What are his skills?" },
-            { label: 'Contact', payload: 'How to contact?' },
+        const totalYears = profile.experience.summary.total_years;
+        const companyCount = profile.experience.summary.company_count;
+        const pool: Suggestion[][] = [
+            [
+                { label: `${totalYears} yrs, ${companyCount} companies →`, payload: "What's his experience?" },
+                { label: "What's he expert at?", payload: "What are his skills?" },
+                { label: 'Say hi 👋', payload: 'How to contact?' },
+            ],
+            [
+                { label: 'His design career →', payload: "What's his experience?" },
+                { label: 'Core skills ⚡', payload: "What are his skills?" },
+                { label: 'Who is Nate?', payload: 'Who is Nate?' },
+            ],
+            [
+                { label: 'Career timeline →', payload: "What's his experience?" },
+                { label: 'Design skills ⚡', payload: "What are his skills?" },
+                { label: 'Get in touch', payload: 'How to contact?' },
+            ],
         ];
+        return this.pick(pool);
     }
 
     // ─── Utilities ───────────────────────────────────────────────────────────────
