@@ -35,7 +35,7 @@ interface Message {
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 const ChatBox: React.FC = () => {
-    const { setTheme } = useTheme();
+    const { theme, setTheme } = useTheme();
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
@@ -225,14 +225,14 @@ const ChatBox: React.FC = () => {
     useEffect(() => {
         const handleThemeChange = (e: CustomEvent) => {
             if (e.detail.mode === 'toggle') {
-                setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+                setTheme(theme === 'dark' ? 'light' : 'dark');
             } else {
                 setTheme(e.detail.mode);
             }
         };
         window.addEventListener('lumo-theme-change', handleThemeChange as EventListener);
         return () => window.removeEventListener('lumo-theme-change', handleThemeChange as EventListener);
-    }, [setTheme]);
+    }, [setTheme, theme]);
 
     // ─── Auto-scroll ─────────────────────────────────────────────────────────────
     useEffect(() => {
