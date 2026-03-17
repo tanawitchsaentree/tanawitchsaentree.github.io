@@ -342,6 +342,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
     const [contentVisible, setContentVisible] = useState(false);
     const [activeSection, setActiveSection] = useState<string>('');
     const [scrollY, setScrollY] = useState(0);
+    const [mounted, setMounted] = useState(false);
     const contentRef = useRef<HTMLDivElement>(null);
     const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
@@ -368,6 +369,12 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                 requestAnimationFrame(() => setContentVisible(true));
             });
         });
+    }, [projectId]);
+
+    // Modal entrance animation
+    useEffect(() => {
+        if (!projectId) { setMounted(false); setScrollY(0); return; }
+        requestAnimationFrame(() => setMounted(true));
     }, [projectId]);
 
     // Scroll lock + escape key
@@ -407,6 +414,8 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
     // Sidebar slides in after scrolling past the hero cover (~160px)
     const sidebarVisible = scrollY > 160;
 
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
     const modal = (
         <div
             style={{
@@ -415,6 +424,9 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                 background: 'var(--background)',
                 zIndex: 2000,
                 overflow: 'hidden',
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? 'translateY(0)' : 'translateY(20px)',
+                transition: `opacity 0.45s ${ease}, transform 0.45s ${ease}`,
             }}
         >
             {/* ── Floating breadcrumb nav ─────────────────────────── */}
@@ -427,13 +439,13 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                 zIndex: 20,
                 pointerEvents: 'none',
             }}>
-                {/* Gradient background layer — fades in as user scrolls */}
+                {/* Gradient background layer — fades in gently as user scrolls */}
                 <div style={{
                     position: 'absolute',
                     inset: 0,
-                    background: 'linear-gradient(to bottom, var(--background) 40%, transparent 100%)',
-                    opacity: navOpacity,
-                    transition: 'opacity 0.4s ease',
+                    background: 'linear-gradient(to bottom, var(--background) 20%, transparent 100%)',
+                    opacity: navOpacity * 0.85,
+                    transition: `opacity 0.5s ${ease}`,
                     pointerEvents: 'none',
                 }} />
 
@@ -508,7 +520,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
             </div>
 
             {/* ── Body: full-width scroll + absolute sidebar ───────── */}
-            <div style={{ position: 'relative', flex: 1, overflow: 'hidden', display: 'flex' }}>
+            <div style={{ position: 'relative', height: '100%', overflow: 'hidden' }}>
 
                 {/* Sidebar nav — absolutely positioned, floats over left edge */}
                 <nav style={{
@@ -524,8 +536,8 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                     gap: 2,
                     zIndex: 5,
                     opacity: sidebarVisible ? 1 : 0,
-                    transform: sidebarVisible ? 'translateX(0)' : 'translateX(-8px)',
-                    transition: 'opacity 0.5s ease, transform 0.5s ease',
+                    transform: sidebarVisible ? 'translateX(0)' : 'translateX(-10px)',
+                    transition: `opacity 0.6s ${ease}, transform 0.6s ${ease}`,
                 }}>
                     {/* Home link */}
                     <button
@@ -580,12 +592,13 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                     })}
                 </nav>
 
-                {/* Main scrollable content — full width so maxWidth centers vs viewport */}
+                {/* Main scrollable content — full width, full height */}
                 <div
                     ref={contentRef}
                     onScroll={e => setScrollY((e.currentTarget).scrollTop)}
                     style={{
                         width: '100%',
+                        height: '100%',
                         overflowY: 'auto',
                     }}
                 >
@@ -617,7 +630,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                     {data && (
                         <div style={{
                             opacity: contentVisible ? 1 : 0,
-                            transition: 'opacity 0.4s ease',
+                            transition: `opacity 0.55s ${ease}`,
                         }}>
                             {data.sections.map(section => (
                                 <div
