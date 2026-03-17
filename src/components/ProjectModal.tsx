@@ -49,7 +49,7 @@ function ImagePlaceholder({ height = 320, label = 'Visual placeholder' }: { heig
             alignItems: 'center',
             justifyContent: 'center',
             color: 'var(--muted-foreground)',
-            fontSize: 'var(--text-sm)',
+            fontSize: 'var(--modal-meta)',
             letterSpacing: '0.05em',
             border: '1px solid var(--border)',
         }}>
@@ -98,7 +98,7 @@ function HeroSection({ data, meta }: { data: any; meta: ProjectMeta }) {
 
             {/* Headline */}
             <h2 style={{
-                fontSize: 'clamp(24px, 3vw, 36px)',
+                fontSize: 'var(--modal-display)',
                 fontWeight: 700,
                 lineHeight: 1.2,
                 margin: '0 0 16px',
@@ -107,9 +107,9 @@ function HeroSection({ data, meta }: { data: any; meta: ProjectMeta }) {
                 {data.headline}
             </h2>
             <p style={{
-                fontSize: 'var(--text-base)',
-                lineHeight: 1.7,
-                color: 'var(--muted-foreground)',
+                fontSize: 'var(--modal-body)',
+                lineHeight: 1.75,
+                color: 'var(--foreground)',
                 margin: '0 0 40px',
                 maxWidth: 640,
             }}>
@@ -126,10 +126,10 @@ function HeroSection({ data, meta }: { data: any; meta: ProjectMeta }) {
             }}>
                 {data.stats.map((s: { label: string; value: string }) => (
                     <div key={s.label}>
-                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
+                        <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
                             {s.label}
                         </div>
-                        <div style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: 'var(--foreground)' }}>
+                        <div style={{ fontSize: 'var(--modal-meta)', fontWeight: 600, color: 'var(--foreground)' }}>
                             {s.value}
                         </div>
                     </div>
@@ -142,11 +142,11 @@ function HeroSection({ data, meta }: { data: any; meta: ProjectMeta }) {
 function StatementSection({ data }: { data: any }) {
     return (
         <div style={{ marginBottom: 64 }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
+            <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
                 {data.eyebrow}
             </div>
             <h3 style={{
-                fontSize: 'clamp(20px, 2.5vw, 28px)',
+                fontSize: 'var(--modal-heading)',
                 fontWeight: 700,
                 lineHeight: 1.3,
                 margin: '0 0 24px',
@@ -155,9 +155,9 @@ function StatementSection({ data }: { data: any }) {
                 {data.headline}
             </h3>
             <p style={{
-                fontSize: 'var(--text-base)',
+                fontSize: 'var(--modal-body)',
                 lineHeight: 1.8,
-                color: 'var(--muted-foreground)',
+                color: 'var(--foreground)',
                 margin: '0 0 32px',
             }}>
                 {data.body}
@@ -169,10 +169,10 @@ function StatementSection({ data }: { data: any }) {
                     borderRadius: 8,
                     borderLeft: '3px solid var(--foreground)',
                 }}>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>
+                    <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>
                         Next Step
                     </div>
-                    <p style={{ margin: 0, fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'var(--foreground)' }}>
+                    <p style={{ margin: 0, fontSize: 'var(--modal-body)', lineHeight: 1.6, color: 'var(--foreground)' }}>
                         {data.next}
                     </p>
                 </div>
@@ -190,11 +190,11 @@ function TextMediaSection({ data }: { data: any }) {
 
     const textBlock = (
         <div style={{ flex: '1 1 0', minWidth: 0 }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
+            <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
                 {data.eyebrow}
             </div>
             <h3 style={{
-                fontSize: 'clamp(18px, 2vw, 24px)',
+                fontSize: 'var(--modal-heading)',
                 fontWeight: 700,
                 lineHeight: 1.3,
                 margin: '0 0 16px',
@@ -203,9 +203,9 @@ function TextMediaSection({ data }: { data: any }) {
                 {data.headline}
             </h3>
             <p style={{
-                fontSize: 'var(--text-sm)',
+                fontSize: 'var(--modal-body)',
                 lineHeight: 1.8,
-                color: 'var(--muted-foreground)',
+                color: 'var(--foreground)',
                 margin: '0 0 24px',
             }}>
                 {data.body}
@@ -213,7 +213,7 @@ function TextMediaSection({ data }: { data: any }) {
             {listItems.length > 0 && (
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {listItems.map((item, i) => (
-                        <li key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', fontSize: 'var(--text-sm)', color: 'var(--foreground)' }}>
+                        <li key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', fontSize: 'var(--modal-body)', color: 'var(--foreground)' }}>
                             <span style={{ opacity: 0.4, flexShrink: 0, marginTop: 2 }}>—</span>
                             <span style={{ lineHeight: 1.6 }}>{item}</span>
                         </li>
@@ -244,11 +244,11 @@ function TextMediaSection({ data }: { data: any }) {
 function DecisionsSection({ data }: { data: any }) {
     return (
         <div style={{ marginBottom: 64 }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
+            <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16 }}>
                 {data.eyebrow}
             </div>
             <h3 style={{
-                fontSize: 'clamp(18px, 2vw, 24px)',
+                fontSize: 'var(--modal-heading)',
                 fontWeight: 700,
                 lineHeight: 1.3,
                 margin: '0 0 40px',
@@ -266,7 +266,7 @@ function DecisionsSection({ data }: { data: any }) {
                     }}>
                         <div style={{
                             fontFamily: 'var(--font-mono, monospace)',
-                            fontSize: 'var(--text-xs)',
+                            fontSize: 'var(--modal-meta)',
                             color: 'var(--muted-foreground)',
                             fontWeight: 600,
                             flexShrink: 0,
@@ -276,10 +276,10 @@ function DecisionsSection({ data }: { data: any }) {
                             {item.number}
                         </div>
                         <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 600, fontSize: 'var(--text-base)', color: 'var(--foreground)', marginBottom: 8 }}>
+                            <div style={{ fontWeight: 600, fontSize: 'var(--modal-body)', color: 'var(--foreground)', marginBottom: 8 }}>
                                 {item.title}
                             </div>
-                            <p style={{ margin: 0, fontSize: 'var(--text-sm)', lineHeight: 1.7, color: 'var(--muted-foreground)' }}>
+                            <p style={{ margin: 0, fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--foreground)' }}>
                                 {item.description}
                             </p>
                         </div>
@@ -610,7 +610,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40 }}>
                             {data.meta.tags.map(tag => (
                                 <span key={tag} style={{
-                                    fontSize: 'var(--text-xs)',
+                                    fontSize: 'var(--modal-meta)',
                                     padding: '4px 10px',
                                     borderRadius: 100,
                                     border: '1px solid var(--border)',

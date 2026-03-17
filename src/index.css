@@ -15,13 +15,16 @@
     --text-color: var(--foreground);
     --text-muted: var(--muted-foreground);
 
-    /* Typography Scale (3 sizes) */
+    /* Typography Scale (3 sizes) — compact UI (profile panel, chatbot) */
     --text-lg: 16px;
-    /* Headings, name, email */
     --text-base: 12px;
-    /* Body text, labels */
     --text-sm: 10px;
-    /* Metadata only */
+
+    /* Modal / Long-form reading scale */
+    --modal-display: 28px;
+    --modal-heading: 18px;
+    --modal-body: 16px;
+    --modal-meta: 12px;
 
     /* Spacing Scale (8px base) */
     --space-1: 4px;
