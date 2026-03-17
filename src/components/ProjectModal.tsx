@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -341,6 +341,7 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
     const [_loading, setLoading] = useState(false);
     const [contentVisible, setContentVisible] = useState(false);
     const [activeSection, setActiveSection] = useState<string>('');
+    const [scrollY, setScrollY] = useState(0);
     const contentRef = useRef<HTMLDivElement>(null);
     const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
@@ -401,192 +402,212 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
 
     if (!projectId) return null;
 
+    // How far the gradient fades in (0 → 1 over first 80px of scroll)
+    const navOpacity = Math.min(scrollY / 80, 1);
+
     const modal = (
         <div
-            className="project-modal-backdrop"
             style={{
                 position: 'fixed',
                 inset: 0,
-                background: 'rgba(0,0,0,0.7)',
-                zIndex: 2000,
-                display: 'flex',
-                alignItems: 'stretch',
-            }}
-            onClick={e => { if (e.target === e.currentTarget) onClose(); }}
-        >
-            {/* Modal panel */}
-            <div style={{
-                position: 'relative',
-                marginLeft: 'auto',
-                width: '100%',
-                maxWidth: '100vw',
-                height: '100dvh',
                 background: 'var(--background)',
-                display: 'flex',
-                flexDirection: 'column',
+                zIndex: 2000,
                 overflow: 'hidden',
+            }}
+        >
+            {/* ── Floating breadcrumb nav ─────────────────────────── */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 56,
+                zIndex: 20,
+                pointerEvents: 'none',
             }}>
-                {/* Header bar */}
+                {/* Gradient background layer — fades in as user scrolls */}
                 <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to bottom, var(--background) 40%, transparent 100%)',
+                    opacity: navOpacity,
+                    transition: 'opacity 0.4s ease',
+                    pointerEvents: 'none',
+                }} />
+
+                {/* Breadcrumb content */}
+                <div style={{
+                    position: 'relative',
+                    height: '100%',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '16px 24px',
-                    borderBottom: '1px solid var(--border)',
-                    flexShrink: 0,
-                    gap: 16,
+                    justifyContent: 'center',
+                    gap: 8,
+                    pointerEvents: 'auto',
                 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
-                        {data && (
-                            <>
-                                <span style={{
-                                    fontSize: 'var(--text-xs)',
-                                    color: 'var(--muted-foreground)',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.08em',
-                                    flexShrink: 0,
-                                }}>
-                                    {data.meta.company}
-                                </span>
-                                <span style={{ color: 'var(--border)', flexShrink: 0 }}>·</span>
-                                <span style={{
-                                    fontSize: 'var(--text-sm)',
-                                    fontWeight: 600,
-                                    color: 'var(--foreground)',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                }}>
-                                    {data.meta.title}
-                                </span>
-                            </>
-                        )}
-                    </div>
+                    {/* Owner dot + name (click = back to home) */}
                     <button
                         onClick={onClose}
                         style={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: '50%',
-                            border: '1px solid var(--border)',
-                            background: 'var(--background)',
-                            color: 'var(--foreground)',
-                            cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
+                            gap: 7,
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            padding: '4px 8px',
+                            borderRadius: 6,
+                            transition: 'opacity 0.2s',
+                            color: 'var(--foreground)',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.opacity = '0.6'}
+                        onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                        aria-label="Back to portfolio"
+                    >
+                        {/* Accent dot */}
+                        <span style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            background: data ? data.meta.cover_color : 'var(--foreground)',
+                            display: 'block',
                             flexShrink: 0,
-                            transition: 'all 0.2s',
-                        }}
-                        aria-label="Close project"
-                    >
-                        <X size={14} />
+                            transition: 'background 0.3s',
+                        }} />
+                        <span style={{
+                            fontSize: 'var(--text-base)',
+                            fontWeight: 500,
+                            lineHeight: 1,
+                        }}>
+                            Nate
+                        </span>
                     </button>
-                </div>
 
-                {/* Body: sidebar + content */}
-                <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-                    {/* Sticky sidebar nav */}
-                    <nav style={{
-                        width: 200,
-                        flexShrink: 0,
-                        padding: '32px 0 32px 24px',
-                        borderRight: '1px solid var(--border)',
-                        overflowY: 'auto',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 4,
+                    {/* Chevron */}
+                    <ChevronRight
+                        size={12}
+                        style={{ color: 'var(--muted-foreground)', flexShrink: 0 }}
+                    />
+
+                    {/* Project name (fades in once data is loaded) */}
+                    <span style={{
+                        fontSize: 'var(--text-base)',
+                        color: 'var(--foreground)',
+                        opacity: data ? 1 : 0,
+                        transition: 'opacity 0.4s ease',
+                        maxWidth: 320,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                     }}>
-                        {(data?.sections ?? Array.from({ length: 6 })).map((s, i) => {
-                            const section = s as Section | undefined;
-                            if (!section) {
-                                return (
-                                    <div key={i} style={{
-                                        height: 14,
-                                        background: 'var(--muted)',
-                                        borderRadius: 4,
-                                        marginBottom: 8,
-                                        width: `${60 + Math.random() * 30}%`,
-                                        animation: 'skeleton-pulse 1.5s ease-in-out infinite',
-                                    }} />
-                                );
-                            }
-                            const isActive = activeSection === section.id;
+                        {data?.meta.title ?? ''}
+                    </span>
+                </div>
+            </div>
+
+            {/* ── Body: sidebar + scrollable content ──────────────── */}
+            <div style={{ display: 'flex', height: '100%' }}>
+
+                {/* Sidebar nav */}
+                <nav style={{
+                    width: 192,
+                    flexShrink: 0,
+                    padding: '72px 0 40px 24px',
+                    borderRight: '1px solid var(--border)',
+                    overflowY: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                }}>
+                    {(data?.sections ?? Array.from({ length: 6 })).map((s, i) => {
+                        const section = s as Section | undefined;
+                        if (!section) {
                             return (
-                                <button
-                                    key={section.id}
-                                    onClick={() => {
-                                        sectionRefs.current[section.id]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                    }}
-                                    style={{
-                                        background: 'none',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        textAlign: 'left',
-                                        padding: '6px 12px 6px 0',
-                                        fontSize: 'var(--text-sm)',
-                                        fontWeight: isActive ? 600 : 400,
-                                        color: isActive ? 'var(--foreground)' : 'var(--muted-foreground)',
-                                        transition: 'color 0.15s',
-                                        lineHeight: 1.4,
-                                        borderLeft: `2px solid ${isActive ? 'var(--foreground)' : 'transparent'}`,
-                                        paddingLeft: 10,
-                                    }}
-                                >
-                                    {section.label}
-                                </button>
+                                <div key={i} style={{
+                                    height: 12,
+                                    background: 'var(--muted)',
+                                    borderRadius: 4,
+                                    marginBottom: 10,
+                                    width: `${55 + (i * 13) % 35}%`,
+                                    animation: 'skeleton-pulse 1.5s ease-in-out infinite',
+                                }} />
                             );
-                        })}
-                    </nav>
+                        }
+                        const isActive = activeSection === section.id;
+                        return (
+                            <button
+                                key={section.id}
+                                onClick={() => {
+                                    sectionRefs.current[section.id]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    textAlign: 'left',
+                                    padding: '6px 0 6px 10px',
+                                    fontSize: 'var(--text-sm)',
+                                    fontWeight: isActive ? 600 : 400,
+                                    color: isActive ? 'var(--foreground)' : 'var(--muted-foreground)',
+                                    transition: 'color 0.2s, font-weight 0.2s',
+                                    lineHeight: 1.5,
+                                    borderLeft: `2px solid ${isActive ? 'var(--foreground)' : 'transparent'}`,
+                                }}
+                            >
+                                {section.label}
+                            </button>
+                        );
+                    })}
+                </nav>
 
-                    {/* Main content area */}
-                    <div
-                        ref={contentRef}
-                        style={{
-                            flex: 1,
-                            overflowY: 'auto',
-                            padding: '48px 48px 80px',
-                        }}
-                    >
-                        {/* Tags (once data is ready) */}
-                        {data && (
-                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40 }}>
-                                {data.meta.tags.map(tag => (
-                                    <span key={tag} style={{
-                                        fontSize: 'var(--text-xs)',
-                                        padding: '4px 10px',
-                                        borderRadius: 100,
-                                        border: '1px solid var(--border)',
-                                        color: 'var(--muted-foreground)',
-                                        letterSpacing: '0.04em',
-                                    }}>
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
+                {/* Main scrollable content */}
+                <div
+                    ref={contentRef}
+                    onScroll={e => setScrollY((e.currentTarget).scrollTop)}
+                    style={{
+                        flex: 1,
+                        overflowY: 'auto',
+                        padding: '72px 56px 100px',
+                    }}
+                >
+                    {/* Tags */}
+                    {data && (
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40 }}>
+                            {data.meta.tags.map(tag => (
+                                <span key={tag} style={{
+                                    fontSize: 'var(--text-xs)',
+                                    padding: '4px 10px',
+                                    borderRadius: 100,
+                                    border: '1px solid var(--border)',
+                                    color: 'var(--muted-foreground)',
+                                    letterSpacing: '0.04em',
+                                }}>
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    )}
 
-                        {/* Skeleton: visible while loading */}
-                        {!contentVisible && <ModalSkeleton />}
+                    {/* Skeleton */}
+                    {!contentVisible && <ModalSkeleton />}
 
-                        {/* Content: fades in once data is ready */}
-                        {data && (
-                            <div style={{
-                                opacity: contentVisible ? 1 : 0,
-                                transition: 'opacity 0.4s ease',
-                            }}>
-                                {data.sections.map(section => (
-                                    <div
-                                        key={section.id}
-                                        id={section.id}
-                                        ref={el => { sectionRefs.current[section.id] = el; }}
-                                    >
-                                        <SectionRenderer section={section} meta={data.meta} />
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    {/* Content fades in */}
+                    {data && (
+                        <div style={{
+                            opacity: contentVisible ? 1 : 0,
+                            transition: 'opacity 0.4s ease',
+                        }}>
+                            {data.sections.map(section => (
+                                <div
+                                    key={section.id}
+                                    id={section.id}
+                                    ref={el => { sectionRefs.current[section.id] = el; }}
+                                >
+                                    <SectionRenderer section={section} meta={data.meta} />
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
