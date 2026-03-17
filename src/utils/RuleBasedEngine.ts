@@ -243,6 +243,14 @@ export class RuleBasedEngine implements ChatEngine {
 
         switch (intent) {
             case 'greeting':
+                if (this.ctx.turnCount > 1) {
+                    const followUps = [
+                        "What's on your mind?",
+                        "Go on — what would you like to know?",
+                        "What else can I help with?",
+                    ];
+                    return { text: this.pick(followUps), suggestions: this.defaultSuggestions() };
+                }
                 return this.buildStaticResponse('greeting', this.defaultSuggestions());
             case 'ask_lumo':
                 return this.buildStaticResponse('ask_lumo', [
@@ -405,7 +413,7 @@ export class RuleBasedEngine implements ChatEngine {
         }));
 
         return {
-            text: `Nate has ${profile.experience.summary.total_years} of experience across ${profile.experience.summary.company_count} companies:\n\n${lines}\n\nAsk about any company for the full story.`,
+            text: `Nate has ${profile.experience.summary.total_years} years of experience across ${profile.experience.summary.company_count} companies:\n\n${lines}\n\nAsk about any company for the full story.`,
             suggestions: companySuggestions
         };
     }

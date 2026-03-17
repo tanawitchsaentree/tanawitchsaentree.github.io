@@ -129,7 +129,10 @@ export class ContextStore {
         if (sentiment === 'skeptical' || sentiment === 'negative' || sentiment === 'comparison') return 'proof';
         if (sentiment === 'deep_dive') return 'honest';
 
+        // First touch always uses story — establish context before going deeper
         const used = this.session.anglesUsed[topic] ?? [];
+        if (used.length === 0) return 'story';
+
         const unused = ANGLE_ORDER.filter(a => !used.includes(a));
         const pool = unused.length > 0 ? unused : [...ANGLE_ORDER];
         return pool[Math.floor(Math.random() * pool.length)];
