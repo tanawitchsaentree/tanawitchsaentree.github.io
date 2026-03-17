@@ -74,25 +74,58 @@
             "subject": "patient monitoring dashboard",
             "impact_metric": "40%",
             "impact_area": "data entry time",
-            "impact_context": "50+ clinics"
+            "impact_context": "50+ clinics",
+            "impact_sentence": "Cut data entry time by 40% across 50+ clinics."
         },
         "peakaccount": {
             "entity": "Peakaccount",
-            "role": "Senior UX/UI Designer",
+            "role": "UX/UI Designer",
             "action": "redesigned",
             "subject": "mobile app",
             "impact_metric": "4.8/5",
             "impact_area": "app store rating",
-            "impact_context": "fintech users"
+            "impact_context": "fintech users",
+            "impact_sentence": "Helped push the app to a 4.8/5 App Store rating."
         },
         "cp_origin": {
             "entity": "CP Origin",
-            "role": "Senior UX/UI Designer",
+            "role": "Senior Product Designer",
             "action": "standardized",
             "subject": "design system",
             "impact_metric": "100%",
             "impact_area": "component reuse",
-            "impact_context": "property platforms"
+            "impact_context": "property platforms",
+            "impact_sentence": "Achieved 100% component reuse across all property platforms."
+        },
+        "doctoranywhere": {
+            "entity": "DoctorAnywhere",
+            "role": "Senior UX/UI Designer",
+            "action": "shipped",
+            "subject": "COVID vaccine passport",
+            "impact_metric": "days",
+            "impact_area": "time-to-launch",
+            "impact_context": "urgent public health crisis",
+            "impact_sentence": "Designed and shipped a critical public health tool in days during the COVID pandemic."
+        },
+        "codefin": {
+            "entity": "Codefin",
+            "role": "Senior Designer",
+            "action": "designed",
+            "subject": "mutual fund application",
+            "impact_metric": "Asia award",
+            "impact_area": "customer experience",
+            "impact_context": "fintech space",
+            "impact_sentence": "Won an Asia customer experience award for the mutual fund app design."
+        },
+        "allianz": {
+            "entity": "Allianz Technology Thailand",
+            "role": "Senior Designer",
+            "action": "designed",
+            "subject": "no-code AI document classification tool",
+            "impact_metric": "multi-state",
+            "impact_area": "enterprise UX",
+            "impact_context": "ops teams across insurance markets",
+            "impact_sentence": "Built a no-code interface letting ops teams configure AI document classification — handling draft, save, test, and publish state in one complex view."
         }
     },
     "experience": {
@@ -123,14 +156,15 @@
                     "level": "senior",
                     "start": "2025-09",
                     "end": "present",
-                    "duration_months": 3
+                    "duration_months": 6
                 },
                 "impact": {
-                    "headline": "Designing insurance tech solutions",
+                    "headline": "Designing no-code AI tooling for insurance document processing",
                     "responsibilities": [
-                        "Design insurance technology products",
-                        "Create user-centered solutions",
-                        "Collaborate with cross-functional teams"
+                        "Design no-code AI configuration UI for insurance document classification across multiple markets",
+                        "Solve multi-state UX — draft, save, test, and publish — in a single complex 3-panel interface",
+                        "Extend the NDBX enterprise design system with custom components where it didn't cover the complexity needed",
+                        "Design for ops/configuration teams managing 3-level insurance taxonomy (LOB → Category → Type)"
                     ],
                     "skills_demonstrated": [
                         "insurance_tech_ux",
@@ -139,15 +173,21 @@
                     ]
                 },
                 "storytelling": {
-                    "short": "Currently designing insurance tech at Allianz Technology Thailand",
-                    "medium": "As Senior Designer at Allianz Technology Thailand, I'm designing insurance technology solutions that serve real users",
-                    "detailed": "As Senior Designer at Allianz Technology Thailand, I'm focused on creating user-centered insurance technology products. I collaborate with cross-functional teams to design solutions that make insurance more accessible and easier to use."
+                    "short": "Currently designing internal AI tooling for insurance document classification at Allianz Technology Thailand",
+                    "medium": "At Allianz Technology Thailand, I designed a no-code AI configuration tool that lets ops teams manage insurance document classification — no engineers needed. The core challenge: managing save, test, and publish state across a 3-panel interface without overwhelming non-technical users",
+                    "detailed": "At Allianz Technology Thailand, I'm designing an internal tool that gives ops teams control over AI document classification — without writing a single line of code. Users configure a 3-level insurance taxonomy (Line of Business → Category → Type), write and test classification prompts, then approve before deploying to production. The hardest UX problem was state: this workflow has unsaved drafts, saved versions, test results, and publish snapshots all happening in one view. I designed the state system so users always know exactly where they are and what's safe to change. I also extended the NDBX design system with custom components — resizable panels, tab overflow with ResizeObserver, and a full test matrix interface — for cases where the enterprise system didn't cover the complexity needed."
                 },
                 "conversational_hooks": [
-                    "Currently at Allianz Technology Thailand",
-                    "Working on insurance tech solutions",
-                    "Designing for enterprise insurance platform"
-                ]
+                    "Designing no-code AI tooling for insurance document processing",
+                    "Solved multi-state UX (draft/save/test/publish) in one complex view",
+                    "Extended NDBX enterprise design system with custom components"
+                ],
+                "angles": {
+                    "story": "At Allianz I designed a no-code AI configuration tool for insurance document classification. Ops teams configure a 3-level taxonomy — Line of Business, Category, Type — write and test classification prompts, then approve before deploying. No engineers needed in the loop.",
+                    "proof": "3-panel interface managing 4 simultaneous states: unsaved draft, saved, tested, and published. Extended NDBX enterprise design system with custom components — ResizeObserver-based tab overflow, drag-to-resize panels — for cases the system didn't cover.",
+                    "honest": "Enterprise design has real constraints. NDBX covers about 70% of what you need. The other 30% you build yourself — carefully, so it doesn't feel bolted on. The hardest part isn't the custom work, it's making it feel like it was always there.",
+                    "personal": "Insurance UX is the most underrated design problem. Nobody thinks about it until they're confused by a policy claim form. Making something that complex feel clear is genuinely satisfying — and harder than most people realize."
+                }
             },
             {
                 "id": "invitrace",
@@ -187,7 +227,13 @@
                     "Previously led design in healthtech",
                     "Built tools that help healthcare professionals",
                     "Managed and mentored a design team"
-                ]
+                ],
+                "angles": {
+                    "story": "Led design at Invitrace for almost 3 years — building healthcare tools from the ground up. Managed a team of designers while doing IC work myself, built the design system they used, and shaped the end-to-end patient monitoring experience.",
+                    "proof": "Cut data entry time by 40% across 50+ clinics. The key was removing cognitive load — nurses were remembering patient states in their heads that the UI should have been showing them. We made the invisible visible.",
+                    "honest": "Healthcare UX has zero margin for ambiguity. If a nurse makes an error because the UI was unclear, that's not a UX metric — it's a patient safety issue. That weight made every design decision feel more serious.",
+                    "personal": "Most meaningful work of my career. Watching real nurses use what my team built in actual clinics — nothing in a portfolio review compares to that."
+                }
             },
             {
                 "id": "cp_origin",
@@ -227,7 +273,13 @@
                     "Built design systems from scratch",
                     "Ran card sorting with real users",
                     "Full-stack designer (mobile + web)"
-                ]
+                ],
+                "angles": {
+                    "story": "At CP Origin I ran card sorting with real users and discovered every navigation label we'd written made sense internally — and nowhere else. That one session restructured the entire IA before a single wireframe was drawn.",
+                    "proof": "Achieved 100% component reuse across all property platforms. Before: 3 teams building the same button 3 different ways. After: one system, one source of truth. Full lifecycle — research through launch.",
+                    "honest": "Card sorting is humbling. You spend weeks naming things logically, then watch a user go completely blank. That confusion is the data. The instinct to explain is the enemy of the insight.",
+                    "personal": "This is where I fell in love with IA. The structure you can't see is the structure that makes or breaks everything. If the bones are wrong, no amount of beautiful UI fixes it."
+                }
             },
             {
                 "id": "doctoranywhere",
@@ -261,7 +313,13 @@
                     "Worked on pandemic response tools",
                     "Designed under extreme time pressure",
                     "Public health impact work"
-                ]
+                ],
+                "angles": {
+                    "story": "During COVID, I designed a vaccine passport under extreme deadline — public health urgency meant compressing a normal design process into weeks. No time for the usual rounds of exploration.",
+                    "proof": "Shipped a working vaccine passport during one of the most critical public health moments in recent history. Real users, real stakes, shipped on time.",
+                    "honest": "Shipping fast means cutting — ruthlessly. We cut everything we couldn't prove was essential. Hard decisions, but they were the right ones. Most of what gets cut in a crisis shouldn't have been in scope in the first place.",
+                    "personal": "Taught me that constraints can be a gift. When time is brutally short, you find out what actually matters. Everything else was a nice-to-have."
+                }
             },
             {
                 "id": "codefin",
@@ -298,7 +356,13 @@
                     "Award-winning fintech work",
                     "Designed for financial services",
                     "Customer experience excellence"
-                ]
+                ],
+                "angles": {
+                    "story": "Contracted to build a mutual fund app for Codefin — the goal was making finance feel less intimidating. Most finance apps optimize for feature completeness. We optimized for confidence.",
+                    "proof": "Won an Asia customer experience award. Short contract, fast turnaround, recognized for CX excellence in a category where most apps feel like spreadsheets.",
+                    "honest": "Short contract, high pressure — had to make impact fast with limited context. The award was genuine validation, but honestly surprised me. I didn't know it had been submitted.",
+                    "personal": "Finance UX is fundamentally about trust, not features. If a user hesitates before clicking invest — even for a millisecond — you've already failed them."
+                }
             },
             {
                 "id": "peakaccount",
@@ -331,7 +395,13 @@
                     "Where I started in UX",
                     "Learned fintech from the ground up",
                     "First real-world design job"
-                ]
+                ],
+                "angles": {
+                    "story": "Peakaccount was my first real UX job — where I learned what it actually means to design for people who aren't designers and don't care about your process.",
+                    "proof": "Contributed to pushing the app to a 4.8/5 App Store rating. Learned early that small interaction details compound into large satisfaction differences over time.",
+                    "honest": "First job is humbling. I thought I knew design from school. Users taught me otherwise in week one. The gap between what you design and what users actually do is the whole job.",
+                    "personal": "Grateful for this foundation. Fintech taught me that UX is about reducing anxiety, not adding features. That principle still guides everything I do."
+                }
             }
         ],
         "patterns": {
@@ -366,7 +436,13 @@
                             "CP Origin card sorting",
                             "Multiple user testing projects"
                         ],
-                        "conversational_angle": "I love talking to users - it's where the best ideas come from"
+                        "conversational_angle": "I love talking to users - it's where the best ideas come from",
+                        "angles": {
+                            "story": "At CP Origin, card sorting with 20 users showed every navigation label we'd written made sense internally — and nowhere else. That one session restructured the entire IA before a single wireframe was drawn.",
+                            "proof": "Multiple research cycles across healthcare, fintech, and productivity — interviews, card sorting, usability testing. Evidence-driven decisions at every company I've worked at.",
+                            "honest": "The hardest thing in user research is staying quiet when someone's confused. That confusion is the data. The instinct to help them is the enemy of the insight.",
+                            "personal": "The best design ideas don't come from brainstorming. They come from watching someone struggle with something for 5 minutes. That's where the real problems live."
+                        }
                     },
                     {
                         "name": "Problem Framing",
@@ -410,7 +486,13 @@
                         "background": [
                             "Photography degree"
                         ],
-                        "conversational_angle": "Visual design is my first love - studied photography originally"
+                        "conversational_angle": "Visual design is my first love - studied photography originally",
+                        "angles": {
+                            "story": "Started with a photography degree before design. Composition, light, the decisive moment — these translate directly into visual hierarchy, contrast, and finding the one layout that makes everything click.",
+                            "proof": "8 years of visual design across healthcare, fintech, and insurance tech. Photography background means thinking in frames — what draws the eye first, what recedes, what the screen needs to communicate at a glance.",
+                            "honest": "Visual design without function is decoration. The challenge is making it both beautiful and purposeful — and knowing when beauty IS the function.",
+                            "personal": "Photography taught me the decisive moment: the one frame that captures everything. I look for that in UI too. The layout where the hierarchy is so clear you don't have to think."
+                        }
                     },
                     {
                         "name": "Design Systems",
@@ -420,7 +502,13 @@
                             "Invitrace",
                             "CP Origin systems"
                         ],
-                        "conversational_angle": "I think in systems - not just screens"
+                        "conversational_angle": "I think in systems - not just screens",
+                        "angles": {
+                            "story": "Built design systems from scratch at Invitrace and CP Origin — and extended NDBX at Allianz. Three systems, three completely different constraints, three different lessons.",
+                            "proof": "100% component reuse at CP Origin. Invitrace system scaled across 3 product areas over 2.75 years. At Allianz, extended NDBX with custom components — ResizeObserver tab overflow, drag-resize panels — for gaps the enterprise system didn't cover.",
+                            "honest": "Design systems are living things. The hardest part isn't building them — it's convincing the team to use them, and keeping them alive when everyone's busy shipping.",
+                            "personal": "I think in systems, not screens. Every component I design I'm asking: what's the rule here, not just what works for this one case."
+                        }
                     }
                 ]
             },
@@ -457,7 +545,13 @@
                         "evidence": [
                             "Lead role managing team at Invitrace"
                         ],
-                        "conversational_angle": "I love growing designers - their wins are my wins"
+                        "conversational_angle": "I love growing designers - their wins are my wins",
+                        "angles": {
+                            "story": "Led a design team at Invitrace for almost 3 years — managing designers while doing IC work myself. Had to be deliberate about when to lead and when to get in and design.",
+                            "proof": "Managed and mentored design team at Invitrace, scaled the team's output while maintaining quality across a healthcare product used in 50+ clinics.",
+                            "honest": "Managing designers while doing design yourself is genuinely hard. You have to hold space for their process even when you see the answer. Their growth matters more than your solution.",
+                            "personal": "The best thing I built at Invitrace wasn't a screen. It was the review process that made the team sharper. Their wins feel like my wins — still do."
+                        }
                     },
                     {
                         "name": "Cross-functional Collaboration",

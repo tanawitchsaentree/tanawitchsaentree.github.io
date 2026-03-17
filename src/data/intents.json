@@ -50,6 +50,17 @@
             "keywords": ["download cv", "download resume", "get cv", "get resume", "pdf resume", "pdf cv"],
             "response_key": "download_cv",
             "command": { "type": "download" }
+        },
+        {
+            "id": "availability",
+            "keywords": ["available", "open to work", "hiring", "for hire", "open to opportunities", "looking for work", "freelance", "contract", "job opportunity", "is he looking", "work with you", "recruit", "open positions"],
+            "response_key": null
+        },
+        {
+            "id": "query_portfolio",
+            "keywords": ["portfolio", "work samples", "projects", "show work", "case study", "case studies", "show me his work", "what has he built", "see his work", "his projects", "his work"],
+            "response_key": "query_portfolio",
+            "command": { "type": "scroll", "value": "work-grid" }
         }
     ],
     "entities": [
@@ -106,6 +117,42 @@
             "data_ref_skill": "research/UX Strategy",
             "keywords": ["ux strategy", "product strategy", "design strategy", "strategic design"],
             "type": "skill"
+        },
+        {
+            "id": "skill_visual_design",
+            "data_ref_skill": "design_craft/Visual Design",
+            "keywords": ["visual design", "ui design", "visual", "aesthetics", "brand design", "visual identity", "ui"],
+            "type": "skill"
+        },
+        {
+            "id": "skill_interaction_design",
+            "data_ref_skill": "design_craft/Interaction Design",
+            "keywords": ["interaction design", "microinteraction", "user flow", "ixd", "user flows", "interaction"],
+            "type": "skill"
+        },
+        {
+            "id": "skill_information_architecture",
+            "data_ref_skill": "design_craft/Information Architecture",
+            "keywords": ["information architecture", "ia", "card sorting", "content hierarchy", "navigation design"],
+            "type": "skill"
+        },
+        {
+            "id": "skill_prototyping",
+            "data_ref_skill": "technical/Prototyping",
+            "keywords": ["prototype", "prototyping", "interactive prototype", "figma prototype"],
+            "type": "skill"
+        },
+        {
+            "id": "skill_accessibility",
+            "data_ref_skill": "technical/Accessibility",
+            "keywords": ["accessibility", "wcag", "inclusive design", "a11y", "accessible"],
+            "type": "skill"
+        },
+        {
+            "id": "skill_design_leadership",
+            "data_ref_skill": "leadership/Design Leadership",
+            "keywords": ["design leadership", "team lead", "mentor", "mentorship", "managing designers", "leading designers", "team management"],
+            "type": "skill"
         }
     ],
     "semantic_patterns": [
@@ -157,6 +204,11 @@
             "Nate sees that not as a failure, but as a stepping stone.",
             "It wasn't a failure, but a valuable lesson in iteration.",
             "He believes mistakes are just data points for better design."
+        ],
+        "query_portfolio": [
+            "Scrolling to his featured work now!",
+            "Here's what he's built — taking you there!",
+            "Let me show you his projects!"
         ]
     },
     "fragments": {

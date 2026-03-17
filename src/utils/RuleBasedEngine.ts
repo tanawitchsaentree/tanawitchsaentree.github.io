@@ -1,20 +1,84 @@
 import type { ChatEngine, BotResponse, ConversationTurn, Suggestion } from './ChatEngine';
 import { ContextStore } from './ContextStore';
 import { FallbackStrategy } from './FallbackStrategy';
+import { CrossTopicEngine } from './CrossTopicEngine';
+import { detectSentiment, pickOpener, type Sentiment } from './SentimentDetector';
 import profile from '../data/profile_data_enhanced.json';
 import intentsData from '../data/intents.json';
 import greetingSystem from '../data/greeting_system.json';
 
-type IntentDef = typeof intentsData.intents[number];
 type EntityDef = typeof intentsData.entities[number];
 
 export class RuleBasedEngine implements ChatEngine {
     private ctx: ContextStore;
     private fallback: FallbackStrategy;
+    private crossTopic: CrossTopicEngine;
 
     constructor() {
         this.ctx = new ContextStore();
         this.fallback = new FallbackStrategy();
+        this.crossTopic = new CrossTopicEngine();
+    }
+
+    // ─── Public API ─────────────────────────────────────────────────────────────
+
+    // ─── Thought Process (shown in UI while engine processes) ───────────────────
+
+    getThought(input: string): string {
+        const norm = input.toLowerCase().trim();
+        const sentiment = detectSentiment(norm);
+        const entity = this.extractEntity(norm);
+        const intent = this.classifyIntent(norm, entity);
+
+        // Cross-topic bridge — most interesting to surface
+        if (entity && this.ctx.previousEntity && entity.id !== this.ctx.previousEntity) {
+            const bridge = this.crossTopic.checkBridge(entity.id, this.ctx.previousEntity);
+            if (bridge) {
+                const prevName = this.getTopicLabel(this.ctx.previousEntity);
+                return `Connecting this to your question about ${prevName}...`;
+            }
+        }
+
+        // Sentiment-driven thoughts
+        if (sentiment === 'skeptical') return 'You want proof — pulling the evidence...';
+        if (sentiment === 'negative')  return 'Addressing that honestly...';
+        if (sentiment === 'deep_dive') return 'Going deeper on this one...';
+        if (sentiment === 'comparison') return 'Drawing the comparison...';
+
+        // Entity-driven thoughts
+        if (entity?.type === 'company') {
+            const exp = (profile.experience.timeline as any[]).find(e => e.id === (entity as any).data_ref);
+            if (exp) {
+                const depth = this.ctx.getDepth(entity.id);
+                if (depth > 0) return `Another angle on ${exp.company.name}...`;
+                return `Looking up ${exp.company.name}...`;
+            }
+        }
+        if (entity?.type === 'skill') {
+            const skillName = ((entity as any).data_ref_skill as string).split('/')[1];
+            return `Pulling the ${skillName} angle...`;
+        }
+
+        // Intent-driven thoughts
+        switch (intent) {
+            case 'query_experience': return 'Pulling his career timeline...';
+            case 'query_skills':     return 'Checking his skill set...';
+            case 'query_contact':    return 'Finding contact details...';
+            case 'query_education':  return 'Looking up his education...';
+            case 'availability':     return 'Checking his availability...';
+            case 'ask_nate':         return 'Introducing Nate...';
+            case 'challenges':       return 'Being honest about the hard parts...';
+            case 'personal_trivia':  return 'Sharing the personal side...';
+            case 'ask_lumo':         return 'That\'s about me...';
+            default:                 return 'Thinking...';
+        }
+    }
+
+    private getTopicLabel(topicId: string): string {
+        const exp = (profile.experience.timeline as any[]).find(e => e.id === topicId);
+        if (exp) return exp.company.name;
+        if (topicId.startsWith('skill_')) return topicId.replace('skill_', '').replace(/_/g, ' ');
+        return topicId;
     }
 
     // ─── Public API ─────────────────────────────────────────────────────────────
@@ -64,16 +128,29 @@ export class RuleBasedEngine implements ChatEngine {
         this.ctx.addTurn();
         const norm = input.toLowerCase().trim();
 
-        // 1. Entity detection (before intent — entity changes intent routing)
+        // 1. Detect HOW the question is being asked
+        const sentiment = detectSentiment(norm);
+
+        // 2. Entity detection (before intent)
+        const previousEntity = this.ctx.previousEntity;
         const entity = this.extractEntity(norm);
         if (entity) this.ctx.setLastEntity(entity.id);
 
-        // 2. Intent classification
+        // 3. Cross-topic bridge — connects dots between topics (the ecosystem layer)
+        if (entity && previousEntity && entity.id !== previousEntity) {
+            const bridge = this.crossTopic.checkBridge(entity.id, previousEntity);
+            if (bridge && sentiment !== 'deep_dive') {
+                this.ctx.trackResponse(bridge.text);
+                return { text: bridge.text, suggestions: bridge.suggestions };
+            }
+        }
+
+        // 4. Intent classification
         const intent = this.classifyIntent(norm, entity);
         this.ctx.setLastIntent(intent);
 
-        // 3. Build response
-        const response = this.buildResponse(intent, entity, norm);
+        // 5. Build response with sentiment awareness
+        const response = this.buildResponse(intent, entity, norm, sentiment);
         this.ctx.trackResponse(response.text);
         return response;
     }
@@ -152,9 +229,9 @@ export class RuleBasedEngine implements ChatEngine {
 
     // ─── Response Building ───────────────────────────────────────────────────────
 
-    private buildResponse(intent: string, entity: EntityDef | null, input: string): BotResponse {
+    private buildResponse(intent: string, entity: EntityDef | null, _input: string, sentiment: Sentiment = 'neutral'): BotResponse {
         // Entity always wins when present
-        if (entity) return this.buildEntityResponse(entity);
+        if (entity) return this.buildEntityResponse(entity, sentiment);
 
         const intentDef = intentsData.intents.find(i => i.id === intent);
 
@@ -189,32 +266,58 @@ export class RuleBasedEngine implements ChatEngine {
                 ]);
             case 'personal_trivia':
                 return this.buildPersonalTriviaResponse();
+            case 'availability':
+                return this.buildAvailabilityResponse();
             default:
                 return this.fallback.handleLowConfidence();
         }
     }
 
-    private buildEntityResponse(entity: EntityDef): BotResponse {
+    private buildEntityResponse(entity: EntityDef, sentiment: Sentiment = 'neutral'): BotResponse {
         if (entity.type === 'company') {
             const exp = (profile.experience.timeline as any[]).find(e => e.id === (entity as any).data_ref);
             if (!exp) return this.fallback.handleLowConfidence();
 
-            const skillList = (exp.impact.skills_demonstrated as string[])
-                .map(s => s.replace(/_/g, ' '))
-                .join(', ');
+            this.ctx.incrementDepth(entity.id);
 
-            // Suggest 2 other companies dynamically
+            // Use angle system if available
+            if (exp.angles) {
+                const angle = this.ctx.getNextAngle(entity.id, sentiment);
+                const angleText = exp.angles[angle];
+                if (angleText) {
+                    this.ctx.markAngleUsed(entity.id, angle);
+                    const opener = pickOpener(sentiment);
+                    const depthHook = this.depthHook(entity.id, exp.angles);
+
+                    const otherCompanies = (profile.experience.timeline as any[])
+                        .filter(e => e.id !== (entity as any).data_ref)
+                        .slice(0, 2)
+                        .map(e => ({ label: e.company.name, payload: `Tell me about ${e.company.name}` }));
+
+                    return {
+                        text: opener + angleText + depthHook,
+                        suggestions: [
+                            ...otherCompanies,
+                            { label: 'Core skills ⚡', payload: "What are his skills?" },
+                        ]
+                    };
+                }
+            }
+
+            // Fallback to storytelling.medium + nlg_factors
+            const skillList = (exp.impact.skills_demonstrated as string[])
+                .map((s: string) => s.replace(/_/g, ' '))
+                .join(', ');
+            const nf = (profile.nlg_factors as any)[exp.id];
+            const impactLine = nf?.impact_sentence ? `\n\nKey result: ${nf.impact_sentence}` : '';
             const otherCompanies = (profile.experience.timeline as any[])
                 .filter(e => e.id !== (entity as any).data_ref)
                 .slice(0, 2)
                 .map(e => ({ label: e.company.name, payload: `Tell me about ${e.company.name}` }));
 
             return {
-                text: `${exp.storytelling.medium}\n\nSkills applied: ${skillList}`,
-                suggestions: [
-                    ...otherCompanies,
-                    { label: 'Core skills ⚡', payload: "What are his skills?" },
-                ]
+                text: `${exp.storytelling.medium}${impactLine}\n\nSkills applied: ${skillList}`,
+                suggestions: [...otherCompanies, { label: 'Core skills ⚡', payload: "What are his skills?" }]
             };
         }
 
@@ -224,10 +327,31 @@ export class RuleBasedEngine implements ChatEngine {
             const skill = cat?.competencies.find((c: any) => c.name === skillName);
             if (!skill) return this.fallback.handleLowConfidence();
 
+            this.ctx.incrementDepth(entity.id);
+
+            // Use angle system if available
+            if (skill.angles) {
+                const angle = this.ctx.getNextAngle(entity.id, sentiment);
+                const angleText = skill.angles[angle];
+                if (angleText) {
+                    this.ctx.markAngleUsed(entity.id, angle);
+                    const opener = pickOpener(sentiment);
+                    const depthHook = this.depthHook(entity.id, skill.angles);
+
+                    return {
+                        text: opener + angleText + depthHook,
+                        suggestions: [
+                            { label: 'More skills ⚡', payload: "What are his skills?" },
+                            { label: 'See it in practice →', payload: "What's his experience?" },
+                        ]
+                    };
+                }
+            }
+
+            // Fallback
             const evidenceNote = skill.evidence?.length
                 ? ` Demonstrated at: ${skill.evidence.join(', ')}.`
                 : '';
-
             return {
                 text: `${skill.name}: ${skill.description}.${evidenceNote}\n\n"${skill.conversational_angle}"`,
                 suggestions: [
@@ -238,6 +362,19 @@ export class RuleBasedEngine implements ChatEngine {
         }
 
         return this.fallback.handleLowConfidence();
+    }
+
+    // Adds a contextual hook based on how deep into a topic the conversation is
+    private depthHook(topic: string, angles: Record<string, string>): string {
+        const depth = this.ctx.getDepth(topic);
+        const allAngles = Object.keys(angles);
+        const usedCount = (this.ctx as any).session?.anglesUsed?.[topic]?.length ?? depth;
+        const remaining = allAngles.length - usedCount;
+
+        if (depth === 1 && remaining > 0) return '';
+        if (depth === 2) return '\n\nWant me to go deeper on any part of this?';
+        if (depth >= 3 && remaining > 0) return '\n\n(There\'s still another angle on this — just ask.)';
+        return '';
     }
 
     private buildAskNateResponse(): BotResponse {
@@ -274,13 +411,23 @@ export class RuleBasedEngine implements ChatEngine {
     }
 
     private buildSkillsResponse(): BotResponse {
-        const expertSkills = Object.values(profile.skills.categories as any)
-            .flatMap((cat: any) => cat.competencies)
+        const allSkills = Object.values(profile.skills.categories as any)
+            .flatMap((cat: any) => cat.competencies);
+
+        const expertSkills = allSkills
             .filter((c: any) => c.proficiency === 'expert')
             .map((c: any) => `- ${c.name}: ${c.description}`);
 
+        const advancedSkills = allSkills
+            .filter((c: any) => c.proficiency === 'advanced')
+            .map((c: any) => `- ${c.name}: ${c.description}`);
+
+        const advancedSection = advancedSkills.length
+            ? `\n\nAlso strong in:\n\n${advancedSkills.join('\n')}`
+            : '';
+
         return {
-            text: `Nate's core strengths:\n\n${expertSkills.join('\n')}`,
+            text: `Nate's core strengths:\n\n${expertSkills.join('\n')}${advancedSection}`,
             suggestions: [
                 { label: 'Design Systems deep dive', payload: 'Tell me about design systems' },
                 { label: 'User research side', payload: 'Tell me about user research' },
@@ -311,6 +458,19 @@ export class RuleBasedEngine implements ChatEngine {
             suggestions: [
                 { label: 'Career timeline →', payload: "What's his work experience?" },
                 { label: 'Design skills ⚡', payload: "What are his skills?" },
+            ]
+        };
+    }
+
+    private buildAvailabilityResponse(): BotResponse {
+        const avail = profile.identity.availability;
+        const id = profile.identity;
+        return {
+            text: `Nate is currently ${avail.status} at ${id.current_title.company}, but is open to ${avail.open_to}. His preference is ${avail.preferences} — so if that sounds like you, reach out!`,
+            suggestions: [
+                { label: 'Say hi 👋', payload: 'How to contact?' },
+                { label: 'His background →', payload: "What's his experience?" },
+                { label: 'Download CV', payload: 'download cv' },
             ]
         };
     }

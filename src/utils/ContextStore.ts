@@ -1,6 +1,9 @@
 /**
  * ContextStore — single source of truth for conversation state.
  * Replaces SmartBot.context + ContextManager + SessionManager (3 systems → 1).
+ *
+ * Persisted (localStorage): visitCount, lastVisit
+ * Session-only (memory):    anglesUsed, topicDepth, previousEntity
  */
 
 interface ContextState {
@@ -14,8 +17,16 @@ interface ContextState {
     lastVisit: number;
 }
 
+// Session-only — not persisted, resets each page load
+interface SessionState {
+    anglesUsed: Record<string, string[]>;
+    topicDepth: Record<string, number>;
+    previousEntity: string | null;
+}
+
 const STORAGE_KEY = 'lumo_ctx_v1';
 const ENTITY_TTL_TURNS = 3;
+const ANGLE_ORDER = ['story', 'proof', 'honest', 'personal'] as const;
 
 const defaultState = (): ContextState => ({
     turnCount: 0,
@@ -28,11 +39,19 @@ const defaultState = (): ContextState => ({
     lastVisit: Date.now(),
 });
 
+const defaultSession = (): SessionState => ({
+    anglesUsed: {},
+    topicDepth: {},
+    previousEntity: null,
+});
+
 export class ContextStore {
     private state: ContextState;
+    private session: SessionState;
 
     constructor() {
         this.state = this.load();
+        this.session = defaultSession();
         this.state.visitCount++;
         this.state.lastVisit = Date.now();
         this.save();
@@ -67,6 +86,10 @@ export class ContextStore {
     }
 
     setLastEntity(entityId: string): void {
+        // Track previous before overwriting
+        if (this.state.lastEntity && this.state.lastEntity !== entityId) {
+            this.session.previousEntity = this.state.lastEntity;
+        }
         this.state.lastEntity = entityId;
         this.state.entityExpiresAt = this.state.turnCount + ENTITY_TTL_TURNS;
         this.save();
@@ -99,8 +122,39 @@ export class ContextStore {
         this.save();
     }
 
+    // ─── Angle Rotation ──────────────────────────────────────────────────────────
+
+    getNextAngle(topic: string, sentiment: string): string {
+        // Sentiment always overrides rotation
+        if (sentiment === 'skeptical' || sentiment === 'negative' || sentiment === 'comparison') return 'proof';
+        if (sentiment === 'deep_dive') return 'honest';
+
+        const used = this.session.anglesUsed[topic] ?? [];
+        const unused = ANGLE_ORDER.filter(a => !used.includes(a));
+        const pool = unused.length > 0 ? unused : [...ANGLE_ORDER];
+        return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    markAngleUsed(topic: string, angle: string): void {
+        if (!this.session.anglesUsed[topic]) this.session.anglesUsed[topic] = [];
+        if (!this.session.anglesUsed[topic].includes(angle)) {
+            this.session.anglesUsed[topic].push(angle);
+        }
+    }
+
+    incrementDepth(topic: string): void {
+        this.session.topicDepth[topic] = (this.session.topicDepth[topic] ?? 0) + 1;
+    }
+
+    getDepth(topic: string): number {
+        return this.session.topicDepth[topic] ?? 0;
+    }
+
+    // ─── Getters ─────────────────────────────────────────────────────────────────
+
     get turnCount() { return this.state.turnCount; }
     get lastEntity() { return this.state.lastEntity; }
+    get previousEntity() { return this.session.previousEntity; }
     get lastIntent() { return this.state.lastIntent; }
     get flowNodeId() { return this.state.flowNodeId; }
     get visitCount() { return this.state.visitCount; }
@@ -108,6 +162,7 @@ export class ContextStore {
 
     reset(): void {
         this.state = defaultState();
+        this.session = defaultSession();
         this.save();
     }
 }

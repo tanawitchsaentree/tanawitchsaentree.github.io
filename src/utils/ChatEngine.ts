@@ -37,4 +37,5 @@ export interface ChatEngine {
     chat(input: string, history: ConversationTurn[]): Promise<BotResponse>;
     getGreeting(): BotResponse;
     getProactiveNudge(): BotResponse;
+    getThought?(input: string): string;
 }

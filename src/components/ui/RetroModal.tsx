@@ -79,7 +79,7 @@ export const RetroModal: React.FC<RetroModalProps> = ({ component, onClose, onAc
                         {component.actions.map((action, idx) => (
                             <RetroButton
                                 key={idx}
-                                variant={action.variant === 'primary' ? 'primary' : 'secondary'}
+                                variant={((action as any).variant === 'primary') ? 'primary' : 'secondary'}
                                 onClick={() => onAction(action)}
                             >
                                 {action.label}

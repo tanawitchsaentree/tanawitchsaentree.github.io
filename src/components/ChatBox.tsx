@@ -24,6 +24,7 @@ interface Message {
     displayingText?: string;
     suggestions?: { label: string; payload: string; icon?: string }[];
     suggestionsUsed?: boolean;
+    pending?: boolean;
     media?: {
         type: 'image' | 'video';
         url: string;
@@ -39,6 +40,7 @@ const ChatBox: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+    const [thought, setThought] = useState('');
     const [copiedEmail, setCopiedEmail] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const outputRef = useRef<HTMLDivElement>(null);
@@ -47,6 +49,9 @@ const ChatBox: React.FC = () => {
 
     // Conversation history for engine context (max 10 turns)
     const conversationHistory = useRef<ConversationTurn[]>([]);
+
+    // Pending message queue — typed while bot is responding
+    const pendingQueue = useRef<{ id: string; text: string }[]>([]);
 
     const engine = useMemo(() => createEngine(), []);
 
@@ -127,30 +132,25 @@ const ChatBox: React.FC = () => {
         start();
     }, [engine, displayMessage]);
 
-    // ─── Send Message ────────────────────────────────────────────────────────────
-    const handleSend = useCallback(async (text: string) => {
-        if (!text.trim() || isTyping) return;
-
-        setMessages(prev => prev.map(msg =>
-            msg.suggestions ? { ...msg, suggestionsUsed: true } : msg
-        ));
-
-        await displayMessage(text, 'user');
-        setInput('');
+    // ─── Engine Response (extracted so queue can reuse it) ───────────────────────
+    const processEngineResponse = useCallback(async (text: string) => {
         setIsTyping(true);
 
-        // Track in conversation history
+        // Show thought during the sleep window
+        const thoughtText = engine.getThought?.(text) ?? '';
+        setThought(thoughtText);
+
         conversationHistory.current = [
             ...conversationHistory.current.slice(-9),
             { role: 'user', content: text }
         ];
 
         await sleep(500 + Math.random() * 400);
+        setThought('');
 
         try {
             const aiResponse: BotResponse = await engine.chat(text, conversationHistory.current);
 
-            // Execute UI commands
             if (aiResponse.command) {
                 switch (aiResponse.command.type) {
                     case 'scroll': UIController.scrollTo(aiResponse.command.value ?? ''); break;
@@ -161,7 +161,6 @@ const ChatBox: React.FC = () => {
 
             await displayMessage(aiResponse.text, 'bot', aiResponse.suggestions);
 
-            // Track bot response in history
             conversationHistory.current = [
                 ...conversationHistory.current.slice(-9),
                 { role: 'assistant', content: aiResponse.text }
@@ -181,7 +180,50 @@ const ChatBox: React.FC = () => {
         } finally {
             setIsTyping(false);
         }
-    }, [isTyping, engine, displayMessage]);
+    }, [engine, displayMessage]);
+
+    // ─── Send Message ────────────────────────────────────────────────────────────
+    const handleSend = useCallback(async (text: string) => {
+        if (!text.trim()) return;
+
+        setMessages(prev => prev.map(msg =>
+            msg.suggestions ? { ...msg, suggestionsUsed: true } : msg
+        ));
+
+        // If bot is mid-response, queue the message — show it immediately as pending
+        if (isTyping) {
+            const pendingId = Date.now().toString();
+            setMessages(prev => [...prev, {
+                id: pendingId,
+                sender: 'user',
+                text,
+                displayingText: text,
+                timestamp: new Date(),
+                pending: true,
+            }]);
+            pendingQueue.current.push({ id: pendingId, text });
+            setInput('');
+            return;
+        }
+
+        await displayMessage(text, 'user');
+        setInput('');
+        await processEngineResponse(text);
+    }, [isTyping, displayMessage, processEngineResponse]);
+
+    // ─── Process Queue when bot finishes ─────────────────────────────────────────
+    const prevIsTyping = useRef(false);
+    useEffect(() => {
+        if (prevIsTyping.current && !isTyping && pendingQueue.current.length > 0) {
+            const next = pendingQueue.current.shift()!;
+            // Resolve pending state on the message
+            setMessages(prev => prev.map(msg =>
+                msg.id === next.id ? { ...msg, pending: false } : msg
+            ));
+            processEngineResponse(next.text);
+        }
+        prevIsTyping.current = isTyping;
+    }, [isTyping, processEngineResponse]);
 
     // ─── IDLE Nudge (listeners attached once, refs for state) ───────────────────
     const isTypingRef = useRef(isTyping);
@@ -360,10 +402,10 @@ const ChatBox: React.FC = () => {
                                 </div>
                             )}
                             <div className="chatbox-message-content">
-                                <div className={`max-w-[85%] rounded-[20px] px-5 py-3 shadow-sm ${msg.sender === 'user'
+                                <div className={`max-w-[85%] rounded-[20px] px-5 py-3 shadow-sm transition-opacity ${msg.sender === 'user'
                                     ? 'bg-[var(--foreground)] text-[var(--background)] rounded-br-[4px]'
                                     : 'bg-[var(--card)] text-[var(--card-foreground)] border border-[var(--border)] rounded-bl-[4px]'
-                                    }`}>
+                                    } ${msg.pending ? 'opacity-50' : 'opacity-100'}`}>
                                     {msg.media?.type === 'image' && (
                                         <div className="mb-3 rounded-lg overflow-hidden border border-[var(--border)]">
                                             <img src={msg.media.url} alt={msg.media.alt} className="w-full h-auto object-cover max-h-[200px]" loading="lazy" />
@@ -376,6 +418,22 @@ const ChatBox: React.FC = () => {
                                         {renderRichText(msg.displayingText || msg.text)}
                                     </div>
                                 </div>
+
+                                {msg.pending && (
+                                    <div style={{
+                                        fontSize: '10px',
+                                        color: 'var(--muted-foreground)',
+                                        textAlign: 'right',
+                                        marginTop: '4px',
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
+                                        alignItems: 'center',
+                                        gap: '3px',
+                                    }}>
+                                        <span className="animate-pulse">●</span>
+                                        <span style={{ opacity: 0.6 }}>waiting</span>
+                                    </div>
+                                )}
 
                                 {msg.sender === 'bot' &&
                                     msg.suggestions?.length &&
@@ -399,7 +457,18 @@ const ChatBox: React.FC = () => {
                                 <img src="/lumo_favicon.svg" alt="Lumo" className="w-8 h-8 rounded-full object-cover" />
                             </div>
                             <div className="max-w-[80%] p-3 rounded-2xl bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]">
-                                <span className="animate-pulse">...</span>
+                                {thought ? (
+                                    <span style={{
+                                        fontSize: '13px',
+                                        fontStyle: 'italic',
+                                        opacity: 0.75,
+                                        letterSpacing: '0.01em',
+                                    }}>
+                                        {thought}
+                                    </span>
+                                ) : (
+                                    <span className="animate-pulse">...</span>
+                                )}
                             </div>
                         </div>
                     )}
@@ -416,11 +485,10 @@ const ChatBox: React.FC = () => {
                                 onChange={e => setInput(e.target.value)}
                                 onFocus={() => !isExpanded && setIsExpanded(true)}
                                 placeholder="Ask Lumo..."
-                                disabled={isTyping}
                             />
                             <button
                                 type="submit"
-                                disabled={isTyping || !input.trim()}
+                                disabled={!input.trim()}
                                 style={{
                                     background: 'none',
                                     border: 'none',

@@ -3,7 +3,7 @@ import workData from '../data/work_projects.json';
 
 export default function WorkGrid() {
     return (
-        <div className="work-grid-container">
+        <div id="work-grid" className="work-grid-container">
             <div className="work-grid">
                 {workData.map((itemData) => {
                     // Default to 'cover' if not specified, but 'contain' can be used for "no matter size" logic
