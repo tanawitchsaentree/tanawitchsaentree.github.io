@@ -1,0 +1,173 @@
+{
+    "id": "allianz-doc-classification",
+    "meta": {
+        "title": "Document Classification Config Tool",
+        "subtitle": "A no-code interface for AI prompt management in enterprise document processing",
+        "company": "Allianz",
+        "year": "2024",
+        "duration": "6 months",
+        "role": "Product Designer",
+        "team_size": "11",
+        "cover_color": "#003781",
+        "tags": ["Enterprise UX", "AI Tooling", "Design Systems", "B2B"]
+    },
+    "sections": [
+        {
+            "id": "overview",
+            "label": "Overview",
+            "type": "hero",
+            "data": {
+                "headline": "Giving non-technical teams ownership over AI document classification",
+                "body": "Allianz's document processing pipeline relied on AI models to classify incoming files — claims, invoices, correspondence. But every time ops or BA teams needed to adjust how the AI was prompted, they had to file a ticket and wait for an engineer. This tool changed that.",
+                "image": null,
+                "stats": [
+                    { "label": "Team", "value": "11 people" },
+                    { "label": "Duration", "value": "6 months" },
+                    { "label": "Year", "value": "2024" },
+                    { "label": "My Role", "value": "Solo Designer" }
+                ]
+            }
+        },
+        {
+            "id": "problem",
+            "label": "The Problem",
+            "type": "statement",
+            "data": {
+                "eyebrow": "The Problem",
+                "headline": "There was no safe way to change how documents get classified without involving engineering.",
+                "body": "Business operations teams managed prompt configurations through shared spreadsheets and config files. Any change — even tweaking a single keyword or threshold — required a developer to deploy. This created a bottleneck that made the system fragile, slow to improve, and impossible to test safely.",
+                "image": null
+            }
+        },
+        {
+            "id": "solution",
+            "label": "The Solution",
+            "type": "text_media",
+            "data": {
+                "layout": "text_left",
+                "eyebrow": "The Solution",
+                "headline": "A configuration interface that lets non-technical teams own the full prompt lifecycle.",
+                "body": "We designed a 3-panel workspace: a document browser on the left, a prompt editor in the center, and a live test output on the right. Ops and BA teams can now write prompts, validate them against real documents, and publish changes — without touching a codebase.",
+                "highlights": [
+                    "Write and version prompts with a structured L1 / L2 / L3 placeholder hierarchy",
+                    "Test against live documents before publishing any change",
+                    "Review historical test results in a persistent LastTestPanel"
+                ],
+                "image": null
+            }
+        },
+        {
+            "id": "research",
+            "label": "Research",
+            "type": "text_media",
+            "data": {
+                "layout": "text_right",
+                "eyebrow": "Research",
+                "headline": "The real problem wasn't intelligence — it was trust.",
+                "body": "We ran stakeholder interviews and workflow shadowing with ops and BA teams over the first three weeks. Most users weren't frustrated that the AI was wrong — they were frustrated they couldn't see why, and couldn't do anything about it. The insight reframed our design goal: don't optimize for accuracy, optimize for confidence.",
+                "insights": [
+                    "Users didn't trust AI output they couldn't inspect",
+                    "Every correction required filing a ticket — avg 3-day delay",
+                    "BA teams had deep domain knowledge but zero tooling to apply it"
+                ],
+                "image": null
+            }
+        },
+        {
+            "id": "flows",
+            "label": "User Flows",
+            "type": "decisions",
+            "data": {
+                "eyebrow": "User Flows",
+                "headline": "9 steps from opening a document to publishing a validated prompt.",
+                "items": [
+                    {
+                        "number": "01",
+                        "title": "Select Document",
+                        "description": "User opens the tool and selects a document from the left panel browser. The center panel loads the current active prompt."
+                    },
+                    {
+                        "number": "02",
+                        "title": "Edit Prompt",
+                        "description": "User edits the prompt in the center panel. Placeholders are highlighted. The prompt enters 'draft' state automatically on first keystroke."
+                    },
+                    {
+                        "number": "03",
+                        "title": "Run Test",
+                        "description": "User clicks 'Test' to run the prompt against the selected document. TestView expands to full panel width."
+                    },
+                    {
+                        "number": "04",
+                        "title": "Review Output",
+                        "description": "Classification results appear with confidence scores. User can compare against the previous test result in LastTestPanel."
+                    },
+                    {
+                        "number": "05",
+                        "title": "Iterate or Publish",
+                        "description": "If satisfied, user clicks 'Publish'. If not, they return to the editor. Failed tests surface inline error state with a suggested fix path."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "decisions",
+            "label": "Design Decisions",
+            "type": "decisions",
+            "data": {
+                "eyebrow": "Key Design Decisions",
+                "headline": "Four decisions that defined the product's character.",
+                "items": [
+                    {
+                        "number": "01",
+                        "title": "TestView as Full Panel, Not Modal",
+                        "description": "Early iterations used a modal for test output. User testing showed that comparing prompt text and classification results side-by-side was the core workflow. We collapsed the document panel and expanded TestView to full width instead."
+                    },
+                    {
+                        "number": "02",
+                        "title": "3-Mode Prompt State Architecture",
+                        "description": "Prompts exist in three states: published (live), draft (edited, untested), and tested (tested, not yet published). This prevented users from publishing untested changes and gave clarity on what was actually running in production."
+                    },
+                    {
+                        "number": "03",
+                        "title": "ResizeObserver Tabs Over Fixed Layout",
+                        "description": "The 3-panel layout needed to work across screen sizes used in ops environments (including older 1280px monitors). We used ResizeObserver to collapse tabs responsively rather than fixed breakpoints."
+                    },
+                    {
+                        "number": "04",
+                        "title": "Extending NDBX, Not Replacing It",
+                        "description": "Allianz uses NDBX (Naturalized Design By Experience) as its design system. Rather than building custom components, we extended NDBX with three new patterns: WorkspaceTabs, ResizeHandle, and a persistent Toast queue — contributed back to the system."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "testing",
+            "label": "Testing",
+            "type": "text_media",
+            "data": {
+                "layout": "text_left",
+                "eyebrow": "User Testing",
+                "headline": "Three rounds of testing. One major pivot.",
+                "body": "We tested with two ops specialists and one BA across three rounds. Round one confirmed the modal approach was wrong — users kept losing context switching between prompt and output. Round two validated the full-panel TestView. Round three focused on the publish guard: users needed to clearly understand what 'published' meant before clicking.",
+                "outcomes": [
+                    "R1: Modal → full-panel pivot (confirmed in week 3)",
+                    "R2: Panel layout validated, placeholder labels refined",
+                    "R3: Publish confirmation copy and state messaging finalized"
+                ],
+                "image": null
+            }
+        },
+        {
+            "id": "reflection",
+            "label": "Reflection",
+            "type": "statement",
+            "data": {
+                "eyebrow": "Reflection",
+                "headline": "What I'm proud of. What I'd do differently.",
+                "body": "The feedback loop between editing and testing is the part I'm most proud of — it genuinely changed how ops teams approached prompt design. What I'd do differently: I'd push to validate the L2/L3 placeholder hierarchy earlier. We designed that system up front based on BA input, but it took two months before anyone actually tried to use nested placeholders, and several assumptions didn't hold.",
+                "next": "Connect the tool to production metrics — so teams can see the downstream impact of a prompt change, not just the test result.",
+                "image": null
+            }
+        }
+    ]
+}

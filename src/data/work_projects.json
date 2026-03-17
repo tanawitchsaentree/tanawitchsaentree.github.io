@@ -1,5 +1,15 @@
 [
     {
+        "id": 0,
+        "title": "Allianz — Doc Classification",
+        "type": "Enterprise UX · AI Tooling",
+        "image": "https://cdn.dribbble.com/userupload/46676464/file/f644e1c73f3cf2c6397d1cd5aa78b611.mp4",
+        "projectId": "allianz-doc-classification",
+        "size": "large",
+        "aspect": "21/9",
+        "position": "center"
+    },
+    {
         "id": 1,
         "title": "Payroll",
         "type": "SaaS",

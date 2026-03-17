@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Moon, Sun, Sunset } from 'lucide-react';
 import Index from "./pages/index";
 import ChatBox from "./components/ChatBox";
 import { DynamicUIRenderer } from './components/DynamicUIRenderer';
 import WorkGrid from './components/WorkGrid';
+import ProjectModal from './components/ProjectModal';
 import './index.css';
 import './App.css';
 
@@ -29,6 +31,8 @@ function DarkModeToggle() {
 }
 
 export default function App() {
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+
   return (
     <div className="app">
       <DynamicUIRenderer />
@@ -44,13 +48,19 @@ export default function App() {
         <section className="chat-section" style={{ position: 'relative' }}>
           <div className="chat-container" style={{ width: '100%', height: '100%' }}>
             {/* Base Content: Work Grid */}
-            <WorkGrid />
+            <WorkGrid onOpenProject={setActiveProjectId} />
 
             {/* Overlay: Floating Chat */}
             <ChatBox />
           </div>
         </section>
       </main>
+
+      {/* Project Detail Modal (portal to body) */}
+      <ProjectModal
+        projectId={activeProjectId}
+        onClose={() => setActiveProjectId(null)}
+      />
     </div>
   );
 }

@@ -1,38 +1,43 @@
 import '../index.css';
 import workData from '../data/work_projects.json';
 
-export default function WorkGrid() {
+interface WorkGridProps {
+    onOpenProject?: (projectId: string) => void;
+}
+
+export default function WorkGrid({ onOpenProject }: WorkGridProps) {
     return (
         <div id="work-grid" className="work-grid-container">
             <div className="work-grid">
                 {workData.map((itemData) => {
-                    // Default to 'cover' if not specified, but 'contain' can be used for "no matter size" logic
-                    // Actually, let's make the "Smart Fit" the default for large banners if they seem complex, 
-                    // but for now we follow the user's desire for a "Good Ratio" handler.
+                    const item = itemData as any;
+                    const hasModal = !!item.projectId;
 
-                    // We will implement the "Blurred Background" technique for ALL items 
-                    // This ensures that even if 'contain' is used, it looks good.
-
-                    // We will implement the "Blurred Background" technique for ALL items 
-                    // This ensures that even if 'contain' is used, it looks good.
-
-                    const item = itemData as any; // Cast to access flexible properties
-                    // If the user wants to see the whole image "no matter size", they should ideally use 'contain' 
-                    // BUT 'contain' usually leaves ugly whitespace.
-                    // The blurred background fixes that whitespace.
+                    const handleClick = () => {
+                        if (hasModal && onOpenProject) {
+                            onOpenProject(item.projectId);
+                        } else if (item.link) {
+                            window.open(item.link, '_blank', 'noopener,noreferrer');
+                        }
+                    };
 
                     return (
                         <div
                             key={item.id}
                             className={`work-item work-item-${item.size}`}
                             aria-label={`Project: ${item.title}`}
+                            role="button"
+                            tabIndex={0}
+                            onClick={handleClick}
+                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') handleClick(); }}
                             style={{
                                 position: 'relative',
                                 overflow: 'hidden',
-                                aspectRatio: item.aspect ? item.aspect : undefined // Allow JSON to override CSS ratio
+                                aspectRatio: item.aspect ? item.aspect : undefined,
+                                cursor: hasModal || item.link ? 'pointer' : 'default',
                             }}
                         >
-                            {/* 1. Blurred Background Layer (Fills the box) */}
+                            {/* 1. Blurred Background Layer */}
                             {item.image.endsWith('.mp4') ? (
                                 <video
                                     src={item.image}
@@ -45,11 +50,11 @@ export default function WorkGrid() {
                                         top: -1, left: -1, right: -1, bottom: -1,
                                         width: 'calc(100% + 2px)',
                                         height: 'calc(100% + 2px)',
-                                        objectFit: 'cover', // Always cover for background
+                                        objectFit: 'cover',
                                         filter: 'blur(20px) brightness(0.6)',
                                         transform: 'scale(1.1)',
                                         zIndex: 0,
-                                        pointerEvents: 'none'
+                                        pointerEvents: 'none',
                                     }}
                                 />
                             ) : (
@@ -63,13 +68,13 @@ export default function WorkGrid() {
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'center',
                                         filter: 'blur(20px) brightness(0.7)',
-                                        transform: 'scale(1.1)', // Prevent blur edges
-                                        zIndex: 0
+                                        transform: 'scale(1.1)',
+                                        zIndex: 0,
                                     }}
                                 />
                             )}
 
-                            {/* 2. Main Media Layer (The content) */}
+                            {/* 2. Main Media Layer */}
                             {item.image.endsWith('.mp4') ? (
                                 <video
                                     src={item.image}
@@ -80,14 +85,13 @@ export default function WorkGrid() {
                                     style={{
                                         display: 'block',
                                         position: 'absolute',
-                                        top: 0,
-                                        left: 0,
+                                        top: 0, left: 0,
                                         width: '100%',
                                         height: '100%',
-                                        objectFit: 'cover', // Force full bleed
-                                        objectPosition: 'center', // Always center
+                                        objectFit: 'cover',
+                                        objectPosition: 'center',
                                         zIndex: 1,
-                                        pointerEvents: 'none' // Let clicks pass through to link
+                                        pointerEvents: 'none',
                                     }}
                                 />
                             ) : (
@@ -97,33 +101,35 @@ export default function WorkGrid() {
                                     style={{
                                         display: 'block',
                                         position: 'absolute',
-                                        top: 0,
-                                        left: 0,
+                                        top: 0, left: 0,
                                         width: '100%',
                                         height: '100%',
-                                        objectFit: 'cover', // Force full bleed
-                                        objectPosition: 'center', // Always center
+                                        objectFit: 'cover',
+                                        objectPosition: 'center',
                                         zIndex: 1,
-                                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                                     }}
                                 />
                             )}
 
-                            {/* 3. Overlay & Content (On Top) */}
+                            {/* 3. Overlay */}
                             <div className="work-item-overlay" style={{
                                 position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
+                                top: 0, left: 0, right: 0, bottom: 0,
                                 background: 'rgba(0,0,0,0.6)',
                                 opacity: 0,
                                 transition: 'opacity 0.3s',
-                                zIndex: 2
+                                zIndex: 2,
                             }} />
+
+                            {/* 4. Content label */}
                             <div className="work-item-content">
-                                <span className="work-item-title" style={{ color: 'white', fontWeight: 'bold', display: 'block' }}>{item.title}</span>
-                                <span className="work-item-type" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9em' }}>{item.type}</span>
+                                <span className="work-item-title" style={{ color: 'white', fontWeight: 'bold', display: 'block' }}>
+                                    {item.title}
+                                </span>
+                                <span className="work-item-type" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9em' }}>
+                                    {item.type}
+                                </span>
                             </div>
                         </div>
                     );
