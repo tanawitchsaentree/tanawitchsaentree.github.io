@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import '../index.css';
 import workData from '../data/work_projects.json';
 
@@ -6,11 +7,39 @@ interface WorkGridProps {
 }
 
 export default function WorkGrid({ onOpenProject }: WorkGridProps) {
+    const gridRef = useRef<HTMLDivElement>(null);
+
+    // Lazy-load videos: set src only when card enters viewport
+    useEffect(() => {
+        const grid = gridRef.current;
+        if (!grid) return;
+
+        const observer = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const card = entry.target as HTMLElement;
+                    card.querySelectorAll<HTMLVideoElement>('video[data-src]').forEach(video => {
+                        video.src = video.dataset.src!;
+                        video.play().catch(() => {});
+                    });
+                    observer.unobserve(card);
+                });
+            },
+            { rootMargin: '200px' }
+        );
+
+        grid.querySelectorAll<HTMLElement>('.work-item').forEach(card => observer.observe(card));
+
+        return () => observer.disconnect();
+    }, []);
+
     return (
         <div id="work-grid" className="work-grid-container">
-            <div className="work-grid">
+            <div className="work-grid" ref={gridRef}>
                 {workData.map((itemData) => {
                     const item = itemData as any;
+                    const isVideo = item.image.endsWith('.mp4');
                     const hasModal = !!item.projectId;
 
                     const handleClick = () => {
@@ -33,63 +62,43 @@ export default function WorkGrid({ onOpenProject }: WorkGridProps) {
                             style={{
                                 position: 'relative',
                                 overflow: 'hidden',
-                                aspectRatio: item.aspect ? item.aspect : undefined,
+                                aspectRatio: item.aspect ?? undefined,
                                 cursor: hasModal || item.link ? 'pointer' : 'default',
+                                background: '#000',
                             }}
                         >
-                            {/* 1. Blurred Background Layer */}
-                            {item.image.endsWith('.mp4') ? (
-                                <video
-                                    src={item.image}
-                                    autoPlay
-                                    loop
-                                    muted
-                                    playsInline
-                                    style={{
-                                        position: 'absolute',
-                                        top: -1, left: -1, right: -1, bottom: -1,
-                                        width: 'calc(100% + 2px)',
-                                        height: 'calc(100% + 2px)',
-                                        objectFit: 'cover',
-                                        filter: 'blur(20px) brightness(0.6)',
-                                        transform: 'scale(1.1)',
-                                        zIndex: 0,
-                                        pointerEvents: 'none',
-                                    }}
-                                />
-                            ) : (
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        top: -1, left: -1, right: -1, bottom: -1,
-                                        width: 'calc(100% + 2px)',
-                                        height: 'calc(100% + 2px)',
-                                        backgroundImage: `url(${item.image})`,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                        filter: 'blur(20px) brightness(0.7)',
-                                        transform: 'scale(1.1)',
-                                        zIndex: 0,
-                                    }}
-                                />
+                            {/* Background layer:
+                                - Video items: solid dark bg (no duplicate video = half the requests)
+                                - Image items: blurred CSS background (no extra request) */}
+                            {!isVideo && (
+                                <div style={{
+                                    position: 'absolute',
+                                    inset: '-2px',
+                                    backgroundImage: `url(${item.image})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    filter: 'blur(20px) brightness(0.7)',
+                                    transform: 'scale(1.1)',
+                                    zIndex: 0,
+                                }} />
                             )}
 
-                            {/* 2. Main Media Layer */}
-                            {item.image.endsWith('.mp4') ? (
+                            {/* Main media */}
+                            {isVideo ? (
                                 <video
-                                    src={item.image}
+                                    data-src={item.image}
                                     autoPlay
                                     loop
                                     muted
                                     playsInline
+                                    preload="none"
                                     style={{
                                         display: 'block',
                                         position: 'absolute',
-                                        top: 0, left: 0,
+                                        inset: 0,
                                         width: '100%',
                                         height: '100%',
                                         objectFit: 'cover',
-                                        objectPosition: 'center',
                                         zIndex: 1,
                                         pointerEvents: 'none',
                                     }}
@@ -98,31 +107,31 @@ export default function WorkGrid({ onOpenProject }: WorkGridProps) {
                                 <img
                                     src={item.image}
                                     alt={item.title}
+                                    loading="lazy"
                                     style={{
                                         display: 'block',
                                         position: 'absolute',
-                                        top: 0, left: 0,
+                                        inset: 0,
                                         width: '100%',
                                         height: '100%',
                                         objectFit: 'cover',
-                                        objectPosition: 'center',
                                         zIndex: 1,
-                                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                                        pointerEvents: 'none',
                                     }}
                                 />
                             )}
 
-                            {/* 3. Overlay */}
+                            {/* Hover overlay */}
                             <div className="work-item-overlay" style={{
                                 position: 'absolute',
-                                top: 0, left: 0, right: 0, bottom: 0,
-                                background: 'rgba(0,0,0,0.6)',
+                                inset: 0,
+                                background: 'rgba(0,0,0,0.55)',
                                 opacity: 0,
                                 transition: 'opacity 0.3s',
                                 zIndex: 2,
                             }} />
 
-                            {/* 4. Content label */}
+                            {/* Label */}
                             <div className="work-item-content">
                                 <span className="work-item-title" style={{ color: 'white', fontWeight: 'bold', display: 'block' }}>
                                     {item.title}
