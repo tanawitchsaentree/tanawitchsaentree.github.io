@@ -402,8 +402,10 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
 
     if (!projectId) return null;
 
-    // How far the gradient fades in (0 → 1 over first 80px of scroll)
+    // Breadcrumb gradient fades in over first 80px
     const navOpacity = Math.min(scrollY / 80, 1);
+    // Sidebar slides in after scrolling past the hero cover (~160px)
+    const sidebarVisible = scrollY > 160;
 
     const modal = (
         <div
@@ -508,31 +510,43 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
             {/* ── Body: sidebar + scrollable content ──────────────── */}
             <div style={{ display: 'flex', height: '100%' }}>
 
-                {/* Sidebar nav */}
+                {/* Sidebar nav — hidden until scrolled past hero */}
                 <nav style={{
-                    width: 192,
+                    width: 180,
                     flexShrink: 0,
-                    padding: '72px 0 40px 24px',
-                    borderRight: '1px solid var(--border)',
+                    padding: '80px 0 40px 32px',
                     overflowY: 'auto',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
+                    opacity: sidebarVisible ? 1 : 0,
+                    transform: sidebarVisible ? 'translateX(0)' : 'translateX(-8px)',
+                    transition: 'opacity 0.5s ease, transform 0.5s ease',
                 }}>
-                    {(data?.sections ?? Array.from({ length: 6 })).map((s, i) => {
-                        const section = s as Section | undefined;
-                        if (!section) {
-                            return (
-                                <div key={i} style={{
-                                    height: 12,
-                                    background: 'var(--muted)',
-                                    borderRadius: 4,
-                                    marginBottom: 10,
-                                    width: `${55 + (i * 13) % 35}%`,
-                                    animation: 'skeleton-pulse 1.5s ease-in-out infinite',
-                                }} />
-                            );
-                        }
+                    {/* Home link */}
+                    <button
+                        onClick={onClose}
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            padding: '6px 0 6px 0',
+                            fontSize: 'var(--text-sm)',
+                            color: 'var(--muted-foreground)',
+                            marginBottom: 16,
+                            transition: 'color 0.2s',
+                            fontFamily: 'inherit',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.color = 'var(--foreground)'}
+                        onMouseLeave={e => e.currentTarget.style.color = 'var(--muted-foreground)'}
+                    >
+                        Home
+                    </button>
+
+                    {/* Section items */}
+                    {(data?.sections ?? []).map(s => {
+                        const section = s as Section;
                         const isActive = activeSection === section.id;
                         return (
                             <button
@@ -545,14 +559,16 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                                     border: 'none',
                                     cursor: 'pointer',
                                     textAlign: 'left',
-                                    padding: '6px 0 6px 10px',
+                                    padding: '5px 0',
                                     fontSize: 'var(--text-sm)',
                                     fontWeight: isActive ? 600 : 400,
                                     color: isActive ? 'var(--foreground)' : 'var(--muted-foreground)',
-                                    transition: 'color 0.2s, font-weight 0.2s',
+                                    transition: 'color 0.25s, font-weight 0.25s',
                                     lineHeight: 1.5,
-                                    borderLeft: `2px solid ${isActive ? 'var(--foreground)' : 'transparent'}`,
+                                    fontFamily: 'inherit',
                                 }}
+                                onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = 'var(--foreground)'; }}
+                                onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--muted-foreground)'; }}
                             >
                                 {section.label}
                             </button>
@@ -567,9 +583,11 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                     style={{
                         flex: 1,
                         overflowY: 'auto',
-                        padding: '72px 56px 100px',
                     }}
                 >
+                    {/* Centered inner wrapper */}
+                    <div style={{ maxWidth: 720, margin: '0 auto', padding: '72px 24px 120px' }}>
+
                     {/* Tags */}
                     {data && (
                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40 }}>
@@ -608,6 +626,8 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                             ))}
                         </div>
                     )}
+
+                    </div> {/* end centered wrapper */}
                 </div>
             </div>
         </div>
