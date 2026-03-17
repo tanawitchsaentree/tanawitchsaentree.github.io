@@ -507,18 +507,22 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                 </div>
             </div>
 
-            {/* ── Body: sidebar + scrollable content ──────────────── */}
-            <div style={{ display: 'flex', height: '100%' }}>
+            {/* ── Body: full-width scroll + absolute sidebar ───────── */}
+            <div style={{ position: 'relative', flex: 1, overflow: 'hidden', display: 'flex' }}>
 
-                {/* Sidebar nav — hidden until scrolled past hero */}
+                {/* Sidebar nav — absolutely positioned, floats over left edge */}
                 <nav style={{
-                    width: 180,
-                    flexShrink: 0,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    width: 160,
                     padding: '80px 0 40px 32px',
                     overflowY: 'auto',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
+                    zIndex: 5,
                     opacity: sidebarVisible ? 1 : 0,
                     transform: sidebarVisible ? 'translateX(0)' : 'translateX(-8px)',
                     transition: 'opacity 0.5s ease, transform 0.5s ease',
@@ -576,12 +580,12 @@ export default function ProjectModal({ projectId, onClose }: ProjectModalProps) 
                     })}
                 </nav>
 
-                {/* Main scrollable content */}
+                {/* Main scrollable content — full width so maxWidth centers vs viewport */}
                 <div
                     ref={contentRef}
                     onScroll={e => setScrollY((e.currentTarget).scrollTop)}
                     style={{
-                        flex: 1,
+                        width: '100%',
                         overflowY: 'auto',
                     }}
                 >
