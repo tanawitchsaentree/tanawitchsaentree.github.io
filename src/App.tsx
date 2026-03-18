@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
-import { Moon, Sun, Sunset } from 'lucide-react';
+import { Moon, Sun, Sunset, User, LayoutGrid } from 'lucide-react';
 import Index from "./pages/index";
 import ChatBox from "./components/ChatBox";
 import { DynamicUIRenderer } from './components/DynamicUIRenderer';
@@ -32,11 +32,12 @@ function DarkModeToggle() {
 
 export default function App() {
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+  const [mobileTab, setMobileTab] = useState<'profile' | 'work'>('profile');
 
   return (
     <div className="app">
       <DynamicUIRenderer />
-      <main className="main-content">
+      <main className={`main-content mobile-tab-${mobileTab}`}>
         {/* 1. Profile Section - Left */}
         <section className="profile-section">
           <div className="profile-container">
@@ -47,16 +48,33 @@ export default function App() {
         {/* 2. Chat Section - Right */}
         <section className="chat-section" style={{ position: 'relative' }}>
           <div className="chat-container" style={{ width: '100%', height: '100%' }}>
-            {/* Base Content: Work Grid */}
             <WorkGrid onOpenProject={setActiveProjectId} />
-
-            {/* Overlay: Floating Chat */}
             <ChatBox />
           </div>
         </section>
       </main>
 
-      {/* Project Detail Modal (portal to body) */}
+      {/* Mobile bottom nav — hidden on tablet+ via CSS */}
+      <nav className="mobile-bottom-nav">
+        <button
+          className={`mobile-nav-btn ${mobileTab === 'profile' ? 'active' : ''}`}
+          onClick={() => setMobileTab('profile')}
+          aria-label="Profile"
+        >
+          <User size={20} />
+          <span>Profile</span>
+        </button>
+        <button
+          className={`mobile-nav-btn ${mobileTab === 'work' ? 'active' : ''}`}
+          onClick={() => setMobileTab('work')}
+          aria-label="Work"
+        >
+          <LayoutGrid size={20} />
+          <span>Work</span>
+        </button>
+      </nav>
+
+      {/* Project Detail Modal */}
       <ProjectModal
         projectId={activeProjectId}
         onClose={() => setActiveProjectId(null)}

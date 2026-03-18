@@ -1,5 +1,65 @@
 /* App-specific styles for Overlays and Toggles only */
 
+/* ── Mobile Bottom Nav ─────────────────────────────────────── */
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* Show nav */
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--background);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+  }
+
+  .mobile-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted-foreground);
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+
+  .mobile-nav-btn.active {
+    color: var(--foreground);
+  }
+
+  /* Tab switching — hide inactive section */
+  .main-content.mobile-tab-profile .chat-section {
+    display: none;
+  }
+
+  .main-content.mobile-tab-work .profile-section {
+    display: none;
+  }
+
+  /* Add padding-bottom so content clears the nav bar */
+  .profile-section,
+  .chat-section {
+    padding-bottom: 72px;
+  }
+}
+
+
 @keyframes skeleton-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
