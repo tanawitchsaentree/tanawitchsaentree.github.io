@@ -158,6 +158,16 @@
             }
         },
         {
+            "id": "demo",
+            "label": "Demo",
+            "type": "demo",
+            "data": {
+                "eyebrow": "Interactive Demo",
+                "title": "Three screens. One decision.",
+                "variant": "drift_app"
+            }
+        },
+        {
             "id": "takeaway",
             "type": "word_reveal",
             "data": {

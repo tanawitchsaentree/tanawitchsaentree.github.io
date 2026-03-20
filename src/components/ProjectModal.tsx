@@ -1162,6 +1162,201 @@ function PersonaLens({ accent }: { accent: string }) {
     );
 }
 
+// ─── Drift App Demo ───────────────────────────────────────────────────────────
+const DRIFT_AVATAR_COLORS = ['#8B5CF6','#3B82F6','#10B981','#F59E0B','#EF4444'];
+function DriftAvatarStack({ count = '99+', size = 26 }: { count?: string; size?: number }) {
+    return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex' }}>
+                {DRIFT_AVATAR_COLORS.map((c, i) => (
+                    <div key={i} style={{ width: size, height: size, borderRadius: '50%', background: c, border: '2px solid #1C1C1E', marginLeft: i > 0 ? -(size * 0.32) : 0, position: 'relative', zIndex: 5 - i }} />
+                ))}
+            </div>
+            <span style={{ fontSize: '11px', color: '#AEAEB2', marginLeft: 8 }}>{count}</span>
+        </div>
+    );
+}
+
+function DriftCityScreen({ accent, tab, setTab, onJob, onEvent }: { accent: string; tab: string; setTab: (t: string) => void; onJob: () => void; onEvent: () => void }) {
+    return (
+        <div style={{ color: '#fff', fontSize: '13px' }}>
+            <div style={{ padding: '4px 16px 10px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ color: '#AEAEB2', fontSize: '20px', lineHeight: 1 }}>‹</span>
+                <span style={{ fontWeight: 700, fontSize: '15px' }}>Prague, Czech Republic</span>
+            </div>
+            <div style={{ margin: '0 16px 12px', height: 90, borderRadius: 12, overflow: 'hidden', background: 'linear-gradient(135deg, #2C3E50 0%, #1a252f 100%)', position: 'relative' }}>
+                <div style={{ position: 'absolute', bottom: 8, left: 10, right: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                    <div style={{ background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', borderRadius: 8, padding: '5px 10px', display: 'flex', alignItems: 'center', gap: 5 }}>
+                        <span style={{ fontSize: '12px', fontWeight: 800 }}>Score : 9.2</span>
+                        <span style={{ color: '#AEAEB2', fontSize: '10px' }}>ⓘ</span>
+                    </div>
+                    <div style={{ background: accent, borderRadius: 8, padding: '5px 10px' }}>
+                        <span style={{ fontSize: '11px', fontWeight: 700 }}>3200 $CAD/month</span>
+                    </div>
+                </div>
+            </div>
+            <div style={{ padding: '0 16px 10px', display: 'flex', gap: 5 }}>
+                {[{ id:'feed',label:'Feed',badge:'Live',badgeColor:'#FF3B30' },{ id:'info',label:'City info.',badge:null,badgeColor:'' },{ id:'event',label:'Event',badge:'3',badgeColor:'' },{ id:'job',label:'Job',badge:'20',badgeColor:'' }].map(t => (
+                    <button key={t.id} onClick={() => setTab(t.id)} style={{ display:'flex',alignItems:'center',gap:3,padding:'5px 10px',borderRadius:20,border:'none',fontFamily:'inherit',fontSize:'11px',cursor:'pointer',flexShrink:0,background:tab===t.id?accent:'rgba(255,255,255,0.1)',color:tab===t.id?'#fff':'#AEAEB2',fontWeight:tab===t.id?700:400,transition:'all 0.18s ease' }}>
+                        {t.label}
+                        {t.badge && <span style={{ padding:'1px 5px',borderRadius:6,fontSize:'9px',fontWeight:700,background:t.badgeColor||'rgba(255,255,255,0.25)',color:'#fff' }}>{t.badge}</span>}
+                    </button>
+                ))}
+            </div>
+            <div style={{ padding: '0 16px 20px' }}>
+                {tab === 'info' && <>
+                    <div style={{ background:'#2C2C2E',borderRadius:12,padding:'12px',marginBottom:10 }}>
+                        <div style={{ fontWeight:700,marginBottom:6 }}>About the city</div>
+                        <div style={{ fontSize:'11px',color:'#AEAEB2',lineHeight:1.6 }}>Prague, capital city of the Czech Republic, is bisected by the Vltava River. Nicknamed "the City of a Hundred Spires"...</div>
+                        <button style={{ background:'none',border:'none',color:accent,fontSize:'11px',fontWeight:700,cursor:'pointer',padding:'5px 0 0',fontFamily:'inherit' }}>Read more</button>
+                    </div>
+                    <div style={{ background:'#2C2C2E',borderRadius:12,padding:'12px' }}>
+                        <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10 }}><span style={{ fontWeight:700 }}>Nomad in this city</span><button style={{ background:'none',border:'none',color:accent,fontSize:'11px',fontWeight:700,cursor:'pointer',fontFamily:'inherit' }}>See all</button></div>
+                        <DriftAvatarStack />
+                    </div>
+                </>}
+                {tab === 'event' && (
+                    <div onClick={onEvent} style={{ background:'#2C2C2E',borderRadius:12,padding:'12px',cursor:'pointer' }}>
+                        <div style={{ fontSize:'10px',color:accent,fontWeight:700,letterSpacing:'0.06em',marginBottom:5 }}>UPCOMING · JUN 12</div>
+                        <div style={{ fontWeight:700,marginBottom:3 }}>Run For Hal Prague 2024</div>
+                        <div style={{ fontSize:'11px',color:'#AEAEB2',marginBottom:8 }}>Prague historic old town · 12 Cad</div>
+                        <DriftAvatarStack count="99+" size={22} />
+                        <div style={{ marginTop:8,fontSize:'11px',color:accent,fontWeight:600 }}>Tap to see event →</div>
+                    </div>
+                )}
+                {tab === 'job' && (
+                    <div onClick={onJob} style={{ background:'#2C2C2E',borderRadius:12,padding:'12px',cursor:'pointer' }}>
+                        <div style={{ fontSize:'10px',color:'#AEAEB2',marginBottom:5,letterSpacing:'0.04em' }}>FEATURED · JUST POSTED</div>
+                        <div style={{ fontWeight:700,marginBottom:2 }}>Graphic Designer</div>
+                        <div style={{ fontSize:'11px',color:'#AEAEB2',marginBottom:8 }}>DuelNow · $50 USD/hr · Remote</div>
+                        <div style={{ display:'flex',gap:5,flexWrap:'wrap' }}>
+                            {['USD','Euro','BTC','ETH'].map(p => <span key={p} style={{ padding:'3px 8px',borderRadius:6,background:`${accent}25`,color:accent,fontSize:'10px',fontWeight:700 }}>{p}</span>)}
+                        </div>
+                        <div style={{ marginTop:8,fontSize:'11px',color:accent,fontWeight:600 }}>Tap to see vacancy →</div>
+                    </div>
+                )}
+                {tab === 'feed' && <div style={{ textAlign:'center',padding:'20px 0',color:'#AEAEB2',fontSize:'12px' }}>Live feed from nomads in Prague</div>}
+            </div>
+        </div>
+    );
+}
+
+function DriftJobScreen({ accent, onBack }: { accent: string; onBack: () => void }) {
+    return (
+        <div style={{ color:'#fff',fontSize:'13px',paddingBottom:20 }}>
+            <div style={{ padding:'4px 16px 10px',display:'flex',alignItems:'center',gap:10 }}>
+                <button onClick={onBack} style={{ background:'none',border:'none',color:accent,fontSize:'20px',cursor:'pointer',padding:0,lineHeight:1 }}>‹</button>
+                <span style={{ fontWeight:700,fontSize:'15px' }}>Vacancy details</span>
+            </div>
+            <div style={{ margin:'0 16px 12px',background:'#2C2C2E',borderRadius:12,padding:'14px' }}>
+                <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10 }}>
+                    <div style={{ display:'flex',alignItems:'center',gap:10 }}>
+                        <div style={{ width:40,height:40,borderRadius:10,background:`${accent}25`,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:800,fontSize:'16px',color:accent }}>D</div>
+                        <div><div style={{ fontWeight:700 }}>Graphic Designer</div><div style={{ fontSize:'11px',color:'#AEAEB2' }}>DuelNow</div></div>
+                    </div>
+                    <span style={{ fontSize:'18px' }}>🔖</span>
+                </div>
+                <div style={{ fontSize:'11px',color:'#AEAEB2',marginBottom:6 }}>📍 European Economic Area</div>
+                <div style={{ color:accent,fontWeight:800,fontSize:'16px',marginBottom:10 }}>50 $USD <span style={{ fontSize:'12px',fontWeight:500,color:'#AEAEB2' }}>/hr</span></div>
+                <div style={{ display:'flex',gap:6,marginBottom:12 }}>
+                    <span style={{ padding:'4px 10px',borderRadius:8,background:'#34C75920',color:'#34C759',fontSize:'11px',fontWeight:700 }}>Freelance</span>
+                    <span style={{ padding:'4px 10px',borderRadius:8,background:'#007AFF20',color:'#007AFF',fontSize:'11px',fontWeight:700 }}>Remote</span>
+                    <span style={{ padding:'4px 10px',borderRadius:8,background:'rgba(255,255,255,0.08)',color:'#AEAEB2',fontSize:'10px' }}>Just posted</span>
+                </div>
+                <div style={{ fontSize:'11px',fontWeight:700,color:'#AEAEB2',textTransform:'uppercase',letterSpacing:'0.07em',marginBottom:8 }}>Payment options</div>
+                <div style={{ display:'flex',gap:6 }}>
+                    {['USD','Euro','BTC','ETH'].map(p => <span key={p} style={{ padding:'6px 13px',borderRadius:8,background:`${accent}20`,color:accent,fontSize:'12px',fontWeight:700,border:`1px solid ${accent}40` }}>{p}</span>)}
+                </div>
+            </div>
+            <div style={{ margin:'0 16px 12px',background:'#2C2C2E',borderRadius:12,padding:'14px' }}>
+                <div style={{ fontWeight:700,marginBottom:6 }}>Position Overview</div>
+                <div style={{ fontSize:'11px',color:'#AEAEB2',lineHeight:1.65 }}>We are seeking a creative Graphic Designer to join our team. You will be responsible for visually impactful graphics and digital assets across marketing channels...</div>
+            </div>
+            <div style={{ margin:'0 16px' }}>
+                <button style={{ width:'100%',padding:'14px',borderRadius:12,background:accent,color:'#fff',border:'none',fontFamily:'inherit',fontWeight:700,fontSize:'14px',cursor:'pointer' }}>Apply now</button>
+            </div>
+        </div>
+    );
+}
+
+function DriftEventScreen({ accent, onBack }: { accent: string; onBack: () => void }) {
+    return (
+        <div style={{ color:'#fff',fontSize:'13px',paddingBottom:20 }}>
+            <div style={{ padding:'4px 16px 10px',display:'flex',alignItems:'center',justifyContent:'space-between' }}>
+                <div style={{ display:'flex',alignItems:'center',gap:10 }}>
+                    <button onClick={onBack} style={{ background:'none',border:'none',color:accent,fontSize:'20px',cursor:'pointer',padding:0,lineHeight:1 }}>‹</button>
+                    <span style={{ fontWeight:700,fontSize:'14px' }}>Run For Hal Prague 2024</span>
+                </div>
+                <span style={{ fontSize:'18px' }}>🔖</span>
+            </div>
+            <div style={{ margin:'0 16px 12px',height:100,borderRadius:12,overflow:'hidden',background:'linear-gradient(135deg,#0d0d1a,#1a1a3e)',display:'flex',alignItems:'center',justifyContent:'center',position:'relative' }}>
+                <div style={{ textAlign:'center' }}><div style={{ fontWeight:900,fontSize:'18px',color:accent }}>Run For Hal</div><div style={{ fontSize:'11px',color:'#AEAEB2',marginTop:2 }}>Prague 2024</div></div>
+                <div style={{ position:'absolute',top:10,left:10,display:'flex',gap:6,alignItems:'center' }}>
+                    <div style={{ width:20,height:20,borderRadius:'50%',background:'rgba(255,255,255,0.1)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'9px' }}>⚡</div>
+                    <div style={{ width:20,height:20,borderRadius:'50%',background:'rgba(255,255,255,0.1)',fontSize:'9px',display:'flex',alignItems:'center',justifyContent:'center' }}>A</div>
+                </div>
+                <div style={{ position:'absolute',top:10,right:10,background:accent,borderRadius:8,padding:'3px 8px',fontSize:'11px',fontWeight:700 }}>12 Cad</div>
+                <div style={{ position:'absolute',bottom:8,left:10,display:'flex',alignItems:'center',gap:4 }}>
+                    <div style={{ background:'rgba(0,0,0,0.5)',borderRadius:6,padding:'3px 8px',display:'flex',alignItems:'center',gap:4 }}>
+                        <span style={{ fontSize:'14px',fontWeight:800,color:'#fff' }}>12</span>
+                        <div><div style={{ fontSize:'8px',color:'#AEAEB2' }}>th</div><div style={{ fontSize:'9px',color:'#AEAEB2' }}>June</div></div>
+                    </div>
+                </div>
+            </div>
+            <div style={{ padding:'0 16px 10px' }}>
+                <div style={{ fontSize:'11px',color:'#AEAEB2',marginBottom:2 }}>📍 Prague historic old town, V Jámé 9</div>
+                <div style={{ fontSize:'11px',color:'#AEAEB2' }}>🕐 2:00 pm – 3:00 pm</div>
+            </div>
+            <div style={{ margin:'0 16px 10px',background:'#2C2C2E',borderRadius:12,padding:'12px' }}>
+                <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10 }}><span style={{ fontWeight:700 }}>Nomad joined</span><button style={{ background:'none',border:'none',color:accent,fontSize:'11px',fontWeight:700,cursor:'pointer',fontFamily:'inherit' }}>See all</button></div>
+                <DriftAvatarStack />
+            </div>
+            <div style={{ margin:'0 16px 12px',background:'#2C2C2E',borderRadius:12,padding:'12px' }}>
+                <div style={{ fontWeight:700,marginBottom:6 }}>About the event</div>
+                <div style={{ fontSize:'11px',color:'#AEAEB2',lineHeight:1.65 }}>Join us for a 5km social run/walk around Prague Old Town, honouring Hal Finney and celebrating BTC Prague. For all abilities...</div>
+                <button style={{ background:'none',border:'none',color:accent,fontSize:'11px',fontWeight:700,cursor:'pointer',padding:'5px 0 0',fontFamily:'inherit' }}>Read more</button>
+            </div>
+            <div style={{ margin:'0 16px' }}>
+                <button style={{ width:'100%',padding:'14px',borderRadius:12,background:accent,color:'#fff',border:'none',fontFamily:'inherit',fontWeight:700,fontSize:'14px',cursor:'pointer' }}>Interest to join</button>
+            </div>
+        </div>
+    );
+}
+
+function DriftAppDemo({ accent }: { accent: string }) {
+    const [screen, setScreen] = useState<'city'|'job'|'event'>('city');
+    const [cityTab, setCityTab] = useState('info');
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    const callouts: Record<string, { label: string; text: string }> = {
+        city: { label:'Decision 03', text:'City tabs show Event count (3) and Job count (20) before you tap — making active content discoverable without opening each tab.' },
+        job: { label:'Decision 01', text:'USD · Euro · BTC · ETH as equal pill badges on the card. Crypto is a qualifying criterion for this user — not a footnote buried in the detail view.' },
+        event: { label:'Decision 02', text:'"Nomad joined" appears before "About the event". Social proof answers the real question first: will I know anyone there?' },
+    };
+    const c = callouts[screen];
+    return (
+        <div style={{ display:'flex',flexDirection:'column',alignItems:'center',gap:16 }}>
+            <div style={{ display:'flex',gap:8,flexWrap:'wrap',justifyContent:'center' }}>
+                {[{id:'city',label:'🏙 City Profile'},{id:'job',label:'💼 Vacancy'},{id:'event',label:'🏃 Event'}].map(s => (
+                    <button key={s.id} onClick={() => setScreen(s.id as any)} style={{ padding:'7px 16px',borderRadius:20,fontFamily:'inherit',fontSize:'12px',fontWeight:screen===s.id?700:500,cursor:'pointer',border:`1.5px solid ${screen===s.id?accent:'var(--border)'}`,background:screen===s.id?accent:'transparent',color:screen===s.id?'#fff':'var(--muted-foreground)',transition:`all 0.2s ${ease}` }}>{s.label}</button>
+                ))}
+            </div>
+            <div style={{ width:300,borderRadius:44,background:'#1C1C1E',border:'9px solid #0A0A0A',boxShadow:'0 0 0 1px #3A3A3C, 0 28px 70px rgba(0,0,0,0.55)',overflow:'hidden' }}>
+                <div style={{ padding:'14px 20px 4px',display:'flex',justifyContent:'space-between' }}>
+                    <span style={{ fontSize:'12px',fontWeight:700,color:'#fff' }}>9:41</span>
+                    <span style={{ fontSize:'10px',color:'#fff',opacity:0.7 }}>●●● WiFi ■</span>
+                </div>
+                {screen === 'city' && <DriftCityScreen accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => setScreen('job')} onEvent={() => setScreen('event')} />}
+                {screen === 'job' && <DriftJobScreen accent={accent} onBack={() => setScreen('city')} />}
+                {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => setScreen('city')} />}
+            </div>
+            <div style={{ maxWidth:300,padding:'12px 16px',borderRadius:10,background:`${accent}12`,border:`1px solid ${accent}30`,fontSize:'12px',color:'var(--muted-foreground)',lineHeight:1.65 }}>
+                <strong style={{ color:accent,display:'block',marginBottom:4 }}>{c.label} — why this layout?</strong>
+                {c.text}
+            </div>
+        </div>
+    );
+}
+
 // ─── Roomvu Homepage Redesign Demo ────────────────────────────────────────────
 type RoomvuCat = 'all' | 'market' | 'mobile' | 'listings';
 const ROOMVU_VIDEOS: Record<RoomvuCat, { title: string; date: string; cat: string }[]> = {
@@ -1323,6 +1518,7 @@ function DemoSection({ data }: { data: any }) {
                : data.variant === 'recipe_collapse'    ? <RecipeCollapse accent={accent} />
                : data.variant === 'persona_lens'       ? <PersonaLens accent={accent} />
                : data.variant === 'roomvu_homepage'    ? <RoomvuHomepageDemo accent={accent} />
+               : data.variant === 'drift_app'          ? <DriftAppDemo accent={accent} />
                : null;
     return (
         <div ref={ref} style={{ marginBottom: 72, opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
