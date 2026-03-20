@@ -58,20 +58,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         root.classList.add('twilight');
       }
 
-      // Set gradient with actual colors
-      overlay.style.background = `linear-gradient(
-        135deg,
-        transparent 0%,
-        transparent 40%,
-        ${newBg} 50%,
-        transparent 60%,
-        transparent 100%
-      )`;
+      // Pass new bg color via CSS variable (used by ::before / ::after stripes)
+      overlay.style.setProperty('--sweep-color', newBg);
 
-      // Trigger animation
+      // Force reflow so re-triggering works on rapid toggles
+      overlay.classList.remove('active');
+      void overlay.offsetWidth;
       overlay.classList.add('active');
 
-      // Change theme during animation for smooth transition
+      // Change theme at exact moment the two stripes cross center (~50% through)
       setTimeout(() => {
         setThemeState(newTheme);
         root.classList.remove('dark', 'twilight');
@@ -83,12 +78,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         }
 
         localStorage.setItem('theme', newTheme);
-      }, 125); // Mid-animation
+      }, 300); // half of 600ms animation
 
-      // Remove active class after animation
+      // Remove active class after animation completes
       setTimeout(() => {
         overlay.classList.remove('active');
-      }, 300);
+      }, 660);
     } else {
       // Fallback if no overlay
       setThemeState(newTheme);

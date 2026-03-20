@@ -39,8 +39,8 @@ All design tokens are defined in `src/index.css` within the `:root`, `.dark`, an
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--font-sans` | `'Courier Prime', monospace` | Body text |
-| `--font-mono` | `'Courier Prime', monospace` | Code, UI elements |
+| `--font-sans` | `-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif` | Body text |
+| `--font-mono` | `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace` | Code, UI elements |
 
 ---
 
@@ -71,6 +71,19 @@ All design tokens are defined in `src/index.css` within the `:root`, `.dark`, an
 | `--muted-foreground` | `#717182` | `oklch(0.708 0 0)` | `#665B55` | Muted text |
 | `--border` | `rgba(0, 0, 0, 0.1)` | `oklch(0.269 0 0)` | `rgba(0, 0, 0, 0.1)` | Dividers, borders |
 | `--destructive` | `#d4183d` | `oklch(0.396 0.141 25.723)` | `#d4183d` | Errors, warnings |
+
+---
+
+## Modal Type Scale
+
+Used exclusively inside `ProjectModal` content areas.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--modal-display` | `28px` | Hero headline |
+| `--modal-heading` | `18px` | Section headings |
+| `--modal-body` | `14px` | Body text, list items |
+| `--modal-meta` | `12px` | Eyebrows, labels, mono |
 
 ---
 

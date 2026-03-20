@@ -1,7 +1,7 @@
 # Layout Pattern
 
 ## Overview
-Main page layout uses a 50/50 grid split on desktop (Profile | Chat), stacking vertically on mobile.
+Main page layout uses a grid split (Profile | Chat), stacking vertically on mobile. On mobile, a bottom nav tab bar switches between Profile, Work, and Chat views.
 
 ---
 
@@ -11,20 +11,24 @@ Main page layout uses a 50/50 grid split on desktop (Profile | Chat), stacking v
 ```css
 .main-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;  /* 50/50 split */
+  grid-template-columns: 2fr 3fr;  /* Profile narrower, Chat wider */
   gap: 0;
   align-items: start;
 }
 ```
 
-### Mobile (<1024px)
+### Tablet (768px–1023px)
 ```css
 .main-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
+  grid-template-columns: 1fr 1fr;  /* 50/50 split */
 }
 ```
+
+### Mobile (<768px)
+Controlled via bottom tab bar — only one panel visible at a time:
+- `.mobile-tab-profile` → shows profile, hides chat/work
+- `.mobile-tab-work` → shows work grid, hides profile/chat
+- `.mobile-tab-chat` → shows chat, hides profile/work
 
 ---
 
@@ -94,31 +98,28 @@ Main page layout uses a 50/50 grid split on desktop (Profile | Chat), stacking v
 
 ## Visual Structure
 
-### Desktop
+### Desktop (2fr 3fr)
 ```
-┌──────────────────────────┬──────────────────────────┐
-│ .profile-section         │ .chat-section            │
-│ (Centered)               │ (Left-aligned)           │
-│                          │                          │
-│      ┌──────────┐        │  ┌───────────────────┐  │
-│      │ Profile  │        │  │ .chatbox-container│  │
-│      │ Content  │        │  │ max-width: 600px  │  │
-│      └──────────┘        │  │ margin: 0         │  │
-│                          │  └───────────────────┘  │
-│         50%              │         50%              │
-└──────────────────────────┴──────────────────────────┘
+┌────────────────────┬──────────────────────────────┐
+│ .profile-section   │ .chat-section                │
+│ (Centered, 2fr)    │ (Left-aligned, 3fr)          │
+│                    │                              │
+│   ┌──────────┐     │  ┌───────────────────┐      │
+│   │ Profile  │     │  │ .chatbox-container│      │
+│   │ Content  │     │  │ max-width: 600px  │      │
+│   └──────────┘     │  └───────────────────┘      │
+└────────────────────┴──────────────────────────────┘
 ```
 
-### Mobile
+### Mobile (tab-switched)
 ```
 ┌──────────────────────────┐
-│ .profile-section         │
-│ (Full width, centered)   │
+│  Active tab panel only   │
+│  (profile / work / chat) │
 └──────────────────────────┘
-         gap: 32px
 ┌──────────────────────────┐
-│ .chat-section            │
-│ (Full width)             │
+│  Bottom nav bar          │
+│  [Profile] [Work] [Chat] │
 └──────────────────────────┘
 ```
 

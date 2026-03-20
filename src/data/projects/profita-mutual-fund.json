@@ -1,0 +1,321 @@
+{
+  "id": "profita-mutual-fund",
+  "meta": {
+    "title": "Profita — Mutual Fund Invest App",
+    "cover_color": "#1B3A5C",
+    "client": "LH Bank",
+    "year": "2020",
+    "roles": ["Lead Designer", "Usability Testing", "Researcher", "Prototyping & Wireframing"]
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "cover",
+      "data": {
+        "eyebrow": "Awarded Best App for Customer Experience",
+        "title": "Mutual Fund Invest App — Profita",
+        "subtitle": "An investment app that helps users build long-term wealth through personalized fund discovery, ROBO advisory, and seamless portfolio management.",
+        "bg_color": "#1B3A5C",
+        "award_badge": true
+      }
+    },
+    {
+      "id": "overview",
+      "label": "Overview",
+      "type": "project_overview",
+      "data": {
+        "label": "Case Study",
+        "title": "Profita — Seamless investment app",
+        "my_role": ["Lead Designer", "Usability Testing", "Researcher", "Prototyping & Wireframing"],
+        "client": "LH Bank",
+        "year": "2020",
+        "overview": "Profita puts the investment world in your hands — an application from Land and Houses Bank that allows you to choose to invest in funds from mutual fund companies. Lead your own portfolio or let ROBO Advisor plan and manage investments to create returns according to your goals. Armed with useful investment information such as returns, historical prices, dividends, Morningstar ratings, and recommended funds from a team of professional advisors.",
+        "award": {
+          "title": "Best App for Customer Experience",
+          "event": "Retail Banker International Asia Trailblazer Awards 2023"
+        }
+      }
+    },
+    {
+      "id": "design-brief",
+      "label": "Design Brief",
+      "type": "design_brief",
+      "data": {
+        "eyebrow": "Pre-stage",
+        "title": "Design brief",
+        "body": "Design a mutual fund app that offers unique funding experiences based on user profiles and preferences, regardless of their previous investment experience. Utilize AI technology to personalize the user experience.",
+        "questions": [
+          {
+            "number": "Q1",
+            "text": "How can the app create a",
+            "highlight": "welcoming and educational onboarding experience",
+            "suffix": "for users who are new to investing?"
+          },
+          {
+            "number": "Q2",
+            "text": "What features will help",
+            "highlight": "intermediate and experienced investors optimize and diversify",
+            "suffix": "their portfolios effectively?"
+          },
+          {
+            "number": "Q3",
+            "text": "How can the app",
+            "highlight": "ensure a seamless and intuitive experience",
+            "suffix": "while navigating complex financial features?"
+          },
+          {
+            "number": "Q4",
+            "text": "In what ways can AI",
+            "highlight": "personalize the investment experience and keep users engaged",
+            "suffix": "over time?"
+          }
+        ]
+      }
+    },
+    {
+      "id": "research",
+      "label": "Research",
+      "type": "research_method",
+      "data": {
+        "title": "Getting to know the user & understanding the context",
+        "methods": [
+          {
+            "icon": "user_interview",
+            "label": "User interviews",
+            "body": "I consider myself as a novice investor, which led me to begin doing empathy to get to know people as individuals, not just users. I asked open-ended questions about how they are doing in life, their work, and what interests them throughout the day. I interviewed four individuals representing our three key user groups — Novice Investors, Intermediate Investors, and Experienced Investors — to understand their expectations, fears, and goals."
+          }
+        ]
+      }
+    },
+    {
+      "id": "hmw",
+      "type": "quote",
+      "data": {
+        "text": "How might we create a welcoming and educational onboarding experience for new users in the mutual fund app?"
+      }
+    },
+    {
+      "id": "challenges",
+      "label": "Key Challenges",
+      "type": "challenges",
+      "data": {
+        "title": "Key Challenges",
+        "bg_color": "#1B3A5C",
+        "items": [
+          "Regulatory Compliance",
+          "Data Security and Privacy",
+          "User Education and Financial Literacy",
+          "Balancing Simplicity and Complexity",
+          "Personalization at Scale",
+          "User Trust and Confidence",
+          "Market Volatility and Economic Changes",
+          "Seamless Integration with External Systems"
+        ]
+      }
+    },
+    {
+      "id": "affinity-map",
+      "label": "User Needs",
+      "type": "affinity_map",
+      "data": {
+        "title": "Uncovering user needs, pain points & opportunities.",
+        "clusters": [
+          {
+            "category": "User Goals and Aspirations",
+            "items": [
+              "Planning for a dream vacation",
+              "Establishing an emergency fund",
+              "Achieving financial independence",
+              "Funding a child's education",
+              "Saving for a major life event",
+              "Building wealth through investments"
+            ]
+          },
+          {
+            "category": "Fears and Concerns",
+            "items": [
+              "Apprehensions about economic downturns",
+              "Worries about potential investment losses",
+              "Fear of missing out on investment opportunities",
+              "Concerns about the complexity of financial markets"
+            ]
+          },
+          {
+            "category": "User Experience Expectations",
+            "items": [
+              "Desire for a visually appealing, user-friendly interface",
+              "Expectation of quick and seamless navigation",
+              "Interest in personalized dashboards",
+              "Preference for a simple and intuitive app design",
+              "Expectation of real-time performance tracking"
+            ]
+          },
+          {
+            "category": "Educational Needs",
+            "items": [
+              "Understanding compound interest",
+              "Exploring the basics of diversification",
+              "Understanding the role of fees in fund management",
+              "Learning about risk management in investments",
+              "Clarification on different types of mutual funds",
+              "Awareness of tax implications on investments"
+            ]
+          },
+          {
+            "category": "Investment Preferences",
+            "items": [
+              "Interest in socially responsible investment options",
+              "Willingness to explore international investment opportunities",
+              "Desire for real estate investment options",
+              "Comfort level with high-risk, high-return strategies"
+            ]
+          },
+          {
+            "category": "Opportunities for Personalization",
+            "items": [
+              "Interest in tailoring portfolios based on personal values",
+              "Preferences for personalized investment recommendations",
+              "Desire for customizable dashboard widgets",
+              "Interest in automated goal-tracking features",
+              "Desire for educational content based on user proficiency"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "personas",
+      "label": "Personas",
+      "type": "personas",
+      "data": {
+        "title": "Defining a user persona.",
+        "items": [
+          {
+            "name": "Sarocha T.",
+            "type": "Novice Investor",
+            "biography": "Recently started her career in marketing and is eager to begin investing. She has limited knowledge about investments and wants to start with something user-friendly and educational.",
+            "goal": "Understand the basics of investing, create a simple portfolio, and save for a future home purchase.",
+            "needs": "Educational resources, user-friendly interface, step-by-step guidance, and a supportive community.",
+            "frustrations": "Overwhelmed by complex financial jargon, unsure where to start, and concerned about making the wrong investment decisions.",
+            "why_use": "The app provides educational content, a simple onboarding process, and a supportive community — helping Sarocha gain confidence in her investment decisions."
+          },
+          {
+            "name": "Anan",
+            "type": "Intermediate Investor",
+            "biography": "Works as a financial analyst with some experience in investing. Looking to diversify and optimize his portfolio using a platform with advanced features and tools.",
+            "goal": "Diversify his investment portfolio, optimize returns, and stay updated on market trends.",
+            "needs": "Advanced analytics, customizable features, access to diverse investment options, and real-time market updates.",
+            "frustrations": "Limited customization options on existing platforms, lack of real-time data, and difficulty managing multiple investment accounts.",
+            "why_use": "The app's advanced analytics, customization features, and wide range of investment options give Anan the tools he needs for strategic portfolio management."
+          },
+          {
+            "name": "Oraya W.",
+            "type": "Environmental Scientist",
+            "biography": "Passionate about sustainable living and environmental conservation. She wants her investments to align with her values and contribute to socially responsible causes.",
+            "goal": "Invest in socially responsible funds, support sustainable initiatives, and create a portfolio with positive impact.",
+            "needs": "Socially responsible investment options, detailed information on ethical funds, and a platform that aligns with her environmental values.",
+            "frustrations": "Limited availability of information on sustainable investments, lack of transparency in fund practices, and scarcity of platforms emphasizing socially responsible options.",
+            "why_use": "The app's emphasis on socially responsible investing, detailed information on ethical funds, and alignment with environmental values makes it the right fit for Oraya."
+          }
+        ]
+      }
+    },
+    {
+      "id": "feature-prioritization",
+      "label": "Features",
+      "type": "feature_matrix",
+      "data": {
+        "title": "Big ideas & feature prioritization",
+        "description": "Together with our users, we identified features that directly address their needs and capitalize on opportunities from our research.",
+        "columns": [
+          {
+            "persona": "Novice Investor",
+            "features": [
+              { "name": "Educational Onboarding Wizard", "priority": "high", "rationale": "Essential for guiding Sarocha through her initial investment journey" },
+              { "name": "User-Friendly Dashboard", "priority": "high", "rationale": "Clear overview, with educational content taking precedence" },
+              { "name": "Customized Learning Paths", "priority": "high", "rationale": "Tailors educational content to Sarocha's progress and interests" },
+              { "name": "Investment Simulations", "priority": "medium", "rationale": "Valuable for practical learning — best introduced after initial onboarding" }
+            ]
+          },
+          {
+            "persona": "Intermediate Investor",
+            "features": [
+              { "name": "Advanced Analytics Toolkit", "priority": "high", "rationale": "Crucial for making informed decisions and optimizing his portfolio" },
+              { "name": "Diverse Investment Options", "priority": "high", "rationale": "Critical for Anan's goal of diversifying beyond existing holdings" },
+              { "name": "Portfolio Optimization Algorithm", "priority": "medium", "rationale": "Supports Anan's goal of optimizing returns and managing risk" },
+              { "name": "Real-Time Market Alerts", "priority": "medium", "rationale": "Useful for staying informed, but secondary to analytics features" }
+            ]
+          },
+          {
+            "persona": "Environmental Scientist",
+            "features": [
+              { "name": "Ethical Fund Explorer", "priority": "high", "rationale": "Critical for Oraya's goal of investing in socially responsible funds" },
+              { "name": "Impact Measurement Tools", "priority": "high", "rationale": "Helps Oraya assess the real-world impact of her investments" },
+              { "name": "Socially Responsible Scorecards", "priority": "high", "rationale": "Essential transparency tool aligned with Oraya's values" },
+              { "name": "Sustainability Reports", "priority": "medium", "rationale": "Supports ongoing awareness but secondary to initial decision-making tools" },
+              { "name": "Collaborative Cause Investing", "priority": "medium", "rationale": "Beneficial for community investment — not as critical as individual impact tools" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "demo",
+      "label": "Try It",
+      "type": "demo",
+      "data": {
+        "eyebrow": "Interactive Demo",
+        "headline": "One app. Three completely different experiences.",
+        "description": "The design challenge wasn't building features for each user — it was building one system that adapts. Switch between personas to feel the difference.",
+        "variant": "persona_lens"
+      }
+    },
+    {
+      "id": "user-flow",
+      "label": "User Flow",
+      "type": "user_flow",
+      "data": {
+        "title": "Navigating Opportunities",
+        "description": "The fund discovery flow guides users from initial search through detailed evaluation to completed investment — adapting based on user preferences and risk profile.",
+        "steps": [
+          "Start",
+          "Access Fund Discovery",
+          "Search for Funds",
+          "Search Results",
+          "Select a Fund",
+          "Explore Fund Details",
+          "Add to Watchlist",
+          "Compare Performance",
+          "Initiate Investment",
+          "Set Amount",
+          "Review Transaction",
+          "Confirm & Complete",
+          "View Confirmation",
+          "End"
+        ]
+      }
+    },
+    {
+      "id": "impact",
+      "label": "Impact",
+      "type": "statement",
+      "creative_direction": { "tone": "triumph", "notes": "Blur-in mirrors the award moment — clarity emerging from years of work. Warm, unhurried." },
+      "motion_spec": { "enter": "blur_in", "duration": 1.0, "delay": 0.1, "easing": "fast_out" },
+      "data": {
+        "eyebrow": "Impact",
+        "headline": "Best App for Customer Experience — Retail Banker International Asia, 2023.",
+        "body": "Three years after launch, Profita was recognized at the Retail Banker International Asia Trailblazer Awards — not for its technical capabilities, but for how it made customers feel.\n\nThe recognition validated a core design bet: that building for the least confident user (the Novice Investor) would raise the bar for everyone. Sarocha's onboarding experience was the same one Anan and Oraya went through. Making it genuinely welcoming — not just functional — was the thing that crossed segments and earned the recognition."
+      }
+    },
+    {
+      "id": "takeaway",
+      "label": "Takeaway",
+      "type": "word_reveal",
+      "data": {
+        "eyebrow": "Lesson learned",
+        "text": "Personalization at scale doesn't mean different features for different users. It means one experience that makes every user feel like it was built for them.",
+        "emojis": ["💰", "📈", "🎯", "✨", "💡", "🏦", "🪙"]
+      }
+    }
+  ]
+}

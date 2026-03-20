@@ -1,0 +1,198 @@
+{
+    "id": "stellar-recipe-app",
+    "meta": {
+        "title": "Stellar — AI Recipe App",
+        "subtitle": "AI-powered mobile app that turns whatever's in your fridge into a recipe",
+        "company": "Side Project",
+        "year": "2024",
+        "duration": "Solo project",
+        "role": "Sole Designer",
+        "team_size": "1",
+        "cover_color": "#111111",
+        "tags": ["Mobile Design", "AI", "UX Research", "Side Project"]
+    },
+    "sections": [
+        {
+            "id": "overview",
+            "label": "Overview",
+            "type": "hero",
+            "data": {
+                "headline": "The kitchen shouldn't require a culinary degree.",
+                "body": "Stellar is an AI-powered recipe app designed to make cooking feel less like a chore and more like a creative act. As sole designer, I led the full UX process — from research and empathy mapping to final UI — with a single goal: make meal planning accessible to anyone, regardless of skill or time.",
+                "image": null,
+                "stats": [
+                    { "label": "Year", "value": "2024" },
+                    { "label": "My Role", "value": "Sole Designer" },
+                    { "label": "Team", "value": "Solo" },
+                    { "label": "Type", "value": "Side Project" }
+                ]
+            }
+        },
+        {
+            "id": "problem",
+            "label": "The Problem",
+            "type": "statement",
+            "creative_direction": { "tone": "reframe", "notes": "Blur-in for the problem headline — it's a revelation. The real problem wasn't what you expected." },
+            "motion_spec": { "enter": "blur_in", "duration": 0.9, "easing": "fast_out" },
+            "data": {
+                "eyebrow": "The Problem",
+                "headline": "People don't have a recipe problem. They have a decision problem.",
+                "body": "There are more recipes online than anyone could cook in a lifetime. The problem isn't access — it's the daily 6pm question of 'what do I actually make tonight?' with a half-empty fridge, 30 minutes, and decision fatigue from the rest of the day.\n\nExisting apps made it worse. More filters, more browsing, more scrolling. The opportunity wasn't to add more recipes — it was to take the decision off the user entirely."
+            }
+        },
+        {
+            "id": "research",
+            "label": "Research",
+            "type": "text_media",
+            "creative_direction": { "tone": "evidence", "notes": "Slides from left — text leads, data follows. Research section should feel like evidence arriving." },
+            "motion_spec": { "enter": "slide_left", "duration": 0.75, "stagger": 0.1, "easing": "fast_out", "y_enter": 32 },
+            "data": {
+                "layout": "text_left",
+                "eyebrow": "User Research",
+                "headline": "Investigating habits, frustrations, and attitudes toward AI in the kitchen.",
+                "body": "20+ users surveyed, 6 interviewed in depth. Methods: quantitative online survey, empathy mapping, Jobs to Be Done framework. The goal wasn't to validate assumptions — it was to find where cooking actually breaks down for real people.",
+                "image": true,
+                "image_hint": "Empathy map or affinity board from interview synthesis — clusters around 'decision fatigue', 'fridge contents', 'trust in AI suggestions'"
+            }
+        },
+        {
+            "id": "research-stats",
+            "type": "stat_grid",
+            "creative_direction": { "tone": "evidence", "notes": "Numbers do the talking here — drop them in cleanly after the research narrative. Fast stagger, feels like data arriving." },
+            "motion_spec": { "enter": "fade_up", "duration": 0.6, "stagger": 0.1, "easing": "fast_out" },
+            "data": {
+                "eyebrow": "What the numbers said",
+                "stats": [
+                    { "value": "70%", "label": "wanted recipes based on what's already in their fridge", "context": "20+ user survey" },
+                    { "value": "85%", "label": "found AI diet-tailored suggestions very helpful", "context": "20+ user survey" },
+                    { "value": "65%", "label": "said visual appeal directly drove their decision to try a dish", "context": "20+ user survey" },
+                    { "value": "~60%", "label": "expected to use an AI recipe app at least weekly", "context": "Projected intent" }
+                ]
+            }
+        },
+        {
+            "id": "hmw",
+            "type": "quote",
+            "data": {
+                "text": "How might we develop a recipe generator that creates new recipes based on users' favorite ingredients?"
+            }
+        },
+        {
+            "id": "user-needs",
+            "label": "User Needs",
+            "type": "affinity_map",
+            "data": {
+                "title": "Three things users couldn't stop talking about.",
+                "clusters": [
+                    {
+                        "category": "Meal Planning Challenges",
+                        "items": [
+                            "Tired of cooking the same recipes every week",
+                            "No time to plan — meal planning feels like another task",
+                            "Overwhelmed in the kitchen, need something that simplifies",
+                            "Picky eater with specific taste preferences",
+                            "Busy traveler who wants to keep up with new cuisines"
+                        ]
+                    },
+                    {
+                        "category": "Food Waste Concerns",
+                        "items": [
+                            "Hate throwing away ingredients before using them",
+                            "Wasting money on groceries that expire unused",
+                            "Environmental guilt around food waste",
+                            "No system for tracking what's in the fridge"
+                        ]
+                    },
+                    {
+                        "category": "Recipe Organization",
+                        "items": [
+                            "No system to organize saved recipes",
+                            "Recipes scattered across apps, screenshots, bookmarks",
+                            "Too much time searching online for something already seen",
+                            "Wish for a personalized, searchable recipe book"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "features",
+            "label": "Key Features",
+            "type": "pinned_cards",
+            "creative_direction": { "tone": "reveal", "notes": "Fast stagger — features pop in one after another with energy. Side project enthusiasm." },
+            "motion_spec": { "enter": "fade_up", "duration": 0.65, "stagger": 0.1, "y_enter": 20, "easing": "fast_out" },
+            "data": {
+                "eyebrow": "Key Features",
+                "headline": "Three ideas built directly from what users said.",
+                "items": [
+                    {
+                        "number": "01",
+                        "title": "Magic Mode — Recipe Generator",
+                        "description": "Type in any ingredient, cooking time, dietary restriction, or cooking method — the AI generates a personalized recipe instantly. No more staring at an open fridge with nothing to show for it. Sub-features include Ingredient Randomizer, Cuisine Explorer, Dietary Twist, Flavor Profiler, and Cooking Technique Mixer."
+                    },
+                    {
+                        "number": "02",
+                        "title": "Personalized Recipe Book",
+                        "description": "Recipes adapt to your cooking history and dietary profile over time. The app learns what you actually cook, not just what you browse. Sub-features: Recipe Recommendations, Cooking Habit Analysis, Ingredient Optimization, Recipe Evolution."
+                    },
+                    {
+                        "number": "03",
+                        "title": "Smart Ingredient Suggestions",
+                        "description": "Track your pantry, auto-suggest recipes from what you already have, find ingredient substitutes, and generate a shopping list. Cooking stops requiring a separate planning session — the app closes the gap between what you have and what you can make."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "demo",
+            "label": "Try It",
+            "type": "demo",
+            "data": {
+                "eyebrow": "Interactive Demo",
+                "headline": "Pick what's in your fridge.",
+                "description": "This is the core of the app. Not a filter. Not a search. Just: what do you have, and what can you make right now?",
+                "variant": "recipe_collapse"
+            }
+        },
+        {
+            "id": "design",
+            "label": "Design",
+            "type": "text_media",
+            "creative_direction": { "tone": "companion", "notes": "Slides from right — conversation enters the frame. The chat-first design comes to meet the reader." },
+            "motion_spec": { "enter": "slide_right", "duration": 0.75, "stagger": 0.1, "easing": "fast_out", "y_enter": 32 },
+            "data": {
+                "layout": "text_right",
+                "eyebrow": "Design",
+                "headline": "AI as a cooking companion, not just a search engine.",
+                "body": "The chat experience lets users ask questions, explore recipes, and get cooking advice in real time. When the AI isn't enough, users can escalate to a pool of culinary experts. Conversations worth sharing can be surfaced to the wider Stellar community — turning individual discovery into collective knowledge.",
+                "highlights": [
+                    "Chat-first interface — ask anything cooking-related, get instant context",
+                    "Expert escalation — route to real culinary professionals when needed",
+                    "Community sharing — useful conversations benefit the whole user base"
+                ]
+            }
+        },
+        {
+            "id": "impact",
+            "label": "What I Learned",
+            "type": "statement",
+            "creative_direction": { "tone": "honest", "notes": "Simple fade_up, no theatrics — this section is honest, not performative. The learning stands on its own." },
+            "motion_spec": { "enter": "fade_up", "duration": 0.8, "delay": 0.05, "y_enter": 28, "easing": "symmetric" },
+            "data": {
+                "eyebrow": "Outcome",
+                "headline": "A validated concept — and a sharper point of view on AI product design.",
+                "body": "Stellar was a self-initiated design sprint, not a shipped product. The value wasn't in the launch — it was in what the research forced me to confront.\n\nThe 6 in-depth interviews kept returning to the same tension: people wanted AI to make decisions for them, but they didn't trust it to. The design challenge became less about generating good recipes and more about making the AI's suggestions feel considered — not random. That tension shaped every feature decision, and it's a lens I've carried into every AI product since."
+            }
+        },
+        {
+            "id": "takeaway",
+            "label": "Takeaway",
+            "type": "word_reveal",
+            "data": {
+                "eyebrow": "Takeaway",
+                "text": "The best cooking app isn't the one with the most recipes. It's the one that makes you forget you were ever stuck.",
+                "emojis": ["🍳", "🥕", "✨", "🍜", "🧅", "🌿", "🫙"]
+            }
+        }
+    ]
+}

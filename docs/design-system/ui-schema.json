@@ -1,6 +1,6 @@
 {
-    "version": "1.0.0",
-    "lastUpdated": "2025-12-10",
+    "version": "1.1.0",
+    "lastUpdated": "2026-03-20",
     "tokens": {
         "spacing": {
             "micro": "var(--space-1)",
@@ -91,6 +91,110 @@
                 "example": "import { RetroButton } from '@/components/ui/RetroButton';\n\n<RetroButton onClick={handleClick}>\n  Click Me\n</RetroButton>"
             }
         },
+        "SmartTooltip": {
+            "type": "overlay",
+            "path": "src/components/ui/SmartTooltip.tsx",
+            "status": "implemented",
+            "description": "Cursor-following tooltip that auto-flips to stay within viewport. Wraps any child element — no ref required.",
+            "when_to_use": [
+                "Icon buttons with no visible label (social icons, theme toggle, copy button)",
+                "Interactive elements that need contextual hint without cluttering the layout",
+                "Any hover interaction in the portfolio where extra context adds value without needing a full popover",
+                "When the element is small and the label/action isn't self-evident"
+            ],
+            "do_not_use_when": [
+                "The element already has clear visible text",
+                "The hint requires more than 2 short lines — use a popover instead",
+                "On mobile (tooltip is desktop-only interaction)"
+            ],
+            "props": {
+                "content": {
+                    "type": "React.ReactNode",
+                    "required": true,
+                    "description": "Tooltip content — string or JSX (e.g. two-line label+tagline)"
+                },
+                "children": {
+                    "type": "React.ReactElement",
+                    "required": true,
+                    "description": "Single child element to attach hover behavior to"
+                },
+                "delay": {
+                    "type": "number",
+                    "default": 350,
+                    "description": "ms before tooltip appears. 350ms feels intentional. Use 200ms for utility actions, 500ms for ambient context."
+                }
+            },
+            "behavior": {
+                "positioning": "Follows mouse cursor in real-time. Initial position fires at latest cursor position after delay (not entry point).",
+                "flip": "Auto-selects one of 4 placements (top-right, top-left, bottom-right, bottom-left) based on viewport edge proximity",
+                "animation": "Scale from cursor-nearest corner + fade. transformOrigin matches placement.",
+                "portal": "Renders in document.body — never clipped by overflow:hidden containers"
+            },
+            "tokens": {
+                "background": "var(--foreground)",
+                "color": "var(--background)",
+                "borderRadius": "var(--radius)",
+                "padding": "10px 16px",
+                "fontSize": "var(--text-base)",
+                "fontFamily": "var(--font-sans)"
+            },
+            "usage": {
+                "example": "import { SmartTooltip } from '@/components/ui/SmartTooltip';\n\n<SmartTooltip content=\"Copy email\">\n  <button onClick={handleCopy}>\n    <Copy size={14} />\n  </button>\n</SmartTooltip>",
+                "two_line_example": "<SmartTooltip content={\n  <div>\n    <div style={{ fontWeight: 700 }}>LinkedIn</div>\n    <div style={{ opacity: 0.6, fontSize: '11px' }}>let's connect</div>\n  </div>\n}>\n  <a href={url}>...</a>\n</SmartTooltip>",
+                "current_usages": [
+                    "src/pages/index.tsx → SocialIcon (LinkedIn, Medium, Behance)",
+                    "src/pages/index.tsx → copy email button",
+                    "src/App.tsx → DarkModeToggle"
+                ]
+            }
+        },
+        "PinnedCard": {
+            "type": "content-card",
+            "path": "src/components/ui/PinnedCard.tsx",
+            "status": "implemented",
+            "description": "Physical 'memo on a board' card with pushpin, slight rotation, and lined-paper texture. Pairs with PinnedCardsSection in ProjectModal for zigzag layout.",
+            "when_to_use": [
+                "Design decisions with numbered rationale (3–5 items)",
+                "Research insights or interview findings",
+                "Key learnings / retrospective takeaways",
+                "User quotes pinned as memos",
+                "Feature spec cards, HMW questions, design principles"
+            ],
+            "do_not_use_when": [
+                "More than 6 items — loses the 'intentional memo' weight",
+                "Content without a title — pins need a headline anchor",
+                "Tabular or comparison data — use a table or before_after instead"
+            ],
+            "props": {
+                "number": { "type": "string", "required": true, "description": "Ordinal label e.g. '01'" },
+                "title": { "type": "string", "required": true },
+                "description": { "type": "string", "required": true },
+                "index": { "type": "number", "required": true, "description": "0-based — drives rotation, tint, pin color, and left/right zigzag alignment" },
+                "visible": { "type": "boolean", "default": true, "description": "Entrance animation trigger (pass from IntersectionObserver)" },
+                "delay": { "type": "number", "default": 0, "description": "seconds — stagger delay for entrance animation" }
+            },
+            "behavior": {
+                "layout": "Zigzag: even index = left-aligned, odd = right-aligned. Width: 62% of container.",
+                "rotation": "Alternating subtle angles (ROTATIONS array) — max ±2.6 degrees",
+                "colors": "4-slot pin colors and card tints cycle by index. All tints are low-opacity rgba — theme-safe.",
+                "texture": "Lined paper via repeating-linear-gradient on an overlay div",
+                "entrance": "scale(0.88) + translateY(24px) → identity on visible=true, stagger by delay prop"
+            },
+            "tokens": {
+                "background": "var(--muted) + radial tint overlay",
+                "border": "var(--border)",
+                "borderRadius": "12px",
+                "titleSize": "var(--modal-body)",
+                "descriptionSize": "var(--modal-body)",
+                "numberFont": "var(--font-mono)"
+            },
+            "usage": {
+                "example": "import { PinnedCard } from '@/components/ui/PinnedCard';\n\n<div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>\n  {items.map((item, i) => (\n    <PinnedCard key={i} number={item.number} title={item.title}\n      description={item.description} index={i}\n      visible={visible} delay={i * 0.12} />\n  ))}\n</div>",
+                "current_usages": [
+                    "src/components/ProjectModal.tsx → PinnedCardsSection → allianz-doc-classification decisions"
+                ]
+            }
+        },
         "SuggestionGroup": {
             "type": "container",
             "cssClass": "suggestion-buttons",
@@ -133,10 +237,11 @@
         },
         "Layout": {
             "pattern": "docs/design-system/patterns/layout.md",
-            "description": "Main grid layout (Profile | Chat)",
+            "description": "Main grid layout (Profile | Chat/Work)",
             "structure": {
-                "mobile": "stacked vertical",
-                "desktop": "50/50 grid split"
+                "mobile": "single panel, tab-switched via bottom nav (profile / work / chat)",
+                "tablet": "1fr 1fr grid (768–1023px)",
+                "desktop": "2fr 3fr grid (≥1024px)"
             },
             "containers": {
                 "profileSection": {

@@ -4,10 +4,8 @@
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--font-sans` | `'Courier Prime', monospace` | Body text, paragraphs |
-| `--font-mono` | `'Courier Prime', monospace` | UI elements, code, buttons |
-
-**Note:** Both tokens use the same font for consistent monospace aesthetic.
+| `--font-sans` | `-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif` | Body text, paragraphs |
+| `--font-mono` | `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace` | Code, UI elements, monospaced labels |
 
 ---
 

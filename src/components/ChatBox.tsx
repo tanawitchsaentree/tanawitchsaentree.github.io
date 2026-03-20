@@ -35,7 +35,12 @@ interface Message {
 
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-const ChatBox: React.FC = () => {
+interface ChatBoxProps {
+    mode?: 'overlay' | 'fullscreen';
+}
+
+const ChatBox: React.FC<ChatBoxProps> = ({ mode = 'overlay' }) => {
+    const isFullscreen = mode === 'fullscreen';
     const { theme, setTheme } = useTheme();
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
@@ -229,6 +234,7 @@ const ChatBox: React.FC = () => {
     const isTypingRef = useRef(isTyping);
     const messagesLengthRef = useRef(messages.length);
     const lastSenderRef = useRef<'user' | 'bot' | null>(null);
+    const nudgeFiredRef = useRef(false);
 
     useEffect(() => { isTypingRef.current = isTyping; }, [isTyping]);
     useEffect(() => {
@@ -243,7 +249,9 @@ const ChatBox: React.FC = () => {
         const resetTimer = () => {
             clearTimeout(timer);
             timer = setTimeout(() => {
-                if (!isTypingRef.current && messagesLengthRef.current > 0 && lastSenderRef.current === 'bot') {
+                if (!nudgeFiredRef.current && !isTypingRef.current && messagesLengthRef.current > 0 && lastSenderRef.current === 'bot') {
+                    nudgeFiredRef.current = true;
+                    setTimeout(() => { nudgeFiredRef.current = false; }, 60_000);
                     const nudge = engine.getProactiveNudge();
                     if (nudge.text) displayMessage(nudge.text, 'bot', nudge.suggestions);
                 }
@@ -278,13 +286,14 @@ const ChatBox: React.FC = () => {
 
     // ─── Auto-scroll ─────────────────────────────────────────────────────────────
     useEffect(() => {
-        if (outputRef.current && isExpanded) {
+        if (outputRef.current && (isExpanded || isFullscreen)) {
             outputRef.current.scrollTop = outputRef.current.scrollHeight;
         }
-    }, [messages, isTyping, isExpanded]);
+    }, [messages, isTyping, isExpanded, isFullscreen]);
 
-    // ─── Click outside to collapse ───────────────────────────────────────────────
+    // ─── Click outside to collapse (overlay only) ────────────────────────────────
     useEffect(() => {
+        if (isFullscreen) return;
         const handleClickOutside = (e: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(e.target as Node) && isExpanded) {
                 setIsExpanded(false);
@@ -292,7 +301,7 @@ const ChatBox: React.FC = () => {
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isExpanded]);
+    }, [isExpanded, isFullscreen]);
 
     // ─── Email copy ───────────────────────────────────────────────────────────────
     const handleCopyEmail = async (email: string) => {
@@ -372,6 +381,140 @@ const ChatBox: React.FC = () => {
         handleSend(input);
     };
 
+    // ─── Shared: message list + typing indicator ─────────────────────────────────
+    const renderMessageList = () => (
+        <>
+            <div style={{ flexGrow: 1, minHeight: 0 }} />
+            {messages.map((msg, idx) => (
+                <div key={msg.id} className={`chatbox-message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'}`}>
+                    {msg.sender === 'bot' && (
+                        <div className="chatbox-avatar">
+                            <img src="/lumo_favicon.svg" alt="Lumo" className="w-8 h-8 rounded-full object-cover" />
+                        </div>
+                    )}
+                    <div className="chatbox-message-content">
+                        <div className={`max-w-[85%] rounded-[20px] px-5 py-3 shadow-sm transition-opacity ${msg.sender === 'user'
+                            ? 'bg-[var(--foreground)] text-[var(--background)] rounded-br-[4px]'
+                            : 'bg-[var(--card)] text-[var(--card-foreground)] border border-[var(--border)] rounded-bl-[4px]'
+                            } ${msg.pending ? 'opacity-50' : 'opacity-100'}`}>
+                            {msg.media?.type === 'image' && (
+                                <div className="mb-3 rounded-lg overflow-hidden border border-[var(--border)]">
+                                    <img src={msg.media.url} alt={msg.media.alt} className="w-full h-auto object-cover max-h-[200px]" loading="lazy" />
+                                    {msg.media.caption && (
+                                        <p className="text-[var(--muted-foreground)] text-xs p-2 bg-[var(--background)] m-0 border-t border-[var(--border)]">{msg.media.caption}</p>
+                                    )}
+                                </div>
+                            )}
+                            <div className={`text-sm leading-relaxed ${isTyping && idx === messages.length - 1 && msg.sender === 'bot' ? 'typing-effect' : ''}`}>
+                                {renderRichText(msg.displayingText || msg.text)}
+                            </div>
+                        </div>
+
+                        {msg.pending && (
+                            <div style={{ fontSize: '10px', color: 'var(--muted-foreground)', textAlign: 'right', marginTop: '4px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '3px' }}>
+                                <span className="animate-pulse">●</span>
+                                <span style={{ opacity: 0.6 }}>waiting</span>
+                            </div>
+                        )}
+
+                        {msg.sender === 'bot' &&
+                            msg.suggestions?.length &&
+                            !msg.suggestionsUsed &&
+                            msg.displayingText === msg.text && (
+                                <div className="suggestion-buttons animate-fade-in-up">
+                                    {msg.suggestions.map((s, i) => (
+                                        <RetroButton key={i} onClick={() => handleSend(s.payload)} title={s.label}>
+                                            {s.label}
+                                        </RetroButton>
+                                    ))}
+                                </div>
+                            )}
+                    </div>
+                </div>
+            ))}
+
+            {isTyping && messages[messages.length - 1]?.sender === 'user' && (
+                <div className="chatbox-message chatbox-message-bot">
+                    <div className="chatbox-avatar">
+                        <img src="/lumo_favicon.svg" alt="Lumo" className="w-8 h-8 rounded-full object-cover" />
+                    </div>
+                    <div className="max-w-[80%] p-3 rounded-2xl bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]">
+                        {thought ? (
+                            <span style={{ fontSize: '13px', fontStyle: 'italic', opacity: 0.75, letterSpacing: '0.01em' }}>
+                                {thought}
+                            </span>
+                        ) : (
+                            <span className="animate-pulse">...</span>
+                        )}
+                    </div>
+                </div>
+            )}
+        </>
+    );
+
+    // ─── Shared: input form ───────────────────────────────────────────────────────
+    const renderInputForm = (stopPropagation = false) => (
+        <form onSubmit={handleFormSubmit} className="chatbox-input-form" onClick={stopPropagation ? (e) => e.stopPropagation() : undefined}>
+            <div className="chatbox-input-container">
+                <div className="chatbox-input-wrapper">
+                    <input
+                        type="text"
+                        className="chatbox-input"
+                        style={{ fontSize: '14px' }}
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        onFocus={() => !isExpanded && !isFullscreen && setIsExpanded(true)}
+                        placeholder="Ask Lumo..."
+                    />
+                    <button
+                        type="submit"
+                        disabled={!input.trim()}
+                        style={{
+                            background: 'none', border: 'none',
+                            cursor: input.trim() && !isTyping ? 'pointer' : 'default',
+                            padding: '6px', display: 'flex', alignItems: 'center',
+                            color: input.trim() && !isTyping ? 'var(--foreground)' : 'var(--muted-foreground)',
+                            opacity: input.trim() && !isTyping ? 1 : 0.4,
+                            transition: 'opacity 0.2s', flexShrink: 0,
+                        }}
+                        aria-label="Send message"
+                    >
+                        <Send size={16} />
+                    </button>
+                </div>
+            </div>
+        </form>
+    );
+
+    // ─── Fullscreen render (mobile Chat tab) ──────────────────────────────────────
+    if (isFullscreen) {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', background: 'var(--background)' }}>
+                {/* Header */}
+                <div style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '14px 16px 12px',
+                    borderBottom: '1px solid var(--border)',
+                    flexShrink: 0,
+                }}>
+                    <img src="/lumo_favicon.svg" alt="Lumo" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover' }} />
+                    <div>
+                        <div style={{ fontWeight: 700, fontSize: '14px', color: 'var(--foreground)', lineHeight: 1.2 }}>Lumo</div>
+                        <div style={{ fontSize: '10px', color: 'var(--muted-foreground)', letterSpacing: '0.04em' }}>Nate's AI · always on</div>
+                    </div>
+                </div>
+
+                {/* Messages */}
+                <div ref={outputRef} style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '12px 16px', gap: '4px', minHeight: 0 }}>
+                    {renderMessageList()}
+                </div>
+
+                {/* Input */}
+                {renderInputForm()}
+            </div>
+        );
+    }
+
     // ─── Render ───────────────────────────────────────────────────────────────────
     return (
         <div ref={containerRef} className={`chat-overlay-wrapper ${isExpanded ? 'expanded' : 'minimized'}`}>
@@ -393,121 +536,10 @@ const ChatBox: React.FC = () => {
                 onClick={() => !isExpanded && setIsExpanded(true)}
             >
                 <div ref={outputRef} className="chatbox-output" style={{ display: isExpanded ? 'flex' : 'none', flexDirection: 'column', flex: 1, overflowY: 'auto' }}>
-                    <div style={{ flexGrow: 1, minHeight: 0 }} />
-                    {messages.map((msg, idx) => (
-                        <div key={msg.id} className={`chatbox-message ${msg.sender === 'user' ? 'chatbox-message-user' : 'chatbox-message-bot'}`}>
-                            {msg.sender === 'bot' && (
-                                <div className="chatbox-avatar">
-                                    <img src="/lumo_favicon.svg" alt="Lumo" className="w-8 h-8 rounded-full object-cover" />
-                                </div>
-                            )}
-                            <div className="chatbox-message-content">
-                                <div className={`max-w-[85%] rounded-[20px] px-5 py-3 shadow-sm transition-opacity ${msg.sender === 'user'
-                                    ? 'bg-[var(--foreground)] text-[var(--background)] rounded-br-[4px]'
-                                    : 'bg-[var(--card)] text-[var(--card-foreground)] border border-[var(--border)] rounded-bl-[4px]'
-                                    } ${msg.pending ? 'opacity-50' : 'opacity-100'}`}>
-                                    {msg.media?.type === 'image' && (
-                                        <div className="mb-3 rounded-lg overflow-hidden border border-[var(--border)]">
-                                            <img src={msg.media.url} alt={msg.media.alt} className="w-full h-auto object-cover max-h-[200px]" loading="lazy" />
-                                            {msg.media.caption && (
-                                                <p className="text-[var(--muted-foreground)] text-xs p-2 bg-[var(--background)] m-0 border-t border-[var(--border)]">{msg.media.caption}</p>
-                                            )}
-                                        </div>
-                                    )}
-                                    <div className={`text-sm leading-relaxed ${isTyping && idx === messages.length - 1 && msg.sender === 'bot' ? 'typing-effect' : ''}`}>
-                                        {renderRichText(msg.displayingText || msg.text)}
-                                    </div>
-                                </div>
-
-                                {msg.pending && (
-                                    <div style={{
-                                        fontSize: '10px',
-                                        color: 'var(--muted-foreground)',
-                                        textAlign: 'right',
-                                        marginTop: '4px',
-                                        display: 'flex',
-                                        justifyContent: 'flex-end',
-                                        alignItems: 'center',
-                                        gap: '3px',
-                                    }}>
-                                        <span className="animate-pulse">●</span>
-                                        <span style={{ opacity: 0.6 }}>waiting</span>
-                                    </div>
-                                )}
-
-                                {msg.sender === 'bot' &&
-                                    msg.suggestions?.length &&
-                                    !msg.suggestionsUsed &&
-                                    msg.displayingText === msg.text && (
-                                        <div className="suggestion-buttons animate-fade-in-up">
-                                            {msg.suggestions.map((s, i) => (
-                                                <RetroButton key={i} onClick={() => handleSend(s.payload)} title={s.label}>
-                                                    {s.label}
-                                                </RetroButton>
-                                            ))}
-                                        </div>
-                                    )}
-                            </div>
-                        </div>
-                    ))}
-
-                    {isTyping && messages[messages.length - 1]?.sender === 'user' && (
-                        <div className="chatbox-message chatbox-message-bot">
-                            <div className="chatbox-avatar">
-                                <img src="/lumo_favicon.svg" alt="Lumo" className="w-8 h-8 rounded-full object-cover" />
-                            </div>
-                            <div className="max-w-[80%] p-3 rounded-2xl bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded-tl-none border border-[var(--border)]">
-                                {thought ? (
-                                    <span style={{
-                                        fontSize: '13px',
-                                        fontStyle: 'italic',
-                                        opacity: 0.75,
-                                        letterSpacing: '0.01em',
-                                    }}>
-                                        {thought}
-                                    </span>
-                                ) : (
-                                    <span className="animate-pulse">...</span>
-                                )}
-                            </div>
-                        </div>
-                    )}
+                    {renderMessageList()}
                 </div>
 
-                <form onSubmit={handleFormSubmit} className="chatbox-input-form" onClick={e => e.stopPropagation()}>
-                    <div className="chatbox-input-container">
-                        <div className="chatbox-input-wrapper">
-                            <input
-                                type="text"
-                                className="chatbox-input"
-                                style={{ fontSize: '14px' }}
-                                value={input}
-                                onChange={e => setInput(e.target.value)}
-                                onFocus={() => !isExpanded && setIsExpanded(true)}
-                                placeholder="Ask Lumo..."
-                            />
-                            <button
-                                type="submit"
-                                disabled={!input.trim()}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    cursor: input.trim() && !isTyping ? 'pointer' : 'default',
-                                    padding: '6px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    color: input.trim() && !isTyping ? 'var(--foreground)' : 'var(--muted-foreground)',
-                                    opacity: input.trim() && !isTyping ? 1 : 0.4,
-                                    transition: 'opacity 0.2s',
-                                    flexShrink: 0,
-                                }}
-                                aria-label="Send message"
-                            >
-                                <Send size={16} />
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                {renderInputForm(true)}
             </div>
         </div>
     );
