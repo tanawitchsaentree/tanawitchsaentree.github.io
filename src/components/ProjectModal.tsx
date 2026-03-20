@@ -510,7 +510,7 @@ function InsightCardsSection({ data, motion }: { data: any; motion?: MotionSpec 
 }
 
 // ─── Audit Table Section ──────────────────────────────────────────────────────
-function AuditTableSection({ data, motion }: { data: any; motion?: MotionSpec }) {
+function AuditTableSection({ data }: { data: any; motion?: MotionSpec }) {
     const [ref, visible] = useInView(0.08);
     const accent = useContext(ProjectAccentCtx);
     const [hovered, setHovered] = useState<number | null>(null);
