@@ -2,14 +2,14 @@
     "id": "drift-nomad-app",
     "meta": {
         "title": "Drift — Nomad Super App",
-        "subtitle": "A crypto-native mobile app that collapses five separate tools into one scroll — city discovery, remote jobs, and IRL community for the location-independent generation.",
-        "company": "Side Project",
+        "subtitle": "A design concept exploring what happens when city discovery, remote jobs, and IRL community are structured around one place — not three separate platforms.",
+        "company": "Design Concept",
         "year": "2024",
         "duration": "Solo concept sprint",
         "role": "Product Designer",
         "team_size": "1",
         "cover_color": "#E07830",
-        "tags": ["Mobile Design", "Web3", "Product Design", "iOS", "Side Project"]
+        "tags": ["Mobile Design", "Web3", "Product Design", "iOS", "Concept"]
     },
     "sections": [
         {
@@ -17,79 +17,59 @@
             "label": "Overview",
             "type": "statement",
             "data": {
-                "eyebrow": "Project Overview",
-                "headline": "Five apps to answer one question: should I move here?",
-                "body": "Every time a digital nomad considers a new city, they open the same five tabs. Nomad List for cost and livability. A job board for remote work. Meetup or Telegram for community. Google Maps for vibe. It works — but it's fragmented, slow, and exhausting. Drift is a single app that answers all three: Can I afford it? Can I work from it? Will I belong there?"
+                "eyebrow": "Design Concept",
+                "headline": "A city isn't a location. It's a decision.",
+                "body": "When a digital nomad considers relocating, they're not asking 'where is Prague?' They're asking: Can I afford it? Is there work? Will there be people like me? These three questions currently live on three different platforms. This concept explores what happens when you structure them around the city — not the task — and what design decisions that forces you to make."
             }
         },
         {
-            "id": "problem",
-            "type": "big_number",
-            "data": {
-                "eyebrow": "The Fragmentation Problem",
-                "value": "5",
-                "unit": "apps",
-                "label": "to decide on one city",
-                "body": "The average crypto-earning nomad context-switches between five separate tools before committing to a relocation. Drift collapses the stack. One scroll replaces the whole session."
-            }
-        },
-        {
-            "id": "pull",
-            "type": "pull_quote",
-            "data": {
-                "text": "I know the job market's good in Prague. I know I can afford it. I just don't know if I'll be eating alone.",
-                "attribution": "Alex Chen, 27",
-                "context": "Web3 freelancer · Bali → considering Prague — composite user quote"
-            }
-        },
-        {
-            "id": "features",
-            "label": "Features",
+            "id": "screens",
+            "label": "Screens",
             "type": "scrolling_cards",
             "data": {
-                "eyebrow": "The System",
-                "title": "Three screens. One decision.",
+                "eyebrow": "Three screens, three questions",
+                "title": "Each screen answers one thing a nomad needs before booking.",
                 "items": [
                     {
-                        "tag": "City Layer",
-                        "title": "Score it before you book the flight.",
-                        "body": "Livability score, monthly cost, number of nomads already there, and open remote jobs — everything needed to commit to a city, without leaving the app. Prague 9.2 · $3,200/mo · 99+ nomads."
+                        "tag": "City Profile",
+                        "title": "Score first, description later.",
+                        "body": "The city view surfaces Score (9.2) and Cost ($3,200/mo) before any descriptive text. The hypothesis: nomads decide on cities quantitatively first, qualitatively second. The description exists for confirmation, not discovery."
                     },
                     {
-                        "tag": "Crypto Jobs",
-                        "title": "Your stack, your rate. No middleman.",
-                        "body": "Job listings that accept USD, Euro, BTC, and ETH as payment options — treated as equals, not footnotes. For a generation that doesn't use bank transfers, this is the baseline."
+                        "tag": "Vacancy",
+                        "title": "Four currencies. One surface.",
+                        "body": "Payment options (USD · Euro · BTC · ETH) appear as equal pill badges on the job card — not inside the detail view. For a freelancer whose income is already in crypto, this is a qualifying signal that needs to be visible before the click."
                     },
                     {
-                        "tag": "IRL Proof",
-                        "title": "99 people already said yes.",
-                        "body": "Events aren't a feature — they're the answer to the loneliness problem. The nomad avatar stack isn't decoration. It's the most important signal on the screen: you won't be alone here."
+                        "tag": "Event",
+                        "title": "Who's going before what it is.",
+                        "body": "'Nomad joined' appears before 'About the event'. The hypothesis: the decision to attend an IRL event is social before it's informational. 99 nomads already there answers 'is this my crowd?' faster than any description."
                     }
                 ]
             }
         },
         {
             "id": "decisions",
-            "label": "Design Decisions",
+            "label": "Decisions",
             "type": "decisions",
             "data": {
                 "eyebrow": "Design Decisions",
-                "headline": "Three hard calls.",
+                "headline": "What the layout is arguing.",
                 "items": [
                     {
                         "number": "01",
-                        "title": "Crypto payment as equals, not exceptions",
-                        "description": "Putting BTC and ETH on a job listing risks feeling sketchy — like a red flag for scam posts. The decision: render all four payment options (USD · Euro · BTC · ETH) as identical pill badges, same size, same weight, same position. No special icon. No asterisk. When crypto sits visually equal to fiat, it reads as a legitimate option, not an outlier."
+                        "title": "Payment options on the card, not the detail",
+                        "description": "For a crypto-earning freelancer, payment type is a qualifying criterion — not a detail. Burying BTC/ETH inside the job detail means opening 20 listings to find one that pays the right way. Moving payment pills to the card surface lets users filter by scanning. The tradeoff: four pills consume card real estate that could show more of the role description. The bet is that payment type matters more to this user than two extra lines of requirements."
                     },
                     {
                         "number": "02",
-                        "title": "Four numbers, not fifty",
-                        "description": "Nomad List has 50+ data points per city. The risk of replicating that: analysis paralysis. The decision: surface only four — livability score, monthly cost, current nomad count, and open job listings. These four map directly to the three decisions a nomad is trying to make. Everything else lives behind 'City info' tab, one tap deeper."
+                        "title": "Social proof above event description",
+                        "description": "Nomads don't attend events for the content — they attend to meet people. '99+ nomads joined' appears before 'About the event' because community fit is the first question, event format is the second. The tradeoff is real: someone unfamiliar with the event has to scroll past the social proof to understand what they're showing up to. The count badge (12 Cad, June 12) does some of that work, but description-first would serve newcomers better."
                     },
                     {
                         "number": "03",
-                        "title": "Social proof before event detail",
-                        "description": "On the event screen, '99+ nomads joined' appears above the event description — not below it. The decision was deliberate: a nomad decides whether to engage with an event based on who's going, not what it is. Show the crowd first. Let the content close the deal."
+                        "title": "City as a content hub, not a static profile",
+                        "description": "Events and jobs aren't useful in the abstract — they're useful because they're in Prague. Most platforms strip that location context away. Keeping events and jobs under the city tab (Event 3 · Job 20) makes the relationship explicit: you're not browsing the job board, you're seeing what work looks like in this specific city. The risk: tabs require users to discover they exist. The count badges are doing critical signalling work. Without them, the tabs look empty."
                     }
                 ]
             }
@@ -99,16 +79,16 @@
             "label": "Persona",
             "type": "personas",
             "data": {
-                "title": "Who Drift is for",
+                "title": "Who this is designed for",
                 "items": [
                     {
-                        "name": "Alex Chen",
-                        "type": "Web3 Freelancer · 27 · Bali → Prague",
-                        "biography": "Frontend developer turned product designer, Alex earns in USDC and ETH. Lives on iPhone and a MacBook in cafés. Finds community through Twitter, Telegram nomad groups, and Bitcoin meetups. Has moved six times in two years — always to cities with a crypto scene.",
-                        "goal": "Land a well-paid remote contract, move to a city with a strong nomad presence, and meet people worth knowing within the first two weeks.",
-                        "needs": "City livability data and job market signals in one place. Crypto payment options as a first-class feature, not a workaround. A way to find IRL events before landing.",
-                        "frustrations": "Switches between five apps to make one relocation decision. Most job boards treat crypto payment as a quirky edge case. Discord and Telegram groups are noisy and hard to trust.",
-                        "why_use": "Drift is the only app that treats the crypto-native, location-independent lifestyle as the default — not a niche."
+                        "name": "The crypto-native nomad",
+                        "type": "Composite · based on app's evident target user",
+                        "biography": "Earns in USDC or ETH. Moves cities every two to three months. Evaluates relocations the way some people evaluate apartments — score, cost, who's already there. Finds community through Bitcoin meetups and Telegram groups, not LinkedIn events.",
+                        "goal": "Find a city with a livable cost, an active crypto freelance market, and enough nomads around that the first two weeks don't feel isolating.",
+                        "needs": "Quantitative city signals upfront. Crypto payment visible without digging through job descriptions. Events with social proof of who's attending — not just what they are.",
+                        "frustrations": "Opening 15 job listings to find the one that pays in crypto. City research scattered across four tabs that don't talk to each other. Arriving in a city and discovering the nomad community a week after the best meetup.",
+                        "why_use": "Opens City Profile, checks Score and Cost before reading a word of the description, scans Job 20 to gauge market depth, looks at Event 3 to see what's coming up. The numbers on the tabs are the entire first pass."
                     }
                 ]
             }
@@ -118,7 +98,7 @@
             "type": "word_reveal",
             "data": {
                 "eyebrow": "Takeaway",
-                "text": "The best relocation tool isn't a checklist. It's knowing someone will be at the coffee shop.",
+                "text": "The best city for a nomad isn't the cheapest or the most beautiful. It's the one where you already know someone before you land.",
                 "emojis": ["🌍", "⚡", "₿", "🏙️", "🤝", "🛫", "🔥"]
             }
         }
