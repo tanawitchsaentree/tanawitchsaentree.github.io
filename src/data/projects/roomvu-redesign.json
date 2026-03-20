@@ -193,6 +193,17 @@
             }
         },
         {
+            "id": "demo",
+            "label": "Prototype",
+            "type": "demo",
+            "data": {
+                "eyebrow": "Redesign Concept",
+                "headline": "What the proposed homepage looks like in action.",
+                "body": "This prototype demonstrates the three core direction decisions: location-first entry, category-led navigation, and location-aware content titles. Change the city to see how the content adapts. Switch category tabs to see the content hierarchy that was missing from the original site.",
+                "variant": "roomvu_homepage"
+            }
+        },
+        {
             "id": "takeaway",
             "type": "word_reveal",
             "data": {

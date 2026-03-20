@@ -1162,6 +1162,159 @@ function PersonaLens({ accent }: { accent: string }) {
     );
 }
 
+// ─── Roomvu Homepage Redesign Demo ────────────────────────────────────────────
+type RoomvuCat = 'all' | 'market' | 'mobile' | 'listings';
+const ROOMVU_VIDEOS: Record<RoomvuCat, { title: string; date: string; cat: string }[]> = {
+    all: [
+        { title: 'Housing Market Q4 Update', date: 'Nov 2023', cat: 'Market Report' },
+        { title: '5 Things Buyers Want Right Now', date: 'Nov 2023', cat: 'Mobile' },
+        { title: 'Luxury Listings — Downtown', date: 'Oct 2023', cat: 'Listing' },
+        { title: 'Condo Market Breakdown', date: 'Oct 2023', cat: 'Market Report' },
+        { title: 'How to Win a Bidding War', date: 'Oct 2023', cat: 'Mobile' },
+        { title: 'New Listings — Westside', date: 'Sep 2023', cat: 'Listing' },
+    ],
+    market: [
+        { title: 'Housing Market Q4 Update', date: 'Nov 2023', cat: 'Market Report' },
+        { title: 'Condo Market Breakdown', date: 'Oct 2023', cat: 'Market Report' },
+        { title: 'Year-End Forecast', date: 'Sep 2023', cat: 'Market Report' },
+    ],
+    mobile: [
+        { title: '5 Things Buyers Want Right Now', date: 'Nov 2023', cat: 'Mobile' },
+        { title: 'How to Win a Bidding War', date: 'Oct 2023', cat: 'Mobile' },
+        { title: 'First-Time Buyer Checklist', date: 'Sep 2023', cat: 'Mobile' },
+    ],
+    listings: [
+        { title: 'Luxury Listings — Downtown', date: 'Oct 2023', cat: 'Listing' },
+        { title: 'New Listings — Westside', date: 'Sep 2023', cat: 'Listing' },
+        { title: 'Featured Properties — East Side', date: 'Sep 2023', cat: 'Listing' },
+    ],
+};
+const CITIES = ['Vancouver', 'Toronto', 'Calgary', 'Montreal', 'Ottawa'];
+const CATS: { id: RoomvuCat; label: string }[] = [
+    { id: 'all', label: 'All' },
+    { id: 'market', label: 'Market Reports' },
+    { id: 'mobile', label: 'Mobile Friendly' },
+    { id: 'listings', label: 'Listings' },
+];
+
+function RoomvuHomepageDemo({ accent }: { accent: string }) {
+    const [city, setCity] = useState('Vancouver');
+    const [cat, setCat] = useState<RoomvuCat>('all');
+    const [pickerOpen, setPickerOpen] = useState(false);
+    const [hovered, setHovered] = useState<number | null>(null);
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    const videos = ROOMVU_VIDEOS[cat];
+
+    return (
+        <div style={{ border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', background: 'var(--background)' }}>
+            {/* Browser chrome */}
+            <div style={{ padding: '10px 16px', background: 'var(--muted)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ display: 'flex', gap: 5 }}>
+                    {['#FF5F57','#FEBC2E','#28C840'].map((c, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />)}
+                </div>
+                <div style={{ flex: 1, background: 'var(--background)', borderRadius: 6, padding: '4px 10px', fontSize: '11px', color: 'var(--muted-foreground)', border: '1px solid var(--border)' }}>
+                    roomvu.com — redesign concept
+                </div>
+            </div>
+
+            {/* Site nav */}
+            <div style={{ padding: '12px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ fontWeight: 800, fontSize: '15px', color: accent, letterSpacing: '-0.02em' }}>roomvu</span>
+                <div style={{ position: 'relative' }}>
+                    <button onClick={() => setPickerOpen(!pickerOpen)} style={{
+                        display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', borderRadius: 20,
+                        border: `1.5px solid ${accent}`, background: `${accent}12`, color: accent,
+                        fontSize: '12px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+                    }}>
+                        📍 {city} ▾
+                    </button>
+                    {pickerOpen && (
+                        <div style={{
+                            position: 'absolute', right: 0, top: '110%', zIndex: 20, minWidth: 140,
+                            background: 'var(--background)', border: '1px solid var(--border)',
+                            borderRadius: 10, overflow: 'hidden', boxShadow: '0 8px 28px rgba(0,0,0,0.14)',
+                        }}>
+                            {CITIES.map(loc => (
+                                <button key={loc} onClick={() => { setCity(loc); setPickerOpen(false); }} style={{
+                                    display: 'block', width: '100%', textAlign: 'left', padding: '9px 16px',
+                                    fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', border: 'none',
+                                    background: loc === city ? `${accent}12` : 'transparent',
+                                    color: loc === city ? accent : 'var(--foreground)',
+                                    fontWeight: loc === city ? 700 : 400,
+                                }}>
+                                    {loc === city ? '✓ ' : ''}{loc}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Hero */}
+            <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid var(--border)', background: `linear-gradient(135deg, ${accent}08 0%, transparent 60%)` }}>
+                <div style={{ fontSize: '10px', fontWeight: 700, color: accent, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>
+                    Localized videos for {city} agents
+                </div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--foreground)', lineHeight: 1.35 }}>
+                    Win more listings.<br />
+                    <span style={{ color: 'var(--muted-foreground)', fontWeight: 500, fontSize: '13px' }}>Spend less time searching for the right content.</span>
+                </div>
+            </div>
+
+            {/* Category tabs */}
+            <div style={{ padding: '10px 20px', borderBottom: '1px solid var(--border)', display: 'flex', gap: 6, overflowX: 'auto' }}>
+                {CATS.map(c => (
+                    <button key={c.id} onClick={() => setCat(c.id)} style={{
+                        padding: '5px 13px', borderRadius: 20, fontFamily: 'inherit', fontSize: '11px',
+                        fontWeight: cat === c.id ? 700 : 500, cursor: 'pointer', flexShrink: 0,
+                        border: `1.5px solid ${cat === c.id ? accent : 'var(--border)'}`,
+                        background: cat === c.id ? accent : 'transparent',
+                        color: cat === c.id ? '#fff' : 'var(--muted-foreground)',
+                        transition: 'all 0.2s ease',
+                    }}>{c.label}</button>
+                ))}
+            </div>
+
+            {/* Video grid */}
+            <div style={{ padding: '16px 20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+                    {videos.map((v, i) => (
+                        <div key={`${cat}-${i}`} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}
+                            style={{
+                                borderRadius: 8, overflow: 'hidden', cursor: 'pointer',
+                                border: `1px solid ${hovered === i ? accent + '55' : 'var(--border)'}`,
+                                transform: hovered === i ? 'translateY(-2px)' : 'none',
+                                boxShadow: hovered === i ? `0 6px 20px ${accent}22` : 'none',
+                                transition: `transform 0.2s ${ease}, box-shadow 0.2s ${ease}, border-color 0.2s`,
+                            }}>
+                            <div style={{
+                                aspectRatio: '16/9', background: `${accent}10`,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}>
+                                <div style={{
+                                    width: 26, height: 26, borderRadius: '50%',
+                                    background: hovered === i ? accent : `${accent}40`,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    transition: `background 0.2s ${ease}`,
+                                }}>
+                                    <div style={{ width: 0, height: 0, borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderLeft: `8px solid ${hovered === i ? '#fff' : accent}`, marginLeft: 2, transition: 'border-left-color 0.2s' }} />
+                                </div>
+                            </div>
+                            <div style={{ padding: '8px 10px' }}>
+                                <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--foreground)', lineHeight: 1.4, marginBottom: 5 }}>{v.title} — {city}</div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ fontSize: '9px', padding: '2px 6px', borderRadius: 4, background: `${accent}15`, color: accent, fontWeight: 700 }}>{v.cat}</span>
+                                    <span style={{ fontSize: '10px', color: 'var(--muted-foreground)' }}>{v.date}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function DemoSection({ data }: { data: any }) {
     const accent = useContext(ProjectAccentCtx);
     const [ref, visible] = useInView(0.08);
@@ -1169,6 +1322,7 @@ function DemoSection({ data }: { data: any }) {
     const demo = data.variant === 'confidence_scanner' ? <ConfidenceScanner accent={accent} />
                : data.variant === 'recipe_collapse'    ? <RecipeCollapse accent={accent} />
                : data.variant === 'persona_lens'       ? <PersonaLens accent={accent} />
+               : data.variant === 'roomvu_homepage'    ? <RoomvuHomepageDemo accent={accent} />
                : null;
     return (
         <div ref={ref} style={{ marginBottom: 72, opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
