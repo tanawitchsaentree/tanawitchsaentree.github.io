@@ -106,10 +106,16 @@ function ExperienceItem({ year, company, role, link, description }: {
       onMouseLeave={() => setHovered(false)}
       style={{ cursor: 'default' }}
     >
-      <div className="experience-year">
+      <div className="experience-year" style={{
+        opacity: hovered ? 0.45 : 0.8,
+        transition: `opacity 0.4s ${ease}`,
+      }}>
         <span>{year}</span>
       </div>
-      <div className="experience-details">
+      <div className="experience-details" style={{
+        transform: hovered ? 'translateX(4px)' : 'translateX(0)',
+        transition: `transform 0.45s ${ease}`,
+      }}>
         <span className="experience-role">{role}</span>
         <span className="experience-company">
           {link ? (
@@ -129,9 +135,14 @@ function ExperienceItem({ year, company, role, link, description }: {
             overflow: 'hidden',
             maxHeight: hovered ? '40px' : '0px',
             opacity: hovered ? 1 : 0,
-            marginTop: hovered ? '4px' : '0px',
-            transform: hovered ? 'translateY(0)' : 'translateY(-4px)',
-            transition: `max-height 0.35s ${ease}, opacity 0.25s ${ease}, margin-top 0.25s ${ease}, transform 0.3s ${ease}`,
+            marginTop: hovered ? '6px' : '0px',
+            transform: hovered ? 'translateY(0)' : 'translateY(6px)',
+            transition: [
+              `max-height 0.5s ${ease}`,
+              `opacity 0.4s 0.1s ease`,
+              `margin-top 0.5s ${ease}`,
+              `transform 0.55s 0.07s ${ease}`,
+            ].join(', '),
           }}>
             {description}
           </span>

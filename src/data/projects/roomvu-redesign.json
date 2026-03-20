@@ -1,0 +1,153 @@
+{
+    "id": "roomvu-redesign",
+    "meta": {
+        "title": "Roomvu — Website Redesign",
+        "subtitle": "A structured UX sprint to fix content discovery, mobile experience, and location relevance for a real estate video marketing platform.",
+        "company": "Academic Project",
+        "year": "2023",
+        "duration": "8–12 hours",
+        "role": "UX Designer",
+        "team_size": "1",
+        "cover_color": "#2846B8",
+        "tags": ["UX Research", "Web Redesign", "PropTech", "Heuristic Audit"]
+    },
+    "sections": [
+        {
+            "id": "overview",
+            "label": "Overview",
+            "type": "statement",
+            "data": {
+                "eyebrow": "Project Overview",
+                "headline": "Helping real estate agents find the right video, faster.",
+                "body": "Roomvu is a real estate video marketing platform used by agents across North America. The existing site buried diverse content behind poor navigation, provided no location context, and broke entirely on mobile. In an 8–12 hour sprint, I audited the site, identified the core failure points, and mapped a redesign direction grounded in a clear user persona and competitive research."
+            }
+        },
+        {
+            "id": "process",
+            "label": "Process",
+            "type": "decisions",
+            "data": {
+                "eyebrow": "Design Process",
+                "headline": "Four phases, one sitting.",
+                "items": [
+                    { "number": "01", "title": "Understand the problem", "description": "Heuristic evaluation of roomvu.com benchmarked against CREA, RE/MAX, Royal LePage, and Zillow to identify gaps in content structure, navigation, and mobile experience." },
+                    { "number": "02", "title": "Define the opportunity", "description": "Synthesized audit findings into three core challenge areas: content variety communication, browsing friction, and mobile optimization. Prioritised by user impact." },
+                    { "number": "03", "title": "Ground it in a real user", "description": "Built a persona and empathy map around a tech-savvy Vancouver agent to pressure-test assumptions and anchor design decisions in a concrete context." },
+                    { "number": "04", "title": "Propose the redesign", "description": "Translated research into a location-first, category-led redesign direction with mobile-responsive layout specifications." }
+                ]
+            }
+        },
+        {
+            "id": "research",
+            "label": "Research",
+            "type": "audit_table",
+            "data": {
+                "eyebrow": "Heuristic Audit",
+                "title": "Site Evaluation — roomvu.com",
+                "columns": ["Area", "Finding", "Severity", "Recommendation"],
+                "rows": [
+                    {
+                        "area": "Content Discovery",
+                        "finding": "No video category structure on the homepage — users must scroll through an undifferentiated feed to find relevant content types.",
+                        "severity": "high",
+                        "recommendation": "Introduce featured category rows (Market Reports, Mobile Friendly, Listings) with clear labels above the fold."
+                    },
+                    {
+                        "area": "Mobile Experience",
+                        "finding": "Layout breaks below 768px viewport width. Primary CTAs clip off-screen and the card grid does not reflow for touch interaction.",
+                        "severity": "high",
+                        "recommendation": "Rebuild card grid as a responsive component. Add sticky mobile nav and ensure all touch targets meet 44px minimum height."
+                    },
+                    {
+                        "area": "Location Context",
+                        "finding": "No location entry point visible above the fold. The content feed defaults to a generic national view regardless of user location.",
+                        "severity": "high",
+                        "recommendation": "Auto-detect or prompt for location on first visit. Persist preference and surface region-relevant content as the default view."
+                    },
+                    {
+                        "area": "Information Architecture",
+                        "finding": "No filtering, sorting, or search controls for the video library. Discovery relies entirely on passive scrolling.",
+                        "severity": "medium",
+                        "recommendation": "Add lightweight filter controls (location, content type, date) and a search field accessible from the library header."
+                    },
+                    {
+                        "area": "Value Communication",
+                        "finding": "Hero section does not explain what content types exist or why they benefit agents. There is no outcome-oriented messaging.",
+                        "severity": "medium",
+                        "recommendation": "Rewrite hero to explicitly name content types and frame them around agent outcomes — save time, win more listings, stay current."
+                    },
+                    {
+                        "area": "Onboarding",
+                        "finding": "No onboarding flow or tooltips for first-time users. Platform capabilities are discovered only through unguided exploration.",
+                        "severity": "low",
+                        "recommendation": "Add a lightweight first-session prompt surfacing three key features: location filter, content categories, and the one-click share tool."
+                    }
+                ],
+                "note": "Evaluated against Nielsen's 10 Usability Heuristics. Severity scale — High: blocks core task completion · Medium: degrades experience quality · Low: polish opportunity."
+            }
+        },
+        {
+            "id": "persona",
+            "label": "Persona",
+            "type": "personas",
+            "data": {
+                "title": "User Persona",
+                "items": [
+                    {
+                        "name": "Robert Phil",
+                        "type": "Professional Agent · Vancouver · Age 32",
+                        "biography": "A tech-savvy real estate agent with several years of experience. Robert relies on digital platforms to stay current and uses video content to differentiate his listings. He values efficiency — time spent searching is time not spent with clients.",
+                        "goal": "Find diverse, location-relevant real estate videos quickly to share with clients and stay ahead of competitors in a fast-moving market.",
+                        "needs": "Fast content discovery, mobile-friendly browsing, and clear categorisation by region and video type.",
+                        "frustrations": "Struggles to find diverse videos on the current site. Overwhelmed by unstructured content and frustrated by a layout that breaks on mobile.",
+                        "why_use": "Seeks platforms that cut time-to-content and surface local market insights without manual digging."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "quote",
+            "type": "pull_quote",
+            "data": {
+                "text": "I know the content I need exists somewhere on this site — I just can't find it without wasting ten minutes.",
+                "attribution": "Robert Phil",
+                "context": "Composite user quote derived from empathy mapping"
+            }
+        },
+        {
+            "id": "solution",
+            "label": "Solution",
+            "type": "before_after",
+            "data": {
+                "eyebrow": "Design Direction",
+                "before": {
+                    "label": "Before — Pain Points",
+                    "items": [
+                        "No category structure — content discovery relied entirely on scrolling a single feed",
+                        "Location was invisible — agents defaulted to irrelevant national content",
+                        "Mobile layout was broken — primary CTAs were off-screen on small viewports",
+                        "Platform value was unexplained — the hero said nothing about what types of content existed"
+                    ]
+                },
+                "after": {
+                    "label": "Redesign Direction",
+                    "items": [
+                        "Location-first entry — detect or select city before surfacing any content",
+                        "Category-led homepage — distinct rows per content type above the fold",
+                        "Mobile-first layout — responsive grid, sticky nav, 44px touch targets throughout",
+                        "Outcome-led hero — messaging anchored to what agents gain, not what the platform is"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "takeaway",
+            "type": "word_reveal",
+            "data": {
+                "eyebrow": "Takeaway",
+                "text": "The right content only helps if agents can actually find it. Every decision here was about reducing the distance between arriving and discovering.",
+                "emojis": ["🏠", "📍", "🎬", "🗺️", "⚡", "📱", "🔍"]
+            }
+        }
+    ]
+}

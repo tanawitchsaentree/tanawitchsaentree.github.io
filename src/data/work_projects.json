@@ -25,5 +25,13 @@
         "cover_color": "#111111",
         "projectId": "stellar-recipe-app",
         "size": "small"
+    },
+    {
+        "id": 3,
+        "title": "Roomvu — Website Redesign",
+        "type": "UX Research · Web · PropTech",
+        "cover_color": "#2846B8",
+        "projectId": "roomvu-redesign",
+        "size": "small"
     }
 ]

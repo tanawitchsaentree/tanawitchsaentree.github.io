@@ -123,6 +123,7 @@ const PROJECT_LOADERS: Record<string, () => Promise<{ default: ProjectData }>> =
     'allianz-doc-classification': () => import('../data/projects/allianz-doc-classification.json') as any,
     'profita-mutual-fund': () => import('../data/projects/profita-mutual-fund.json') as any,
     'stellar-recipe-app': () => import('../data/projects/stellar-recipe-app.json') as any,
+    'roomvu-redesign': () => import('../data/projects/roomvu-redesign.json') as any,
 };
 export const KNOWN_PROJECT_IDS = Object.keys(PROJECT_LOADERS);
 
@@ -504,6 +505,119 @@ function InsightCardsSection({ data, motion }: { data: any; motion?: MotionSpec 
                     </div>
                 ))}
             </div>
+        </div>
+    );
+}
+
+// ─── Audit Table Section ──────────────────────────────────────────────────────
+function AuditTableSection({ data, motion }: { data: any; motion?: MotionSpec }) {
+    const [ref, visible] = useInView(0.08);
+    const accent = useContext(ProjectAccentCtx);
+    const [hovered, setHovered] = useState<number | null>(null);
+    const [filter, setFilter] = useState<string>('all');
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
+    const rows: any[] = data.rows ?? [];
+    const filterOptions = ['all', 'high', 'medium', 'low'];
+    const counts: Record<string, number> = { all: rows.length, high: 0, medium: 0, low: 0 };
+    rows.forEach(r => { if (counts[r.severity] !== undefined) counts[r.severity]++; });
+    const filtered = filter === 'all' ? rows : rows.filter((r: any) => r.severity === filter);
+
+    const SEV_COLOR: Record<string, string> = { high: '#D94040', medium: '#C97A20', low: '#2E9B5F' };
+    const SEV_BG: Record<string, string>    = { high: 'rgba(217,64,64,0.09)', medium: 'rgba(201,122,32,0.09)', low: 'rgba(46,155,95,0.09)' };
+
+    return (
+        <div ref={ref} style={{ marginBottom: 64 }}>
+            {data.eyebrow && <Eyebrow text={data.eyebrow} />}
+            {data.title && (
+                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, margin: '0 0 20px', color: 'var(--foreground)', lineHeight: 1.3 }}>
+                    {data.title}
+                </h3>
+            )}
+
+            {/* Severity filter pills */}
+            <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap',
+                opacity: visible ? 1 : 0, transition: `opacity 0.4s 0.05s ${ease}` }}>
+                {filterOptions.map(f => (
+                    <button key={f} onClick={() => setFilter(f)} style={{
+                        padding: '5px 14px', borderRadius: 100, fontFamily: 'inherit',
+                        fontSize: '11px', letterSpacing: '0.04em', cursor: 'pointer',
+                        fontWeight: filter === f ? 700 : 500,
+                        border: `1px solid ${filter === f ? 'var(--foreground)' : 'var(--border)'}`,
+                        background: filter === f ? 'var(--foreground)' : 'transparent',
+                        color: filter === f ? 'var(--background)' : 'var(--muted-foreground)',
+                        transition: 'all 0.2s ease',
+                    }}>
+                        {f === 'all' ? 'All issues' : f.charAt(0).toUpperCase() + f.slice(1)}
+                        <span style={{ marginLeft: 6, opacity: 0.5, fontWeight: 400 }}>{counts[f]}</span>
+                    </button>
+                ))}
+            </div>
+
+            {/* Table */}
+            <div style={{ border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden',
+                opacity: visible ? 1 : 0, transition: `opacity 0.5s 0.1s ${ease}` }}>
+
+                {/* Column headers */}
+                <div style={{
+                    display: 'grid', gridTemplateColumns: '130px 1fr 88px 1fr',
+                    padding: '10px 20px', background: 'var(--muted)', borderBottom: '1px solid var(--border)',
+                }}>
+                    {(data.columns ?? ['Area', 'Finding', 'Severity', 'Recommendation']).map((col: string, i: number) => (
+                        <div key={i} style={{
+                            fontSize: '10px', fontWeight: 700, textTransform: 'uppercase',
+                            letterSpacing: '0.1em', color: 'var(--muted-foreground)',
+                        }}>
+                            {col}
+                        </div>
+                    ))}
+                </div>
+
+                {/* Data rows */}
+                <div style={{ overflowX: 'auto' }}>
+                    {filtered.map((row: any, i: number) => (
+                        <div
+                            key={`${filter}-${i}`}
+                            onMouseEnter={() => setHovered(i)}
+                            onMouseLeave={() => setHovered(null)}
+                            style={{
+                                display: 'grid', gridTemplateColumns: '130px 1fr 88px 1fr', minWidth: 600,
+                                padding: '14px 20px',
+                                borderBottom: i < filtered.length - 1 ? '1px solid var(--border)' : 'none',
+                                background: hovered === i ? `${accent}0c` : 'transparent',
+                                opacity: visible ? 1 : 0,
+                                transform: visible ? 'none' : 'translateY(10px)',
+                                transition: `opacity 0.45s ${i * 0.07 + 0.15}s ${ease}, transform 0.45s ${i * 0.07 + 0.15}s ${ease}, background 0.2s ease`,
+                            }}
+                        >
+                            <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--foreground)', paddingRight: 12, paddingTop: 1, lineHeight: 1.5 }}>{row.area}</div>
+                            <div style={{ fontSize: 'var(--modal-body)', color: 'var(--foreground)', lineHeight: 1.65, paddingRight: 20 }}>{row.finding}</div>
+                            <div style={{ paddingTop: 2 }}>
+                                <span style={{
+                                    display: 'inline-block', padding: '3px 10px', borderRadius: 100,
+                                    fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
+                                    color: SEV_COLOR[row.severity] ?? 'var(--foreground)',
+                                    background: SEV_BG[row.severity] ?? 'var(--muted)',
+                                }}>
+                                    {row.severity}
+                                </span>
+                            </div>
+                            <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', lineHeight: 1.65 }}>{row.recommendation}</div>
+                        </div>
+                    ))}
+                    {filtered.length === 0 && (
+                        <div style={{ padding: '32px 20px', textAlign: 'center', color: 'var(--muted-foreground)', fontSize: 'var(--modal-meta)' }}>
+                            No issues in this category.
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {data.note && (
+                <p style={{ marginTop: 12, fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', lineHeight: 1.7, fontStyle: 'italic' }}>
+                    {data.note}
+                </p>
+            )}
         </div>
     );
 }
@@ -1925,7 +2039,14 @@ function ModalSkeleton() {
 
 // ─── Word Reveal Section ──────────────────────────────────────────────────────
 // ─── Floating emoji physics ───────────────────────────────────────────────────
-interface EmojiParticle { x: number; y: number; vx: number; vy: number; rot: number; rotV: number; size: number; }
+interface EmojiParticle { x: number; y: number; vx: number; vy: number; rot: number; rotV: number; size: number; bounces: number; spawned: boolean; }
+
+const GRAVITY     = 0.30;
+const ROT_DRAG    = 0.972;
+const FLOOR_VY    = 0.58;   // energy kept on floor bounce (exponentially decays per bounce)
+const FLOOR_VX    = 0.80;   // floor friction
+const WALL_VX     = 0.65;
+const CEIL_VY     = 0.45;
 
 function FloatingEmojis({ emojis, active }: { emojis: string[]; active: boolean }) {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -1939,73 +2060,113 @@ function FloatingEmojis({ emojis, active }: { emojis: string[]; active: boolean 
         const container = containerRef.current;
         if (!container) return;
 
-        // Init positions once
         if (!initialized.current) {
             const W = container.clientWidth;
             const H = container.clientHeight;
-            particles.current = emojis.map((_) => ({
-                x: 40 + Math.random() * Math.max(W - 80, 80),
-                y: 20 + Math.random() * Math.max(H - 60, 40),
-                vx: (Math.random() - 0.5) * 1.4,
-                vy: (Math.random() - 0.5) * 1.0,
-                rot: Math.random() * 360,
-                rotV: (Math.random() - 0.5) * 2.2,
-                size: 26 + Math.floor(Math.random() * 22),
-            }));
-            // Fade in each emoji with spring stagger
+            const cx = W * 0.5;
+            const cy = H * 0.42;
+
+            // All particles start at center, burst outward (popcorn stagger 0–260ms)
+            particles.current = emojis.map(() => {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 8 + Math.random() * 11;
+                return {
+                    x: cx,
+                    y: cy,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 6,  // upward bias on burst
+                    rot: Math.random() * 360,
+                    rotV: (Math.random() - 0.5) * 20, // fast initial spin
+                    size: 22 + Math.floor(Math.random() * 22),
+                    bounces: 0,
+                    spawned: false,
+                };
+            });
+
+            // Staggered popcorn entrance — random delay, NOT sequential
             spanRefs.current.forEach((span, i) => {
                 if (!span) return;
                 const p = particles.current[i];
-                span.style.left = `${p.x}px`;
-                span.style.top = `${p.y}px`;
-                span.style.fontSize = `${p.size}px`;
+                span.style.left      = `${p.x}px`;
+                span.style.top       = `${p.y}px`;
+                span.style.fontSize  = `${p.size}px`;
                 span.style.transform = `rotate(${p.rot}deg) scale(0)`;
-                span.style.opacity = '0';
+                span.style.opacity   = '0';
+                const delay = Math.random() * 260;
                 setTimeout(() => {
                     if (!span) return;
-                    span.style.transition = 'opacity 0.5s ease, transform 0.55s cubic-bezier(0.34,1.56,0.64,1)';
-                    span.style.opacity = '1';
-                    span.style.transform = `rotate(${p.rot}deg) scale(1)`;
-                    // Clear transition after spring so rAF can drive freely
-                    setTimeout(() => { if (span) span.style.transition = 'opacity 0.5s ease'; }, 600);
-                }, i * 110 + 80);
+                    span.style.transition = 'opacity 0.25s ease, transform 0.38s cubic-bezier(0.34,1.56,0.64,1)';
+                    span.style.opacity    = '1';
+                    span.style.transform  = `rotate(${p.rot}deg) scale(1)`;
+                    setTimeout(() => {
+                        if (span) { span.style.transition = 'none'; p.spawned = true; }
+                    }, 420);
+                }, delay);
             });
             initialized.current = true;
         }
 
         const tick = () => {
-            const W = containerRef.current?.clientWidth ?? 400;
+            const W = containerRef.current?.clientWidth  ?? 400;
             const H = containerRef.current?.clientHeight ?? 300;
+
             particles.current.forEach((p, i) => {
                 const span = spanRefs.current[i];
-                if (!span) return;
+                if (!span || !p.spawned) return;
 
-                // Physics
-                p.vy += 0.014;           // subtle gravity
-                p.vx *= 0.9992;
-                p.vy *= 0.9992;
-                p.rotV *= 0.9985;
-                p.x += p.vx;
-                p.y += p.vy;
+                // Gravity
+                p.vy += GRAVITY;
+
+                // Spin coupled to horizontal motion (rolling feel)
+                p.rotV += p.vx * 0.035;
+                p.rotV *= ROT_DRAG;
+
+                p.x   += p.vx;
+                p.y   += p.vy;
                 p.rot += p.rotV;
 
-                // Random gentle nudge to keep them alive
-                if (Math.random() < 0.003) {
-                    p.vx += (Math.random() - 0.5) * 1.8;
-                    p.vy += (Math.random() - 0.5) * 1.2 - 0.4; // slight upward bias
-                    p.rotV += (Math.random() - 0.5) * 1.2;
+                // Floor — energy decays per bounce
+                if (p.y > H - p.size) {
+                    p.y = H - p.size;
+                    const retain = Math.pow(FLOOR_VY, 1 + p.bounces * 0.25);
+                    p.vy    = -Math.abs(p.vy) * Math.max(retain, 0.12);
+                    p.vx   *= FLOOR_VX;
+                    p.rotV *= 0.72;
+                    p.bounces++;
+                }
+                // Ceiling
+                if (p.y < 0) {
+                    p.y  = 0;
+                    p.vy = Math.abs(p.vy) * CEIL_VY;
+                }
+                // Walls
+                if (p.x < 0) {
+                    p.x    = 0;
+                    p.vx   = Math.abs(p.vx) * WALL_VX;
+                    p.rotV *= -0.65;
+                }
+                if (p.x > W - p.size) {
+                    p.x    = W - p.size;
+                    p.vx   = -Math.abs(p.vx) * WALL_VX;
+                    p.rotV *= -0.65;
                 }
 
-                // Bounce off walls
-                if (p.x < 0)       { p.x = 0;       p.vx =  Math.abs(p.vx) * 0.72; p.rotV *= -0.7; }
-                if (p.x > W - p.size) { p.x = W - p.size; p.vx = -Math.abs(p.vx) * 0.72; p.rotV *= -0.7; }
-                if (p.y < 0)       { p.y = 0;       p.vy =  Math.abs(p.vy) * 0.72; }
-                if (p.y > H - p.size) { p.y = H - p.size; p.vy = -Math.abs(p.vy) * 0.8;  p.rotV *= 0.85; }
+                // Nudge when nearly settled — keeps scene alive without chaos
+                const speed = Math.hypot(p.vx, p.vy);
+                if (speed < 0.5 && Math.random() < 0.003) {
+                    const a = Math.random() * Math.PI * 2;
+                    const s = 2.5 + Math.random() * 3.5;
+                    p.vx   += Math.cos(a) * s;
+                    p.vy   += Math.sin(a) * s - 2; // slight upward bias
+                    p.rotV += (Math.random() - 0.5) * 5;
+                    p.bounces = Math.max(0, p.bounces - 1); // restore a bit of bounce energy
+                }
 
                 span.style.left      = `${p.x}px`;
                 span.style.top       = `${p.y}px`;
                 span.style.transform = `rotate(${p.rot}deg) scale(1)`;
             });
+
             rafRef.current = requestAnimationFrame(tick);
         };
 
@@ -2102,6 +2263,7 @@ function SectionRenderer({ section, meta }: { section: Section; meta: ProjectMet
         case 'stat_grid': return <StatGridSection data={section.data} motion={section.motion_spec} />;
         case 'before_after': return <BeforeAfterSection data={section.data} motion={section.motion_spec} />;
         case 'insight_cards': return <InsightCardsSection data={section.data} motion={section.motion_spec} />;
+        case 'audit_table': return <AuditTableSection data={section.data} motion={section.motion_spec} />;
         case 'demo': return <DemoSection data={section.data} />;
         // Profita
         case 'cover': return <CoverSection data={section.data} />;

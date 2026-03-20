@@ -3,8 +3,9 @@ import '../index.css';
 import workData from '../data/work_projects.json';
 import { useTheme } from 'next-themes';
 
-// Palette applied only in light theme — cycles by card index, never hardcoded per card
+// Palettes cycle by card index — never hardcoded per card
 const LIGHT_PALETTE = ['#555879', '#98A1BC', '#DED3C4', '#F4EBD3'] as const;
+const DARK_PALETTE  = ['#171717', '#444444', '#DA0037', '#EDEDED'] as const;
 
 // Perceived brightness (0–255). > 140 = treat as light background.
 function hexBrightness(hex: string): number {
@@ -118,7 +119,7 @@ export default function WorkGrid({ onOpenProject }: WorkGridProps) {
                         const staggerDelay = cardIndex * 0.08 + 0.1;
                         const cardBg = theme === 'light'
                             ? LIGHT_PALETTE[cardIndex % LIGHT_PALETTE.length]
-                            : (item.cover_color ?? '#111');
+                            : DARK_PALETTE[cardIndex % DARK_PALETTE.length];
                         // Flip all foreground colors when card background is perceptually light
                         const isLightCard = !hasImage && hexBrightness(cardBg) > 140;
                         // Light cards: dark gradient zone → white text still works (same as dark cards)
