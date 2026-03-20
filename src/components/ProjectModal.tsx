@@ -59,6 +59,8 @@ const MODAL_CSS = `
 @keyframes m-shimmer   { 0%{background-position:200% center} 100%{background-position:-200% center} }
 @keyframes blink       { 0%,100%{opacity:0.3} 50%{opacity:1} }
 .recipe-carousel::-webkit-scrollbar { display: none }
+.scrolling-cards-track::-webkit-scrollbar { display: none }
+.scrolling-cards-track { -ms-overflow-style: none; scrollbar-width: none; }
 `;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -124,6 +126,7 @@ const PROJECT_LOADERS: Record<string, () => Promise<{ default: ProjectData }>> =
     'profita-mutual-fund': () => import('../data/projects/profita-mutual-fund.json') as any,
     'stellar-recipe-app': () => import('../data/projects/stellar-recipe-app.json') as any,
     'roomvu-redesign': () => import('../data/projects/roomvu-redesign.json') as any,
+    'drift-nomad-app': () => import('../data/projects/drift-nomad-app.json') as any,
 };
 export const KNOWN_PROJECT_IDS = Object.keys(PROJECT_LOADERS);
 
@@ -1514,6 +1517,124 @@ function QuoteSection({ data }: { data: any }) {
     );
 }
 
+// PULL QUOTE — single dramatic user quote, very large, accent-tinted mark
+function PullQuoteSection({ data }: { data: any }) {
+    const [ref, visible] = useInView(0.2);
+    const accent = useContext(ProjectAccentCtx);
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    return (
+        <div ref={ref} style={{ margin: '0 0 72px', padding: '56px 0' }}>
+            <div style={{
+                fontSize: '72px', lineHeight: 1, fontFamily: 'Georgia, serif',
+                color: accent, opacity: visible ? 0.55 : 0,
+                transform: visible ? 'none' : 'translateY(-8px)',
+                transition: `opacity 0.6s ${ease}, transform 0.6s ${ease}`,
+                marginBottom: 12, userSelect: 'none',
+            }}>"</div>
+            <p style={{
+                margin: '0 0 28px', maxWidth: 680,
+                fontSize: 'clamp(20px, 2.6vw, 28px)', fontWeight: 500, lineHeight: 1.6,
+                color: 'var(--foreground)', fontStyle: 'italic',
+                opacity: visible ? 1 : 0,
+                filter: visible ? 'blur(0px)' : 'blur(8px)',
+                transform: visible ? 'none' : 'translateY(12px)',
+                transition: `opacity 0.8s 0.1s ${ease}, filter 0.8s 0.1s, transform 0.8s 0.1s ${ease}`,
+            }}>{data.text}</p>
+            {(data.attribution || data.context) && (
+                <div style={{
+                    display: 'flex', flexDirection: 'column', gap: 3,
+                    opacity: visible ? 1 : 0, transition: `opacity 0.6s 0.35s`,
+                }}>
+                    {data.attribution && (
+                        <span style={{ fontSize: 'var(--modal-body)', fontWeight: 600, color: 'var(--foreground)' }}>
+                            — {data.attribution}
+                        </span>
+                    )}
+                    {data.context && (
+                        <span style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', fontStyle: 'italic' }}>
+                            {data.context}
+                        </span>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
+
+// SCROLLING CARDS — horizontal Apple-style feature tour with snap scroll
+function ScrollingCardsSection({ data }: { data: any }) {
+    const [ref, visible] = useInView(0.08);
+    const accent = useContext(ProjectAccentCtx);
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const isDragging = useRef(false);
+    const startX = useRef(0);
+    const scrollLeft = useRef(0);
+
+    const onMouseDown = (e: React.MouseEvent) => {
+        isDragging.current = true;
+        startX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0);
+        scrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
+    };
+    const onMouseMove = (e: React.MouseEvent) => {
+        if (!isDragging.current || !scrollRef.current) return;
+        e.preventDefault();
+        const x = e.pageX - scrollRef.current.offsetLeft;
+        scrollRef.current.scrollLeft = scrollLeft.current - (x - startX.current) * 1.2;
+    };
+    const onMouseUp = () => { isDragging.current = false; };
+
+    const items: { title: string; body: string; tag?: string }[] = data.items ?? [];
+
+    return (
+        <div ref={ref} style={{ marginBottom: 64 }}>
+            {data.eyebrow && <Eyebrow text={data.eyebrow} />}
+            {data.title && (
+                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, margin: '0 0 24px', color: 'var(--foreground)', lineHeight: 1.3 }}>
+                    {data.title}
+                </h3>
+            )}
+            <div
+                ref={scrollRef}
+                onMouseDown={onMouseDown}
+                onMouseMove={onMouseMove}
+                onMouseUp={onMouseUp}
+                onMouseLeave={onMouseUp}
+                style={{
+                    display: 'flex', gap: 16, overflowX: 'auto', paddingBottom: 6,
+                    scrollSnapType: 'x mandatory', cursor: 'grab', userSelect: 'none',
+                    marginLeft: -2, paddingLeft: 2,
+                }}
+                className="scrolling-cards-track"
+            >
+                {items.map((item, i) => (
+                    <div
+                        key={i}
+                        style={{
+                            flexShrink: 0, width: 260, padding: '24px 22px', borderRadius: 16,
+                            border: `1px solid var(--border)`, background: 'var(--muted)',
+                            scrollSnapAlign: 'start',
+                            opacity: visible ? 1 : 0,
+                            transform: visible ? 'none' : 'translateX(24px)',
+                            transition: `opacity 0.5s ${i * 0.1 + 0.1}s ${ease}, transform 0.55s ${i * 0.1 + 0.1}s ${ease}`,
+                        }}
+                    >
+                        {item.tag && (
+                            <span style={{
+                                display: 'inline-block', padding: '3px 11px', borderRadius: 100, marginBottom: 18,
+                                fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em',
+                                background: `${accent}20`, color: accent,
+                            }}>{item.tag}</span>
+                        )}
+                        <h4 style={{ fontSize: '15px', fontWeight: 700, margin: '0 0 10px', color: 'var(--foreground)', lineHeight: 1.35 }}>{item.title}</h4>
+                        <p style={{ fontSize: 'var(--modal-body)', color: 'var(--muted-foreground)', lineHeight: 1.7, margin: 0 }}>{item.body}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
 // CHALLENGES — alternating slide entrance, hover brightens + left border
 function ChallengesSection({ data }: { data: any }) {
     const [ref, visible] = useInView(0.1);
@@ -2272,6 +2393,8 @@ function SectionRenderer({ section, meta }: { section: Section; meta: ProjectMet
         case 'design_brief': return <DesignBriefSection data={section.data} />;
         case 'research_method': return <ResearchMethodSection data={section.data} />;
         case 'quote': return <QuoteSection data={section.data} />;
+        case 'pull_quote': return <PullQuoteSection data={section.data} />;
+        case 'scrolling_cards': return <ScrollingCardsSection data={section.data} />;
         case 'challenges': return <ChallengesSection data={section.data} />;
         case 'affinity_map': return <AffinityMapSection data={section.data} />;
         case 'personas': return <PersonasSection data={section.data} />;

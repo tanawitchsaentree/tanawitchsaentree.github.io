@@ -1,0 +1,126 @@
+{
+    "id": "drift-nomad-app",
+    "meta": {
+        "title": "Drift — Nomad Super App",
+        "subtitle": "A crypto-native mobile app that collapses five separate tools into one scroll — city discovery, remote jobs, and IRL community for the location-independent generation.",
+        "company": "Side Project",
+        "year": "2024",
+        "duration": "Solo concept sprint",
+        "role": "Product Designer",
+        "team_size": "1",
+        "cover_color": "#E07830",
+        "tags": ["Mobile Design", "Web3", "Product Design", "iOS", "Side Project"]
+    },
+    "sections": [
+        {
+            "id": "overview",
+            "label": "Overview",
+            "type": "statement",
+            "data": {
+                "eyebrow": "Project Overview",
+                "headline": "Five apps to answer one question: should I move here?",
+                "body": "Every time a digital nomad considers a new city, they open the same five tabs. Nomad List for cost and livability. A job board for remote work. Meetup or Telegram for community. Google Maps for vibe. It works — but it's fragmented, slow, and exhausting. Drift is a single app that answers all three: Can I afford it? Can I work from it? Will I belong there?"
+            }
+        },
+        {
+            "id": "problem",
+            "type": "big_number",
+            "data": {
+                "eyebrow": "The Fragmentation Problem",
+                "value": "5",
+                "unit": "apps",
+                "label": "to decide on one city",
+                "body": "The average crypto-earning nomad context-switches between five separate tools before committing to a relocation. Drift collapses the stack. One scroll replaces the whole session."
+            }
+        },
+        {
+            "id": "pull",
+            "type": "pull_quote",
+            "data": {
+                "text": "I know the job market's good in Prague. I know I can afford it. I just don't know if I'll be eating alone.",
+                "attribution": "Alex Chen, 27",
+                "context": "Web3 freelancer · Bali → considering Prague — composite user quote"
+            }
+        },
+        {
+            "id": "features",
+            "label": "Features",
+            "type": "scrolling_cards",
+            "data": {
+                "eyebrow": "The System",
+                "title": "Three screens. One decision.",
+                "items": [
+                    {
+                        "tag": "City Layer",
+                        "title": "Score it before you book the flight.",
+                        "body": "Livability score, monthly cost, number of nomads already there, and open remote jobs — everything needed to commit to a city, without leaving the app. Prague 9.2 · $3,200/mo · 99+ nomads."
+                    },
+                    {
+                        "tag": "Crypto Jobs",
+                        "title": "Your stack, your rate. No middleman.",
+                        "body": "Job listings that accept USD, Euro, BTC, and ETH as payment options — treated as equals, not footnotes. For a generation that doesn't use bank transfers, this is the baseline."
+                    },
+                    {
+                        "tag": "IRL Proof",
+                        "title": "99 people already said yes.",
+                        "body": "Events aren't a feature — they're the answer to the loneliness problem. The nomad avatar stack isn't decoration. It's the most important signal on the screen: you won't be alone here."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "decisions",
+            "label": "Design Decisions",
+            "type": "decisions",
+            "data": {
+                "eyebrow": "Design Decisions",
+                "headline": "Three hard calls.",
+                "items": [
+                    {
+                        "number": "01",
+                        "title": "Crypto payment as equals, not exceptions",
+                        "description": "Putting BTC and ETH on a job listing risks feeling sketchy — like a red flag for scam posts. The decision: render all four payment options (USD · Euro · BTC · ETH) as identical pill badges, same size, same weight, same position. No special icon. No asterisk. When crypto sits visually equal to fiat, it reads as a legitimate option, not an outlier."
+                    },
+                    {
+                        "number": "02",
+                        "title": "Four numbers, not fifty",
+                        "description": "Nomad List has 50+ data points per city. The risk of replicating that: analysis paralysis. The decision: surface only four — livability score, monthly cost, current nomad count, and open job listings. These four map directly to the three decisions a nomad is trying to make. Everything else lives behind 'City info' tab, one tap deeper."
+                    },
+                    {
+                        "number": "03",
+                        "title": "Social proof before event detail",
+                        "description": "On the event screen, '99+ nomads joined' appears above the event description — not below it. The decision was deliberate: a nomad decides whether to engage with an event based on who's going, not what it is. Show the crowd first. Let the content close the deal."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "persona",
+            "label": "Persona",
+            "type": "personas",
+            "data": {
+                "title": "Who Drift is for",
+                "items": [
+                    {
+                        "name": "Alex Chen",
+                        "type": "Web3 Freelancer · 27 · Bali → Prague",
+                        "biography": "Frontend developer turned product designer, Alex earns in USDC and ETH. Lives on iPhone and a MacBook in cafés. Finds community through Twitter, Telegram nomad groups, and Bitcoin meetups. Has moved six times in two years — always to cities with a crypto scene.",
+                        "goal": "Land a well-paid remote contract, move to a city with a strong nomad presence, and meet people worth knowing within the first two weeks.",
+                        "needs": "City livability data and job market signals in one place. Crypto payment options as a first-class feature, not a workaround. A way to find IRL events before landing.",
+                        "frustrations": "Switches between five apps to make one relocation decision. Most job boards treat crypto payment as a quirky edge case. Discord and Telegram groups are noisy and hard to trust.",
+                        "why_use": "Drift is the only app that treats the crypto-native, location-independent lifestyle as the default — not a niche."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "takeaway",
+            "type": "word_reveal",
+            "data": {
+                "eyebrow": "Takeaway",
+                "text": "The best relocation tool isn't a checklist. It's knowing someone will be at the coffee shop.",
+                "emojis": ["🌍", "⚡", "₿", "🏙️", "🤝", "🛫", "🔥"]
+            }
+        }
+    ]
+}

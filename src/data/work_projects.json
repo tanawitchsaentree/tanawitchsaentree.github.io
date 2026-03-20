@@ -33,5 +33,14 @@
         "cover_color": "#2846B8",
         "projectId": "roomvu-redesign",
         "size": "small"
+    },
+    {
+        "id": 4,
+        "title": "Drift — Nomad Super App",
+        "type": "Mobile Design · Web3 · Side Project",
+        "cover_color": "#E07830",
+        "projectId": "drift-nomad-app",
+        "size": "large",
+        "aspect": "21/9"
     }
 ]
