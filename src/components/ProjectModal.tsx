@@ -378,88 +378,69 @@ function StatGridSection({ data, motion }: { data: any; motion?: MotionSpec }) {
     );
 }
 
-// BEFORE / AFTER — contrast columns, hover reinforces the narrative
+// BEFORE / AFTER — paired transformation rows
+// Each row = one before item directly paired with its after item.
+// Hover a row: before fades (old reality), arrow lights up, after glows (new reality).
+// grid ensures left/right cells share the same height — no alignment drift.
 function BeforeAfterSection({ data, motion }: { data: any; motion?: MotionSpec }) {
     const [ref, visible] = useInView(0.08);
     const accent = useContext(ProjectAccentCtx);
     const { m } = useMotion(motion);
     const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
     const beforeItems: string[] = data.before?.items ?? [];
-    const afterItems: string[] = data.after?.items ?? [];
-    const [hoveredBefore, setHoveredBefore] = useState<number | null>(null);
-    const [hoveredAfter, setHoveredAfter] = useState<number | null>(null);
+    const afterItems: string[]  = data.after?.items ?? [];
+    const rowCount = Math.max(beforeItems.length, afterItems.length);
+    const [hovRow, setHovRow] = useState<number|null>(null);
+
     return (
         <div ref={ref} style={{ marginBottom: 64 }}>
             {data.eyebrow && <Eyebrow text={data.eyebrow} />}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                {/* Before column — hover dims further, ✕ marker */}
-                <div>
-                    <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--muted-foreground)', marginBottom: 12, opacity: visible ? 1 : 0, transition: `opacity 0.5s ${ease}` }}>
-                        {data.before?.label ?? 'Before'}
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        {beforeItems.map((item, i) => (
-                            <div key={i}
-                                onMouseEnter={() => setHoveredBefore(i)}
-                                onMouseLeave={() => setHoveredBefore(null)}
-                                style={{
-                                    padding: '12px 16px', borderRadius: 10,
-                                    background: hoveredBefore === i ? 'rgba(220,60,60,0.05)' : 'var(--muted)',
-                                    border: `1px solid ${hoveredBefore === i ? 'rgba(220,60,60,0.18)' : 'var(--border)'}`,
-                                    display: 'flex', gap: 10, alignItems: 'flex-start',
-                                    opacity: visible ? (hoveredBefore === i ? 0.65 : 1) : 0,
-                                    transform: visible ? 'none' : 'translateX(-20px)',
-                                    transition: `opacity 0.5s ${i * 0.07 + (m.delay ?? 0)}s ${ease}, transform 0.5s ${i * 0.07 + (m.delay ?? 0)}s ${ease}, background 0.2s, border-color 0.2s`,
-                                    cursor: 'default',
-                                }}>
-                                <span style={{
-                                    color: hoveredBefore === i ? 'rgba(220,60,60,0.6)' : 'var(--muted-foreground)',
-                                    flexShrink: 0, opacity: hoveredBefore === i ? 1 : 0.4,
-                                    lineHeight: '1.6', fontSize: 'var(--modal-meta)', fontWeight: 700,
-                                    transition: 'color 0.2s, opacity 0.2s',
-                                }}>{hoveredBefore === i ? '✕' : '—'}</span>
-                                <span style={{ fontSize: 'var(--modal-body)', color: 'var(--muted-foreground)', lineHeight: 1.55 }}>{item}</span>
-                            </div>
-                        ))}
-                    </div>
+
+            {/* Column header row */}
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 36px 1fr', gap:'0 8px', marginBottom:12 }}>
+                <div style={{ fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.09em', color:'var(--muted-foreground)', opacity: visible?1:0, transition:`opacity 0.4s ${ease}` }}>
+                    {data.before?.label ?? 'Before'}
                 </div>
-                {/* After column — hover brightens, border glows */}
-                <div>
-                    <div style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: accent, marginBottom: 12, opacity: visible ? 1 : 0, transition: `opacity 0.5s 0.08s ${ease}` }}>
-                        {data.after?.label ?? 'After'}
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        {afterItems.map((item, i) => (
-                            <div key={i}
-                                onMouseEnter={() => setHoveredAfter(i)}
-                                onMouseLeave={() => setHoveredAfter(null)}
-                                style={{
-                                    padding: '12px 16px 12px 13px', borderRadius: 10,
-                                    background: hoveredAfter === i ? `${accent}08` : 'var(--background)',
-                                    border: `1px solid ${hoveredAfter === i ? `${accent}40` : 'var(--border)'}`,
-                                    borderLeft: `3px solid ${hoveredAfter === i ? accent : `${accent}80`}`,
-                                    boxShadow: hoveredAfter === i ? `0 2px 16px ${accent}18` : 'none',
-                                    display: 'flex', gap: 10, alignItems: 'flex-start',
-                                    opacity: visible ? 1 : 0,
-                                    transform: visible ? 'none' : 'translateX(20px)',
-                                    transition: `opacity 0.5s ${i * 0.07 + (m.delay ?? 0) + 0.05}s ${ease}, transform 0.5s ${i * 0.07 + (m.delay ?? 0) + 0.05}s ${ease}, background 0.2s, border-color 0.2s, box-shadow 0.3s`,
-                                    cursor: 'default',
-                                }}>
-                                <span style={{
-                                    color: accent, flexShrink: 0, fontSize: '10px', lineHeight: '1.8', fontWeight: 700,
-                                    opacity: hoveredAfter === i ? 1 : 0.6,
-                                    transition: 'opacity 0.2s',
-                                }}>→</span>
-                                <span style={{
-                                    fontSize: 'var(--modal-body)', lineHeight: 1.55,
-                                    color: hoveredAfter === i ? 'var(--foreground)' : 'var(--foreground)',
-                                    fontWeight: hoveredAfter === i ? 500 : 400,
-                                    transition: 'font-weight 0.2s',
-                                }}>{item}</span>
-                            </div>
-                        ))}
-                    </div>
+                <div />
+                <div style={{ fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.09em', color:accent, opacity: visible?1:0, transition:`opacity 0.4s 0.06s ${ease}` }}>
+                    {data.after?.label ?? 'After'}
                 </div>
+            </div>
+
+            {/* Paired rows — left and right cells share the same grid row height */}
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                {Array.from({ length: rowCount }).map((_, i) => {
+                    const before = beforeItems[i];
+                    const after  = afterItems[i];
+                    const isHov  = hovRow === i;
+                    const delay  = i * 0.07 + (m.delay ?? 0);
+                    return (
+                        <div key={i}
+                            onMouseEnter={() => setHovRow(i)}
+                            onMouseLeave={() => setHovRow(null)}
+                            style={{ display:'grid', gridTemplateColumns:'1fr 36px 1fr', gap:'0 8px', alignItems:'stretch', cursor:'default', opacity: visible?1:0, transform: visible?'none':'translateY(14px)', transition:`opacity 0.5s ${delay}s ${ease}, transform 0.5s ${delay}s ${ease}` }}>
+
+                            {/* Before cell */}
+                            {before ? (
+                                <div style={{ padding:'11px 14px', borderRadius:9, background:'var(--muted)', border:'1px solid var(--border)', display:'flex', gap:9, alignItems:'flex-start', opacity: isHov ? 0.28 : 0.85, transition:'opacity 0.22s ease' }}>
+                                    <span style={{ color:'var(--muted-foreground)', flexShrink:0, fontWeight:700, fontSize:'11px', lineHeight:'1.6', opacity:0.5, userSelect:'none' }}>—</span>
+                                    <span style={{ fontSize:'var(--modal-body)', color:'var(--muted-foreground)', lineHeight:1.55 }}>{before}</span>
+                                </div>
+                            ) : <div />}
+
+                            {/* Arrow connector — lights up on hover, nudges right */}
+                            <div style={{ display:'flex', alignItems:'center', justifyContent:'center', color: isHov ? accent : 'var(--muted-foreground)', opacity: isHov ? 1 : 0.3, fontSize:'15px', fontWeight:800, transform: isHov ? 'translateX(3px)' : 'none', transition:'color 0.2s ease, opacity 0.2s ease, transform 0.2s ease', userSelect:'none' }}>→</div>
+
+                            {/* After cell */}
+                            {after ? (
+                                <div style={{ padding:'11px 14px 11px 12px', borderRadius:9, background: isHov ? `${accent}10` : 'var(--background)', border:`1px solid ${isHov ? `${accent}45` : 'var(--border)'}`, borderLeft:`2.5px solid ${isHov ? accent : `${accent}55`}`, boxShadow: isHov ? `0 3px 18px ${accent}14` : 'none', display:'flex', gap:9, alignItems:'flex-start', transition:'background 0.22s ease, border-color 0.22s ease, box-shadow 0.28s ease' }}>
+                                    <span style={{ color:accent, flexShrink:0, fontSize:'11px', lineHeight:'1.6', fontWeight:700, opacity: isHov ? 1 : 0.5, transition:'opacity 0.2s' }}>→</span>
+                                    <span style={{ fontSize:'var(--modal-body)', color:'var(--foreground)', lineHeight:1.55, fontWeight: isHov ? 500 : 400, transition:'font-weight 0.15s' }}>{after}</span>
+                                </div>
+                            ) : <div />}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
