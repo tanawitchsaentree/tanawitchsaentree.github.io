@@ -1485,46 +1485,57 @@ function DriftAppDemo({ accent }: { accent: string }) {
     };
 
     return (
-        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:20 }}>
-            {/* Phone frame — navigation is entirely internal */}
-            <div style={{ width:300, borderRadius:44, background:'#1C1C1E', border:'9px solid #0A0A0A', boxShadow:`0 0 0 1px #3A3A3C, 0 28px 70px rgba(0,0,0,0.6), 0 0 50px ${accent}18`, overflow:'hidden' }}>
-                <div style={{ padding:'14px 20px 4px', display:'flex', justifyContent:'space-between' }}>
-                    <span style={{ fontSize:'12px', fontWeight:700, color:'#fff' }}>9:41</span>
-                    <span style={{ fontSize:'10px', color:'#fff', opacity:0.7 }}>●●● WiFi ■</span>
+        /* Dark atmospheric stage — matches phone's dark UI, creates immersive showcase feel */
+        <div style={{ borderRadius:20, overflow:'hidden', background:'linear-gradient(160deg,#0c0c14 0%,#15100a 60%,#0e0d0c 100%)', position:'relative', padding:'44px 32px 36px' }}>
+            {/* Ambient glow behind phone — accent bleeds through */}
+            <div style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:340, height:260, background:`radial-gradient(ellipse at 50% 0%, ${accent}22 0%, transparent 68%)`, pointerEvents:'none' }} />
+
+            {/* Phone — centered, dramatic shadow */}
+            <div style={{ display:'flex', justifyContent:'center', marginBottom:36, position:'relative', zIndex:1 }}>
+                <div style={{ width:300, borderRadius:44, background:'#1C1C1E', border:'9px solid #0A0A0A', boxShadow:`0 0 0 1px #2a2a2a, 0 48px 96px rgba(0,0,0,0.85), 0 0 70px ${accent}20`, overflow:'hidden' }}>
+                    <div style={{ padding:'14px 20px 4px', display:'flex', justifyContent:'space-between' }}>
+                        <span style={{ fontSize:'12px', fontWeight:700, color:'#fff' }}>9:41</span>
+                        <span style={{ fontSize:'10px', color:'#fff', opacity:0.7 }}>●●● WiFi ■</span>
+                    </div>
+                    {screen === 'city'  && <DriftCityScreen  accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => handleScreen('job')} onEvent={() => handleScreen('event')} onCallout={showCallout} animScore={animScore} />}
+                    {screen === 'job'   && <DriftJobScreen   accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
+                    {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
                 </div>
-                {screen === 'city'  && <DriftCityScreen  accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => handleScreen('job')} onEvent={() => handleScreen('event')} onCallout={showCallout} animScore={animScore} />}
-                {screen === 'job'   && <DriftJobScreen   accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
-                {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
             </div>
 
-            {/* Journey strip — shows connected flow, current position, visited state */}
-            <div style={{ display:'flex', alignItems:'center' }}>
+            {/* Journey indicator — dot nodes, no boxes */}
+            <div style={{ display:'flex', justifyContent:'center', alignItems:'flex-start', position:'relative', zIndex:1, marginBottom:28 }}>
                 {DRIFT_JOURNEY.map((node, i) => {
                     const isActive  = screen === node.id;
                     const isVisited = visited.has(node.id);
+                    const nextVisited = i < DRIFT_JOURNEY.length - 1 && visited.has(DRIFT_JOURNEY[i+1].id);
                     return (
-                        <div key={node.id} style={{ display:'flex', alignItems:'center' }}>
-                            <button onClick={() => handleScreen(node.id)} title={node.step} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:4, padding:'7px 14px', borderRadius:10, border:`1.5px solid ${isActive ? accent : isVisited ? `${accent}50` : 'var(--border)'}`, background: isActive ? `${accent}18` : 'transparent', cursor:'pointer', fontFamily:'inherit', transition:`all 0.2s ${ease}`, opacity: isVisited ? 1 : 0.45 }}>
-                                <span style={{ fontSize:'15px' }}>{node.icon}</span>
-                                <span style={{ fontSize:'10px', fontWeight: isActive ? 700 : 400, color: isActive ? accent : 'var(--muted-foreground)', whiteSpace:'nowrap' }}>{node.label}</span>
-                                <span style={{ fontSize:'9px', color:'var(--muted-foreground)', opacity:0.7, whiteSpace:'nowrap' }}>{node.step}</span>
+                        <div key={node.id} style={{ display:'flex', alignItems:'flex-start' }}>
+                            <button onClick={() => handleScreen(node.id)} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, background:'none', border:'none', cursor:'pointer', padding:'0 22px', fontFamily:'inherit' }}>
+                                {/* Dot */}
+                                <div style={{ width: isActive?10:7, height: isActive?10:7, borderRadius:'50%', background: isActive ? accent : isVisited ? `${accent}70` : 'rgba(255,255,255,0.18)', boxShadow: isActive ? `0 0 14px ${accent}` : 'none', transition:`all 0.3s ${ease}`, flexShrink:0 }} />
+                                <span style={{ fontSize:'11px', fontWeight: isActive?700:400, color: isActive?'#fff':'rgba(255,255,255,0.35)', whiteSpace:'nowrap', transition:`all 0.2s ${ease}` }}>{node.label}</span>
+                                <span style={{ fontSize:'9px', color:'rgba(255,255,255,0.2)', whiteSpace:'nowrap' }}>{node.step}</span>
                             </button>
                             {i < DRIFT_JOURNEY.length - 1 && (
-                                <div style={{ width:20, height:1.5, background: visited.has(DRIFT_JOURNEY[i+1].id) ? accent : 'var(--border)', flexShrink:0, transition:`background 0.4s ${ease}`, opacity: visited.has(DRIFT_JOURNEY[i+1].id) ? 0.7 : 0.3 }} />
+                                <div style={{ width:28, height:1.5, flexShrink:0, background: nextVisited ? accent : 'rgba(255,255,255,0.1)', opacity: nextVisited ? 0.55 : 1, transition:`background 0.4s ${ease}`, marginTop:4 }} />
                             )}
                         </div>
                     );
                 })}
             </div>
 
-            {/* Callout — fades in on interaction, auto-dismisses, reserves height to prevent layout jump */}
-            <div style={{ maxWidth:320, width:'100%', minHeight:72, display:'flex', alignItems:'center' }}>
-                <div style={{ width:'100%', padding: callout ? '12px 16px' : 0, borderRadius:10, background: callout ? `${accent}12` : 'transparent', border:`1px solid ${callout ? `${accent}30` : 'transparent'}`, fontSize:'12px', color:'var(--muted-foreground)', lineHeight:1.7, transition:`opacity 0.3s ${ease}, background 0.3s ease`, opacity: callout ? 1 : 0, animation: callout ? `drift-fade 0.25s ${ease}` : undefined }}>
-                    {callout && <>
-                        <strong style={{ color:accent, display:'block', marginBottom:4 }}>{callout.label} — why this?</strong>
-                        {callout.text}
-                    </>}
-                </div>
+            {/* Callout — editorial annotation, no generic box */}
+            <div style={{ maxWidth:360, margin:'0 auto', minHeight:56, position:'relative', zIndex:1, opacity: callout?1:0, visibility: callout?'visible':'hidden', transition:`opacity 0.3s ${ease}`, animation: callout ? `drift-fade 0.25s ${ease}` : undefined }}>
+                {callout && (
+                    <div style={{ display:'flex', gap:14, alignItems:'flex-start' }}>
+                        <div style={{ width:2, flexShrink:0, background:accent, borderRadius:2, alignSelf:'stretch', opacity:0.85 }} />
+                        <div>
+                            <div style={{ fontSize:'10px', fontWeight:700, color:accent, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:6 }}>{callout.label}</div>
+                            <div style={{ fontSize:'12px', color:'rgba(255,255,255,0.5)', lineHeight:1.75 }}>{callout.text}</div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
