@@ -1152,7 +1152,7 @@ function PersonaLens({ accent }: { accent: string }) {
                 {/* Fund card — morphs per persona */}
                 <div style={{ maxWidth:460, margin:'0 auto', background:p.bg, borderRadius:16, padding:'28px 24px', border:`1px solid ${p.color}22`, boxShadow:`0 24px 60px rgba(0,0,0,0.5), 0 0 50px ${p.color}12`, transition:`all 0.5s ${ease}`, position:'relative', overflow:'hidden' }}>
                     <div style={{ position:'absolute', bottom:-30, right:-30, width:160, height:160, background:`radial-gradient(circle,${p.color}15 0%,transparent 70%)`, pointerEvents:'none' }} />
-                    <div style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.4)', letterSpacing:'0.02em', marginBottom:20 }}>{p.fundName}</div>
+                    <div style={{ fontSize:12, fontWeight:600, color:'rgba(255,255,255,0.65)', letterSpacing:'0.02em', marginBottom:20 }}>{p.fundName}</div>
                     {/* Hero — fixed height morph container */}
                     <div style={{ position:'relative', height:110, marginBottom:20 }}>
                         {/* Sarocha: stars */}
@@ -1160,7 +1160,7 @@ function PersonaLens({ accent }: { accent: string }) {
                             <SmartTooltip wide delay={280} content={<DriftTip label="Decision 02" title="Stars as universal translator" body="Sarocha can't interpret Sharpe ratio. Five stars answers 'is this good?' without requiring financial literacy." />}>
                                 <div style={{ cursor:'default' }}>
                                     <div style={{ display:'flex', gap:4, marginBottom:10 }}>{'★★★★★'.split('').map((s,i) => <span key={i} style={{ fontSize:34, color:'#F59E0B', textShadow:'0 0 20px #F59E0B88' }}>{s}</span>)}</div>
-                                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.35)' }}>Morningstar Overall Rating</div>
+                                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.58)' }}>Morningstar Overall Rating</div>
                                 </div>
                             </SmartTooltip>
                         </div>
@@ -1171,7 +1171,7 @@ function PersonaLens({ accent }: { accent: string }) {
                                     <div style={{ fontSize:56, fontWeight:900, color:'#22c55e', letterSpacing:'-0.04em', lineHeight:1, marginBottom:10, textShadow:'0 0 30px #22c55e50' }}>+14.8%</div>
                                     <div style={{ display:'flex', gap:16 }}>
                                         {[['Sharpe','0.81'],['Std Dev','6.2%'],['Expense','0.65%']].map(([k,v]) => (
-                                            <div key={k}><div style={{ fontSize:8, color:'rgba(255,255,255,0.25)', marginBottom:2 }}>{k}</div><div style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.75)' }}>{v}</div></div>
+                                            <div key={k}><div style={{ fontSize:8, color:'rgba(255,255,255,0.5)', marginBottom:2 }}>{k}</div><div style={{ fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.88)' }}>{v}</div></div>
                                         ))}
                                     </div>
                                 </div>
@@ -1189,7 +1189,7 @@ function PersonaLens({ accent }: { accent: string }) {
                             </SmartTooltip>
                         </div>
                     </div>
-                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.3)', marginBottom:20 }}>{p.fundSub}</div>
+                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.55)', marginBottom:20 }}>{p.fundSub}</div>
                     <SmartTooltip wide delay={300} content={<DriftTip label="Decision 04" title="CTA adapts to intent" body={persona==='sarocha'?'Concrete amount anchors the ask. Abstract CTAs are more intimidating than specific ones.':persona==='anan'?'Analyst intent is refinement. CTA reflects active portfolio management.':'Values-driven framing. "Explore" signals alignment — not just a transaction.'} />}>
                         <button style={{ width:'100%', padding:'13px', borderRadius:10, background:p.color, color:'#fff', fontSize:13, fontWeight:700, border:'none', cursor:'pointer', transition:`all 0.3s ${ease}`, boxShadow:`0 4px 20px ${p.color}45` }}>{p.cta}</button>
                     </SmartTooltip>
@@ -1291,7 +1291,7 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
             <div style={{ display:'flex', gap:8, marginBottom:16 }}>
                 {(Object.keys(DRIFT_CITIES_DATA) as DCity[]).map(c => (
                     <SmartTooltip key={c} wide delay={250} content={<DriftTip label="City Profile" title={`Switch to ${c}`} body="Each city profile replaces Nomad List + remote job board + Meetup in one screen. Score, work, and community — same tap." />}>
-                        <button onClick={() => setCity(c)} style={{ display:'flex', alignItems:'center', gap:6, padding:'7px 14px', borderRadius:8, background:city===c?DRIFT_CITIES_DATA[c].accent:'rgba(255,255,255,0.05)', color:city===c?'#fff':'rgba(255,255,255,0.5)', border:`1px solid ${city===c?DRIFT_CITIES_DATA[c].accent:'rgba(255,255,255,0.08)'}`, cursor:'pointer', fontSize:11, fontWeight:700, transition:`all 0.2s ${ease}`, transform:city===c?'scale(1.04)':'scale(1)' }}>
+                        <button onClick={() => setCity(c)} style={{ display:'flex', alignItems:'center', gap:6, padding:'7px 14px', borderRadius:8, background:city===c?DRIFT_CITIES_DATA[c].accent:'rgba(255,255,255,0.05)', color:city===c?'#fff':'rgba(255,255,255,0.68)', border:`1px solid ${city===c?DRIFT_CITIES_DATA[c].accent:'rgba(255,255,255,0.14)'}`, cursor:'pointer', fontSize:11, fontWeight:700, transition:`all 0.2s ${ease}`, transform:city===c?'scale(1.04)':'scale(1)' }}>
                             <span>{DRIFT_CITIES_DATA[c].flag}</span><span>{c}</span>
                         </button>
                     </SmartTooltip>
@@ -1305,12 +1305,12 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
                         <span style={{ fontSize:28 }}>{cd.flag}</span>
                         <div>
                             <div style={{ fontSize:20, fontWeight:800, color:'#fff', letterSpacing:'-0.02em' }}>{city}</div>
-                            <div style={{ fontSize:10, color:'rgba(255,255,255,0.3)', letterSpacing:'0.08em', textTransform:'uppercase' }}>Nomad City Profile</div>
+                            <div style={{ fontSize:10, color:'rgba(255,255,255,0.52)', letterSpacing:'0.08em', textTransform:'uppercase' }}>Nomad City Profile</div>
                         </div>
                     </div>
                     <div style={{ textAlign:'right' }}>
-                        <div style={{ fontSize:9, color:'rgba(255,255,255,0.28)', marginBottom:2, textTransform:'uppercase', letterSpacing:'0.06em' }}>Cost / mo</div>
-                        <div style={{ fontSize:20, fontWeight:800, color:'rgba(255,255,255,0.8)' }}>{cd.cost}</div>
+                        <div style={{ fontSize:9, color:'rgba(255,255,255,0.52)', marginBottom:2, textTransform:'uppercase', letterSpacing:'0.06em' }}>Cost / mo</div>
+                        <div style={{ fontSize:20, fontWeight:800, color:'rgba(255,255,255,0.92)' }}>{cd.cost}</div>
                     </div>
                 </div>
                 {/* Score hero */}
@@ -1325,8 +1325,8 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
                     {tabs.map((t, tIdx) => (
                         <SmartTooltip key={t.id} wide delay={250} content={<DriftTip label="Decision 03" title={`${t.badge} ${t.label.toLowerCase()} — count is the signal`} body={t.id==='events'?'3 upcoming events before tap. Nomads qualify city by scene depth, not by reading.':t.id==='jobs'?'20 open roles in Prague. Answers "is there work here?" in one scan.':'Live pulse. The city has a scene right now.'} />}>
                             <button onClick={() => setTab(t.id)} style={{ flex:1, padding:'8px 4px', borderRadius:8, background:tab===t.id?`${cd.accent}28`:'transparent', border:tab===t.id?`1px solid ${cd.accent}55`:'1px solid transparent', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:5, transition:`all 0.2s ${ease}` }}>
-                                <span style={{ fontSize:11, fontWeight:700, color:tab===t.id?'#fff':'rgba(255,255,255,0.38)' }}>{t.label}</span>
-                                <span style={{ fontSize:t.badge==='●'?8:10, fontWeight:800, color:tab===t.id?cd.accent:'rgba(255,255,255,0.28)', background:countsIn?(tab===t.id?`${cd.accent}28`:'rgba(255,255,255,0.06)'):'transparent', padding:'1px 6px', borderRadius:4, opacity:countsIn?1:0, transform:countsIn?'scale(1)':'scale(0.4) translateY(4px)', transition:`all 0.4s ${ease} ${tIdx*0.08}s` }}>{t.badge}</span>
+                                <span style={{ fontSize:11, fontWeight:700, color:tab===t.id?'#fff':'rgba(255,255,255,0.6)' }}>{t.label}</span>
+                                <span style={{ fontSize:t.badge==='●'?8:10, fontWeight:800, color:tab===t.id?cd.accent:'rgba(255,255,255,0.5)', background:countsIn?(tab===t.id?`${cd.accent}28`:'rgba(255,255,255,0.06)'):'transparent', padding:'1px 6px', borderRadius:4, opacity:countsIn?1:0, transform:countsIn?'scale(1)':'scale(0.4) translateY(4px)', transition:`all 0.4s ${ease} ${tIdx*0.08}s` }}>{t.badge}</span>
                             </button>
                         </SmartTooltip>
                     ))}
@@ -1338,7 +1338,7 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
                             <div style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 14px', background:'rgba(255,255,255,0.05)', border:`1px solid rgba(255,255,255,0.08)`, borderRadius:10, animation:`drift-el-in 0.3s ${ease} ${i*0.07}s both`, cursor:'default' }}>
                                 <div style={{ flex:1 }}>
                                     <div style={{ fontSize:12, fontWeight:600, color:'#fff' }}>{ev.title}</div>
-                                    <div style={{ fontSize:10, color:'rgba(255,255,255,0.32)', marginTop:2 }}>{ev.meta}</div>
+                                    <div style={{ fontSize:10, color:'rgba(255,255,255,0.55)', marginTop:2 }}>{ev.meta}</div>
                                 </div>
                                 <DriftAvatarStack size={20} count={ev.count} />
                             </div>
@@ -1363,7 +1363,7 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
                 <SmartTooltip wide delay={300} content={<DriftTip label="Design decision" title="Community makes the city real" body={`${cd.nomads} nomads active in ${city} this week. The scene exists before you land.`} />}>
                     <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'12px 0', borderTop:'1px solid rgba(255,255,255,0.06)', cursor:'default' }}>
                         <DriftAvatarStack size={26} count={99} />
-                        <div style={{ fontSize:11, color:'rgba(255,255,255,0.32)', fontWeight:600 }}>{cd.nomads} nomads active this week</div>
+                        <div style={{ fontSize:11, color:'rgba(255,255,255,0.58)', fontWeight:600 }}>{cd.nomads} nomads active this week</div>
                     </div>
                 </SmartTooltip>
             </div>
@@ -1432,7 +1432,7 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
                 <div style={{ display:'flex', gap:8, marginBottom:20, flexWrap:'wrap' }}>
                     {RV_CITIES.map(c => (
                         <SmartTooltip key={c} wide delay={250} content={<DriftTip label="Decision 01" title="Location-first entry" body="Three of six high-severity audit findings traced to missing location context. The city picker makes location the first-class organising principle." />}>
-                            <button onClick={() => setCity(c)} style={{ display:'flex', alignItems:'center', gap:5, padding:'6px 12px', borderRadius:7, background:city===c?`${accent}22`:'rgba(255,255,255,0.04)', border:`1px solid ${city===c?`${accent}55`:'rgba(255,255,255,0.08)'}`, cursor:'pointer', fontSize:11, fontWeight:700, color:city===c?'#fff':'rgba(255,255,255,0.4)', transition:`all 0.2s ${ease}` }}>
+                            <button onClick={() => setCity(c)} style={{ display:'flex', alignItems:'center', gap:5, padding:'6px 12px', borderRadius:7, background:city===c?`${accent}22`:'rgba(255,255,255,0.04)', border:`1px solid ${city===c?`${accent}55`:'rgba(255,255,255,0.08)'}`, cursor:'pointer', fontSize:11, fontWeight:700, color:city===c?'#fff':'rgba(255,255,255,0.65)', transition:`all 0.2s ${ease}` }}>
                                 <span style={{ fontSize:10 }}>📍</span><span>{c}</span>
                             </button>
                         </SmartTooltip>
@@ -1446,14 +1446,14 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
                             <span key={city} style={{ color:accent, animation:`drift-el-in 0.35s ${ease} both`, display:'inline-block' }}>{city}</span>
                             {' '}agents.
                         </div>
-                        <div style={{ fontSize:12, color:'rgba(255,255,255,0.3)', marginTop:8 }}>Ready-to-share · Brand-consistent · Updated weekly</div>
+                        <div style={{ fontSize:12, color:'rgba(255,255,255,0.55)', marginTop:8 }}>Ready-to-share · Brand-consistent · Updated weekly</div>
                     </div>
                 </SmartTooltip>
                 {/* Category tabs */}
                 <div style={{ display:'flex', gap:0, background:'rgba(255,255,255,0.04)', borderRadius:10, padding:3, marginBottom:16 }}>
                     {RV_CATS.map(c => (
                         <SmartTooltip key={c.id} wide delay={250} content={<DriftTip label="Decision 02" title={`${c.label} — navigation, not search`} body="Agents browsing for inspiration don't know what to search for — they need to see what exists. Category rows surface the taxonomy before the first tap." />}>
-                            <button onClick={() => setCat(c.id)} style={{ flex:1, padding:'7px 8px', borderRadius:8, background:cat===c.id?`${accent}22`:'transparent', border:cat===c.id?`1px solid ${accent}45`:'1px solid transparent', cursor:'pointer', fontSize:10, fontWeight:700, color:cat===c.id?'#fff':'rgba(255,255,255,0.38)', transition:`all 0.2s ${ease}`, whiteSpace:'nowrap' }}>{c.label}</button>
+                            <button onClick={() => setCat(c.id)} style={{ flex:1, padding:'7px 8px', borderRadius:8, background:cat===c.id?`${accent}22`:'transparent', border:cat===c.id?`1px solid ${accent}45`:'1px solid transparent', cursor:'pointer', fontSize:10, fontWeight:700, color:cat===c.id?'#fff':'rgba(255,255,255,0.62)', transition:`all 0.2s ${ease}`, whiteSpace:'nowrap' }}>{c.label}</button>
                         </SmartTooltip>
                     ))}
                 </div>
@@ -1477,7 +1477,7 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
                                                 ? <>{parts[0]}<span style={{ color:accent, fontWeight:800 }}>{city}</span>{parts[1]}</>
                                                 : title}
                                         </div>
-                                        <div style={{ fontSize:8, color:'rgba(255,255,255,0.28)', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em' }}>{v.sub}</div>
+                                        <div style={{ fontSize:8, color:'rgba(255,255,255,0.55)', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em' }}>{v.sub}</div>
                                     </div>
                                 </div>
                             </SmartTooltip>
