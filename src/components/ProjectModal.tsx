@@ -1625,12 +1625,12 @@ function DriftAppDemo({ accent }: { accent: string }) {
 
             {/* Phone — centered, dramatic shadow */}
             <div style={{ display:'flex', justifyContent:'center', marginBottom:36, position:'relative', zIndex:1 }}>
-                <div style={{ width:300, borderRadius:44, background:'#1C1C1E', border:'9px solid #0A0A0A', boxShadow:`0 0 0 1px #2a2a2a, 0 48px 96px rgba(0,0,0,0.85), 0 0 70px ${accent}20`, overflow:'hidden' }}>
+                <div style={{ width:300, borderRadius:44, background:'#1C1C1E', border:'9px solid #0A0A0A', boxShadow:`0 0 0 1px #2a2a2a, 0 48px 96px rgba(0,0,0,0.85), 0 0 70px ${accent}20`, overflow:'hidden', height:600 }}>
                     <div style={{ padding:'14px 20px 4px', display:'flex', justifyContent:'space-between' }}>
                         <span style={{ fontSize:'12px', fontWeight:700, color:'#fff' }}>9:41</span>
                         <span style={{ fontSize:'10px', color:'#fff', opacity:0.7 }}>●●● WiFi ■</span>
                     </div>
-                    <div key={screen} style={{ animation: `${screenDir >= 0 ? 'drift-screen-fwd' : 'drift-screen-back'} 0.26s cubic-bezier(0.16,1,0.3,1) both` }}>
+                    <div key={screen} style={{ animation: `${screenDir >= 0 ? 'drift-screen-fwd' : 'drift-screen-back'} 0.26s cubic-bezier(0.16,1,0.3,1) both`, height:'calc(100% - 38px)', overflowY:'auto' }}>
                         {screen === 'city'  && <DriftCityScreen  accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => handleScreen('job')} onEvent={() => handleScreen('event')} onCallout={showCallout} animScore={animScore} />}
                         {screen === 'job'   && <DriftJobScreen   accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
                         {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
