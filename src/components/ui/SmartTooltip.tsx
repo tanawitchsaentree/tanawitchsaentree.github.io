@@ -9,17 +9,23 @@ export interface SmartTooltipProps {
     children: React.ReactElement<any>;
     /** ms before tooltip appears — default 350 feels intentional, not accidental */
     delay?: number;
+    /** wide mode: multi-line card with max-width 260px — for structured content */
+    wide?: boolean;
 }
 
-const OFFSET = 14;   // gap from cursor tip to nearest tooltip corner
-const EST_W  = 190;  // estimated max width for edge detection
-const EST_H  = 58;   // estimated height for edge detection
+const OFFSET   = 14;
+const EST_W    = 190;
+const EST_W_WD = 260;  // wide mode edge detection
+const EST_H    = 58;
+const EST_H_WD = 90;   // wide mode estimated height
 
-function choosePlacement(x: number, y: number): Placement {
+function choosePlacement(x: number, y: number, wide = false): Placement {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const goLeft  = x + EST_W  + OFFSET > vw - 16;
-    const goAbove = y + EST_H  + OFFSET > vh - 16;
+    const w = wide ? EST_W_WD : EST_W;
+    const h = wide ? EST_H_WD : EST_H;
+    const goLeft  = x + w + OFFSET > vw - 16;
+    const goAbove = y + h + OFFSET > vh - 16;
     if (goAbove && goLeft)  return 'top-left';
     if (goAbove)            return 'top-right';
     if (goLeft)             return 'bottom-left';
@@ -33,7 +39,7 @@ interface BubbleState {
     visible: boolean;
 }
 
-function TooltipBubble({ content, state }: { content: React.ReactNode; state: BubbleState }) {
+function TooltipBubble({ content, state, wide }: { content: React.ReactNode; state: BubbleState; wide?: boolean }) {
     const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
     const { x, y, placement, visible } = state;
     const isAbove = placement.startsWith('top');
@@ -73,12 +79,13 @@ function TooltipBubble({ content, state }: { content: React.ReactNode; state: Bu
                 <div style={{
                     background: 'var(--foreground)',
                     color: 'var(--background)',
-                    borderRadius: 'var(--radius)',
-                    padding: '10px 16px',
+                    borderRadius: wide ? 12 : 'var(--radius)',
+                    padding: wide ? '12px 16px' : '10px 16px',
                     fontSize: 'var(--text-base)',
                     fontFamily: 'var(--font-sans)',
                     lineHeight: 1.55,
-                    whiteSpace: 'nowrap',
+                    whiteSpace: wide ? 'normal' : 'nowrap',
+                    maxWidth: wide ? 260 : undefined,
                     boxShadow: '0 8px 24px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.1)',
                 }}>
                     {content}
@@ -89,7 +96,7 @@ function TooltipBubble({ content, state }: { content: React.ReactNode; state: Bu
     );
 }
 
-export function SmartTooltip({ content, children, delay = 350 }: SmartTooltipProps) {
+export function SmartTooltip({ content, children, delay = 350, wide = false }: SmartTooltipProps) {
     const timerRef  = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const cursorRef = useRef({ x: 0, y: 0 }); // tracks latest cursor pos while waiting for delay
     const [mounted, setMounted]   = useState(false);
@@ -103,7 +110,7 @@ export function SmartTooltip({ content, children, delay = 350 }: SmartTooltipPro
         timerRef.current = setTimeout(() => {
             const { x: cx, y: cy } = cursorRef.current;
             setMounted(true);
-            setState({ x: cx, y: cy, placement: choosePlacement(cx, cy), visible: true });
+            setState({ x: cx, y: cy, placement: choosePlacement(cx, cy, wide), visible: true });
         }, delay);
     }, [delay]);
 
@@ -115,7 +122,7 @@ export function SmartTooltip({ content, children, delay = 350 }: SmartTooltipPro
     const move = useCallback((x: number, y: number) => {
         cursorRef.current = { x, y };
         setState(s => s.visible
-            ? { ...s, x, y, placement: choosePlacement(x, y) }
+            ? { ...s, x, y, placement: choosePlacement(x, y, wide) }
             : s
         );
     }, []);
@@ -149,7 +156,7 @@ export function SmartTooltip({ content, children, delay = 350 }: SmartTooltipPro
         <>
             {child}
             {mounted && createPortal(
-                <TooltipBubble content={content} state={state} />,
+                <TooltipBubble content={content} state={state} wide={wide} />,
                 document.body
             )}
         </>

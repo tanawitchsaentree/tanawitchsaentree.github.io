@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { ChevronRight, ChevronDown } from 'lucide-react';
 import workData from '../data/work_projects.json';
 import { PinnedCard } from './ui/PinnedCard';
+import { SmartTooltip } from './ui/SmartTooltip';
 
 // ─── Modal Scroll Context ──────────────────────────────────────────────────────
 const ModalScrollCtx = createContext<React.RefObject<HTMLDivElement | null> | null>(null);
@@ -1165,6 +1166,18 @@ function PersonaLens({ accent }: { accent: string }) {
 }
 
 // ─── Drift App Demo ───────────────────────────────────────────────────────────
+
+/** Structured tooltip card for Drift demo design rationale */
+function DriftTip({ label, title, body }: { label: string; title: string; body: string }) {
+    return (
+        <div>
+            <div style={{ fontSize:'9px', fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:5, opacity:0.45 }}>{label}</div>
+            <div style={{ fontSize:'13px', fontWeight:700, marginBottom:5, lineHeight:1.3 }}>{title}</div>
+            <div style={{ fontSize:'11px', lineHeight:1.65, opacity:0.65 }}>{body}</div>
+        </div>
+    );
+}
+
 const DRIFT_AVATAR_COLORS = ['#8B5CF6','#3B82F6','#10B981','#F59E0B','#EF4444'];
 // Callout data — maps interaction key → design decision explanation
 const DRIFT_CALLOUTS: Record<string, {label:string; text:string}> = {
@@ -1220,6 +1233,7 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
             </div>
 
             {/* Score hero — THE argument in pixels */}
+            <SmartTooltip wide delay={400} content={<DriftTip label="Design decision" title="One number qualifies a city" body="The 9.2 synthesises internet, cost, safety, and nomad density. One scan to decide — or skip — without opening anything." />}>
             <div style={{ margin:'0 14px 14px', borderRadius:18, overflow:'hidden', background:'linear-gradient(145deg,#0e1624 0%,#131020 60%,#0e0e14 100%)', position:'relative', padding:'20px 18px 16px', animation:`drift-el-in 0.4s ${ease} 0.1s both` }}>
                 <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 15% 85%, ${accent}30 0%, transparent 55%)`, pointerEvents:'none' }} />
                 <div style={{ position:'absolute', top:0, right:0, width:120, height:120, background:`radial-gradient(ellipse at 80% 20%, ${accent}15 0%, transparent 60%)`, pointerEvents:'none' }} />
@@ -1242,14 +1256,24 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
                     <div style={{ height:'100%', borderRadius:3, background:`linear-gradient(90deg, ${accent}80, ${accent})`, width:`${(animScore/10)*100}%`, transition:'width 0.05s linear', boxShadow:`0 0 12px ${accent}90` }} />
                 </div>
             </div>
+            </SmartTooltip>
 
             {/* Tab bar — counts are the design argument */}
             <div style={{ padding:'0 14px 12px', display:'flex', gap:5, animation:`drift-el-in 0.4s ${ease} 0.18s both` }}>
                 {TABS.map(t => (
-                    <button key={t.id} onClick={() => { setTab(t.id); onCallout(`tab_${t.id}`); }} style={{ display:'flex', alignItems:'center', gap:5, padding:'7px 11px', borderRadius:20, border:'none', fontFamily:'inherit', fontSize:'12px', cursor:'pointer', flexShrink:0, background:tab===t.id?accent:'rgba(255,255,255,0.08)', color:tab===t.id?'#fff':'rgba(255,255,255,0.5)', fontWeight:tab===t.id?700:500, transition:`all 0.22s ${ease}`, boxShadow:tab===t.id?`0 4px 20px ${accent}55`:'none' }}>
+                    <SmartTooltip key={t.id} wide delay={300}
+                        content={
+                            t.id==='event' ? <DriftTip label="Decision 03" title={`${t.badge} events — no tap needed`} body="Count visible before you open. Nomads scan numbers first, descriptions second." /> :
+                            t.id==='job'   ? <DriftTip label="Decision 03" title={`${t.badge} open roles in Prague`}   body="Freelancers qualify a city by job density. This number answers in one scan." /> :
+                            t.id==='feed'  ? <DriftTip label="Decision 03" title="Live — nomads active now"             body="Pulse badge signals real-time activity. The city has a scene right now." /> :
+                            t.label
+                        }
+                    >
+                    <button onClick={() => { setTab(t.id); onCallout(`tab_${t.id}`); }} style={{ display:'flex', alignItems:'center', gap:5, padding:'7px 11px', borderRadius:20, border:'none', fontFamily:'inherit', fontSize:'12px', cursor:'pointer', flexShrink:0, background:tab===t.id?accent:'rgba(255,255,255,0.08)', color:tab===t.id?'#fff':'rgba(255,255,255,0.5)', fontWeight:tab===t.id?700:500, transition:`all 0.22s ${ease}`, boxShadow:tab===t.id?`0 4px 20px ${accent}55`:'none' }}>
                         {t.label}
                         {t.badge && <span style={{ padding:'2px 6px', borderRadius:6, fontSize:'10px', fontWeight:800, background:t.live?'#FF3B30':'rgba(255,255,255,0.22)', color:'#fff', animation:t.live?'drift-pulse 2s ease-in-out infinite':undefined }}>{t.badge}</span>}
                     </button>
+                    </SmartTooltip>
                 ))}
             </div>
 
@@ -1272,6 +1296,7 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
                     </div>
                 )}
                 {tab==='event' && (
+                    <SmartTooltip wide delay={300} content={<DriftTip label="Decision 02" title="Social proof before description" body="99+ nomads joined. The crowd is the product — the event is just the occasion. Tap to see it in context." />}>
                     <div
                         onClick={onEvent}
                         onMouseEnter={() => setHoverEvent(true)}
@@ -1286,8 +1311,10 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
                             <div style={{ marginTop:12, fontSize:'12px', color:accent, fontWeight:700 }}>Open event →</div>
                         </div>
                     </div>
+                    </SmartTooltip>
                 )}
                 {tab==='job' && (
+                    <SmartTooltip wide delay={300} content={<DriftTip label="Decision 01" title="Currency on the card" body="BTC, ETH, USD, Euro visible before you open. For a crypto nomad this single scan replaces 15 taps per session." />}>
                     <div
                         onClick={onJob}
                         onMouseEnter={() => setHoverJob(true)}
@@ -1303,6 +1330,7 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
                         </div>
                         <div style={{ marginTop:12, fontSize:'12px', color:accent, fontWeight:700 }}>Open vacancy →</div>
                     </div>
+                    </SmartTooltip>
                 )}
                 {tab==='feed' && (
                     <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
@@ -1376,6 +1404,7 @@ function DriftJobScreen({ accent, onBack, onCallout }: { accent: string; onBack:
                         </div>
                     </div>
                     {/* Salary — hero number */}
+                    <SmartTooltip wide delay={300} content={<DriftTip label="Decision 01" title="Rate at hero scale" body="Hourly rate is the primary filter. Shown at 44px so the scan takes half a second — not a detail buried in a paragraph." />}>
                     <div style={{ marginBottom:14 }}>
                         <div style={{ fontSize:'10px', fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:5 }}>HOURLY RATE</div>
                         <div style={{ display:'flex', alignItems:'baseline', gap:6 }}>
@@ -1383,6 +1412,7 @@ function DriftJobScreen({ accent, onBack, onCallout }: { accent: string; onBack:
                             <span style={{ fontSize:'15px', color:'rgba(255,255,255,0.4)', fontWeight:500 }}>/hr USD</span>
                         </div>
                     </div>
+                    </SmartTooltip>
                     {/* Tags */}
                     <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
                         <span style={{ padding:'5px 11px', borderRadius:8, background:'#34C75918', color:'#34C759', fontSize:'12px', fontWeight:700 }}>Freelance</span>
@@ -1402,11 +1432,19 @@ function DriftJobScreen({ accent, onBack, onCallout }: { accent: string; onBack:
                     {['USD','Euro','BTC','ETH'].map(p => {
                         const active = activePayment === p;
                         const c = PILL_COLORS[p];
+                        const tipBody: Record<string,string> = {
+                            USD:  'Standard. Present but not the differentiator — every platform shows USD.',
+                            Euro: 'Common for European contracts. Card-level means no surprise currency when you open the listing.',
+                            BTC:  'The signal. A Bitcoin-native freelancer sees this and qualifies the listing in under a second.',
+                            ETH:  'DeFi-adjacent roles often pay in ETH. For this user it is as important as the salary number.',
+                        };
                         return (
-                            <button key={p} onClick={() => handlePayment(p)} style={{ padding:'13px 14px', borderRadius:12, border:`1.5px solid ${active ? c : 'rgba(255,255,255,0.1)'}`, background: active ? `${c}22` : 'rgba(255,255,255,0.04)', color: active ? c : 'rgba(255,255,255,0.55)', fontSize:'14px', fontWeight:800, cursor:'pointer', fontFamily:'inherit', transition:`all 0.2s ${ease}`, boxShadow: active ? `0 0 0 1px ${c}50, 0 8px 24px ${c}28` : 'none', display:'flex', alignItems:'center', justifyContent:'center', gap:6, transform: active ? 'scale(1.04)' : 'scale(1)', letterSpacing:'-0.01em' }}>
+                            <SmartTooltip key={p} wide delay={250} content={<DriftTip label="Decision 01" title={`${p} — why it's on the card`} body={tipBody[p]} />}>
+                            <button onClick={() => handlePayment(p)} style={{ padding:'13px 14px', borderRadius:12, border:`1.5px solid ${active ? c : 'rgba(255,255,255,0.1)'}`, background: active ? `${c}22` : 'rgba(255,255,255,0.04)', color: active ? c : 'rgba(255,255,255,0.55)', fontSize:'14px', fontWeight:800, cursor:'pointer', fontFamily:'inherit', transition:`all 0.2s ${ease}`, boxShadow: active ? `0 0 0 1px ${c}50, 0 8px 24px ${c}28` : 'none', display:'flex', alignItems:'center', justifyContent:'center', gap:6, transform: active ? 'scale(1.04)' : 'scale(1)', letterSpacing:'-0.01em' }}>
                                 {active && <span style={{ fontSize:'11px' }}>✓</span>}
                                 {p}
                             </button>
+                            </SmartTooltip>
                         );
                     })}
                 </div>
@@ -1476,6 +1514,7 @@ function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBac
             </div>
 
             {/* Hero — social proof FIRST, dominant. This IS the design argument. */}
+            <SmartTooltip wide delay={300} content={<DriftTip label="Decision 02" title="Ordering is an argument" body="Count sits above the description. The decision to attend is social first — you need to know the crowd before you care about the agenda." />}>
             <div
                 onClick={() => onCallout('social_tap')}
                 style={{
@@ -1514,6 +1553,7 @@ function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBac
                 <DriftAvatarStack animatedCount={nomadCount} />
                 <div style={{ marginTop:10, fontSize:'10px', color:`${accent}99`, fontWeight:600 }}>↑ tap · social proof surfaces first</div>
             </div>
+            </SmartTooltip>
 
             {/* Toast */}
             {showToast && (
@@ -1558,6 +1598,7 @@ function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBac
 
             {/* CTA */}
             <div style={{ margin:'0 16px', animation:`drift-el-in 0.4s ${ease} 0.3s both` }}>
+            <SmartTooltip wide delay={300} content={<DriftTip label="Decision 04" title="Interest, not RSVP" body="Two-tap confirmation is intentional. Low-quality RSVPs inflate the count and break the social proof argument." />}>
                 <button
                     onClick={handleJoin}
                     style={{
@@ -1573,6 +1614,7 @@ function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBac
                 >
                     {joined ? '✓ Interested' : 'Interest to Join'}
                 </button>
+            </SmartTooltip>
             </div>
         </div>
     );
