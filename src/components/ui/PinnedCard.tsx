@@ -1,3 +1,20 @@
+import React from 'react';
+
+/** Parses **bold** and \n\n paragraph breaks into React nodes. */
+function renderRich(text: string): React.ReactNode {
+    if (!text) return null;
+    const paras = text.split('\n\n');
+    return paras.map((para, pi) => {
+        const parts = para.split(/\*\*(.+?)\*\*/g);
+        const nodes = parts.map((part, i) =>
+            i % 2 === 1
+                ? <strong key={i} style={{ color: 'var(--foreground)', fontWeight: 600 }}>{part}</strong>
+                : part
+        );
+        return <p key={pi} style={{ margin: pi < paras.length - 1 ? '0 0 10px' : 0 }}>{nodes}</p>;
+    });
+}
+
 /**
  * PinnedCard — physical "memo on a board" card
  *
@@ -137,14 +154,14 @@ export function PinnedCard({
                     {title}
                 </div>
 
-                <p
+                <div
                     style={{
-                        margin: 0, fontSize: 'var(--modal-body)', lineHeight: 1.7,
+                        fontSize: 'var(--modal-body)', lineHeight: 1.7,
                         color: 'var(--muted-foreground)', position: 'relative',
                     }}
                 >
-                    {description}
-                </p>
+                    {renderRich(description)}
+                </div>
             </div>
         </div>
     );

@@ -150,6 +150,20 @@ function ImagePlaceholder({ height = 320, label = 'Visual placeholder' }: { heig
         </div>
     );
 }
+/** Parses **bold** and \n\n paragraph breaks into React nodes. */
+function renderRich(text: string): React.ReactNode {
+    if (!text) return null;
+    const paras = text.split('\n\n');
+    return paras.map((para, pi) => {
+        const parts = para.split(/\*\*(.+?)\*\*/g);
+        const nodes = parts.map((part, i) =>
+            i % 2 === 1
+                ? <strong key={i} style={{ color: 'var(--foreground)', fontWeight: 600 }}>{part}</strong>
+                : part
+        );
+        return <p key={pi} style={{ margin: pi < paras.length - 1 ? '0 0 10px' : 0 }}>{nodes}</p>;
+    });
+}
 function Eyebrow({ text }: { text: string }) {
     return (
         <div style={{
@@ -177,7 +191,7 @@ function HeroSection({ data, meta }: { data: any; meta: ProjectMeta }) {
             <div style={{ display: 'flex', gap: 64, alignItems: 'flex-start' }}>
                 <div style={{ flex: '1 1 0', minWidth: 0 }}>
                     <h2 style={{ fontSize: 'var(--modal-display)', fontWeight: 700, lineHeight: 1.15, margin: '0 0 24px', color: 'var(--foreground)' }}>{data.headline}</h2>
-                    <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--foreground)', margin: 0 }}>{data.body}</p>
+                    <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--foreground)' }}>{renderRich(data.body)}</div>
                 </div>
                 <div style={{ width: 160, flexShrink: 0, paddingTop: 6 }}>
                     {data.stats.map((s: { label: string; value: string }) => (
@@ -199,7 +213,7 @@ function StatementSection({ data, motion }: { data: any; motion?: MotionSpec }) 
             <div style={entranceStyle(0, visible)}>
                 <Eyebrow text={data.eyebrow} />
                 <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 24px', color: 'var(--foreground)' }}>{data.headline}</h3>
-                <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--foreground)', margin: '0 0 32px' }}>{data.body}</p>
+                <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--foreground)', marginBottom: 32 }}>{renderRich(data.body)}</div>
                 {data.next && (
                     <div style={{ padding: '16px 20px', background: 'var(--muted)', borderRadius: 8, borderLeft: '3px solid var(--foreground)' }}>
                         <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Next Step</div>
@@ -220,7 +234,7 @@ function TextMediaSection({ data, motion }: { data: any; motion?: MotionSpec }) 
         <div style={{ flex: '1 1 0', minWidth: 0, ...entranceStyle(0, visible) }}>
             <Eyebrow text={data.eyebrow} />
             <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 16px', color: 'var(--foreground)' }}>{data.headline}</h3>
-            <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--foreground)', margin: '0 0 24px' }}>{data.body}</p>
+            <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--foreground)', marginBottom: 24 }}>{renderRich(data.body)}</div>
             {listItems.length > 0 && (
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {listItems.map((item, i) => (
@@ -262,7 +276,7 @@ function DecisionsSection({ data, motion }: { data: any; motion?: MotionSpec }) 
                         <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', fontWeight: 600, flexShrink: 0, width: 28, paddingTop: 2 }}>{item.number}</div>
                         <div style={{ flex: 1 }}>
                             <div style={{ fontWeight: 600, fontSize: 'var(--modal-body)', color: 'var(--foreground)', marginBottom: 8 }}>{item.title}</div>
-                            <p style={{ margin: 0, fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--foreground)' }}>{item.description}</p>
+                            <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--foreground)' }}>{renderRich(item.description)}</div>
                         </div>
                     </div>
                 ))}
@@ -488,7 +502,7 @@ function InsightCardsSection({ data, motion }: { data: any; motion?: MotionSpec 
                                 color: 'var(--foreground)', opacity: hovered === i ? 1 : 0.85,
                                 transition: 'opacity 0.2s',
                             }}>{item.headline}</div>
-                            <p style={{ margin: 0, fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--muted-foreground)' }}>{item.body}</p>
+                            <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--muted-foreground)' }}>{renderRich(item.body)}</div>
                         </div>
                     </div>
                 ))}
@@ -2357,7 +2371,7 @@ function PersonasSection({ data }: { data: any }) {
                     {p.why_use && (
                         <div>
                             <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Why Use the App</div>
-                            <p style={{ margin: 0, fontSize: '12px', lineHeight: 1.75, color: 'var(--foreground)' }}>{p.why_use}</p>
+                            <div style={{ fontSize: '12px', lineHeight: 1.75, color: 'var(--foreground)' }}>{renderRich(p.why_use)}</div>
                         </div>
                     )}
                 </div>
@@ -2370,7 +2384,7 @@ function PersonasSection({ data }: { data: any }) {
                                 animation: `m-row-in 0.45s ${fi * 0.06}s ${ease} both`,
                             }}>
                                 <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>{f.label}</div>
-                                <p style={{ margin: 0, fontSize: 'var(--modal-meta)', lineHeight: 1.8, color: 'var(--foreground)' }}>{p[f.key]}</p>
+                                <div style={{ fontSize: 'var(--modal-meta)', lineHeight: 1.8, color: 'var(--foreground)' }}>{renderRich(p[f.key])}</div>
                             </div>
                         ))}
                     </div>

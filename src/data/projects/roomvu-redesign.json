@@ -177,17 +177,17 @@
                     {
                         "icon": "📍",
                         "headline": "Location-first over content-first",
-                        "body": "Options: (A) global content-first, location as an optional filter — lower friction for first-time visitors. (B) location-prompted entry — detect or ask city before surfacing content. Decision: B. Three of six high-severity audit findings trace back to missing location context. An agent who lands on Vancouver-irrelevant content and sees no way to fix it doesn't come back. The tradeoff: location gating adds a step for new users who just want to browse."
+                        "body": "**A:** Global content-first, location as optional filter — lower friction for first-time visitors. **B:** Location-prompted entry — detect or ask city before surfacing content.\n\n**Chose B** — three of six high-severity audit findings trace back to missing location context. An agent who lands on Vancouver-irrelevant content and sees no way to fix it doesn't come back. **Cost:** Location gating adds a step for new users who just want to browse without commitment."
                     },
                     {
                         "icon": "📂",
                         "headline": "Category-led layout over search-led discovery",
-                        "body": "Options: (A) prominent search bar as the primary navigation — familiar web pattern, works for known queries. (B) category-led homepage with labelled rows per content type. Decision: B. Agents browsing for inspiration don't know what to search for — they need to see what exists. Video content types are finite and browsable (Market Reports · Listings · Mobile-Friendly). Keyword search doesn't help when you don't know the query yet. Tradeoff: categories must be maintained and updated — a stale category structure is worse than no structure."
+                        "body": "**A:** Prominent search bar as primary navigation — familiar, works for known queries. **B:** Category-led homepage with labelled rows per content type (Market Reports · Listings · Mobile-Friendly).\n\n**Chose B** — agents browsing for inspiration don't know what to search for; they need to see what exists. Keyword search doesn't help when you don't know the query yet. **Cost:** Categories must be actively maintained. A stale category structure is worse than no structure at all."
                     },
                     {
                         "icon": "🔧",
                         "headline": "Full mobile rebuild over responsive patching",
-                        "body": "Options: (A) add responsive breakpoints and media queries to the existing layout — faster, less disruptive. (B) rebuild the mobile navigation architecture from scratch. Decision: B, with honest caveat. The existing navigation structure collapses at small sizes in a way that media queries alone cannot fix — the layout hierarchy itself is wrong. Patching would delay the problem, not solve it. The tradeoff: a full rebuild is a larger engineering commitment than an academic project can prototype end-to-end. This direction was proposed, not shipped."
+                        "body": "**A:** Add responsive breakpoints to the existing layout — faster, less disruptive. **B:** Rebuild the mobile navigation architecture from scratch.\n\n**Chose B (with honest caveat)** — the existing navigation collapses at small sizes in a way media queries alone cannot fix. The layout hierarchy itself is wrong. Patching would delay the problem, not solve it. **Cost:** A full rebuild is a larger engineering commitment than this sprint could prototype end-to-end. This direction was proposed, not shipped."
                     }
                 ]
             }
