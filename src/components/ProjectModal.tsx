@@ -1386,469 +1386,177 @@ function DriftTip({ label, title, body }: { label: string; title: string; body: 
 }
 
 const DRIFT_AVATAR_COLORS = ['#8B5CF6','#3B82F6','#10B981','#F59E0B','#EF4444'];
-// Callout data — maps interaction key → design decision explanation
-const DRIFT_CALLOUTS: Record<string, {label:string; text:string}> = {
-    city:          { label:'Decision 03', text:'Tab badges (Event 3 · Job 20) make a city\'s depth readable without opening anything. Nomads qualify cities by scanning numbers first, descriptions second.' },
-    tab_event:     { label:'Decision 03', text:'Event 3 — three upcoming events visible before you tap. The count is the signal. Without it, the tab looks empty.' },
-    tab_job:       { label:'Decision 03', text:'Job 20 — twenty open remote roles in Prague, visible from the city view. Context that would otherwise require a separate app.' },
-    tab_feed:      { label:'Decision 03', text:'Live badge pulses to signal real-time activity. The feed shows nomads currently in the city — the "is there a scene here?" question answered in seconds.' },
-    payment_USD:   { label:'Decision 01', text:'USD — standard. Present but not a differentiator. Every platform shows USD. The decision is why the other options are here at the same level.' },
-    payment_Euro:  { label:'Decision 01', text:'Euro — common for European contracts. Card-level visibility means you don\'t open a listing only to discover the wrong currency.' },
-    payment_BTC:   { label:'Decision 01', text:'BTC — the signal. A Bitcoin-native freelancer sees this and qualifies the listing in under a second. This is the argument for putting payment on the card, not buried in the detail.' },
-    payment_ETH:   { label:'Decision 01', text:'ETH — DeFi-adjacent roles often pay in ETH. For this user it\'s as important as salary. Card-level means one scan, not fifteen opens.' },
-    bookmark_job:  { label:'Decision 04', text:'Saved to Prague list. The same bookmark action works for jobs and events — one shortlist for the whole city, not two separate save systems.' },
-    bookmark_event:{ label:'Decision 04', text:'Same icon. Same action. The intent is identical: "I\'m coming back to this for Prague." Unified saves mean the city shortlist stays coherent.' },
-    join_event:    { label:'Decision 02', text:'Joining takes two taps — tap Interest, then confirm. Friction is intentional: low-quality RSVPs inflate the nomad count and break the social proof argument.' },
-    social_tap:    { label:'Decision 02', text:'Ordering is an argument. "Nomad joined" (99+) sits above the event description because the decision to attend is social first. You need to know your crowd before you care about the agenda.' },
-    event:         { label:'Decision 02', text:'Social proof before description. A well-described event with zero nomads is less compelling than a vague one with 99 people already in. Try tapping the nomad count above.' },
-};
 
-function DriftAvatarStack({ size = 30, count = 99, animatedCount }: { size?: number; count?: number; animatedCount?: number }) {
-    const n = animatedCount !== undefined ? animatedCount : count;
-    const label = n >= 99 ? '99+' : String(n);
+function DriftAvatarStack({ size = 30, count = 99 }: { size?: number; count?: number }) {
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ display: 'flex' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <div style={{ display:'flex' }}>
                 {DRIFT_AVATAR_COLORS.map((c, i) => (
-                    <div key={i} style={{ width: size, height: size, borderRadius: '50%', background: `radial-gradient(circle at 38% 35%, ${c}ee 0%, ${c}88 100%)`, border: '2.5px solid #1C1C1E', marginLeft: i > 0 ? -(size * 0.28) : 0, position: 'relative', zIndex: 5 - i, boxShadow: '0 2px 8px rgba(0,0,0,0.45)' }} />
+                    <div key={i} style={{ width:size, height:size, borderRadius:'50%', background:`radial-gradient(circle at 38% 35%,${c}ee 0%,${c}88 100%)`, border:'2.5px solid #1C1C1E', marginLeft:i>0?-(size*0.28):0, position:'relative', zIndex:5-i, boxShadow:'0 2px 8px rgba(0,0,0,0.45)' }} />
                 ))}
             </div>
-            <span style={{ fontSize: '15px', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>{label}</span>
+            <span style={{ fontSize:'15px', fontWeight:800, color:'#fff', letterSpacing:'-0.02em' }}>{count >= 99 ? '99+' : count}</span>
         </div>
     );
 }
 
-function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animScore }: {
-    accent: string; tab: string; setTab: (t: string) => void;
-    onJob: () => void; onEvent: () => void; onCallout: (k: string) => void; animScore: number;
-}) {
+// ─── Drift — Concept Isolation Demo ─────────────────────────────────────────
+function DriftConceptCurrency({ accent }: { accent: string }) {
+    const [active, setActive] = useState<string | null>(null);
     const ease = 'cubic-bezier(0.16,1,0.3,1)';
-    const [hoverEvent, setHoverEvent] = useState(false);
-    const [hoverJob, setHoverJob] = useState(false);
-    const TABS = [
-        { id:'feed',  label:'Feed', badge:'Live', live:true },
-        { id:'info',  label:'City info', badge:null, live:false },
-        { id:'event', label:'Event', badge:'3', live:false },
-        { id:'job',   label:'Job', badge:'20', live:false },
+    const jobs = [
+        { title: 'Senior Product Designer', sub: 'Remote · Full-time',      currencies: ['USD', 'EUR'] },
+        { title: 'Full-Stack Developer',    sub: 'Async · Contract',         currencies: ['BTC', 'ETH', 'USDC'] },
+        { title: 'Growth Lead',             sub: 'Crypto-native startup',    currencies: ['ETH', 'USDC'] },
     ];
+    const filters = ['USD', 'ETH', 'BTC', 'EUR', 'USDC'];
+    const matches = (j: { currencies: string[] }) => active === null || j.currencies.includes(active);
     return (
-        <div style={{ color:'#fff' }}>
-            {/* Nav */}
-            <div style={{ padding:'6px 16px 10px', display:'flex', alignItems:'center', gap:8, animation:`drift-el-in 0.35s ${ease} 0.04s both` }}>
-                <span style={{ color:'#AEAEB2', fontSize:'22px', lineHeight:1, fontWeight:300 }}>‹</span>
-                <span style={{ fontWeight:700, fontSize:'16px', letterSpacing:'-0.01em' }}>Prague, Czech Republic</span>
-            </div>
-
-            {/* Score hero — THE argument in pixels */}
-            <SmartTooltip wide delay={400} content={<DriftTip label="Design decision" title="One number qualifies a city" body="The 9.2 synthesises internet, cost, safety, and nomad density. One scan to decide — or skip — without opening anything." />}>
-            <div style={{ margin:'0 14px 14px', borderRadius:18, overflow:'hidden', background:'linear-gradient(145deg,#0e1624 0%,#131020 60%,#0e0e14 100%)', position:'relative', padding:'20px 18px 16px', animation:`drift-el-in 0.4s ${ease} 0.1s both` }}>
-                <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 15% 85%, ${accent}30 0%, transparent 55%)`, pointerEvents:'none' }} />
-                <div style={{ position:'absolute', top:0, right:0, width:120, height:120, background:`radial-gradient(ellipse at 80% 20%, ${accent}15 0%, transparent 60%)`, pointerEvents:'none' }} />
-                <div style={{ position:'relative', display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
-                    <div>
-                        <div style={{ fontSize:'10px', fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:'0.13em', textTransform:'uppercase', marginBottom:6 }}>NOMAD SCORE</div>
-                        <div style={{ fontSize:'54px', fontWeight:900, lineHeight:0.95, letterSpacing:'-0.04em', color:'#fff', textShadow:`0 0 48px ${accent}70, 0 4px 20px rgba(0,0,0,0.6)`, fontVariantNumeric:'tabular-nums' }}>
-                            {animScore.toFixed(1)}
+        <div style={{ background:'linear-gradient(145deg,#111827 0%,#16213e 60%,#0f1425 100%)', borderRadius:16, padding:'24px 20px', display:'flex', flexDirection:'column', gap:14, position:'relative', overflow:'hidden', minHeight:340 }}>
+            <div style={{ position:'absolute', top:-40, right:-40, width:140, height:140, background:`radial-gradient(circle,${accent}25 0%,transparent 70%)`, pointerEvents:'none' }} />
+            <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, opacity:0.85 }}>Decision 01</div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#fff', lineHeight:1.3, letterSpacing:'-0.01em' }}>Qualifying signal<br/>before the click</div>
+            <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                {jobs.map((j, i) => (
+                    <SmartTooltip key={i} wide delay={300} content={<DriftTip label="Decision 01" title="Currency on the card surface" body="For a crypto-native freelancer, payment type is a qualifying filter — not a detail. Visible before the click means 20 listings scanned in seconds." />}>
+                        <div style={{ background: matches(j) ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.02)', border:`1px solid ${matches(j) ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.04)'}`, borderRadius:10, padding:'10px 12px', transition:`all 0.3s ${ease}`, cursor:'default' }}>
+                            <div style={{ fontSize:12, fontWeight:600, color: matches(j) ? '#fff' : 'rgba(255,255,255,0.22)', transition:`color 0.3s ${ease}`, marginBottom:4 }}>{j.title}</div>
+                            <div style={{ fontSize:10, color:'rgba(255,255,255,0.35)', marginBottom:8 }}>{j.sub}</div>
+                            <div style={{ display:'flex', gap:4, flexWrap:'wrap' }}>
+                                {j.currencies.map(c => (
+                                    <span key={c} style={{ fontSize:9, fontWeight:700, padding:'2px 7px', borderRadius:4, background:(active===c && matches(j)) ? `${accent}30` : 'rgba(255,255,255,0.07)', color:(active===c && matches(j)) ? accent : 'rgba(255,255,255,0.45)', border:`1px solid ${(active===c && matches(j)) ? `${accent}60` : 'rgba(255,255,255,0.08)'}`, transition:`all 0.2s ${ease}` }}>{c}</span>
+                                ))}
+                            </div>
                         </div>
-                        <div style={{ fontSize:'11px', color:'rgba(255,255,255,0.3)', marginTop:6 }}>out of 10</div>
-                    </div>
-                    <div style={{ textAlign:'right', paddingBottom:4 }}>
-                        <div style={{ fontSize:'10px', fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:5 }}>MONTHLY COST</div>
-                        <div style={{ fontSize:'24px', fontWeight:900, color:accent, letterSpacing:'-0.03em', lineHeight:1 }}>$3,200</div>
-                        <div style={{ fontSize:'11px', color:'rgba(255,255,255,0.3)', marginTop:4 }}>CAD / month</div>
-                    </div>
-                </div>
-                {/* Score progress bar */}
-                <div style={{ marginTop:14, height:3, borderRadius:3, background:'rgba(255,255,255,0.08)', overflow:'hidden' }}>
-                    <div style={{ height:'100%', borderRadius:3, background:`linear-gradient(90deg, ${accent}80, ${accent})`, width:`${(animScore/10)*100}%`, transition:'width 0.05s linear', boxShadow:`0 0 12px ${accent}90` }} />
-                </div>
-            </div>
-            </SmartTooltip>
-
-            {/* Tab bar — counts are the design argument */}
-            <div style={{ padding:'0 14px 12px', display:'flex', gap:5, animation:`drift-el-in 0.4s ${ease} 0.18s both` }}>
-                {TABS.map(t => (
-                    <SmartTooltip key={t.id} wide delay={300}
-                        content={
-                            t.id==='event' ? <DriftTip label="Decision 03" title={`${t.badge} events — no tap needed`} body="Count visible before you open. Nomads scan numbers first, descriptions second." /> :
-                            t.id==='job'   ? <DriftTip label="Decision 03" title={`${t.badge} open roles in Prague`}   body="Freelancers qualify a city by job density. This number answers in one scan." /> :
-                            t.id==='feed'  ? <DriftTip label="Decision 03" title="Live — nomads active now"             body="Pulse badge signals real-time activity. The city has a scene right now." /> :
-                            t.label
-                        }
-                    >
-                    <button onClick={() => { setTab(t.id); onCallout(`tab_${t.id}`); }} style={{ display:'flex', alignItems:'center', gap:5, padding:'7px 11px', borderRadius:20, border:'none', fontFamily:'inherit', fontSize:'12px', cursor:'pointer', flexShrink:0, background:tab===t.id?accent:'rgba(255,255,255,0.08)', color:tab===t.id?'#fff':'rgba(255,255,255,0.5)', fontWeight:tab===t.id?700:500, transition:`all 0.22s ${ease}`, boxShadow:tab===t.id?`0 4px 20px ${accent}55`:'none' }}>
-                        {t.label}
-                        {t.badge && <span style={{ padding:'2px 6px', borderRadius:6, fontSize:'10px', fontWeight:800, background:t.live?'#FF3B30':'rgba(255,255,255,0.22)', color:'#fff', animation:t.live?'drift-pulse 2s ease-in-out infinite':undefined }}>{t.badge}</span>}
-                    </button>
                     </SmartTooltip>
                 ))}
             </div>
-
-            {/* Tab content */}
-            <div style={{ padding:'0 14px 16px', animation:`drift-el-in 0.4s ${ease} 0.26s both` }}>
-                {tab==='info' && (
-                    <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                        <div style={{ background:'#2C2C2E', borderRadius:14, padding:'14px' }}>
-                            <div style={{ fontWeight:700, fontSize:'14px', marginBottom:8 }}>About Prague</div>
-                            <div style={{ fontSize:'13px', color:'#AEAEB2', lineHeight:1.65 }}>Capital of Czech Republic, bisected by the Vltava. One of Europe's fastest-growing nomad hubs — 9.2 for a reason.</div>
-                            <button style={{ background:'none', border:'none', color:accent, fontSize:'12px', fontWeight:700, cursor:'pointer', padding:'6px 0 0', fontFamily:'inherit' }}>Read more</button>
-                        </div>
-                        <div style={{ background:'#2C2C2E', borderRadius:14, padding:'14px' }}>
-                            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:12 }}>
-                                <span style={{ fontWeight:700, fontSize:'14px' }}>Nomads in city</span>
-                                <button style={{ background:'none', border:'none', color:accent, fontSize:'12px', fontWeight:700, cursor:'pointer', fontFamily:'inherit' }}>See all</button>
-                            </div>
-                            <DriftAvatarStack count={99} />
-                        </div>
-                    </div>
-                )}
-                {tab==='event' && (
-                    <SmartTooltip wide delay={300} content={<DriftTip label="Decision 02" title="Social proof before description" body="99+ nomads joined. The crowd is the product — the event is just the occasion. Tap to see it in context." />}>
-                    <div
-                        onClick={onEvent}
-                        onMouseEnter={() => setHoverEvent(true)}
-                        onMouseLeave={() => setHoverEvent(false)}
-                        style={{ background: hoverEvent ? 'linear-gradient(145deg,#232340,#3a2040)' : 'linear-gradient(145deg,#1C1C2E,#2C1C2E)', borderRadius:14, padding:'16px', cursor:'pointer', border:`1.5px solid ${hoverEvent ? accent : accent+'35'}`, position:'relative', overflow:'hidden', transform: hoverEvent ? 'translateY(-2px)' : 'none', boxShadow: hoverEvent ? `0 12px 36px ${accent}30` : 'none', transition:`all 0.22s ${ease}` }}>
-                        <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 80% 80%, ${accent}${hoverEvent?'35':'20'}, transparent 60%)`, pointerEvents:'none', transition:`all 0.22s ${ease}` }} />
-                        <div style={{ position:'relative' }}>
-                            <div style={{ fontSize:'11px', color:accent, fontWeight:700, letterSpacing:'0.08em', marginBottom:8 }}>UPCOMING · JUN 12</div>
-                            <div style={{ fontWeight:800, fontSize:'16px', marginBottom:4, letterSpacing:'-0.01em' }}>Run For Hal Prague 2024</div>
-                            <div style={{ fontSize:'13px', color:'#AEAEB2', marginBottom:14 }}>Prague Old Town · 12 CAD</div>
-                            <DriftAvatarStack count={99} />
-                            <div style={{ marginTop:12, fontSize:'12px', color:accent, fontWeight:700 }}>Open event →</div>
-                        </div>
-                    </div>
-                    </SmartTooltip>
-                )}
-                {tab==='job' && (
-                    <SmartTooltip wide delay={300} content={<DriftTip label="Decision 01" title="Currency on the card" body="BTC, ETH, USD, Euro visible before you open. For a crypto nomad this single scan replaces 15 taps per session." />}>
-                    <div
-                        onClick={onJob}
-                        onMouseEnter={() => setHoverJob(true)}
-                        onMouseLeave={() => setHoverJob(false)}
-                        style={{ background: hoverJob ? '#3a3a3c' : '#2C2C2E', borderRadius:14, padding:'16px', cursor:'pointer', border:`1px solid ${hoverJob ? 'rgba(255,255,255,0.18)' : 'transparent'}`, transform: hoverJob ? 'translateY(-2px)' : 'none', boxShadow: hoverJob ? '0 12px 32px rgba(0,0,0,0.5)' : 'none', transition:`all 0.22s ${ease}` }}>
-                        <div style={{ fontSize:'11px', color:'rgba(255,255,255,0.35)', marginBottom:6, letterSpacing:'0.06em', textTransform:'uppercase' }}>FEATURED · JUST POSTED</div>
-                        <div style={{ fontWeight:800, fontSize:'16px', marginBottom:4, letterSpacing:'-0.01em' }}>Graphic Designer</div>
-                        <div style={{ fontSize:'13px', color:'#AEAEB2', marginBottom:14 }}>DuelNow · $50 USD/hr · Remote</div>
-                        <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
-                            {[['USD','#34C759'],['Euro','#007AFF'],['BTC','#F7931A'],['ETH','#627EEA']].map(([p,c]) => (
-                                <span key={p} style={{ padding:'5px 11px', borderRadius:8, background:`${c}20`, color:c, fontSize:'11px', fontWeight:800, border:`1px solid ${c}40` }}>{p}</span>
-                            ))}
-                        </div>
-                        <div style={{ marginTop:12, fontSize:'12px', color:accent, fontWeight:700 }}>Open vacancy →</div>
-                    </div>
-                    </SmartTooltip>
-                )}
-                {tab==='feed' && (
-                    <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-                        {[
-                            { handle:'@alexk_dev',  time:'2m',  text:'Just landed at Václav Havel. Coworking recs?', color:'#4ECDC4' },
-                            { handle:'@sara.ui',    time:'15m', text:'Running the Run For Hal 5K on the 12th. Anyone?', color:'#FF6B6B' },
-                            { handle:'@0xjamie',   time:'1h',  text:'Locked ETH-pay contract for July. Prague stays. 🔒', color:'#FFE66D' },
-                        ].map((item,i) => (
-                            <div key={i} style={{ background:'#2C2C2E', borderRadius:12, padding:'12px 14px', display:'flex', gap:10, alignItems:'flex-start', animation:`drift-el-in 0.3s ${ease} ${i*0.08}s both` }}>
-                                <div style={{ width:32, height:32, borderRadius:'50%', background:item.color, flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px', fontWeight:900, color:'#1C1C1E' }}>{item.handle[1].toUpperCase()}</div>
-                                <div style={{ minWidth:0 }}>
-                                    <div style={{ display:'flex', gap:6, alignItems:'center', marginBottom:3 }}>
-                                        <span style={{ fontSize:'13px', fontWeight:700 }}>{item.handle}</span>
-                                        <span style={{ fontSize:'11px', color:'rgba(255,255,255,0.3)' }}>{item.time} ago</span>
-                                    </div>
-                                    <div style={{ fontSize:'13px', color:'#AEAEB2', lineHeight:1.55 }}>{item.text}</div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+            <div style={{ marginTop:'auto' }}>
+                <div style={{ fontSize:9, color:'rgba(255,255,255,0.3)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:8 }}>↑ filter by currency</div>
+                <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
+                    {filters.map(c => (
+                        <button key={c} onClick={() => setActive(active===c ? null : c)} style={{ fontSize:10, fontWeight:700, padding:'5px 10px', borderRadius:6, background:active===c ? accent : 'rgba(255,255,255,0.06)', color:active===c ? '#fff' : 'rgba(255,255,255,0.5)', border:`1px solid ${active===c ? accent : 'rgba(255,255,255,0.08)'}`, cursor:'pointer', transition:`all 0.18s ${ease}`, transform:active===c ? 'scale(1.05)' : 'scale(1)' }}>{c}</button>
+                    ))}
+                </div>
             </div>
         </div>
     );
 }
 
-function DriftJobScreen({ accent, onBack, onCallout }: { accent: string; onBack: () => void; onCallout: (k: string) => void }) {
-    const [activePayment, setActivePayment] = useState<string|null>(null);
-    const [bookmarked, setBookmarked] = useState(false);
-    const [showToast, setShowToast] = useState(false);
+function DriftConceptSocial({ accent }: { accent: string }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [phase, setPhase] = useState(0);
+    const [count, setCount] = useState(0);
     const ease = 'cubic-bezier(0.16,1,0.3,1)';
-    const PILL_COLORS: Record<string,string> = { USD:'#34C759', Euro:'#007AFF', BTC:'#F7931A', ETH:'#627EEA' };
-
-    const handlePayment = (p: string) => {
-        setActivePayment(prev => prev === p ? null : p);
-        onCallout(`payment_${p}`);
-    };
-    const handleBookmark = () => {
-        if (!bookmarked) { setBookmarked(true); setShowToast(true); onCallout('bookmark_job'); setTimeout(() => setShowToast(false), 2200); }
-    };
-
-    return (
-        <div style={{ color:'#fff', paddingBottom:20 }}>
-            {/* Nav */}
-            <div style={{ padding:'6px 16px 10px', display:'flex', alignItems:'center', justifyContent:'space-between', animation:`drift-el-in 0.35s ${ease} 0.04s both` }}>
-                <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                    <button onClick={onBack} style={{ background:'none', border:'none', color:accent, fontSize:'22px', cursor:'pointer', padding:0, lineHeight:1, fontWeight:300 }}>‹</button>
-                    <span style={{ fontWeight:700, fontSize:'16px', letterSpacing:'-0.01em' }}>Vacancy details</span>
-                </div>
-                <button onClick={handleBookmark} style={{ width:34, height:34, borderRadius:10, background:bookmarked?`${accent}25`:'rgba(255,255,255,0.08)', border:`1.5px solid ${bookmarked?accent:'rgba(255,255,255,0.12)'}`, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'15px', animation:bookmarked?'drift-pop 0.3s ease':undefined, transition:`all 0.2s ${ease}` }}>
-                    {bookmarked ? '🔖' : '🏷'}
-                </button>
-            </div>
-
-            {showToast && (
-                <div style={{ margin:'0 14px 8px', background:'#1C3A1C', borderRadius:10, padding:'10px 14px', fontSize:'13px', fontWeight:700, color:'#34C759', textAlign:'center', animation:'drift-toast 2.2s ease forwards', border:'1px solid #34C75940' }}>
-                    ✓ Added to Prague list
-                </div>
-            )}
-
-            {/* Job hero card */}
-            <div style={{ margin:'0 14px 12px', background:'linear-gradient(145deg,#1C1C1E,#252525)', borderRadius:16, padding:'18px 16px', position:'relative', overflow:'hidden', animation:`drift-el-in 0.4s ${ease} 0.1s both` }}>
-                <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 90% 10%, ${accent}18 0%, transparent 50%)`, pointerEvents:'none' }} />
-                <div style={{ position:'relative' }}>
-                    {/* Company */}
-                    <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:16 }}>
-                        <div style={{ width:42, height:42, borderRadius:12, background:`${accent}22`, border:`1px solid ${accent}40`, display:'flex', alignItems:'center', justifyContent:'center', fontWeight:900, fontSize:'18px', color:accent, flexShrink:0 }}>D</div>
-                        <div>
-                            <div style={{ fontWeight:800, fontSize:'17px', letterSpacing:'-0.01em' }}>Graphic Designer</div>
-                            <div style={{ fontSize:'13px', color:'rgba(255,255,255,0.45)', marginTop:2 }}>DuelNow · Remote · EEA</div>
-                        </div>
-                    </div>
-                    {/* Salary — hero number */}
-                    <SmartTooltip wide delay={300} content={<DriftTip label="Decision 01" title="Rate at hero scale" body="Hourly rate is the primary filter. Shown at 44px so the scan takes half a second — not a detail buried in a paragraph." />}>
-                    <div style={{ marginBottom:14 }}>
-                        <div style={{ fontSize:'10px', fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:5 }}>HOURLY RATE</div>
-                        <div style={{ display:'flex', alignItems:'baseline', gap:6 }}>
-                            <span style={{ fontSize:'44px', fontWeight:900, letterSpacing:'-0.04em', lineHeight:1, background:`linear-gradient(135deg, ${accent} 0%, #FFD580 100%)`, WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>$50</span>
-                            <span style={{ fontSize:'15px', color:'rgba(255,255,255,0.4)', fontWeight:500 }}>/hr USD</span>
-                        </div>
-                    </div>
-                    </SmartTooltip>
-                    {/* Tags */}
-                    <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
-                        <span style={{ padding:'5px 11px', borderRadius:8, background:'#34C75918', color:'#34C759', fontSize:'12px', fontWeight:700 }}>Freelance</span>
-                        <span style={{ padding:'5px 11px', borderRadius:8, background:'#007AFF18', color:'#007AFF', fontSize:'12px', fontWeight:700 }}>Remote</span>
-                        <span style={{ padding:'5px 11px', borderRadius:8, background:'rgba(255,255,255,0.06)', color:'rgba(255,255,255,0.4)', fontSize:'11px' }}>Just posted</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Payment pills — THE design argument: visible before the click */}
-            <div style={{ margin:'0 14px 14px', animation:`drift-el-in 0.4s ${ease} 0.18s both` }}>
-                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
-                    <span style={{ fontSize:'11px', fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:'0.1em', textTransform:'uppercase' }}>Payment currencies</span>
-                    <span style={{ fontSize:'11px', color:accent, fontWeight:700 }}>↑ tap to try</span>
-                </div>
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
-                    {['USD','Euro','BTC','ETH'].map(p => {
-                        const active = activePayment === p;
-                        const c = PILL_COLORS[p];
-                        const tipBody: Record<string,string> = {
-                            USD:  'Standard. Present but not the differentiator — every platform shows USD.',
-                            Euro: 'Common for European contracts. Card-level means no surprise currency when you open the listing.',
-                            BTC:  'The signal. A Bitcoin-native freelancer sees this and qualifies the listing in under a second.',
-                            ETH:  'DeFi-adjacent roles often pay in ETH. For this user it is as important as the salary number.',
-                        };
-                        return (
-                            <SmartTooltip key={p} wide delay={250} content={<DriftTip label="Decision 01" title={`${p} — why it's on the card`} body={tipBody[p]} />}>
-                            <button onClick={() => handlePayment(p)} style={{ padding:'13px 14px', borderRadius:12, border:`1.5px solid ${active ? c : 'rgba(255,255,255,0.1)'}`, background: active ? `${c}22` : 'rgba(255,255,255,0.04)', color: active ? c : 'rgba(255,255,255,0.55)', fontSize:'14px', fontWeight:800, cursor:'pointer', fontFamily:'inherit', transition:`all 0.2s ${ease}`, boxShadow: active ? `0 0 0 1px ${c}50, 0 8px 24px ${c}28` : 'none', display:'flex', alignItems:'center', justifyContent:'center', gap:6, transform: active ? 'scale(1.04)' : 'scale(1)', letterSpacing:'-0.01em' }}>
-                                {active && <span style={{ fontSize:'11px' }}>✓</span>}
-                                {p}
-                            </button>
-                            </SmartTooltip>
-                        );
-                    })}
-                </div>
-            </div>
-
-            <div style={{ margin:'0 14px', animation:`drift-el-in 0.4s ${ease} 0.26s both` }}>
-                <button style={{ width:'100%', padding:'15px', borderRadius:14, background:accent, color:'#fff', border:'none', fontFamily:'inherit', fontWeight:800, fontSize:'15px', cursor:'pointer', boxShadow:`0 8px 28px ${accent}50`, letterSpacing:'-0.01em' }}>Apply now</button>
-            </div>
-        </div>
-    );
-}
-
-function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBack: () => void; onCallout: (k: string) => void }) {
-    const [bookmarked, setBookmarked] = useState(false);
-    const [showToast, setShowToast] = useState(false);
-    const [nomadCount, setNomadCount] = useState(0);
-    const [joined, setJoined] = useState(false);
-
     useEffect(() => {
-        let n = 0;
-        const iv = setInterval(() => {
-            n += 3;
-            if (n >= 99) { setNomadCount(99); clearInterval(iv); }
-            else setNomadCount(n);
-        }, 12);
-        return () => clearInterval(iv);
+        const el = ref.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(([e]) => {
+            if (!e.isIntersecting) return;
+            obs.disconnect();
+            setPhase(1);
+            setTimeout(() => {
+                setPhase(2);
+                const startTime = performance.now();
+                const duration = 900;
+                const animate = (now: number) => {
+                    const t = Math.min((now - startTime) / duration, 1);
+                    const eased = 1 - Math.pow(1 - t, 3);
+                    setCount(Math.floor(eased * 99));
+                    if (t < 1) requestAnimationFrame(animate);
+                    else setCount(99);
+                };
+                requestAnimationFrame(animate);
+            }, 500);
+            setTimeout(() => setPhase(3), 1500);
+        }, { threshold: 0.3 });
+        obs.observe(el);
+        return () => obs.disconnect();
     }, []);
-
-    const handleBookmark = () => {
-        if (!bookmarked) {
-            setBookmarked(true);
-            setShowToast(true);
-            onCallout('bookmark_event');
-            setTimeout(() => setShowToast(false), 2200);
-        }
-    };
-
-    const handleJoin = () => {
-        if (!joined) {
-            setJoined(true);
-            onCallout('join_event');
-        }
-    };
-
-    const ease = 'cubic-bezier(0.16,1,0.3,1)';
     return (
-        <div style={{ color:'#fff', fontSize:'13px', paddingBottom:20 }}>
-            {/* Header */}
-            <div style={{ padding:'4px 16px 10px', display:'flex', alignItems:'center', justifyContent:'space-between', animation:`drift-el-in 0.35s ${ease} 0.04s both` }}>
-                <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                    <button onClick={onBack} style={{ background:'none', border:'none', color:accent, fontSize:'22px', cursor:'pointer', padding:0, lineHeight:1 }}>‹</button>
-                    <span style={{ fontWeight:700, fontSize:'15px' }}>Run For Hal Prague</span>
+        <div ref={ref} style={{ background:'linear-gradient(145deg,#1C1220 0%,#241030 60%,#180e28 100%)', borderRadius:16, padding:'24px 20px', display:'flex', flexDirection:'column', gap:14, position:'relative', overflow:'hidden', minHeight:340 }}>
+            <div style={{ position:'absolute', top:20, left:'50%', transform:'translateX(-50%)', width:180, height:120, background:`radial-gradient(ellipse,${accent}22 0%,transparent 70%)`, pointerEvents:'none' }} />
+            <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, opacity:0.85 }}>Decision 02</div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#fff', lineHeight:1.3, letterSpacing:'-0.01em' }}>Who's going<br/>before what it is</div>
+            <SmartTooltip wide delay={300} content={<DriftTip label="Decision 02" title="Social proof loads first" body="The entrance sequence is the argument. Avatars and count appear before the description — attendance is a social decision, not an informational one." />}>
+                <div style={{ background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:12, padding:'16px 14px', opacity:phase>=1?1:0, transform:phase>=1?'none':'translateY(14px)', transition:`all 0.5s ${ease}`, cursor:'default' }}>
+                    <DriftAvatarStack size={26} count={99} />
+                    <div style={{ fontSize:36, fontWeight:900, color:'#fff', letterSpacing:'-0.04em', lineHeight:1.1, marginTop:12, opacity:phase>=2?1:0, transform:phase>=2?'none':'translateY(10px)', transition:`all 0.5s ${ease} 0.1s` }}>{count >= 99 ? '99+' : count > 0 ? count : '0'}</div>
+                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:600, letterSpacing:'0.04em', marginTop:4 }}>nomads joined</div>
                 </div>
-                <button
-                    onClick={handleBookmark}
-                    style={{
-                        width:32, height:32, borderRadius:8, border:`1px solid ${bookmarked ? accent : 'rgba(255,255,255,0.15)'}`,
-                        background: bookmarked ? `${accent}20` : 'rgba(255,255,255,0.06)',
-                        color: bookmarked ? accent : 'rgba(255,255,255,0.5)',
-                        cursor:'pointer', fontSize:'14px', display:'flex', alignItems:'center', justifyContent:'center',
-                        animation: bookmarked ? 'drift-pop 0.3s ease' : undefined,
-                        transition:'all 0.2s ease',
-                    }}
-                >
-                    {bookmarked ? '★' : '☆'}
-                </button>
-            </div>
-
-            {/* Hero — social proof FIRST, dominant. This IS the design argument. */}
-            <SmartTooltip wide delay={300} content={<DriftTip label="Decision 02" title="Ordering is an argument" body="Count sits above the description. The decision to attend is social first — you need to know the crowd before you care about the agenda." />}>
-            <div
-                onClick={() => onCallout('social_tap')}
-                style={{
-                    margin:'0 16px 10px',
-                    borderRadius:16,
-                    overflow:'hidden',
-                    background:'linear-gradient(145deg,#1C1C2E,#2C1C2E)',
-                    border:`1px solid ${accent}30`,
-                    cursor:'pointer',
-                    position:'relative',
-                    padding:'18px 16px 16px',
-                    animation:`drift-el-in 0.4s ${ease} 0.1s both`,
-                }}
-            >
-                {/* Radial glow behind the number */}
-                <div style={{
-                    position:'absolute', top:'50%', left:'50%',
-                    transform:'translate(-50%,-60%)',
-                    width:120, height:120,
-                    background:`radial-gradient(ellipse, ${accent}22 0%, transparent 70%)`,
-                    pointerEvents:'none',
-                }} />
-                <div style={{ fontSize:'10px', letterSpacing:'0.1em', textTransform:'uppercase', color:`${accent}cc`, fontWeight:600, marginBottom:6 }}>
-                    Nomads Joining
-                </div>
-                {/* The number is the hero */}
-                <div style={{
-                    fontSize:'54px', fontWeight:900, lineHeight:1,
-                    color: accent,
-                    fontVariantNumeric:'tabular-nums',
-                    textShadow:`0 0 48px ${accent}70, 0 0 12px ${accent}40`,
-                    marginBottom:12,
-                }}>
-                    {nomadCount >= 99 ? '99+' : nomadCount}
-                </div>
-                <DriftAvatarStack animatedCount={nomadCount} />
-                <div style={{ marginTop:10, fontSize:'10px', color:`${accent}99`, fontWeight:600 }}>↑ tap · social proof surfaces first</div>
-            </div>
             </SmartTooltip>
-
-            {/* Toast */}
-            {showToast && (
-                <div style={{
-                    margin:'0 16px 8px',
-                    background:'linear-gradient(135deg,#1a2e1a,#1e3a1e)',
-                    border:'1px solid #34C75960',
-                    borderRadius:10, padding:'9px 14px',
-                    fontSize:'12px', fontWeight:700, color:'#34C759',
-                    display:'flex', alignItems:'center', gap:6,
-                    animation:'drift-toast 2.2s ease forwards',
-                }}>
-                    <span style={{ fontSize:'14px' }}>✓</span> Saved to your Prague list
-                </div>
-            )}
-
-            {/* Event meta — visually subordinate */}
-            <div style={{ margin:'0 16px 10px', background:'rgba(255,255,255,0.04)', borderRadius:12, padding:'12px 14px', animation:`drift-el-in 0.4s ${ease} 0.18s both` }}>
-                <div style={{ fontWeight:700, fontSize:'14px', marginBottom:8 }}>Run For Hal Prague 2024</div>
-                <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:8, fontSize:'12px', color:'rgba(255,255,255,0.55)' }}>
-                        <span style={{ fontSize:'13px' }}>📍</span>
-                        <span>Prague Old Town · V Jámé 9</span>
-                    </div>
-                    <div style={{ display:'flex', alignItems:'center', gap:8, fontSize:'12px', color:'rgba(255,255,255,0.55)' }}>
-                        <span style={{ fontSize:'13px' }}>🕐</span>
-                        <span>June 12 · 2:00 pm – 3:00 pm</span>
-                    </div>
-                    <div style={{ display:'flex', alignItems:'center', gap:8, fontSize:'12px', color:'rgba(255,255,255,0.55)' }}>
-                        <span style={{ fontSize:'13px' }}>₿</span>
-                        <span>BTC Prague 2024 · Free entry</span>
-                    </div>
-                </div>
+            <div style={{ opacity:phase>=3?1:0, transform:phase>=3?'none':'translateY(8px)', transition:`all 0.5s ${ease}` }}>
+                <div style={{ fontSize:9, fontWeight:700, color:'rgba(255,255,255,0.3)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:6 }}>About this event</div>
+                <div style={{ fontSize:11, color:'rgba(255,255,255,0.45)', lineHeight:1.7 }}>Nomad Run Prague · 5K through the old town. Organized by nomads, for nomads. Bring your crew.</div>
             </div>
-
-            {/* About — lowest hierarchy */}
-            <div style={{ margin:'0 16px 14px', padding:'0 2px', animation:`drift-el-in 0.4s ${ease} 0.24s both` }}>
-                <div style={{ fontSize:'13px', color:'rgba(255,255,255,0.45)', lineHeight:1.7 }}>
-                    A 5km social run/walk around Prague Old Town, honouring Hal Finney. All abilities welcome.
-                </div>
-            </div>
-
-            {/* CTA */}
-            <div style={{ margin:'0 16px', animation:`drift-el-in 0.4s ${ease} 0.3s both` }}>
-            <SmartTooltip wide delay={300} content={<DriftTip label="Decision 04" title="Interest, not RSVP" body="Two-tap confirmation is intentional. Low-quality RSVPs inflate the count and break the social proof argument." />}>
-                <button
-                    onClick={handleJoin}
-                    style={{
-                        width:'100%', padding:'14px', borderRadius:12,
-                        background: joined ? `${accent}30` : accent,
-                        color: joined ? accent : '#fff',
-                        border: joined ? `1px solid ${accent}60` : 'none',
-                        fontFamily:'inherit', fontWeight:700, fontSize:'14px', cursor:'pointer',
-                        boxShadow: joined ? 'none' : `0 8px 28px ${accent}50`,
-                        transition:'all 0.25s cubic-bezier(0.16,1,0.3,1)',
-                        letterSpacing:'0.01em',
-                    }}
-                >
-                    {joined ? '✓ Interested' : 'Interest to Join'}
-                </button>
-            </SmartTooltip>
-            </div>
+            <div style={{ fontSize:9, color:'rgba(255,255,255,0.22)', letterSpacing:'0.06em', textTransform:'uppercase', marginTop:'auto' }}>↑ sequence replays on scroll-enter</div>
         </div>
     );
 }
 
-type DriftScreen = 'city' | 'job' | 'event';
-
-const DRIFT_JOURNEY = [
-    { id:'city'  as DriftScreen, icon:'🏙', label:'City Profile', step:'Choose a city' },
-    { id:'job'   as DriftScreen, icon:'💼', label:'Vacancy',      step:'Find the work' },
-    { id:'event' as DriftScreen, icon:'🏃', label:'Event',        step:'Confirm the crowd' },
-];
+function DriftConceptTabs({ accent }: { accent: string }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [tab, setTab] = useState<'events'|'jobs'|'feed'>('events');
+    const [countsIn, setCountsIn] = useState(false);
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
+    const tabs = [
+        { id:'events' as const, label:'Events', badge:'3',  tip:'Three upcoming IRL events. Count visible before tap — nomads qualify a city by scene depth, not by reading.' },
+        { id:'jobs'   as const, label:'Jobs',   badge:'20', tip:'Twenty open remote roles in Prague. The number answers "is there work here?" in one scan — no tap required.' },
+        { id:'feed'   as const, label:'Feed',   badge:'●',  tip:'Live pulse badge signals real-time activity. The city has a scene right now — not last month.' },
+    ];
+    const content: Record<'events'|'jobs'|'feed', {e:string;d:string}[]> = {
+        events: [{e:'Nomad Run Prague',d:'Sat · 9am · 99+ going'},{e:'BTC Prague Meetup',d:'Thu · 7pm · 45 going'},{e:'Remote Work Cafe',d:'Wed · 2pm · 22 going'}],
+        jobs:   [{e:'Senior Product Designer',d:'Remote · USD · ETH'},{e:'Growth Lead',d:'Remote · USDC'},{e:'Full-Stack Dev',d:'Async · BTC'}],
+        feed:   [{e:'Alex arrived in Prague 2h ago',d:'🏙️ City Explorer'},{e:'Mia bookmarked ETH job',d:'💼 Crypto Dev'},{e:'Leo joined Nomad Run',d:'🏃 Fitness Nomad'}],
+    };
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(([e]) => {
+            if (!e.isIntersecting) return;
+            obs.disconnect();
+            setTimeout(() => setCountsIn(true), 600);
+        }, { threshold: 0.3 });
+        obs.observe(el);
+        return () => obs.disconnect();
+    }, []);
+    return (
+        <div ref={ref} style={{ background:'linear-gradient(145deg,#0f1a2e 0%,#1a2840 60%,#0d1624 100%)', borderRadius:16, padding:'24px 20px', display:'flex', flexDirection:'column', gap:14, position:'relative', overflow:'hidden', minHeight:340 }}>
+            <div style={{ position:'absolute', bottom:-30, right:-30, width:160, height:160, background:`radial-gradient(circle,${accent}18 0%,transparent 70%)`, pointerEvents:'none' }} />
+            <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, opacity:0.85 }}>Decision 03</div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#fff', lineHeight:1.3, letterSpacing:'-0.01em' }}>Tab counts are<br/>the first pass</div>
+            <SmartTooltip wide delay={350} content={<DriftTip label="Decision 03" title="One number qualifies a city" body="9.2 synthesises internet, cost, safety, and nomad density. One scan decides — or skips — without opening anything." />}>
+                <div style={{ display:'flex', alignItems:'baseline', gap:8, cursor:'default' }}>
+                    <div style={{ fontSize:44, fontWeight:900, color:'#fff', letterSpacing:'-0.04em', lineHeight:1 }}>9.2</div>
+                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontWeight:600 }}>Prague score</div>
+                </div>
+            </SmartTooltip>
+            <div style={{ display:'flex', gap:0, background:'rgba(255,255,255,0.04)', borderRadius:10, padding:3 }}>
+                {tabs.map((t, tIdx) => (
+                    <SmartTooltip key={t.id} wide delay={250} content={<DriftTip label="Decision 03" title={`${t.badge} ${t.label.toLowerCase()} before tap`} body={t.tip} />}>
+                        <button onClick={() => setTab(t.id)} style={{ flex:1, padding:'7px 4px', borderRadius:8, background:tab===t.id?`${accent}22`:'transparent', border:tab===t.id?`1px solid ${accent}50`:'1px solid transparent', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:5, transition:`all 0.2s ${ease}` }}>
+                            <span style={{ fontSize:10, fontWeight:600, color:tab===t.id?'#fff':'rgba(255,255,255,0.4)', transition:`color 0.2s ${ease}` }}>{t.label}</span>
+                            <span style={{ fontSize:t.badge==='●'?8:9, fontWeight:800, color:tab===t.id?accent:'rgba(255,255,255,0.35)', background:countsIn?(tab===t.id?`${accent}25`:'rgba(255,255,255,0.07)'):'transparent', padding:'1px 5px', borderRadius:4, opacity:countsIn?1:0, transform:countsIn?'scale(1) translateY(0)':'scale(0.4) translateY(4px)', transition:`all 0.4s ${ease} ${tIdx*0.08}s` }}>{t.badge}</span>
+                        </button>
+                    </SmartTooltip>
+                ))}
+            </div>
+            <div key={tab} style={{ display:'flex', flexDirection:'column', gap:6, flex:1 }}>
+                {content[tab].map((item, i) => (
+                    <div key={i} style={{ display:'flex', flexDirection:'column', gap:2, padding:'8px 10px', background:'rgba(255,255,255,0.04)', borderRadius:8, animation:`drift-el-in 0.3s ${ease} ${i*0.06}s both` }}>
+                        <div style={{ fontSize:11, fontWeight:600, color:'#fff' }}>{item.e}</div>
+                        <div style={{ fontSize:9, color:'rgba(255,255,255,0.35)' }}>{item.d}</div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
 
 function DriftAppDemo({ accent }: { accent: string }) {
-    const [screen, setScreen]     = useState<DriftScreen>('city');
-    const [screenDir, setScreenDir] = useState<1|-1>(1);
-    const [cityTab, setCityTab]   = useState('info');
-    const [callout, setCallout]   = useState<{label:string;text:string}|null>(null);
-    const [visited, setVisited]   = useState<Set<DriftScreen>>(new Set(['city']));
-    const [animScore, setAnimScore] = useState(0);
-    const [phoneHover, setPhoneHover] = useState(false);
-    const [visible, setVisible]   = useState(false);
     const stageRef = useRef<HTMLDivElement>(null);
-    const timerRef = useRef<ReturnType<typeof setTimeout>|null>(null);
-    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
-
-    // Scroll reveal
+    const [visible, setVisible] = useState(false);
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
     useEffect(() => {
         const el = stageRef.current;
         if (!el) return;
@@ -1858,93 +1566,17 @@ function DriftAppDemo({ accent }: { accent: string }) {
         obs.observe(el);
         return () => obs.disconnect();
     }, []);
-
-    // Score animation on mount + initial callout hint
-    useEffect(() => {
-        let s = 0;
-        const iv = setInterval(() => {
-            s = parseFloat((s + 0.2).toFixed(1));
-            if (s >= 9.2) { setAnimScore(9.2); clearInterval(iv); }
-            else setAnimScore(s);
-        }, 18);
-        const t = setTimeout(() => showCallout('city'), 900);
-        return () => { clearInterval(iv); clearTimeout(t); };
-    }, []);
-
-    const showCallout = (key: string) => {
-        const c = DRIFT_CALLOUTS[key];
-        if (!c) return;
-        if (timerRef.current) clearTimeout(timerRef.current);
-        setCallout(c);
-        timerRef.current = setTimeout(() => setCallout(null), 4000);
-    };
-
-    const DRIFT_ORDER: DriftScreen[] = ['city', 'job', 'event'];
-    const handleScreen = (s: DriftScreen) => {
-        const dir = DRIFT_ORDER.indexOf(s) >= DRIFT_ORDER.indexOf(screen) ? 1 : -1;
-        setScreenDir(dir);
-        setScreen(s);
-        setVisited(prev => new Set([...prev, s]));
-        showCallout(s);
-    };
-
     return (
-        /* Dark atmospheric stage — matches phone's dark UI, creates immersive showcase feel */
-        <div ref={stageRef} style={{ borderRadius:20, overflow:'hidden', background:'linear-gradient(160deg,#0c0c14 0%,#15100a 60%,#0e0d0c 100%)', position:'relative', padding:'44px 32px 36px', opacity: visible?1:0, transform: visible?'none':'translateY(32px)', transition:`opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
-            {/* Ambient glow behind phone — accent bleeds through */}
-            <div style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:340, height:260, background:`radial-gradient(ellipse at 50% 0%, ${accent}22 0%, transparent 68%)`, pointerEvents:'none' }} />
-
-            {/* Phone — centered, dramatic shadow */}
-            <div style={{ display:'flex', justifyContent:'center', marginBottom:36, position:'relative', zIndex:1, opacity: visible?1:0, transform: visible?'none':'translateY(20px)', transition:`opacity 0.7s ${ease} 0.12s, transform 0.7s ${ease} 0.12s` }}>
-                <div
-                    onMouseEnter={() => setPhoneHover(true)}
-                    onMouseLeave={() => setPhoneHover(false)}
-                    style={{ width:300, borderRadius:44, background:'#1C1C1E', border:'9px solid #0A0A0A', boxShadow: phoneHover ? `0 0 0 1px #3a3a3a, 0 60px 120px rgba(0,0,0,0.9), 0 0 90px ${accent}35` : `0 0 0 1px #2a2a2a, 0 48px 96px rgba(0,0,0,0.85), 0 0 70px ${accent}20`, overflow:'hidden', height:600, transform: phoneHover ? 'translateY(-6px) scale(1.012)' : 'none', transition:`all 0.35s ${ease}` }}>
-                    <div style={{ padding:'14px 20px 4px', display:'flex', justifyContent:'space-between' }}>
-                        <span style={{ fontSize:'12px', fontWeight:700, color:'#fff' }}>9:41</span>
-                        <span style={{ fontSize:'10px', color:'#fff', opacity:0.7 }}>●●● WiFi ■</span>
-                    </div>
-                    <div key={screen} style={{ animation: `${screenDir >= 0 ? 'drift-screen-fwd' : 'drift-screen-back'} 0.26s cubic-bezier(0.16,1,0.3,1) both`, overflow:'hidden' }}>
-                        {screen === 'city'  && <DriftCityScreen  accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => handleScreen('job')} onEvent={() => handleScreen('event')} onCallout={showCallout} animScore={animScore} />}
-                        {screen === 'job'   && <DriftJobScreen   accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
-                        {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
-                    </div>
-                </div>
+        <div ref={stageRef} style={{ opacity:visible?1:0, transform:visible?'none':'translateY(24px)', transition:`opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
+            <div style={{ marginBottom:20 }}>
+                <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, marginBottom:8, opacity:0.8 }}>Interactive Demo</div>
+                <div style={{ fontSize:18, fontWeight:700, color:'var(--foreground)', letterSpacing:'-0.02em', marginBottom:6 }}>Three decisions, each demonstrated</div>
+                <div style={{ fontSize:13, color:'var(--muted-foreground)', lineHeight:1.6 }}>Each card isolates one design argument. Hover any element for the WHY. Try the interactive filters.</div>
             </div>
-
-            {/* Journey indicator — dot nodes, no boxes */}
-            <div style={{ display:'flex', justifyContent:'center', alignItems:'flex-start', position:'relative', zIndex:1, marginBottom:28, opacity: visible?1:0, transform: visible?'none':'translateY(12px)', transition:`opacity 0.6s ${ease} 0.35s, transform 0.6s ${ease} 0.35s` }}>
-                {DRIFT_JOURNEY.map((node, i) => {
-                    const isActive  = screen === node.id;
-                    const isVisited = visited.has(node.id);
-                    const nextVisited = i < DRIFT_JOURNEY.length - 1 && visited.has(DRIFT_JOURNEY[i+1].id);
-                    return (
-                        <div key={node.id} style={{ display:'flex', alignItems:'flex-start' }}>
-                            <button onClick={() => handleScreen(node.id)} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, background:'none', border:'none', cursor:'pointer', padding:'0 22px', fontFamily:'inherit' }}>
-                                {/* Dot */}
-                                <div style={{ width: isActive?10:7, height: isActive?10:7, borderRadius:'50%', background: isActive ? accent : isVisited ? `${accent}70` : 'rgba(255,255,255,0.18)', boxShadow: isActive ? `0 0 14px ${accent}` : 'none', transition:`all 0.3s ${ease}`, flexShrink:0 }} />
-                                <span style={{ fontSize:'11px', fontWeight: isActive?700:400, color: isActive?'#fff':'rgba(255,255,255,0.35)', whiteSpace:'nowrap', transition:`all 0.2s ${ease}` }}>{node.label}</span>
-                                <span style={{ fontSize:'9px', color:'rgba(255,255,255,0.2)', whiteSpace:'nowrap' }}>{node.step}</span>
-                            </button>
-                            {i < DRIFT_JOURNEY.length - 1 && (
-                                <div style={{ width:28, height:1.5, flexShrink:0, background: nextVisited ? accent : 'rgba(255,255,255,0.1)', opacity: nextVisited ? 0.55 : 1, transition:`background 0.4s ${ease}`, marginTop:4 }} />
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
-
-            {/* Callout — editorial annotation, no generic box */}
-            <div style={{ maxWidth:360, margin:'0 auto', minHeight:56, position:'relative', zIndex:1, opacity: callout?1:0, visibility: callout?'visible':'hidden', transition:`opacity 0.3s ${ease}`, animation: callout ? `drift-fade 0.25s ${ease}` : undefined }}>
-                {callout && (
-                    <div style={{ display:'flex', gap:14, alignItems:'flex-start' }}>
-                        <div style={{ width:2, flexShrink:0, background:accent, borderRadius:2, alignSelf:'stretch', opacity:0.85 }} />
-                        <div>
-                            <div style={{ fontSize:'10px', fontWeight:700, color:accent, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:6 }}>{callout.label}</div>
-                            <div style={{ fontSize:'12px', color:'rgba(255,255,255,0.5)', lineHeight:1.75 }}>{callout.text}</div>
-                        </div>
-                    </div>
-                )}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:16 }}>
+                <DriftConceptCurrency accent={accent} />
+                <DriftConceptSocial accent={accent} />
+                <DriftConceptTabs accent={accent} />
             </div>
         </div>
     );
