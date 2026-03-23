@@ -208,7 +208,7 @@
             "type": "word_reveal",
             "data": {
                 "eyebrow": "Takeaway",
-                "text": "The platform had the right content. The architecture just made sure nobody could find it. Every direction here is about closing that gap.",
+                "text": "Location was missing from every layer — not as a feature, but as the fundamental organising logic. The right content in the wrong context is just noise. Every agent's world is six square miles. The platform was built for a country.",
                 "emojis": ["🏠", "📍", "🎬", "🗺️", "⚡", "📱", "🔍"]
             }
         }

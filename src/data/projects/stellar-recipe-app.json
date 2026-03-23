@@ -17,8 +17,8 @@
             "label": "Overview",
             "type": "hero",
             "data": {
-                "headline": "The kitchen shouldn't require a culinary degree.",
-                "body": "Stellar is an AI-powered recipe app designed to make cooking feel less like a chore and more like a creative act. As sole designer, I led the full UX process — from research and empathy mapping to final UI — with a single goal: make meal planning accessible to anyone, regardless of skill or time.",
+                "headline": "An AI that earns trust slowly, in a world where the first session is the only one that matters.",
+                "body": "Stellar is a solo design sprint exploring what it actually takes to make AI-powered recipe generation feel trustworthy — not just technically correct. Research kept returning to the same contradiction: users wanted the AI to decide for them, but any sign of arbitrariness collapsed trust in the whole system. The design challenge wasn't building an AI that generated good recipes. It was building one that felt considered on day one — before it had any behavioral data to work with.",
                 "image": null,
                 "stats": [
                     { "label": "Year", "value": "2024" },
@@ -242,7 +242,7 @@
             "type": "word_reveal",
             "data": {
                 "eyebrow": "Takeaway",
-                "text": "The best cooking app isn't the one with the most recipes. It's the one that makes you forget you were ever stuck.",
+                "text": "AI earns trust through explanation, not accuracy. The moment it can't show its work is the moment the user decides it's guessing — and they're usually right.",
                 "emojis": ["🍳", "🥕", "✨", "🍜", "🧅", "🌿", "🫙"]
             }
         }

@@ -347,7 +347,7 @@
       "type": "word_reveal",
       "data": {
         "eyebrow": "Lesson learned",
-        "text": "Personalization at scale doesn't mean different features for different users. It means one experience that makes every user feel like it was built for them.",
+        "text": "The novice investor is the hardest design brief: she needs confidence she doesn't have, in a language she hasn't learned. Build for her without condescending to the expert, and you've solved something most fintech doesn't bother attempting.",
         "emojis": ["💰", "📈", "🎯", "✨", "💡", "🏦", "🪙"]
       }
     }
