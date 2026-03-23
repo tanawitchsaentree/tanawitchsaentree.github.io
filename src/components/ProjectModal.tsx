@@ -1462,14 +1462,22 @@ function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBac
 
 type DriftScreen = 'city' | 'job' | 'event';
 
+const DRIFT_JOURNEY = [
+    { id:'city'  as DriftScreen, icon:'🏙', label:'City Profile', step:'Choose a city' },
+    { id:'job'   as DriftScreen, icon:'💼', label:'Vacancy',      step:'Find the work' },
+    { id:'event' as DriftScreen, icon:'🏃', label:'Event',        step:'Confirm the crowd' },
+];
+
 function DriftAppDemo({ accent }: { accent: string }) {
-    const [screen, setScreen] = useState<DriftScreen>('city');
-    const [cityTab, setCityTab] = useState('info');
-    const [calloutKey, setCalloutKey] = useState<string>('city');
+    const [screen, setScreen]     = useState<DriftScreen>('city');
+    const [cityTab, setCityTab]   = useState('info');
+    const [callout, setCallout]   = useState<{label:string;text:string}|null>(null);
+    const [visited, setVisited]   = useState<Set<DriftScreen>>(new Set(['city']));
     const [animScore, setAnimScore] = useState(0);
+    const timerRef = useRef<ReturnType<typeof setTimeout>|null>(null);
     const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
-    // Animate score on mount
+    // Score animation on mount + initial callout hint
     useEffect(() => {
         let s = 0;
         const iv = setInterval(() => {
@@ -1477,40 +1485,65 @@ function DriftAppDemo({ accent }: { accent: string }) {
             if (s >= 9.2) { setAnimScore(9.2); clearInterval(iv); }
             else setAnimScore(s);
         }, 18);
-        return () => clearInterval(iv);
+        const t = setTimeout(() => showCallout('city'), 900);
+        return () => { clearInterval(iv); clearTimeout(t); };
     }, []);
+
+    const showCallout = (key: string) => {
+        const c = DRIFT_CALLOUTS[key];
+        if (!c) return;
+        if (timerRef.current) clearTimeout(timerRef.current);
+        setCallout(c);
+        timerRef.current = setTimeout(() => setCallout(null), 4000);
+    };
 
     const handleScreen = (s: DriftScreen) => {
         setScreen(s);
-        setCalloutKey(s);
+        setVisited(prev => new Set([...prev, s]));
+        showCallout(s);
     };
 
-    const c = DRIFT_CALLOUTS[calloutKey] ?? DRIFT_CALLOUTS['city'];
-
     return (
-        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:16 }}>
-            {/* Screen selector */}
-            <div style={{ display:'flex', gap:8, flexWrap:'wrap', justifyContent:'center' }}>
-                {([{ id:'city', label:'🏙 City Profile' }, { id:'job', label:'💼 Vacancy' }, { id:'event', label:'🏃 Event' }] as const).map(s => (
-                    <button key={s.id} onClick={() => handleScreen(s.id)} style={{ padding:'7px 16px', borderRadius:20, fontFamily:'inherit', fontSize:'12px', fontWeight:screen===s.id?700:500, cursor:'pointer', border:`1.5px solid ${screen===s.id?accent:'var(--border)'}`, background:screen===s.id?accent:'transparent', color:screen===s.id?'#fff':'var(--muted-foreground)', transition:`all 0.2s ${ease}` }}>
-                        {s.label}
-                    </button>
-                ))}
-            </div>
-            {/* Phone frame */}
+        <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:20 }}>
+            {/* Phone frame — navigation is entirely internal */}
             <div style={{ width:300, borderRadius:44, background:'#1C1C1E', border:'9px solid #0A0A0A', boxShadow:`0 0 0 1px #3A3A3C, 0 28px 70px rgba(0,0,0,0.6), 0 0 50px ${accent}18`, overflow:'hidden' }}>
                 <div style={{ padding:'14px 20px 4px', display:'flex', justifyContent:'space-between' }}>
                     <span style={{ fontSize:'12px', fontWeight:700, color:'#fff' }}>9:41</span>
                     <span style={{ fontSize:'10px', color:'#fff', opacity:0.7 }}>●●● WiFi ■</span>
                 </div>
-                {screen === 'city'  && <DriftCityScreen  accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => handleScreen('job')} onEvent={() => handleScreen('event')} onCallout={setCalloutKey} animScore={animScore} />}
-                {screen === 'job'   && <DriftJobScreen   accent={accent} onBack={() => handleScreen('city')} onCallout={setCalloutKey} />}
-                {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => handleScreen('city')} onCallout={setCalloutKey} />}
+                {screen === 'city'  && <DriftCityScreen  accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => handleScreen('job')} onEvent={() => handleScreen('event')} onCallout={showCallout} animScore={animScore} />}
+                {screen === 'job'   && <DriftJobScreen   accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
+                {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
             </div>
-            {/* Reactive design decision callout — updates on every interaction */}
-            <div key={calloutKey} style={{ maxWidth:320, padding:'12px 16px', borderRadius:10, background:`${accent}12`, border:`1px solid ${accent}30`, fontSize:'12px', color:'var(--muted-foreground)', lineHeight:1.7, animation:`drift-fade 0.25s ${ease}` }}>
-                <strong style={{ color:accent, display:'block', marginBottom:4 }}>{c.label} — why this?</strong>
-                {c.text}
+
+            {/* Journey strip — shows connected flow, current position, visited state */}
+            <div style={{ display:'flex', alignItems:'center' }}>
+                {DRIFT_JOURNEY.map((node, i) => {
+                    const isActive  = screen === node.id;
+                    const isVisited = visited.has(node.id);
+                    return (
+                        <div key={node.id} style={{ display:'flex', alignItems:'center' }}>
+                            <button onClick={() => handleScreen(node.id)} title={node.step} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:4, padding:'7px 14px', borderRadius:10, border:`1.5px solid ${isActive ? accent : isVisited ? `${accent}50` : 'var(--border)'}`, background: isActive ? `${accent}18` : 'transparent', cursor:'pointer', fontFamily:'inherit', transition:`all 0.2s ${ease}`, opacity: isVisited ? 1 : 0.45 }}>
+                                <span style={{ fontSize:'15px' }}>{node.icon}</span>
+                                <span style={{ fontSize:'10px', fontWeight: isActive ? 700 : 400, color: isActive ? accent : 'var(--muted-foreground)', whiteSpace:'nowrap' }}>{node.label}</span>
+                                <span style={{ fontSize:'9px', color:'var(--muted-foreground)', opacity:0.7, whiteSpace:'nowrap' }}>{node.step}</span>
+                            </button>
+                            {i < DRIFT_JOURNEY.length - 1 && (
+                                <div style={{ width:20, height:1.5, background: visited.has(DRIFT_JOURNEY[i+1].id) ? accent : 'var(--border)', flexShrink:0, transition:`background 0.4s ${ease}`, opacity: visited.has(DRIFT_JOURNEY[i+1].id) ? 0.7 : 0.3 }} />
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Callout — fades in on interaction, auto-dismisses, reserves height to prevent layout jump */}
+            <div style={{ maxWidth:320, width:'100%', minHeight:72, display:'flex', alignItems:'center' }}>
+                <div style={{ width:'100%', padding: callout ? '12px 16px' : 0, borderRadius:10, background: callout ? `${accent}12` : 'transparent', border:`1px solid ${callout ? `${accent}30` : 'transparent'}`, fontSize:'12px', color:'var(--muted-foreground)', lineHeight:1.7, transition:`opacity 0.3s ${ease}, background 0.3s ease`, opacity: callout ? 1 : 0, animation: callout ? `drift-fade 0.25s ${ease}` : undefined }}>
+                    {callout && <>
+                        <strong style={{ color:accent, display:'block', marginBottom:4 }}>{callout.label} — why this?</strong>
+                        {callout.text}
+                    </>}
+                </div>
             </div>
         </div>
     );
