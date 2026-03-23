@@ -1457,54 +1457,169 @@ function DriftAppDemo({ accent }: { accent: string }) {
     );
 }
 
-// ─── Roomvu Homepage Redesign Demo ────────────────────────────────────────────
-type RoomvuCat = 'all' | 'market' | 'mobile' | 'listings';
-const ROOMVU_VIDEOS: Record<RoomvuCat, { title: string; date: string; cat: string }[]> = {
-    all: [
-        { title: 'Housing Market Q4 Update', date: 'Nov 2023', cat: 'Market Report' },
-        { title: '5 Things Buyers Want Right Now', date: 'Nov 2023', cat: 'Mobile' },
-        { title: 'Luxury Listings — Downtown', date: 'Oct 2023', cat: 'Listing' },
-        { title: 'Condo Market Breakdown', date: 'Oct 2023', cat: 'Market Report' },
-        { title: 'How to Win a Bidding War', date: 'Oct 2023', cat: 'Mobile' },
-        { title: 'New Listings — Westside', date: 'Sep 2023', cat: 'Listing' },
-    ],
-    market: [
-        { title: 'Housing Market Q4 Update', date: 'Nov 2023', cat: 'Market Report' },
-        { title: 'Condo Market Breakdown', date: 'Oct 2023', cat: 'Market Report' },
-        { title: 'Year-End Forecast', date: 'Sep 2023', cat: 'Market Report' },
-    ],
-    mobile: [
-        { title: '5 Things Buyers Want Right Now', date: 'Nov 2023', cat: 'Mobile' },
-        { title: 'How to Win a Bidding War', date: 'Oct 2023', cat: 'Mobile' },
-        { title: 'First-Time Buyer Checklist', date: 'Sep 2023', cat: 'Mobile' },
-    ],
-    listings: [
-        { title: 'Luxury Listings — Downtown', date: 'Oct 2023', cat: 'Listing' },
-        { title: 'New Listings — Westside', date: 'Sep 2023', cat: 'Listing' },
-        { title: 'Featured Properties — East Side', date: 'Sep 2023', cat: 'Listing' },
-    ],
+// ─── Roomvu — Concept Isolation Demo ────────────────────────────────────────
+const ROOMVU_CITIES = ['Vancouver', 'Toronto', 'Calgary'] as const;
+type RoomvuCity = typeof ROOMVU_CITIES[number];
+type RoomvuCat = 'all' | 'market' | 'listings' | 'mobile';
+
+const ROOMVU_TITLES: Record<RoomvuCity, string[]> = {
+    Vancouver: ['Q4 Market Report — Vancouver','New Listings — Vancouver Downtown','Top Neighbourhoods in Vancouver'],
+    Toronto:   ['Q4 Market Report — Toronto','New Listings — Toronto Downtown','Top Neighbourhoods in Toronto'],
+    Calgary:   ['Q4 Market Report — Calgary','New Listings — Calgary Downtown','Top Neighbourhoods in Calgary'],
 };
-const CITIES = ['Vancouver', 'Toronto', 'Calgary', 'Montreal', 'Ottawa'];
-const CATS: { id: RoomvuCat; label: string }[] = [
-    { id: 'all', label: 'All' },
-    { id: 'market', label: 'Market Reports' },
-    { id: 'mobile', label: 'Mobile Friendly' },
-    { id: 'listings', label: 'Listings' },
-];
+
+const ROOMVU_CAT_ITEMS: Record<RoomvuCat, {title:string;cat:string}[]> = {
+    all:      [{title:'Q4 Market Report',cat:'Market'},{title:'5 Things Buyers Want',cat:'Mobile'},{title:'New Listings — Westside',cat:'Listing'}],
+    market:   [{title:'Q4 Market Report',cat:'Market'},{title:'Housing Market Recap',cat:'Market'},{title:'Year-End Forecast',cat:'Market'}],
+    listings: [{title:'New Listings — Westside',cat:'Listing'},{title:'Luxury Listings — Downtown',cat:'Listing'},{title:'Featured Properties',cat:'Listing'}],
+    mobile:   [{title:'5 Things Buyers Want',cat:'Mobile'},{title:'How to Win a Bidding War',cat:'Mobile'},{title:'First-Time Buyer Checklist',cat:'Mobile'}],
+};
+
+function RoomvuConceptLocation({ accent }: { accent: string }) {
+    const [city, setCity] = useState<RoomvuCity>('Vancouver');
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
+    return (
+        <div style={{ background:'linear-gradient(145deg,#080c18 0%,#0d1430 60%,#080c18 100%)', borderRadius:16, padding:'24px 20px', display:'flex', flexDirection:'column', gap:14, position:'relative', overflow:'hidden', minHeight:340 }}>
+            <div style={{ position:'absolute', top:-30, right:-30, width:150, height:150, background:`radial-gradient(circle,${accent}28 0%,transparent 70%)`, pointerEvents:'none' }} />
+            <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, opacity:0.85 }}>Decision 01</div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#fff', lineHeight:1.3, letterSpacing:'-0.01em' }}>Location propagates<br/>into every title</div>
+            <div style={{ display:'flex', gap:6 }}>
+                {ROOMVU_CITIES.map(c => (
+                    <SmartTooltip key={c} wide delay={250} content={<DriftTip label="Decision 01" title="Location-first entry" body="Three of six high-severity audit findings traced to missing location context. Every agent's world is six square miles — the feed was built for a country." />}>
+                        <button onClick={() => setCity(c)} style={{ fontSize:10, fontWeight:700, padding:'5px 10px', borderRadius:6, background:city===c?accent:'rgba(255,255,255,0.06)', color:city===c?'#fff':'rgba(255,255,255,0.45)', border:`1px solid ${city===c?accent:'rgba(255,255,255,0.08)'}`, cursor:'pointer', transition:`all 0.18s ${ease}`, transform:city===c?'scale(1.04)':'scale(1)' }}>{c}</button>
+                    </SmartTooltip>
+                ))}
+            </div>
+            <div style={{ display:'flex', flexDirection:'column', gap:7, flex:1 }}>
+                {ROOMVU_TITLES[city].map((title, i) => (
+                    <SmartTooltip key={`${city}-${i}`} wide delay={300} content={<DriftTip label="Decision 01" title={`"— ${city}" in every title`} body="The city name isn't a filter label — it's in the title itself. Agents scrolling on mobile can qualify relevance without opening a video." />}>
+                        <div style={{ padding:'10px 12px', background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:10, animation:`drift-el-in 0.32s ${ease} ${i*0.07}s both`, cursor:'default' }}>
+                            <div style={{ fontSize:11, fontWeight:600, color:'#fff', lineHeight:1.4 }}>
+                                {title.includes(city)
+                                    ? <>{title.split(city)[0]}<span style={{ color:accent, fontWeight:800 }}>{city}</span>{title.split(city)[1]}</>
+                                    : title}
+                            </div>
+                            <div style={{ fontSize:9, color:'rgba(255,255,255,0.3)', marginTop:4 }}>Real estate video · Ready to share</div>
+                        </div>
+                    </SmartTooltip>
+                ))}
+            </div>
+            <div style={{ fontSize:9, color:'rgba(255,255,255,0.22)', letterSpacing:'0.06em', textTransform:'uppercase' }}>↑ tap a city</div>
+        </div>
+    );
+}
+
+function RoomvuConceptCategories({ accent }: { accent: string }) {
+    const [tab, setTab] = useState<RoomvuCat>('all');
+    const [showOriginal, setShowOriginal] = useState(false);
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
+    const cats: {id:RoomvuCat;label:string}[] = [
+        {id:'all',label:'All'},{id:'market',label:'Market'},{id:'listings',label:'Listings'},{id:'mobile',label:'Mobile'},
+    ];
+    const flatItems = ['Q4 Market Report','New Listings — Westside','5 Things Buyers Want','How to Win a Bidding War','Luxury Listings','Year-End Forecast'];
+    return (
+        <div style={{ background:'linear-gradient(145deg,#09100e 0%,#0e1a18 60%,#09100e 100%)', borderRadius:16, padding:'24px 20px', display:'flex', flexDirection:'column', gap:14, position:'relative', overflow:'hidden', minHeight:340 }}>
+            <div style={{ position:'absolute', bottom:-30, left:-20, width:140, height:140, background:`radial-gradient(circle,${accent}20 0%,transparent 70%)`, pointerEvents:'none' }} />
+            <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, opacity:0.85 }}>Decision 02</div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#fff', lineHeight:1.3, letterSpacing:'-0.01em' }}>Category is navigation,<br/>not filtering</div>
+            {/* Before / After toggle */}
+            <div style={{ display:'flex', gap:0, background:'rgba(255,255,255,0.04)', borderRadius:8, padding:3 }}>
+                {[['Redesigned', false],['Original', true]].map(([label, val]) => (
+                    <button key={String(label)} onClick={() => setShowOriginal(val as boolean)} style={{ flex:1, padding:'5px 8px', borderRadius:6, background:showOriginal===(val as boolean)?'rgba(255,255,255,0.1)':'transparent', border:showOriginal===(val as boolean)?'1px solid rgba(255,255,255,0.15)':'1px solid transparent', cursor:'pointer', fontSize:10, fontWeight:600, color:showOriginal===(val as boolean)?'#fff':'rgba(255,255,255,0.35)', transition:`all 0.2s ${ease}` }}>{label as string}</button>
+                ))}
+            </div>
+            {showOriginal ? (
+                /* Original: flat undifferentiated feed */
+                <SmartTooltip wide delay={300} content={<DriftTip label="Decision 02" title="Original: no categories" body="A flat feed with no structure. Agents had to scroll past Market Reports to find Listings, past Listings to find Mobile content. Discovery relied entirely on patience." />}>
+                    <div style={{ display:'flex', flexDirection:'column', gap:5, cursor:'default' }}>
+                        {flatItems.map((t, i) => (
+                            <div key={i} style={{ padding:'7px 10px', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:8, fontSize:10, color:'rgba(255,255,255,0.55)', animation:`drift-el-in 0.28s ${ease} ${i*0.04}s both` }}>{t}</div>
+                        ))}
+                    </div>
+                </SmartTooltip>
+            ) : (
+                /* Redesigned: category tabs + grid */
+                <div style={{ display:'flex', flexDirection:'column', gap:8, flex:1 }}>
+                    <div style={{ display:'flex', gap:0, background:'rgba(255,255,255,0.04)', borderRadius:8, padding:3 }}>
+                        {cats.map(c => (
+                            <SmartTooltip key={c.id} wide delay={250} content={<DriftTip label="Decision 02" title={`${c.label} — first-class navigation`} body="Agents browsing for inspiration don't know what to search for — they need to see what exists. Category rows surface the content taxonomy before the first tap." />}>
+                                <button onClick={() => setTab(c.id)} style={{ flex:1, padding:'5px 4px', borderRadius:6, background:tab===c.id?`${accent}28`:'transparent', border:tab===c.id?`1px solid ${accent}50`:'1px solid transparent', cursor:'pointer', fontSize:9, fontWeight:700, color:tab===c.id?'#fff':'rgba(255,255,255,0.38)', transition:`all 0.2s ${ease}` }}>{c.label}</button>
+                            </SmartTooltip>
+                        ))}
+                    </div>
+                    <div key={tab} style={{ display:'flex', flexDirection:'column', gap:5 }}>
+                        {ROOMVU_CAT_ITEMS[tab].map((item, i) => (
+                            <div key={i} style={{ padding:'8px 10px', background:'rgba(255,255,255,0.05)', border:`1px solid rgba(255,255,255,0.08)`, borderLeft:`2px solid ${accent}`, borderRadius:8, animation:`drift-el-in 0.28s ${ease} ${i*0.07}s both` }}>
+                                <div style={{ fontSize:10, fontWeight:600, color:'#fff' }}>{item.title}</div>
+                                <div style={{ fontSize:8, color:'rgba(255,255,255,0.3)', marginTop:2 }}>{item.cat} · Ready to share</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            <div style={{ fontSize:9, color:'rgba(255,255,255,0.22)', letterSpacing:'0.06em', textTransform:'uppercase' }}>↑ toggle original · switch tabs</div>
+        </div>
+    );
+}
+
+function RoomvuConceptAudit({ accent }: { accent: string }) {
+    const [expanded, setExpanded] = useState<number | null>(null);
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
+    const findings = [
+        {
+            area: 'Content Discovery', severity: 'High',
+            finding: 'No category structure — undifferentiated feed.',
+            direction: 'Category-led homepage: labelled rows per type above the fold.',
+            icon: '📂',
+        },
+        {
+            area: 'Location Context', severity: 'High',
+            finding: 'No city filter. Every agent sees generic national content.',
+            direction: 'Location-first entry — detect or prompt city, persist as default.',
+            icon: '📍',
+        },
+        {
+            area: 'Mobile Experience', severity: 'High',
+            finding: 'Layout collapses below 768px. Nav architecture broken.',
+            direction: 'Full rebuild — not a responsive patch. Wrong hierarchy at the root.',
+            icon: '📱',
+        },
+    ];
+    return (
+        <div style={{ background:'linear-gradient(145deg,#0e0a08 0%,#1a1008 60%,#0e0a08 100%)', borderRadius:16, padding:'24px 20px', display:'flex', flexDirection:'column', gap:14, position:'relative', overflow:'hidden', minHeight:340 }}>
+            <div style={{ position:'absolute', top:-20, right:-20, width:140, height:140, background:'radial-gradient(circle,#ef444420 0%,transparent 70%)', pointerEvents:'none' }} />
+            <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, opacity:0.85 }}>Heuristic Audit</div>
+            <div style={{ fontSize:14, fontWeight:700, color:'#fff', lineHeight:1.3, letterSpacing:'-0.01em' }}>Three high-severity<br/>findings. One root cause.</div>
+            <div style={{ display:'flex', flexDirection:'column', gap:7, flex:1 }}>
+                {findings.map((f, i) => (
+                    <SmartTooltip key={i} wide delay={300} content={<DriftTip label={`Finding ${i+1}`} title={f.area} body={expanded===i ? f.direction : f.finding} />}>
+                        <div onClick={() => setExpanded(expanded===i ? null : i)} style={{ padding:'10px 12px', background: expanded===i ? `${accent}15` : 'rgba(255,255,255,0.04)', border:`1px solid ${expanded===i ? `${accent}45` : 'rgba(255,255,255,0.07)'}`, borderLeft:`2.5px solid ${expanded===i ? accent : '#ef4444'}`, borderRadius:10, cursor:'pointer', transition:`all 0.25s ${ease}` }}>
+                            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:8 }}>
+                                <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                                    <span style={{ fontSize:13 }}>{f.icon}</span>
+                                    <div>
+                                        <div style={{ fontSize:10, fontWeight:700, color:expanded===i?'#fff':'rgba(255,255,255,0.7)' }}>{f.area}</div>
+                                        <div style={{ fontSize:8, fontWeight:700, color:'#ef4444', letterSpacing:'0.06em', textTransform:'uppercase' }}>● {f.severity}</div>
+                                    </div>
+                                </div>
+                                <span style={{ fontSize:10, color:'rgba(255,255,255,0.3)', transform:expanded===i?'rotate(90deg)':'none', transition:`transform 0.2s ${ease}` }}>›</span>
+                            </div>
+                            <div style={{ overflow:'hidden', maxHeight:expanded===i?'80px':'0', opacity:expanded===i?1:0, transition:`all 0.3s ${ease}`, marginTop:expanded===i?8:0 }}>
+                                <div style={{ fontSize:10, color:'rgba(255,255,255,0.5)', lineHeight:1.6 }}>{f.direction}</div>
+                            </div>
+                        </div>
+                    </SmartTooltip>
+                ))}
+            </div>
+            <div style={{ fontSize:9, color:'rgba(255,255,255,0.22)', letterSpacing:'0.06em', textTransform:'uppercase' }}>↑ tap a finding to reveal direction</div>
+        </div>
+    );
+}
 
 function RoomvuHomepageDemo({ accent }: { accent: string }) {
-    const [city, setCity]           = useState('Vancouver');
-    const [cat, setCat]             = useState<RoomvuCat>('all');
-    const [pickerOpen, setPickerOpen] = useState(false);
-    const [hovered, setHovered]     = useState<number | null>(null);
-    const [callout, setCallout]     = useState<{label:string;text:string}|null>(null);
-    const [visible, setVisible]     = useState(false);
-    const stageRef  = useRef<HTMLDivElement>(null);
-    const timerRef  = useRef<ReturnType<typeof setTimeout>|null>(null);
-    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
-    const videos = ROOMVU_VIDEOS[cat];
-
-    // Scroll reveal
+    const stageRef = useRef<HTMLDivElement>(null);
+    const [visible, setVisible] = useState(false);
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
     useEffect(() => {
         const el = stageRef.current;
         if (!el) return;
@@ -1514,154 +1629,22 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
         obs.observe(el);
         return () => obs.disconnect();
     }, []);
-
-    // Initial callout
-    useEffect(() => {
-        const t = setTimeout(() => showCallout('Decision 01', 'City picker is persistent in the nav — not a settings page. Location is the first-class organising principle, not an afterthought.'), 900);
-        return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const showCallout = (label: string, text: string) => {
-        if (timerRef.current) clearTimeout(timerRef.current);
-        setCallout({ label, text });
-        timerRef.current = setTimeout(() => setCallout(null), 4200);
-    };
-
-    const CAT_MSGS: Record<RoomvuCat, string> = {
-        all:      'All content types for your city. Category + location together — neither alone is enough.',
-        market:   'Market Reports filtered to your city. The old filter returned global results — irrelevant to a local agent.',
-        mobile:   'Mobile-friendly format, scoped to city. Agents post from their phone — short-form is what travels.',
-        listings: 'Listing videos tied to your city properties. Location + listing type in a single filter.',
-    };
-
-    const changeCity = (loc: string) => {
-        setCity(loc);
-        setPickerOpen(false);
-        showCallout('Decision 01', `Every title now reads "${loc}". Change location — change everything. The old site had one global feed with no city context.`);
-    };
-
-    const changeCat = (id: RoomvuCat) => {
-        setCat(id);
-        showCallout('Decision 02', CAT_MSGS[id]);
-    };
-
     return (
-        <div ref={stageRef} style={{ borderRadius:20, overflow:'hidden', background:'linear-gradient(160deg,#080c14 0%,#0c1120 60%,#080c14 100%)', position:'relative', padding:'36px 28px 36px', opacity:visible?1:0, transform:visible?'none':'translateY(32px)', transition:`opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
-            {/* Ambient glow */}
-            <div style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:'100%', height:200, background:`radial-gradient(ellipse at 50% 0%, ${accent}18 0%, transparent 65%)`, pointerEvents:'none' }} />
-
-            {/* Browser window — floats on dark stage */}
-            <div style={{ position:'relative', zIndex:1, borderRadius:14, overflow:'hidden', background:'var(--background)', border:'1px solid var(--border)', boxShadow:`0 0 0 1px rgba(255,255,255,0.06), 0 32px 80px rgba(0,0,0,0.7), 0 0 60px ${accent}18`, opacity:visible?1:0, transform:visible?'none':'translateY(16px)', transition:`opacity 0.6s ${ease} 0.15s, transform 0.6s ${ease} 0.15s` }}>
-
-                {/* Browser chrome */}
-                <div style={{ padding:'10px 16px', background:'var(--muted)', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', gap:10 }}>
-                    <div style={{ display:'flex', gap:5 }}>
-                        {['#FF5F57','#FEBC2E','#28C840'].map((c,i) => <div key={i} style={{ width:10, height:10, borderRadius:'50%', background:c }} />)}
-                    </div>
-                    <div style={{ flex:1, background:'var(--background)', borderRadius:6, padding:'4px 10px', fontSize:'11px', color:'var(--muted-foreground)', border:'1px solid var(--border)' }}>
-                        roomvu.com — redesign concept
-                    </div>
-                </div>
-
-                {/* Site nav */}
-                <div style={{ padding:'12px 20px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                    <span style={{ fontWeight:800, fontSize:'15px', color:accent, letterSpacing:'-0.02em' }}>roomvu</span>
-                    <div style={{ position:'relative' }}>
-                        <SmartTooltip wide delay={300} content={<DriftTip label="Decision 01" title="Location in the nav, not settings" body="The old site had no persistent city context. Every agent was seeing the same global feed. This picker makes location the first-class organising principle." />}>
-                        <button onClick={() => setPickerOpen(!pickerOpen)} style={{ display:'flex', alignItems:'center', gap:5, padding:'6px 13px', borderRadius:20, border:`1.5px solid ${accent}`, background:`${accent}12`, color:accent, fontSize:'12px', fontWeight:700, cursor:'pointer', fontFamily:'inherit', transition:`all 0.2s ${ease}` }}>
-                            📍 {city} ▾
-                        </button>
-                        </SmartTooltip>
-                        {pickerOpen && (
-                            <div style={{ position:'absolute', right:0, top:'110%', zIndex:20, minWidth:150, background:'var(--background)', border:`1px solid var(--border)`, borderRadius:10, overflow:'hidden', boxShadow:'0 8px 32px rgba(0,0,0,0.2)', animation:`drift-el-in 0.2s ${ease} both` }}>
-                                {CITIES.map(loc => (
-                                    <button key={loc} onClick={() => changeCity(loc)} style={{ display:'block', width:'100%', textAlign:'left', padding:'9px 16px', fontSize:'12px', cursor:'pointer', fontFamily:'inherit', border:'none', background: loc === city ? `${accent}10` : 'transparent', color: loc === city ? accent : 'var(--foreground)', fontWeight: loc === city ? 700 : 400, transition:`background 0.15s` }}>
-                                        {loc === city ? '✓ ' : ''}{loc}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Hero — key={city} so it re-animates on city change */}
-                <SmartTooltip wide delay={350} content={<DriftTip label="Decision 01" title="This headline didn't exist before" body="The old site showed a generic tagline. Now it says 'Localized videos for {city} agents' — the city name propagates into the headline itself." />}>
-                <div key={city} style={{ padding:'20px 20px 16px', borderBottom:'1px solid var(--border)', background:`linear-gradient(135deg, ${accent}08 0%, transparent 60%)`, animation:`drift-el-in 0.35s ${ease} both` }}>
-                    <div style={{ fontSize:'10px', fontWeight:700, color:accent, letterSpacing:'0.09em', textTransform:'uppercase', marginBottom:6 }}>
-                        Localized videos for {city} agents
-                    </div>
-                    <div style={{ fontSize:'16px', fontWeight:800, color:'var(--foreground)', lineHeight:1.35 }}>
-                        Win more listings.<br />
-                        <span style={{ color:'var(--muted-foreground)', fontWeight:500, fontSize:'13px' }}>Spend less time searching for the right content.</span>
-                    </div>
-                </div>
-                </SmartTooltip>
-
-                {/* Category tabs */}
-                <div style={{ padding:'10px 20px', borderBottom:'1px solid var(--border)', display:'flex', gap:6, overflowX:'auto' }}>
-                    {CATS.map(c => (
-                        <SmartTooltip key={c.id} wide delay={300}
-                            content={
-                                c.id === 'all'      ? <DriftTip label="Decision 02" title="All content for your location" body="Category + city together. Neither filter alone gives you what you need — a Vancouver agent wants Vancouver market reports, not Toronto's." /> :
-                                c.id === 'market'   ? <DriftTip label="Decision 02" title="Market Reports — location-scoped" body="The old filter showed global reports. Agents had to manually scan for their city. Now the filter and location work together." /> :
-                                c.id === 'mobile'   ? <DriftTip label="Decision 02" title="Mobile-friendly, city-scoped" body="Agents post from phones. Short-form content localised to their market is the format that gets used." /> :
-                                                      <DriftTip label="Decision 02" title="Listings tied to your city" body="Listing videos attached to the city they were filmed in. Location + content type as a single filter instead of two separate steps." />
-                            }
-                        >
-                        <button onClick={() => changeCat(c.id)} style={{ padding:'5px 13px', borderRadius:20, fontFamily:'inherit', fontSize:'11px', fontWeight:cat===c.id?700:500, cursor:'pointer', flexShrink:0, border:`1.5px solid ${cat===c.id?accent:'var(--border)'}`, background:cat===c.id?accent:'transparent', color:cat===c.id?'#fff':'var(--muted-foreground)', transition:`all 0.2s ${ease}` }}>
-                            {c.label}
-                        </button>
-                        </SmartTooltip>
-                    ))}
-                </div>
-
-                {/* Video grid — key={city+cat} triggers re-stagger on any change */}
-                <div style={{ padding:'16px 20px' }}>
-                    <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:10 }}>
-                        {videos.map((v,i) => (
-                            <SmartTooltip key={`${city}-${cat}-${i}`} wide delay={300}
-                                content={<DriftTip label="Decision 03" title={`"— ${city}" in every title`} body={`Agents were spending 45 min searching for relevant content. The city suffix makes relevance visible from the grid — no need to open each video.`} />}
-                            >
-                            <div
-                                onMouseEnter={() => setHovered(i)}
-                                onMouseLeave={() => setHovered(null)}
-                                style={{ borderRadius:8, overflow:'hidden', cursor:'pointer', border:`1px solid ${hovered===i ? accent+'55' : 'var(--border)'}`, transform:hovered===i?'translateY(-2px)':'none', boxShadow:hovered===i?`0 6px 20px ${accent}22`:'none', transition:`transform 0.2s ${ease}, box-shadow 0.2s ${ease}, border-color 0.2s`, animation:`drift-el-in 0.35s ${ease} ${i*0.06}s both` }}
-                            >
-                                <div style={{ aspectRatio:'16/9', background:`${accent}10`, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                                    <div style={{ width:26, height:26, borderRadius:'50%', background:hovered===i?accent:`${accent}40`, display:'flex', alignItems:'center', justifyContent:'center', transition:`background 0.2s ${ease}` }}>
-                                        <div style={{ width:0, height:0, borderTop:'5px solid transparent', borderBottom:'5px solid transparent', borderLeft:`8px solid ${hovered===i?'#fff':accent}`, marginLeft:2, transition:'border-left-color 0.2s' }} />
-                                    </div>
-                                </div>
-                                <div style={{ padding:'8px 10px' }}>
-                                    <div style={{ fontSize:'11px', fontWeight:600, color:'var(--foreground)', lineHeight:1.4, marginBottom:5 }}>{v.title} — {city}</div>
-                                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                                        <span style={{ fontSize:'9px', padding:'2px 6px', borderRadius:4, background:`${accent}15`, color:accent, fontWeight:700 }}>{v.cat}</span>
-                                        <span style={{ fontSize:'10px', color:'var(--muted-foreground)' }}>{v.date}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            </SmartTooltip>
-                        ))}
-                    </div>
-                </div>
+        <div ref={stageRef} style={{ opacity:visible?1:0, transform:visible?'none':'translateY(24px)', transition:`opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
+            <div style={{ marginBottom:20 }}>
+                <div style={{ fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, marginBottom:8, opacity:0.8 }}>Interactive Demo</div>
+                <div style={{ fontSize:18, fontWeight:700, color:'var(--foreground)', letterSpacing:'-0.02em', marginBottom:6 }}>Three decisions. Each one here.</div>
+                <div style={{ fontSize:13, color:'var(--muted-foreground)', lineHeight:1.6 }}>Each card isolates one design argument. Hover to reveal the WHY. Try the interactive controls.</div>
             </div>
-
-            {/* Callout annotation below browser */}
-            <div style={{ maxWidth:480, margin:'28px auto 0', minHeight:52, position:'relative', zIndex:1, opacity:callout?1:0, visibility:callout?'visible':'hidden', transition:`opacity 0.3s ${ease}`, animation:callout?`drift-fade 0.25s ${ease}`:undefined }}>
-                {callout && (
-                    <div style={{ display:'flex', gap:14, alignItems:'flex-start' }}>
-                        <div style={{ width:2, flexShrink:0, background:accent, borderRadius:2, alignSelf:'stretch', opacity:0.85 }} />
-                        <div>
-                            <div style={{ fontSize:'10px', fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, opacity:0.85, marginBottom:5 }}>{callout.label}</div>
-                            <div style={{ fontSize:'12px', color:'rgba(255,255,255,0.5)', lineHeight:1.75 }}>{callout.text}</div>
-                        </div>
-                    </div>
-                )}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:16 }}>
+                <RoomvuConceptLocation accent={accent} />
+                <RoomvuConceptCategories accent={accent} />
+                <RoomvuConceptAudit accent={accent} />
             </div>
         </div>
     );
 }
+
 
 function DemoSection({ data }: { data: any }) {
     const accent = useContext(ProjectAccentCtx);
