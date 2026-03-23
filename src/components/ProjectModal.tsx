@@ -62,6 +62,8 @@ const MODAL_CSS = `
 @keyframes drift-fade  { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
 @keyframes drift-toast { 0%{opacity:0;transform:translateY(-6px)} 15%,85%{opacity:1;transform:none} 100%{opacity:0} }
 @keyframes drift-pop   { 0%{transform:scale(1)} 40%{transform:scale(1.35)} 100%{transform:scale(1)} }
+@keyframes drift-screen-fwd  { from{opacity:0;transform:translateX(28px)}  to{opacity:1;transform:translateX(0)} }
+@keyframes drift-screen-back { from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:translateX(0)} }
 .recipe-carousel::-webkit-scrollbar { display: none }
 .scrolling-cards-track::-webkit-scrollbar { display: none }
 .scrolling-cards-track { -ms-overflow-style: none; scrollbar-width: none; }
@@ -1465,6 +1467,7 @@ const DRIFT_JOURNEY = [
 
 function DriftAppDemo({ accent }: { accent: string }) {
     const [screen, setScreen]     = useState<DriftScreen>('city');
+    const [screenDir, setScreenDir] = useState<1|-1>(1);
     const [cityTab, setCityTab]   = useState('info');
     const [callout, setCallout]   = useState<{label:string;text:string}|null>(null);
     const [visited, setVisited]   = useState<Set<DriftScreen>>(new Set(['city']));
@@ -1492,7 +1495,10 @@ function DriftAppDemo({ accent }: { accent: string }) {
         timerRef.current = setTimeout(() => setCallout(null), 4000);
     };
 
+    const DRIFT_ORDER: DriftScreen[] = ['city', 'job', 'event'];
     const handleScreen = (s: DriftScreen) => {
+        const dir = DRIFT_ORDER.indexOf(s) >= DRIFT_ORDER.indexOf(screen) ? 1 : -1;
+        setScreenDir(dir);
         setScreen(s);
         setVisited(prev => new Set([...prev, s]));
         showCallout(s);
@@ -1511,9 +1517,11 @@ function DriftAppDemo({ accent }: { accent: string }) {
                         <span style={{ fontSize:'12px', fontWeight:700, color:'#fff' }}>9:41</span>
                         <span style={{ fontSize:'10px', color:'#fff', opacity:0.7 }}>●●● WiFi ■</span>
                     </div>
-                    {screen === 'city'  && <DriftCityScreen  accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => handleScreen('job')} onEvent={() => handleScreen('event')} onCallout={showCallout} animScore={animScore} />}
-                    {screen === 'job'   && <DriftJobScreen   accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
-                    {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
+                    <div key={screen} style={{ animation: `${screenDir >= 0 ? 'drift-screen-fwd' : 'drift-screen-back'} 0.26s cubic-bezier(0.16,1,0.3,1) both` }}>
+                        {screen === 'city'  && <DriftCityScreen  accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => handleScreen('job')} onEvent={() => handleScreen('event')} onCallout={showCallout} animScore={animScore} />}
+                        {screen === 'job'   && <DriftJobScreen   accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
+                        {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
+                    </div>
                 </div>
             </div>
 
