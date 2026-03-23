@@ -1986,118 +1986,171 @@ const CATS: { id: RoomvuCat; label: string }[] = [
 ];
 
 function RoomvuHomepageDemo({ accent }: { accent: string }) {
-    const [city, setCity] = useState('Vancouver');
-    const [cat, setCat] = useState<RoomvuCat>('all');
+    const [city, setCity]           = useState('Vancouver');
+    const [cat, setCat]             = useState<RoomvuCat>('all');
     const [pickerOpen, setPickerOpen] = useState(false);
-    const [hovered, setHovered] = useState<number | null>(null);
+    const [hovered, setHovered]     = useState<number | null>(null);
+    const [callout, setCallout]     = useState<{label:string;text:string}|null>(null);
+    const [visible, setVisible]     = useState(false);
+    const stageRef  = useRef<HTMLDivElement>(null);
+    const timerRef  = useRef<ReturnType<typeof setTimeout>|null>(null);
     const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
     const videos = ROOMVU_VIDEOS[cat];
 
+    // Scroll reveal
+    useEffect(() => {
+        const el = stageRef.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { setVisible(true); obs.disconnect(); }
+        }, { threshold: 0.12 });
+        obs.observe(el);
+        return () => obs.disconnect();
+    }, []);
+
+    // Initial callout
+    useEffect(() => {
+        const t = setTimeout(() => showCallout('Decision 01', 'City picker is persistent in the nav — not a settings page. Location is the first-class organising principle, not an afterthought.'), 900);
+        return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const showCallout = (label: string, text: string) => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        setCallout({ label, text });
+        timerRef.current = setTimeout(() => setCallout(null), 4200);
+    };
+
+    const CAT_MSGS: Record<RoomvuCat, string> = {
+        all:      'All content types for your city. Category + location together — neither alone is enough.',
+        market:   'Market Reports filtered to your city. The old filter returned global results — irrelevant to a local agent.',
+        mobile:   'Mobile-friendly format, scoped to city. Agents post from their phone — short-form is what travels.',
+        listings: 'Listing videos tied to your city properties. Location + listing type in a single filter.',
+    };
+
+    const changeCity = (loc: string) => {
+        setCity(loc);
+        setPickerOpen(false);
+        showCallout('Decision 01', `Every title now reads "${loc}". Change location — change everything. The old site had one global feed with no city context.`);
+    };
+
+    const changeCat = (id: RoomvuCat) => {
+        setCat(id);
+        showCallout('Decision 02', CAT_MSGS[id]);
+    };
+
     return (
-        <div style={{ border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', background: 'var(--background)' }}>
-            {/* Browser chrome */}
-            <div style={{ padding: '10px 16px', background: 'var(--muted)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ display: 'flex', gap: 5 }}>
-                    {['#FF5F57','#FEBC2E','#28C840'].map((c, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c }} />)}
-                </div>
-                <div style={{ flex: 1, background: 'var(--background)', borderRadius: 6, padding: '4px 10px', fontSize: '11px', color: 'var(--muted-foreground)', border: '1px solid var(--border)' }}>
-                    roomvu.com — redesign concept
-                </div>
-            </div>
+        <div ref={stageRef} style={{ borderRadius:20, overflow:'hidden', background:'linear-gradient(160deg,#080c14 0%,#0c1120 60%,#080c14 100%)', position:'relative', padding:'36px 28px 36px', opacity:visible?1:0, transform:visible?'none':'translateY(32px)', transition:`opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
+            {/* Ambient glow */}
+            <div style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:'100%', height:200, background:`radial-gradient(ellipse at 50% 0%, ${accent}18 0%, transparent 65%)`, pointerEvents:'none' }} />
 
-            {/* Site nav */}
-            <div style={{ padding: '12px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontWeight: 800, fontSize: '15px', color: accent, letterSpacing: '-0.02em' }}>roomvu</span>
-                <div style={{ position: 'relative' }}>
-                    <button onClick={() => setPickerOpen(!pickerOpen)} style={{
-                        display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', borderRadius: 20,
-                        border: `1.5px solid ${accent}`, background: `${accent}12`, color: accent,
-                        fontSize: '12px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
-                    }}>
-                        📍 {city} ▾
-                    </button>
-                    {pickerOpen && (
-                        <div style={{
-                            position: 'absolute', right: 0, top: '110%', zIndex: 20, minWidth: 140,
-                            background: 'var(--background)', border: '1px solid var(--border)',
-                            borderRadius: 10, overflow: 'hidden', boxShadow: '0 8px 28px rgba(0,0,0,0.14)',
-                        }}>
-                            {CITIES.map(loc => (
-                                <button key={loc} onClick={() => { setCity(loc); setPickerOpen(false); }} style={{
-                                    display: 'block', width: '100%', textAlign: 'left', padding: '9px 16px',
-                                    fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', border: 'none',
-                                    background: loc === city ? `${accent}12` : 'transparent',
-                                    color: loc === city ? accent : 'var(--foreground)',
-                                    fontWeight: loc === city ? 700 : 400,
-                                }}>
-                                    {loc === city ? '✓ ' : ''}{loc}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
+            {/* Browser window — floats on dark stage */}
+            <div style={{ position:'relative', zIndex:1, borderRadius:14, overflow:'hidden', background:'var(--background)', border:'1px solid var(--border)', boxShadow:`0 0 0 1px rgba(255,255,255,0.06), 0 32px 80px rgba(0,0,0,0.7), 0 0 60px ${accent}18`, opacity:visible?1:0, transform:visible?'none':'translateY(16px)', transition:`opacity 0.6s ${ease} 0.15s, transform 0.6s ${ease} 0.15s` }}>
 
-            {/* Hero */}
-            <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid var(--border)', background: `linear-gradient(135deg, ${accent}08 0%, transparent 60%)` }}>
-                <div style={{ fontSize: '10px', fontWeight: 700, color: accent, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>
-                    Localized videos for {city} agents
+                {/* Browser chrome */}
+                <div style={{ padding:'10px 16px', background:'var(--muted)', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', gap:10 }}>
+                    <div style={{ display:'flex', gap:5 }}>
+                        {['#FF5F57','#FEBC2E','#28C840'].map((c,i) => <div key={i} style={{ width:10, height:10, borderRadius:'50%', background:c }} />)}
+                    </div>
+                    <div style={{ flex:1, background:'var(--background)', borderRadius:6, padding:'4px 10px', fontSize:'11px', color:'var(--muted-foreground)', border:'1px solid var(--border)' }}>
+                        roomvu.com — redesign concept
+                    </div>
                 </div>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--foreground)', lineHeight: 1.35 }}>
-                    Win more listings.<br />
-                    <span style={{ color: 'var(--muted-foreground)', fontWeight: 500, fontSize: '13px' }}>Spend less time searching for the right content.</span>
-                </div>
-            </div>
 
-            {/* Category tabs */}
-            <div style={{ padding: '10px 20px', borderBottom: '1px solid var(--border)', display: 'flex', gap: 6, overflowX: 'auto' }}>
-                {CATS.map(c => (
-                    <button key={c.id} onClick={() => setCat(c.id)} style={{
-                        padding: '5px 13px', borderRadius: 20, fontFamily: 'inherit', fontSize: '11px',
-                        fontWeight: cat === c.id ? 700 : 500, cursor: 'pointer', flexShrink: 0,
-                        border: `1.5px solid ${cat === c.id ? accent : 'var(--border)'}`,
-                        background: cat === c.id ? accent : 'transparent',
-                        color: cat === c.id ? '#fff' : 'var(--muted-foreground)',
-                        transition: 'all 0.2s ease',
-                    }}>{c.label}</button>
-                ))}
-            </div>
-
-            {/* Video grid */}
-            <div style={{ padding: '16px 20px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
-                    {videos.map((v, i) => (
-                        <div key={`${cat}-${i}`} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}
-                            style={{
-                                borderRadius: 8, overflow: 'hidden', cursor: 'pointer',
-                                border: `1px solid ${hovered === i ? accent + '55' : 'var(--border)'}`,
-                                transform: hovered === i ? 'translateY(-2px)' : 'none',
-                                boxShadow: hovered === i ? `0 6px 20px ${accent}22` : 'none',
-                                transition: `transform 0.2s ${ease}, box-shadow 0.2s ${ease}, border-color 0.2s`,
-                            }}>
-                            <div style={{
-                                aspectRatio: '16/9', background: `${accent}10`,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            }}>
-                                <div style={{
-                                    width: 26, height: 26, borderRadius: '50%',
-                                    background: hovered === i ? accent : `${accent}40`,
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    transition: `background 0.2s ${ease}`,
-                                }}>
-                                    <div style={{ width: 0, height: 0, borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderLeft: `8px solid ${hovered === i ? '#fff' : accent}`, marginLeft: 2, transition: 'border-left-color 0.2s' }} />
-                                </div>
+                {/* Site nav */}
+                <div style={{ padding:'12px 20px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                    <span style={{ fontWeight:800, fontSize:'15px', color:accent, letterSpacing:'-0.02em' }}>roomvu</span>
+                    <div style={{ position:'relative' }}>
+                        <SmartTooltip wide delay={300} content={<DriftTip label="Decision 01" title="Location in the nav, not settings" body="The old site had no persistent city context. Every agent was seeing the same global feed. This picker makes location the first-class organising principle." />}>
+                        <button onClick={() => setPickerOpen(!pickerOpen)} style={{ display:'flex', alignItems:'center', gap:5, padding:'6px 13px', borderRadius:20, border:`1.5px solid ${accent}`, background:`${accent}12`, color:accent, fontSize:'12px', fontWeight:700, cursor:'pointer', fontFamily:'inherit', transition:`all 0.2s ${ease}` }}>
+                            📍 {city} ▾
+                        </button>
+                        </SmartTooltip>
+                        {pickerOpen && (
+                            <div style={{ position:'absolute', right:0, top:'110%', zIndex:20, minWidth:150, background:'var(--background)', border:`1px solid var(--border)`, borderRadius:10, overflow:'hidden', boxShadow:'0 8px 32px rgba(0,0,0,0.2)', animation:`drift-el-in 0.2s ${ease} both` }}>
+                                {CITIES.map(loc => (
+                                    <button key={loc} onClick={() => changeCity(loc)} style={{ display:'block', width:'100%', textAlign:'left', padding:'9px 16px', fontSize:'12px', cursor:'pointer', fontFamily:'inherit', border:'none', background: loc === city ? `${accent}10` : 'transparent', color: loc === city ? accent : 'var(--foreground)', fontWeight: loc === city ? 700 : 400, transition:`background 0.15s` }}>
+                                        {loc === city ? '✓ ' : ''}{loc}
+                                    </button>
+                                ))}
                             </div>
-                            <div style={{ padding: '8px 10px' }}>
-                                <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--foreground)', lineHeight: 1.4, marginBottom: 5 }}>{v.title} — {city}</div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <span style={{ fontSize: '9px', padding: '2px 6px', borderRadius: 4, background: `${accent}15`, color: accent, fontWeight: 700 }}>{v.cat}</span>
-                                    <span style={{ fontSize: '10px', color: 'var(--muted-foreground)' }}>{v.date}</span>
-                                </div>
-                            </div>
-                        </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Hero — key={city} so it re-animates on city change */}
+                <SmartTooltip wide delay={350} content={<DriftTip label="Decision 01" title="This headline didn't exist before" body="The old site showed a generic tagline. Now it says 'Localized videos for {city} agents' — the city name propagates into the headline itself." />}>
+                <div key={city} style={{ padding:'20px 20px 16px', borderBottom:'1px solid var(--border)', background:`linear-gradient(135deg, ${accent}08 0%, transparent 60%)`, animation:`drift-el-in 0.35s ${ease} both` }}>
+                    <div style={{ fontSize:'10px', fontWeight:700, color:accent, letterSpacing:'0.09em', textTransform:'uppercase', marginBottom:6 }}>
+                        Localized videos for {city} agents
+                    </div>
+                    <div style={{ fontSize:'16px', fontWeight:800, color:'var(--foreground)', lineHeight:1.35 }}>
+                        Win more listings.<br />
+                        <span style={{ color:'var(--muted-foreground)', fontWeight:500, fontSize:'13px' }}>Spend less time searching for the right content.</span>
+                    </div>
+                </div>
+                </SmartTooltip>
+
+                {/* Category tabs */}
+                <div style={{ padding:'10px 20px', borderBottom:'1px solid var(--border)', display:'flex', gap:6, overflowX:'auto' }}>
+                    {CATS.map(c => (
+                        <SmartTooltip key={c.id} wide delay={300}
+                            content={
+                                c.id === 'all'      ? <DriftTip label="Decision 02" title="All content for your location" body="Category + city together. Neither filter alone gives you what you need — a Vancouver agent wants Vancouver market reports, not Toronto's." /> :
+                                c.id === 'market'   ? <DriftTip label="Decision 02" title="Market Reports — location-scoped" body="The old filter showed global reports. Agents had to manually scan for their city. Now the filter and location work together." /> :
+                                c.id === 'mobile'   ? <DriftTip label="Decision 02" title="Mobile-friendly, city-scoped" body="Agents post from phones. Short-form content localised to their market is the format that gets used." /> :
+                                                      <DriftTip label="Decision 02" title="Listings tied to your city" body="Listing videos attached to the city they were filmed in. Location + content type as a single filter instead of two separate steps." />
+                            }
+                        >
+                        <button onClick={() => changeCat(c.id)} style={{ padding:'5px 13px', borderRadius:20, fontFamily:'inherit', fontSize:'11px', fontWeight:cat===c.id?700:500, cursor:'pointer', flexShrink:0, border:`1.5px solid ${cat===c.id?accent:'var(--border)'}`, background:cat===c.id?accent:'transparent', color:cat===c.id?'#fff':'var(--muted-foreground)', transition:`all 0.2s ${ease}` }}>
+                            {c.label}
+                        </button>
+                        </SmartTooltip>
                     ))}
                 </div>
+
+                {/* Video grid — key={city+cat} triggers re-stagger on any change */}
+                <div style={{ padding:'16px 20px' }}>
+                    <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:10 }}>
+                        {videos.map((v,i) => (
+                            <SmartTooltip key={`${city}-${cat}-${i}`} wide delay={300}
+                                content={<DriftTip label="Decision 03" title={`"— ${city}" in every title`} body={`Agents were spending 45 min searching for relevant content. The city suffix makes relevance visible from the grid — no need to open each video.`} />}
+                            >
+                            <div
+                                onMouseEnter={() => setHovered(i)}
+                                onMouseLeave={() => setHovered(null)}
+                                style={{ borderRadius:8, overflow:'hidden', cursor:'pointer', border:`1px solid ${hovered===i ? accent+'55' : 'var(--border)'}`, transform:hovered===i?'translateY(-2px)':'none', boxShadow:hovered===i?`0 6px 20px ${accent}22`:'none', transition:`transform 0.2s ${ease}, box-shadow 0.2s ${ease}, border-color 0.2s`, animation:`drift-el-in 0.35s ${ease} ${i*0.06}s both` }}
+                            >
+                                <div style={{ aspectRatio:'16/9', background:`${accent}10`, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                                    <div style={{ width:26, height:26, borderRadius:'50%', background:hovered===i?accent:`${accent}40`, display:'flex', alignItems:'center', justifyContent:'center', transition:`background 0.2s ${ease}` }}>
+                                        <div style={{ width:0, height:0, borderTop:'5px solid transparent', borderBottom:'5px solid transparent', borderLeft:`8px solid ${hovered===i?'#fff':accent}`, marginLeft:2, transition:'border-left-color 0.2s' }} />
+                                    </div>
+                                </div>
+                                <div style={{ padding:'8px 10px' }}>
+                                    <div style={{ fontSize:'11px', fontWeight:600, color:'var(--foreground)', lineHeight:1.4, marginBottom:5 }}>{v.title} — {city}</div>
+                                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                                        <span style={{ fontSize:'9px', padding:'2px 6px', borderRadius:4, background:`${accent}15`, color:accent, fontWeight:700 }}>{v.cat}</span>
+                                        <span style={{ fontSize:'10px', color:'var(--muted-foreground)' }}>{v.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            </SmartTooltip>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Callout annotation below browser */}
+            <div style={{ maxWidth:480, margin:'28px auto 0', minHeight:52, position:'relative', zIndex:1, opacity:callout?1:0, visibility:callout?'visible':'hidden', transition:`opacity 0.3s ${ease}`, animation:callout?`drift-fade 0.25s ${ease}`:undefined }}>
+                {callout && (
+                    <div style={{ display:'flex', gap:14, alignItems:'flex-start' }}>
+                        <div style={{ width:2, flexShrink:0, background:accent, borderRadius:2, alignSelf:'stretch', opacity:0.85 }} />
+                        <div>
+                            <div style={{ fontSize:'10px', fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, opacity:0.85, marginBottom:5 }}>{callout.label}</div>
+                            <div style={{ fontSize:'12px', color:'rgba(255,255,255,0.5)', lineHeight:1.75 }}>{callout.text}</div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
