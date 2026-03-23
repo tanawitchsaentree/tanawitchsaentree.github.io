@@ -1,11 +1,12 @@
 {
   "id": "profita-mutual-fund",
   "meta": {
-    "title": "Profita — Mutual Fund Invest App",
+    "title": "Profita — Mutual Fund App",
     "cover_color": "#1B3A5C",
     "client": "LH Bank",
     "year": "2020",
-    "roles": ["Lead Designer", "Usability Testing", "Researcher", "Prototyping & Wireframing"]
+    "roles": ["Lead Designer", "Usability Testing", "Researcher", "Prototyping & Wireframing"],
+    "tags": ["Mobile App", "Fintech", "UX Research", "Product Design"]
   },
   "sections": [
     {
@@ -14,7 +15,7 @@
       "data": {
         "eyebrow": "Awarded Best App for Customer Experience",
         "title": "Mutual Fund Invest App — Profita",
-        "subtitle": "An investment app that helps users build long-term wealth through personalized fund discovery, ROBO advisory, and seamless portfolio management.",
+        "subtitle": "An investment app that serves three completely different types of investor — novice, intermediate, and values-driven — without building three separate products.",
         "bg_color": "#1B3A5C",
         "award_badge": true
       }
@@ -25,15 +26,25 @@
       "type": "project_overview",
       "data": {
         "label": "Case Study",
-        "title": "Profita — Seamless investment app",
+        "title": "Profita — One system. Three investment identities.",
         "my_role": ["Lead Designer", "Usability Testing", "Researcher", "Prototyping & Wireframing"],
         "client": "LH Bank",
         "year": "2020",
-        "overview": "Profita puts the investment world in your hands — an application from Land and Houses Bank that allows you to choose to invest in funds from mutual fund companies. Lead your own portfolio or let ROBO Advisor plan and manage investments to create returns according to your goals. Armed with useful investment information such as returns, historical prices, dividends, Morningstar ratings, and recommended funds from a team of professional advisors.",
+        "overview": "Profita is an investment app from Land and Houses Bank. It lets users choose mutual funds, access ROBO advisory, and manage their portfolio in one place — with Morningstar ratings, historical performance, and professional fund recommendations built in. The design challenge wasn't the feature list. It was building a single experience that felt personally built for three completely different types of investor.",
         "award": {
           "title": "Best App for Customer Experience",
           "event": "Retail Banker International Asia Trailblazer Awards 2023"
         }
+      }
+    },
+    {
+      "id": "opening",
+      "label": "The Argument",
+      "type": "statement",
+      "data": {
+        "eyebrow": "The Design Bet",
+        "headline": "Building for the least confident investor was the strategy, not the compromise.",
+        "body": "The conventional approach to an investment app for 'all experience levels' is to build for the median user — someone who knows a little, wants a little guidance, and won't be intimidated by a performance chart. Profita rejected that. The bet was to build genuinely for the novice investor: make the app so welcoming and clear that someone with zero investment knowledge could make their first trade with confidence. The hypothesis was that if you build for the most underserved user without condescending to the experienced one, the resulting design earns trust across the entire spectrum. Three years later, the award validated it."
       }
     },
     {
@@ -82,7 +93,7 @@
           {
             "icon": "user_interview",
             "label": "User interviews",
-            "body": "I consider myself as a novice investor, which led me to begin doing empathy to get to know people as individuals, not just users. I asked open-ended questions about how they are doing in life, their work, and what interests them throughout the day. I interviewed four individuals representing our three key user groups — Novice Investors, Intermediate Investors, and Experienced Investors — to understand their expectations, fears, and goals."
+            "body": "I consider myself a novice investor, which led me to start with empathy rather than assumptions. I asked open-ended questions about daily life, financial goals, and attitudes toward money — not just app preferences. I interviewed four individuals across three user groups: Novice Investors, Intermediate Investors, and values-driven investors. The goal was to find where confidence and confusion diverge across experience levels."
           }
         ]
       }
@@ -95,21 +106,27 @@
       }
     },
     {
-      "id": "challenges",
-      "label": "Key Challenges",
-      "type": "challenges",
+      "id": "tensions",
+      "label": "Key Tensions",
+      "type": "insight_cards",
       "data": {
-        "title": "Key Challenges",
-        "bg_color": "#1B3A5C",
+        "eyebrow": "What research revealed",
         "items": [
-          "Regulatory Compliance",
-          "Data Security and Privacy",
-          "User Education and Financial Literacy",
-          "Balancing Simplicity and Complexity",
-          "Personalization at Scale",
-          "User Trust and Confidence",
-          "Market Volatility and Economic Changes",
-          "Seamless Integration with External Systems"
+          {
+            "icon": "⚖️",
+            "headline": "Control creates anxiety",
+            "body": "Users wanted to feel in control of their investments — but exercising that control was exactly what scared them. Being shown a fund selection interface as a novice didn't feel empowering. It felt like a test they hadn't studied for. The design had to give the illusion of control while reducing the actual burden of decision-making."
+          },
+          {
+            "icon": "📊",
+            "headline": "What's educational for one is condescending to another",
+            "body": "The same onboarding flow that calmed Sarocha frustrated Anan. A glossary tooltip on 'Sharpe ratio' was helpful for a novice and patronizing for a financial analyst. Information density and guidance level couldn't be static — the app had to adapt without asking users to configure it manually."
+          },
+          {
+            "icon": "🌱",
+            "headline": "Values vs. returns is a false tradeoff — but only if you design for it",
+            "body": "ESG-focused investors didn't want to sacrifice returns for values. They wanted to see evidence that sustainable funds could compete. If ESG was just a filter that removed everything else from view, it looked like a values-driven sacrifice. The design had to frame it as intelligent selection, not restriction."
+          }
         ]
       }
     },
@@ -169,16 +186,6 @@
               "Desire for real estate investment options",
               "Comfort level with high-risk, high-return strategies"
             ]
-          },
-          {
-            "category": "Opportunities for Personalization",
-            "items": [
-              "Interest in tailoring portfolios based on personal values",
-              "Preferences for personalized investment recommendations",
-              "Desire for customizable dashboard widgets",
-              "Interest in automated goal-tracking features",
-              "Desire for educational content based on user proficiency"
-            ]
           }
         ]
       }
@@ -188,34 +195,34 @@
       "label": "Personas",
       "type": "personas",
       "data": {
-        "title": "Defining a user persona.",
+        "title": "Three investors. Three completely different first taps.",
         "items": [
           {
             "name": "Sarocha T.",
             "type": "Novice Investor",
-            "biography": "Recently started her career in marketing and is eager to begin investing. She has limited knowledge about investments and wants to start with something user-friendly and educational.",
-            "goal": "Understand the basics of investing, create a simple portfolio, and save for a future home purchase.",
-            "needs": "Educational resources, user-friendly interface, step-by-step guidance, and a supportive community.",
-            "frustrations": "Overwhelmed by complex financial jargon, unsure where to start, and concerned about making the wrong investment decisions.",
-            "why_use": "The app provides educational content, a simple onboarding process, and a supportive community — helping Sarocha gain confidence in her investment decisions."
+            "biography": "Recently started her career in marketing. Wants to invest but finds financial language intimidating. Has a savings goal — a home purchase — but doesn't know how to translate that into a fund selection.",
+            "goal": "Make her first investment without feeling like she's guessing. Build a simple portfolio that moves toward a home purchase over 3–5 years.",
+            "needs": "An automated path that makes the first decision for her. Clear language with no assumed knowledge. A goal-framing entry point ('save for a home') rather than a fund-browsing entry point.",
+            "frustrations": "Opens a fund comparison screen and sees 'Sharpe ratio: 0.81', '3Y return: 12.4%', 'standard deviation: 6.2'. Has no idea if any of those numbers are good. Closes the app.",
+            "why_use": "Sarocha opens the app and taps 'Let ROBO Advisor handle it.' She sets a goal: save ฿500,000 in 3 years. ROBO recommends a conservative mixed-fund portfolio. She confirms without reading the fund details — the ROBO path is designed so she doesn't have to. She invests in under 4 minutes. She comes back monthly to check progress against her goal, not to rebalance her portfolio."
           },
           {
             "name": "Anan",
             "type": "Intermediate Investor",
-            "biography": "Works as a financial analyst with some experience in investing. Looking to diversify and optimize his portfolio using a platform with advanced features and tools.",
-            "goal": "Diversify his investment portfolio, optimize returns, and stay updated on market trends.",
-            "needs": "Advanced analytics, customizable features, access to diverse investment options, and real-time market updates.",
-            "frustrations": "Limited customization options on existing platforms, lack of real-time data, and difficulty managing multiple investment accounts.",
-            "why_use": "The app's advanced analytics, customization features, and wide range of investment options give Anan the tools he needs for strategic portfolio management."
+            "biography": "Financial analyst with 4 years of investing experience. Has an existing portfolio on another platform and wants to diversify into categories it doesn't cover well. Comes to Profita for specific access, not for guidance.",
+            "goal": "Find funds in underrepresented categories — Asia ex-Japan equity, global bonds — and add them to a portfolio he actively manages.",
+            "needs": "Raw performance data accessible from the fund card, not behind a detail page. Morningstar rating visible as one data point among several, not the dominant signal. Quick comparison between 2–3 shortlisted funds.",
+            "frustrations": "Platforms that treat him like a beginner. A 5-step onboarding flow that teaches him what a mutual fund is. Tooltips explaining basic terms he's known for years.",
+            "why_use": "Anan skips the ROBO path at onboarding. He goes directly to Fund Discovery, filters by 4-star Morningstar and Asia ex-Japan region, and gets 8 results. He opens the top two funds, checks their 3-year return chart and expense ratio side-by-side, and invests in the better performer. The whole session takes 6 minutes. He doesn't need the educational content — he needs the app to stay out of his way."
           },
           {
             "name": "Oraya W.",
-            "type": "Environmental Scientist",
-            "biography": "Passionate about sustainable living and environmental conservation. She wants her investments to align with her values and contribute to socially responsible causes.",
-            "goal": "Invest in socially responsible funds, support sustainable initiatives, and create a portfolio with positive impact.",
-            "needs": "Socially responsible investment options, detailed information on ethical funds, and a platform that aligns with her environmental values.",
-            "frustrations": "Limited availability of information on sustainable investments, lack of transparency in fund practices, and scarcity of platforms emphasizing socially responsible options.",
-            "why_use": "The app's emphasis on socially responsible investing, detailed information on ethical funds, and alignment with environmental values makes it the right fit for Oraya."
+            "type": "ESG-Focused Investor",
+            "biography": "Environmental scientist. Treats investment as an extension of her values — won't invest in fossil fuels, tobacco, or companies with poor governance scores. Has been frustrated by platforms that treat ESG as a niche toggle rather than a primary lens.",
+            "goal": "Build a portfolio that reflects her values without sacrificing competitive returns. Prove to herself that sustainable investing doesn't require accepting lower performance.",
+            "needs": "ESG filter that restructures the entire fund catalogue — not a tag on cards she still has to sort through. Impact scorecard showing CO2, governance, and social metrics per fund. Evidence that the ESG funds she's considering have performance comparable to non-ESG alternatives.",
+            "frustrations": "Platforms that show ESG as a tag among 15 other tags. Having to manually exclude fossil fuel funds one by one. No way to see how an ESG fund's returns compare to the broader category average.",
+            "why_use": "Oraya opens the app and taps the ESG filter first. The catalogue collapses from 200+ funds to 14. She sorts by impact scorecard — a composite of CO2 reduction, governance score, and social impact. She opens the top-ranked fund, checks its 5-year performance against the category benchmark (6.1% vs 5.8% average), and invests. The filter didn't hide performance data — it just ensured she only ever had to look at funds she'd actually consider."
           }
         ]
       }
@@ -232,29 +239,59 @@
             "persona": "Novice Investor",
             "features": [
               { "name": "Educational Onboarding Wizard", "priority": "high", "rationale": "Essential for guiding Sarocha through her initial investment journey" },
-              { "name": "User-Friendly Dashboard", "priority": "high", "rationale": "Clear overview, with educational content taking precedence" },
-              { "name": "Customized Learning Paths", "priority": "high", "rationale": "Tailors educational content to Sarocha's progress and interests" },
-              { "name": "Investment Simulations", "priority": "medium", "rationale": "Valuable for practical learning — best introduced after initial onboarding" }
+              { "name": "ROBO Advisor Path", "priority": "high", "rationale": "Removes the fund-selection decision entirely for users who can't yet make it confidently" },
+              { "name": "Goal-Based Portfolio View", "priority": "high", "rationale": "Frames progress in terms Sarocha understands — 'you're 34% toward your home purchase goal'" },
+              { "name": "Investment Simulations", "priority": "medium", "rationale": "Useful for building confidence — best introduced after first investment is made" }
             ]
           },
           {
             "persona": "Intermediate Investor",
             "features": [
-              { "name": "Advanced Analytics Toolkit", "priority": "high", "rationale": "Crucial for making informed decisions and optimizing his portfolio" },
-              { "name": "Diverse Investment Options", "priority": "high", "rationale": "Critical for Anan's goal of diversifying beyond existing holdings" },
-              { "name": "Portfolio Optimization Algorithm", "priority": "medium", "rationale": "Supports Anan's goal of optimizing returns and managing risk" },
-              { "name": "Real-Time Market Alerts", "priority": "medium", "rationale": "Useful for staying informed, but secondary to analytics features" }
+              { "name": "Advanced Analytics Toolkit", "priority": "high", "rationale": "Crucial for Anan's evaluation process — raw performance data must be surface-level, not hidden" },
+              { "name": "Morningstar Rating Integration", "priority": "high", "rationale": "Third-party credibility signal useful across all levels — front-and-center for novices, one input among several for Anan" },
+              { "name": "Fund Comparison Tool", "priority": "high", "rationale": "Anan's critical workflow — side-by-side comparison of 2–3 shortlisted funds" },
+              { "name": "Real-Time Market Alerts", "priority": "medium", "rationale": "Useful for active management, but secondary to the comparison and discovery tools" }
             ]
           },
           {
-            "persona": "Environmental Scientist",
+            "persona": "ESG Investor",
             "features": [
-              { "name": "Ethical Fund Explorer", "priority": "high", "rationale": "Critical for Oraya's goal of investing in socially responsible funds" },
-              { "name": "Impact Measurement Tools", "priority": "high", "rationale": "Helps Oraya assess the real-world impact of her investments" },
-              { "name": "Socially Responsible Scorecards", "priority": "high", "rationale": "Essential transparency tool aligned with Oraya's values" },
-              { "name": "Sustainability Reports", "priority": "medium", "rationale": "Supports ongoing awareness but secondary to initial decision-making tools" },
-              { "name": "Collaborative Cause Investing", "priority": "medium", "rationale": "Beneficial for community investment — not as critical as individual impact tools" }
+              { "name": "ESG View-Restructuring Filter", "priority": "high", "rationale": "ESG as a primary filter that collapses the catalogue — not a tag on individual cards" },
+              { "name": "Impact Scorecard per Fund", "priority": "high", "rationale": "CO2, governance, and social impact as visible metrics alongside financial performance" },
+              { "name": "ESG vs. Category Benchmark Comparison", "priority": "high", "rationale": "Addresses Oraya's core tension — she needs evidence that sustainable doesn't mean lower returns" },
+              { "name": "Sustainability Reports", "priority": "medium", "rationale": "Supports ongoing transparency but secondary to the initial fund selection decision" }
             ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "decisions",
+      "label": "Design Decisions",
+      "type": "pinned_cards",
+      "data": {
+        "eyebrow": "Design Decisions",
+        "headline": "Four choices that made one app feel like three different products.",
+        "items": [
+          {
+            "number": "01",
+            "title": "ROBO Advisor as opt-in path, not the default",
+            "description": "Problem: novice investors don't know how to select funds — but making ROBO the default would remove the sense of agency from intermediate investors who came specifically to manage their own portfolio. Options: (A) ROBO as default, manual opt-out — lowest friction for novices. (B) Manual browsing as default, ROBO as explicit mode. (C) Adaptive: an experience-level question at onboarding routes each user to a different starting point. Decision: C. The tradeoff is real: experience level is self-reported and unreliable. A novice who answers 'intermediate' to seem confident skips the ROBO path and lands in the fund selection interface — which was designed for Anan, not Sarocha. The adaptive system can guide but can't protect against misplaced confidence."
+          },
+          {
+            "number": "02",
+            "title": "Morningstar star as the leading credibility signal — not raw returns",
+            "description": "Problem: novice users saw '3-year return: 12.4%' and 'Sharpe ratio: 0.81' and asked 'is that good?' They had no reference frame to evaluate raw performance data. Every comparison they attempted was guesswork. Options: (A) Show all performance data and trust users to interpret — keeps the interface clean, doesn't patronize experienced users. (B) Front-load the Morningstar star rating (1–5) as a recognised third-party signal, with detailed data accessible below. Decision: B. The tradeoff: experienced investors who distrust Morningstar ratings (arguing they lag real performance) can't reorganize the view around raw data. The star system was designed for Sarocha, and it sits slightly in Anan's way."
+          },
+          {
+            "number": "03",
+            "title": "ESG as a view-restructuring filter, not a tag",
+            "description": "Problem: ESG-focused investors don't use sustainability as a preference toggle — it's a qualifying criterion. If ESG is a tag on fund cards, Oraya still scrolls through 200+ funds to find the 14 that qualify. The signal arrives too late in the discovery process. Options: (A) ESG tag on cards — visible but the user still browses everything. (B) ESG as a primary filter that collapses the entire catalogue to sustainable funds only. Decision: B. The tradeoff: users who want to compare ESG vs. non-ESG funds for performance reasons can't do that comparison while the ESG filter is active. The filter is an either/or, not a priority ranking. Oraya is served; the comparison use case isn't."
+          },
+          {
+            "number": "04",
+            "title": "Implicit profiling through behaviour, not onboarding surveys",
+            "description": "Problem: the AI personalisation required knowing what a user likes, knows, and has invested in before. An onboarding survey asking 'what types of funds interest you?' produces low-quality data — people answer aspirationally, not accurately. Options: (A) Detailed onboarding survey at signup — builds profile upfront, gives immediate personalisation. (B) Start with a minimal profile, learn from every interaction: what they generate, save, skip, and compare. Decision: B. The tradeoff: the first several sessions feel generic. The personalisation is invisible until enough behavioral data exists. New users who churn after 3 sessions never experience the system's intelligence — the promise is a long-game payoff that requires the user to stay."
           }
         ]
       }
@@ -279,19 +316,17 @@
         "description": "The fund discovery flow guides users from initial search through detailed evaluation to completed investment — adapting based on user preferences and risk profile.",
         "steps": [
           "Start",
-          "Access Fund Discovery",
-          "Search for Funds",
-          "Search Results",
-          "Select a Fund",
-          "Explore Fund Details",
+          "Onboarding: experience level",
+          "Novice → ROBO path / Intermediate → Fund Discovery",
+          "Set goal or browse by category",
+          "Review fund details + Morningstar rating",
           "Add to Watchlist",
-          "Compare Performance",
+          "Compare shortlisted funds",
           "Initiate Investment",
           "Set Amount",
           "Review Transaction",
           "Confirm & Complete",
-          "View Confirmation",
-          "End"
+          "View portfolio progress toward goal"
         ]
       }
     },
@@ -299,12 +334,11 @@
       "id": "impact",
       "label": "Impact",
       "type": "statement",
-      "creative_direction": { "tone": "triumph", "notes": "Blur-in mirrors the award moment — clarity emerging from years of work. Warm, unhurried." },
       "motion_spec": { "enter": "blur_in", "duration": 1.0, "delay": 0.1, "easing": "fast_out" },
       "data": {
         "eyebrow": "Impact",
         "headline": "Best App for Customer Experience — Retail Banker International Asia, 2023.",
-        "body": "Three years after launch, Profita was recognized at the Retail Banker International Asia Trailblazer Awards — not for its technical capabilities, but for how it made customers feel.\n\nThe recognition validated a core design bet: that building for the least confident user (the Novice Investor) would raise the bar for everyone. Sarocha's onboarding experience was the same one Anan and Oraya went through. Making it genuinely welcoming — not just functional — was the thing that crossed segments and earned the recognition."
+        "body": "Three years after launch, Profita was recognised at the Retail Banker International Asia Trailblazer Awards — not for its technical capabilities, but for how it made customers feel.\n\nThe recognition validated the core design bet: that building for the least confident user would raise the bar for everyone. The onboarding experience Sarocha went through was the same one Anan and Oraya went through. Making it genuinely welcoming — not just functional — crossed experience levels and earned the recognition.\n\nThe adaptive design didn't treat users as permanent categories. It treated the novice investor as someone who might become an intermediate investor one day — and designed for that journey, not just the first session."
       }
     },
     {

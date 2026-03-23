@@ -73,27 +73,26 @@
         {
             "id": "scope",
             "label": "What This Tool Is",
-            "type": "decisions",
+            "type": "insight_cards",
             "creative_direction": { "tone": "methodical", "notes": "Items stagger in one-by-one — each scope point lands with weight. Measured timing reflects enterprise rigor." },
             "motion_spec": { "enter": "fade_up", "duration": 0.7, "stagger": 0.12, "y_enter": 24, "easing": "fast_out" },
             "data": {
                 "eyebrow": "Scope",
-                "headline": "Not a claims tool. The layer that tells the AI how to read claims.",
                 "items": [
                     {
-                        "number": "01",
-                        "title": "Users = business configurators",
-                        "description": "Not ops staff. Not ML engineers. People with deep domain knowledge who had never had a direct way to encode that knowledge into the system — until now. The interface had to work for someone who understood insurance documents fluently but had never written a line of code."
+                        "icon": "🧠",
+                        "headline": "Users = business configurators",
+                        "body": "Not ops staff. Not ML engineers. People with deep domain knowledge who had never had a direct way to encode that knowledge into the system — until now. The interface had to work for someone who understood insurance documents fluently but had never written a line of code."
                     },
                     {
-                        "number": "02",
-                        "title": "Engineering dependency eliminated",
-                        "description": "Before this tool, changing prompt logic required raising an engineering ticket and waiting 3+ days for deployment. Business teams had workarounds — spreadsheets, shared docs, informal Slack threads — that tracked what the prompts were supposed to do but couldn't actually change them."
+                        "icon": "⚙️",
+                        "headline": "Engineering dependency eliminated",
+                        "body": "Before this tool, changing prompt logic required raising an engineering ticket and waiting 3+ days for deployment. Business teams had workarounds — spreadsheets, shared docs, informal Slack threads — that tracked what the prompts were supposed to do but couldn't actually change them."
                     },
                     {
-                        "number": "03",
-                        "title": "Full lifecycle in one place",
-                        "description": "Write, test against real documents, get approval, publish, monitor performance. The tool needed to cover every stage — not just authoring. Without a safe testing environment and a clear publish gate, configurators couldn't trust what they were changing or when it went live."
+                        "icon": "🔄",
+                        "headline": "Full lifecycle in one place",
+                        "body": "Write, test against real documents, get approval, publish, monitor performance. The tool needed to cover every stage — not just authoring. Without a safe testing environment and a clear publish gate, configurators couldn't trust what they were changing or when it went live."
                     }
                 ]
             }
@@ -162,7 +161,7 @@
                     {
                         "number": "03",
                         "title": "Plain language over technical precision",
-                        "description": "Early iterations used ML-accurate terminology throughout the interface: 'inference threshold', 'classification schema', 'token boundary'. Every term was technically correct. None of them meant anything to a business configurator. We rewrote the entire UI layer in plain language — 'Save draft', 'Approve & Publish', 'Test against documents'. Placeholder names like {{CLASSIFICATION_HIERARCHY}} kept their technical identifiers but were annotated with plain descriptions inline. The goal was that someone with zero ML background could use the tool fluently after a 20-minute onboarding."
+                        "description": "Early iterations used ML-accurate terminology throughout the interface: 'inference threshold', 'classification schema', 'token boundary'. Every term was technically correct. The ML engineering team pushed back on removing it — their argument was that the terminology was load-bearing, that renaming 'inference threshold' to 'confidence minimum' would cause confusion when configurators escalated issues to the engineering team who thought in the original terms. They had a point. The decision was to keep technical identifiers in the JSON layer and API surface — where engineers would touch them — but rewrite the UI layer entirely in plain language, with inline annotations mapping plain terms back to technical ones. 'Save draft', 'Approve & Publish', 'Test against documents' in the interface; full technical vocabulary preserved in documentation. The tradeoff: configurators who became power users and wanted to understand the ML layer had to context-switch between two vocabularies — one for doing, one for learning."
                     }
                 ]
             }

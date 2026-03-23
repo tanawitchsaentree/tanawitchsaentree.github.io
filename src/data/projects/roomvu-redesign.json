@@ -136,7 +136,7 @@
                         "goal": "Find Vancouver-specific market report and listing videos quickly enough to share with a client before the next showing — without sitting at a desktop to do it.",
                         "needs": "Location filter that defaults to Vancouver without manual setup every session. Mobile layout that works one-handed. Category structure so he can go straight to 'Market Reports' without scrolling past Listings content.",
                         "frustrations": "Opens Roomvu on mobile between appointments [mobile feature] — layout breaks, CTAs are off-screen, he bounces. When he does get to the video library on desktop, there's no location filter [location feature] so he scrolls through Florida and Texas content to find Vancouver. By the time he finds what he needs, he could have just searched YouTube.",
-                        "why_use": "Roomvu has content that's genuinely better than what he'd find elsewhere — branded, professional, market-specific. The platform loses him not because the product is wrong but because the UX makes him work too hard to prove it."
+                        "why_use": "Roomvu produces content Robert genuinely can't replicate himself — branded, market-specific clips ready to share with clients. When the mobile layout works, he opens the app between appointments, taps 'Market Reports', finds a Vancouver clip, and shares it to his client in under 90 seconds [mobile layout + category navigation]. When the location filter defaults to his city, he never scrolls past Toronto or Calgary content — every session starts where he is [location-persistent filter]. Those two moments are the only reason he returns. Without them, he's back to YouTube."
                     }
                 ]
             }
