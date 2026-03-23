@@ -1102,64 +1102,271 @@ function RecipeCollapse({ accent }: { accent: string }) {
     );
 }
 
-type PD = { id: string; name: string; type: string; initial: string; funds: { name: string; tag: string; stars: number; pct: string | null; esg: boolean }[]; showChart: boolean; showESG: boolean; cta: string; tip: string | null };
-const PERSONA_DEMO_DATA: PD[] = [
-    { id: 'novice', name: 'Sarocha', type: 'First-time investor', initial: 'S', funds: [{ name: 'Conservative Bond Fund', tag: 'Low Risk', stars: 5, pct: null, esg: false }], showChart: false, showESG: false, cta: 'Start with ฿1,000 →', tip: '💡 Bond funds are lower risk — a good place to start building confidence.' },
-    { id: 'intermediate', name: 'Anan', type: 'Financial analyst', initial: 'A', funds: [{ name: 'Global Equity Growth', tag: 'High', stars: 4, pct: '+14.2%', esg: false }, { name: 'Asia Balanced Fund', tag: 'Med', stars: 3, pct: '+7.8%', esg: false }, { name: 'US Tech Index', tag: 'High', stars: 5, pct: '+22.1%', esg: false }], showChart: true, showESG: false, cta: 'Optimize portfolio', tip: null },
-    { id: 'env', name: 'Oraya', type: 'Environmental scientist', initial: 'O', funds: [{ name: 'ESG Global Leaders', tag: 'ESG A+', stars: 4, pct: '+9.3%', esg: true }, { name: 'Green Energy Fund', tag: 'ESG S+', stars: 5, pct: '+12.0%', esg: true }], showChart: false, showESG: true, cta: 'Explore ethical funds', tip: null },
-];
-function PersonaLens({ accent }: { accent: string }) {
-    const [active, setActive] = useState(0);
-    const [fading, setFading] = useState(false);
-    const [displayed, setDisplayed] = useState(0);
-    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
-    const switchTo = (i: number) => { if (i === active || fading) return; setFading(true); setTimeout(() => { setDisplayed(i); setActive(i); setFading(false); }, 180); };
-    const p = PERSONA_DEMO_DATA[displayed];
+// ── Profita per-persona screens ───────────────────────────────────────────────
+
+function ProfitaAppHeader({ accent, tab }: { accent: string; tab: string }) {
     return (
-        <div>
-            <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                {PERSONA_DEMO_DATA.map((pd, i) => (
-                    <button key={pd.id} onClick={() => switchTo(i)} style={{ flex: active === i ? '1.8 1 0' : '1 1 0', minWidth: 0, display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 12, fontFamily: 'inherit', cursor: 'pointer', background: active === i ? accent : 'var(--background)', border: `1.5px solid ${active === i ? accent : 'var(--border)'}`, color: active === i ? '#fff' : 'var(--muted-foreground)', transition: `flex 0.4s ${ease}, background 0.25s, border-color 0.25s, color 0.25s` }}>
-                        <div style={{ width: 28, height: 28, borderRadius: '50%', flexShrink: 0, background: active === i ? 'rgba(255,255,255,0.2)' : 'var(--muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 700, color: active === i ? '#fff' : 'var(--foreground)' }}>{pd.initial}</div>
-                        <div style={{ textAlign: 'left', minWidth: 0, overflow: 'hidden' }}>
-                            <div style={{ fontSize: '13px', fontWeight: 700, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{pd.name}</div>
-                            <div style={{ fontSize: '10px', opacity: 0.65, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{pd.type}</div>
+        <div style={{ padding:'10px 16px', background:`linear-gradient(135deg, ${accent} 0%, #0d2140 100%)`, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <span style={{ fontSize:'16px', fontWeight:900, color:'#fff', letterSpacing:'-0.02em' }}>Profita</span>
+            <span style={{ fontSize:'10px', fontWeight:700, color:'rgba(255,255,255,0.55)', letterSpacing:'0.06em', textTransform:'uppercase' }}>{tab}</span>
+        </div>
+    );
+}
+
+function ProfitaNoviceScreen({ accent }: { accent: string }) {
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
+    return (
+        <div style={{ color:'#fff', paddingBottom:16 }}>
+            <ProfitaAppHeader accent={accent} tab="My Journey" />
+            <SmartTooltip wide delay={350} content={<DriftTip label="Decision 03" title="One fund, no percentages" body="Reduces cognitive load for first-time investors. Sarocha sees one option — the analyst sees three. Same app, different complexity." />}>
+            <div style={{ margin:'12px 14px 10px', background:'linear-gradient(145deg,#0d1a2e,#122040)', borderRadius:14, padding:'16px', position:'relative', overflow:'hidden', animation:`drift-el-in 0.4s ${ease} 0.08s both` }}>
+                <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 20% 80%, ${accent}35 0%, transparent 55%)`, pointerEvents:'none' }} />
+                <div style={{ position:'relative' }}>
+                    <div style={{ fontSize:'10px', fontWeight:700, color:'rgba(255,255,255,0.4)', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:6 }}>SUGGESTED START</div>
+                    <div style={{ fontSize:'42px', fontWeight:900, letterSpacing:'-0.04em', lineHeight:1, background:'linear-gradient(135deg,#60a5fa 0%,#93c5fd 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', marginBottom:5 }}>฿1,000</div>
+                    <div style={{ fontSize:'12px', color:'rgba(255,255,255,0.4)' }}>A comfortable starting amount</div>
+                </div>
+            </div>
+            </SmartTooltip>
+            <div style={{ margin:'0 14px 10px', padding:'10px 12px', borderRadius:10, background:'rgba(96,165,250,0.07)', border:'1px solid rgba(96,165,250,0.18)', display:'flex', gap:8, alignItems:'flex-start', animation:`drift-el-in 0.4s ${ease} 0.14s both` }}>
+                <span style={{ fontSize:'14px', flexShrink:0 }}>💡</span>
+                <span style={{ fontSize:'12px', color:'rgba(255,255,255,0.55)', lineHeight:1.6 }}>Bond funds are lower risk — a good place to start building confidence.</span>
+            </div>
+            <SmartTooltip wide delay={300} content={<DriftTip label="Decision 03" title="Large card = low intimidation" body="Bigger padding, larger font, no return %. The design removes data the novice isn't ready to interpret — not because it hides it, but because it's irrelevant to her decision right now." />}>
+            <div style={{ margin:'0 14px 14px', borderRadius:12, background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.1)', padding:'16px', animation:`drift-el-in 0.4s ${ease} 0.2s both` }}>
+                <div style={{ fontWeight:700, fontSize:'15px', marginBottom:6, lineHeight:1.3 }}>Conservative Bond Fund</div>
+                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+                    <span style={{ fontSize:'11px', padding:'3px 9px', borderRadius:100, background:'rgba(96,165,250,0.12)', border:'1px solid rgba(96,165,250,0.3)', color:'#60a5fa', fontWeight:700 }}>Low Risk</span>
+                    <span style={{ fontSize:'13px', color:'#eab308' }}>★★★★★</span>
+                </div>
+                <div style={{ fontSize:'12px', color:'rgba(255,255,255,0.35)' }}>Stable returns · Capital protection</div>
+            </div>
+            </SmartTooltip>
+            <SmartTooltip wide delay={300} content={<DriftTip label="Decision 04" title="'฿1,000' not 'Start investing'" body="Concrete amount anchors the ask. Abstract CTAs are more intimidating than specific ones. The number makes the first step feel achievable." />}>
+            <div style={{ margin:'0 14px', animation:`drift-el-in 0.4s ${ease} 0.26s both` }}>
+                <button style={{ width:'100%', padding:'14px', borderRadius:12, background:`linear-gradient(135deg, ${accent} 0%, #1e4080 100%)`, color:'#fff', border:'none', fontFamily:'inherit', fontWeight:800, fontSize:'14px', cursor:'pointer', boxShadow:`0 8px 28px ${accent}50` }}>
+                    Start with ฿1,000 →
+                </button>
+            </div>
+            </SmartTooltip>
+        </div>
+    );
+}
+
+function ProfitaIntermScreen({ accent }: { accent: string }) {
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
+    const funds = [
+        { name:'Global Equity Growth', tag:'High Risk', pct:'+14.2%', stars:4 },
+        { name:'Asia Balanced Fund',   tag:'Med Risk',  pct:'+7.8%',  stars:3 },
+        { name:'US Tech Index',        tag:'High Risk', pct:'+22.1%', stars:5 },
+    ];
+    return (
+        <div style={{ color:'#fff', paddingBottom:16 }}>
+            <ProfitaAppHeader accent={accent} tab="Portfolio Analytics" />
+            <SmartTooltip wide delay={350} content={<DriftTip label="Decision 03" title="YTD return at hero scale for analysts" body="Sarocha never sees this number. Anan sees it first. Same app — the information hierarchy shifts based on what each user uses to make decisions." />}>
+            <div style={{ margin:'12px 14px 10px', background:'linear-gradient(145deg,#0d1a2e,#122040)', borderRadius:14, padding:'16px', position:'relative', overflow:'hidden', animation:`drift-el-in 0.4s ${ease} 0.08s both` }}>
+                <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 80% 20%, ${accent}25 0%, transparent 55%)`, pointerEvents:'none' }} />
+                <div style={{ position:'relative', display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
+                    <div>
+                        <div style={{ fontSize:'10px', fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:5 }}>PORTFOLIO YTD</div>
+                        <div style={{ fontSize:'38px', fontWeight:900, letterSpacing:'-0.04em', lineHeight:1, background:'linear-gradient(135deg,#34d399 0%,#6ee7b7 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>+14.8%</div>
+                    </div>
+                    <div style={{ textAlign:'right' }}>
+                        <div style={{ fontSize:'10px', color:'rgba(255,255,255,0.35)', letterSpacing:'0.08em', marginBottom:4, textTransform:'uppercase' }}>Total value</div>
+                        <div style={{ fontSize:'16px', fontWeight:700, color:'rgba(255,255,255,0.75)' }}>฿248,420</div>
+                    </div>
+                </div>
+                <div style={{ marginTop:12, display:'flex', gap:2, alignItems:'flex-end', height:32 }}>
+                    {[30,42,36,50,45,58,52,65,60,72,68,82].map((h,i) => (
+                        <div key={i} style={{ flex:1, borderRadius:'2px 2px 0 0', height:`${h}%`, background:'linear-gradient(180deg,#34d399 0%,#059669 100%)', opacity:0.4+i*0.05 }} />
+                    ))}
+                </div>
+            </div>
+            </SmartTooltip>
+            <div style={{ margin:'0 14px 14px', display:'flex', flexDirection:'column', gap:7, animation:`drift-el-in 0.4s ${ease} 0.16s both` }}>
+                {funds.map((f,i) => (
+                    <SmartTooltip key={f.name} wide delay={250} content={<DriftTip label="Decision 03" title="Return % only for analysts" body="Sarocha's view shows no percentage — too much data too early causes paralysis. Anan's view surfaces it because that's her primary filter." />}>
+                    <div style={{ padding:'11px 14px', borderRadius:10, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.08)', display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, animation:`drift-el-in 0.3s ${ease} ${0.18+i*0.06}s both` }}>
+                        <div>
+                            <div style={{ fontSize:'13px', fontWeight:600, marginBottom:3 }}>{f.name}</div>
+                            <div style={{ display:'flex', gap:5, alignItems:'center' }}>
+                                <span style={{ fontSize:'10px', padding:'2px 7px', borderRadius:100, background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.45)', fontWeight:600 }}>{f.tag}</span>
+                                <span style={{ fontSize:'11px', color:'#eab308' }}>{'★'.repeat(f.stars)}</span>
+                            </div>
                         </div>
-                    </button>
+                        <div style={{ fontSize:'16px', fontWeight:800, color:'#34d399', flexShrink:0 }}>{f.pct}</div>
+                    </div>
+                    </SmartTooltip>
                 ))}
             </div>
-            <div style={{ borderRadius: 14, border: '1px solid var(--border)', overflow: 'hidden', background: 'var(--background)', opacity: fading ? 0 : 1, transform: fading ? 'translateY(6px)' : 'none', transition: fading ? 'opacity 0.18s ease-in, transform 0.18s ease-in' : `opacity 0.35s ${ease}, transform 0.35s ${ease}` }}>
-                <div style={{ padding: '12px 18px', borderBottom: '1px solid var(--border)', background: accent, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 700, color: '#fff' }}>Profita</span>
-                    <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)' }}>{p.id === 'novice' ? 'My Journey' : p.id === 'intermediate' ? 'Portfolio Analytics' : 'Ethical Investing'}</span>
-                </div>
-                <div style={{ padding: '18px' }}>
-                    {p.tip && <div style={{ padding: '10px 14px', borderRadius: 10, background: `${accent}10`, border: `1px solid ${accent}25`, marginBottom: 14, fontSize: '12px', color: accent, lineHeight: 1.5 }}>{p.tip}</div>}
-                    {p.showESG && <div style={{ display: 'flex', gap: 6, marginBottom: 14, flexWrap: 'wrap' }}>{['ESG Screened ✓','Carbon Neutral ✓','Social Impact ✓'].map(t => <span key={t} style={{ fontSize: '11px', padding: '3px 10px', borderRadius: 100, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', color: '#16a34a', fontWeight: 600 }}>{t}</span>)}</div>}
-                    {p.showChart && <div style={{ marginBottom: 14, padding: '12px 14px', background: 'var(--muted)', borderRadius: 10 }}>
-                        <div style={{ fontSize: '10px', color: 'var(--muted-foreground)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Portfolio YTD · +14.8%</div>
-                        <div style={{ display: 'flex', gap: 3, alignItems: 'flex-end', height: 40 }}>
-                            {[30,42,36,50,45,58,52,65,60,72,68,82].map((h, i) => <div key={i} style={{ flex: 1, background: accent, borderRadius: '2px 2px 0 0', height: `${h}%`, opacity: 0.45 + i * 0.04 }} />)}
-                        </div>
-                    </div>}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        {p.funds.map(fund => (
-                            <div key={fund.name} style={{ padding: p.id === 'novice' ? '16px 18px' : '11px 14px', borderRadius: 10, background: 'var(--background)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, border: '1px solid var(--border)', borderLeft: fund.esg ? '3px solid #22c55e' : '1px solid var(--border)' }}>
-                                <div style={{ minWidth: 0 }}>
-                                    <div style={{ fontSize: p.id === 'novice' ? '14px' : '12px', fontWeight: 600, color: 'var(--foreground)', marginBottom: 3, lineHeight: 1.3 }}>{fund.name}</div>
-                                    <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                                        <span style={{ fontSize: '10px', padding: '2px 7px', borderRadius: 100, background: 'var(--muted)', border: '1px solid var(--border)', color: 'var(--muted-foreground)', fontWeight: 600 }}>{fund.tag}</span>
-                                        <span style={{ fontSize: '11px', color: '#eab308' }}>{'★'.repeat(fund.stars)}</span>
-                                    </div>
-                                </div>
-                                <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                                    {fund.pct ? <div style={{ fontSize: '14px', fontWeight: 700, color: '#16a34a' }}>{fund.pct}</div> : <div style={{ fontSize: '11px', color: 'var(--muted-foreground)', lineHeight: 1.4 }}>Low<br/>risk</div>}
-                                </div>
-                            </div>
+            <SmartTooltip wide delay={300} content={<DriftTip label="Decision 04" title="'Optimize' not 'Start'" body="Analyst intent is refinement, not discovery. CTA copy shifts from '฿1,000 start' to 'Optimize portfolio' — same button position, entirely different user model." />}>
+            <div style={{ margin:'0 14px', animation:`drift-el-in 0.4s ${ease} 0.3s both` }}>
+                <button style={{ width:'100%', padding:'14px', borderRadius:12, background:`linear-gradient(135deg, ${accent} 0%, #1e4080 100%)`, color:'#fff', border:'none', fontFamily:'inherit', fontWeight:800, fontSize:'14px', cursor:'pointer', boxShadow:`0 8px 28px ${accent}50` }}>
+                    Optimize portfolio
+                </button>
+            </div>
+            </SmartTooltip>
+        </div>
+    );
+}
+
+function ProfitaESGScreen({ accent }: { accent: string }) {
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
+    const green = '#22c55e';
+    const funds = [
+        { name:'ESG Global Leaders', badge:'ESG A+', pct:'+9.3%',  stars:4 },
+        { name:'Green Energy Fund',  badge:'ESG S+', pct:'+12.0%', stars:5 },
+    ];
+    return (
+        <div style={{ color:'#fff', paddingBottom:16 }}>
+            <ProfitaAppHeader accent={accent} tab="Ethical Investing" />
+            <SmartTooltip wide delay={350} content={<DriftTip label="Decision 02" title="ESG rating surfaces before fund list" body="Oraya qualifies funds by values, not returns. The rating hierarchy mirrors Drift's social proof ordering — the most important signal surfaces first." />}>
+            <div style={{ margin:'12px 14px 10px', background:'linear-gradient(145deg,#0a1a0f,#0d2014)', borderRadius:14, padding:'16px', position:'relative', overflow:'hidden', border:`1px solid ${green}22`, animation:`drift-el-in 0.4s ${ease} 0.08s both` }}>
+                <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 30% 80%, ${green}18 0%, transparent 60%)`, pointerEvents:'none' }} />
+                <div style={{ position:'relative', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                    <div>
+                        <div style={{ fontSize:'10px', fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:5 }}>YOUR ESG RATING</div>
+                        <div style={{ fontSize:'46px', fontWeight:900, letterSpacing:'-0.04em', lineHeight:1, background:`linear-gradient(135deg, ${green} 0%, #4ade80 100%)`, WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>A+</div>
+                        <div style={{ fontSize:'11px', color:'rgba(255,255,255,0.3)', marginTop:4 }}>Portfolio ESG score</div>
+                    </div>
+                    <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
+                        {['ESG Screened ✓','Carbon Neutral ✓'].map(t => (
+                            <SmartTooltip key={t} wide delay={250} content={<DriftTip label="Decision 02" title="Filter badge at hero level" body="ESG filters are primary qualifiers — not buried in advanced settings. They surface at the same hierarchy as the fund name." />}>
+                            <span style={{ fontSize:'10px', padding:'4px 9px', borderRadius:100, background:`${green}15`, border:`1px solid ${green}35`, color:green, fontWeight:700, whiteSpace:'nowrap', display:'block' }}>{t}</span>
+                            </SmartTooltip>
                         ))}
                     </div>
-                    <button style={{ width: '100%', marginTop: 14, padding: '11px', borderRadius: 10, background: accent, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: '13px', fontWeight: 700 }}>{p.cta}</button>
                 </div>
+            </div>
+            </SmartTooltip>
+            <div style={{ margin:'0 14px 14px', display:'flex', flexDirection:'column', gap:8, animation:`drift-el-in 0.4s ${ease} 0.16s both` }}>
+                {funds.map((f,i) => (
+                    <div key={f.name} style={{ padding:'14px', borderRadius:12, background:'rgba(255,255,255,0.04)', border:`1px solid rgba(255,255,255,0.07)`, borderLeft:`3px solid ${green}`, display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, animation:`drift-el-in 0.3s ${ease} ${0.18+i*0.07}s both` }}>
+                        <div>
+                            <div style={{ fontSize:'13px', fontWeight:700, marginBottom:5 }}>{f.name}</div>
+                            <div style={{ display:'flex', gap:6, alignItems:'center' }}>
+                                <span style={{ fontSize:'10px', padding:'2px 8px', borderRadius:100, background:`${green}15`, border:`1px solid ${green}35`, color:green, fontWeight:700 }}>{f.badge}</span>
+                                <span style={{ fontSize:'11px', color:'#eab308' }}>{'★'.repeat(f.stars)}</span>
+                            </div>
+                        </div>
+                        <div style={{ fontSize:'16px', fontWeight:800, color:green, flexShrink:0 }}>{f.pct}</div>
+                    </div>
+                ))}
+            </div>
+            <SmartTooltip wide delay={300} content={<DriftTip label="Decision 04" title="'Explore ethical' not 'Invest'" body="For values-driven users, the framing of the action matters. 'Explore' signals alignment with her intent — it's not just a transaction." />}>
+            <div style={{ margin:'0 14px', animation:`drift-el-in 0.4s ${ease} 0.3s both` }}>
+                <button style={{ width:'100%', padding:'14px', borderRadius:12, background:'linear-gradient(135deg,#16a34a 0%,#15803d 100%)', color:'#fff', border:'none', fontFamily:'inherit', fontWeight:800, fontSize:'14px', cursor:'pointer', boxShadow:`0 8px 28px ${green}40` }}>
+                    Explore ethical funds
+                </button>
+            </div>
+            </SmartTooltip>
+        </div>
+    );
+}
+
+function PersonaLens({ accent }: { accent: string }) {
+    const [active, setActive]       = useState(0);
+    const [animDir, setAnimDir]     = useState<1|-1>(1);
+    const [callout, setCallout]     = useState<{label:string;text:string}|null>(null);
+    const [visible, setVisible]     = useState(false);
+    const [phoneHover, setPhoneHover] = useState(false);
+    const stageRef = useRef<HTMLDivElement>(null);
+    const timerRef = useRef<ReturnType<typeof setTimeout>|null>(null);
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
+
+    const PERSONAS = [
+        { initial:'S', name:'Sarocha', label:'First-time',  callout:{ label:'Persona 01', text:'Sarocha needs simplicity. One fund, no percentage, concrete starting amount. The app reduces every variable except the one decision she needs to make.' } },
+        { initial:'A', name:'Anan',    label:'Analyst',     callout:{ label:'Persona 02', text:'Anan optimises daily. She needs YTD performance, charts, and three options side-by-side. Same app — information density triples.' } },
+        { initial:'O', name:'Oraya',   label:'ESG Focus',   callout:{ label:'Persona 03', text:'Oraya qualifies by values first. ESG rating surfaces before fund description. Returns are secondary. The hierarchy itself is the decision.' } },
+    ];
+
+    useEffect(() => {
+        const el = stageRef.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { setVisible(true); obs.disconnect(); }
+        }, { threshold: 0.12 });
+        obs.observe(el);
+        return () => obs.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const t = setTimeout(() => showCallout(0), 900);
+        return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const showCallout = (i: number) => {
+        const c = PERSONAS[i].callout;
+        if (timerRef.current) clearTimeout(timerRef.current);
+        setCallout(c);
+        timerRef.current = setTimeout(() => setCallout(null), 4000);
+    };
+
+    const switchTo = (i: number) => {
+        if (i === active) return;
+        setAnimDir(i > active ? 1 : -1);
+        setActive(i);
+        showCallout(i);
+    };
+
+    return (
+        <div ref={stageRef} style={{ borderRadius:20, overflow:'hidden', background:'linear-gradient(160deg,#060d18 0%,#091526 60%,#060d18 100%)', position:'relative', padding:'44px 32px 36px', opacity:visible?1:0, transform:visible?'none':'translateY(32px)', transition:`opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
+            <div style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:340, height:260, background:`radial-gradient(ellipse at 50% 0%, ${accent}28 0%, transparent 65%)`, pointerEvents:'none' }} />
+
+            {/* Phone */}
+            <div style={{ display:'flex', justifyContent:'center', marginBottom:32, position:'relative', zIndex:1, opacity:visible?1:0, transform:visible?'none':'translateY(20px)', transition:`opacity 0.7s ${ease} 0.12s, transform 0.7s ${ease} 0.12s` }}>
+                <div
+                    onMouseEnter={() => setPhoneHover(true)}
+                    onMouseLeave={() => setPhoneHover(false)}
+                    style={{ width:300, borderRadius:44, background:'#1C1C1E', border:'9px solid #0A0A0A', overflow:'hidden', height:580, boxShadow: phoneHover ? `0 0 0 1px #2a3a4a, 0 60px 120px rgba(0,0,0,0.9), 0 0 90px ${accent}35` : `0 0 0 1px #1a2a3a, 0 48px 96px rgba(0,0,0,0.88), 0 0 70px ${accent}22`, transform: phoneHover ? 'translateY(-6px) scale(1.012)' : 'none', transition:`all 0.35s ${ease}` }}
+                >
+                    <div style={{ padding:'14px 20px 4px', display:'flex', justifyContent:'space-between' }}>
+                        <span style={{ fontSize:'12px', fontWeight:700, color:'#fff' }}>9:41</span>
+                        <span style={{ fontSize:'10px', color:'#fff', opacity:0.7 }}>●●● WiFi ■</span>
+                    </div>
+                    <div key={active} style={{ animation:`${animDir >= 0 ? 'drift-screen-fwd' : 'drift-screen-back'} 0.26s ${ease} both`, overflow:'hidden' }}>
+                        {active === 0 && <ProfitaNoviceScreen accent={accent} />}
+                        {active === 1 && <ProfitaIntermScreen accent={accent} />}
+                        {active === 2 && <ProfitaESGScreen   accent={accent} />}
+                    </div>
+                </div>
+            </div>
+
+            {/* Persona strip — dot nodes, same pattern as Drift journey */}
+            <div style={{ display:'flex', justifyContent:'center', alignItems:'flex-start', position:'relative', zIndex:1, marginBottom:28, opacity:visible?1:0, transform:visible?'none':'translateY(12px)', transition:`opacity 0.6s ${ease} 0.35s, transform 0.6s ${ease} 0.35s` }}>
+                {PERSONAS.map((p,i) => {
+                    const isActive  = active === i;
+                    const isVisited = active > i;
+                    const nextVis   = i < PERSONAS.length - 1 && active > i;
+                    return (
+                        <div key={p.name} style={{ display:'flex', alignItems:'flex-start' }}>
+                            <SmartTooltip wide delay={300} content={<DriftTip label={`Persona 0${i+1}`} title={p.name} body={p.callout.text} />}>
+                            <button onClick={() => switchTo(i)} style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, background:'none', border:'none', cursor:'pointer', padding:'0 22px', fontFamily:'inherit' }}>
+                                <div style={{ width:isActive?10:7, height:isActive?10:7, borderRadius:'50%', background: isActive ? accent : isVisited ? `${accent}70` : 'rgba(255,255,255,0.18)', boxShadow: isActive ? `0 0 14px ${accent}` : 'none', transition:`all 0.3s ${ease}`, flexShrink:0 }} />
+                                <span style={{ fontSize:'11px', fontWeight:isActive?700:400, color:isActive?'#fff':'rgba(255,255,255,0.35)', whiteSpace:'nowrap', transition:`all 0.2s ${ease}` }}>{p.name}</span>
+                                <span style={{ fontSize:'9px', color:'rgba(255,255,255,0.2)', whiteSpace:'nowrap' }}>{p.label}</span>
+                            </button>
+                            </SmartTooltip>
+                            {i < PERSONAS.length - 1 && (
+                                <div style={{ width:28, height:1.5, flexShrink:0, background: nextVis ? accent : 'rgba(255,255,255,0.1)', opacity: nextVis ? 0.55 : 1, transition:`background 0.4s ${ease}`, marginTop:4 }} />
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Callout annotation */}
+            <div style={{ maxWidth:360, margin:'0 auto', minHeight:56, position:'relative', zIndex:1, opacity:callout?1:0, visibility:callout?'visible':'hidden', transition:`opacity 0.3s ${ease}`, animation:callout?`drift-fade 0.25s ${ease}`:undefined }}>
+                {callout && (
+                    <div style={{ display:'flex', gap:14, alignItems:'flex-start' }}>
+                        <div style={{ width:2, flexShrink:0, background:accent, borderRadius:2, alignSelf:'stretch', opacity:0.85 }} />
+                        <div>
+                            <div style={{ fontSize:'10px', fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:accent, opacity:0.85, marginBottom:5 }}>{callout.label}</div>
+                            <div style={{ fontSize:'12px', color:'rgba(255,255,255,0.5)', lineHeight:1.75 }}>{callout.text}</div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
