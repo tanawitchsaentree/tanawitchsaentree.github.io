@@ -64,6 +64,7 @@ const MODAL_CSS = `
 @keyframes drift-pop   { 0%{transform:scale(1)} 40%{transform:scale(1.35)} 100%{transform:scale(1)} }
 @keyframes drift-screen-fwd  { from{opacity:0;transform:translateX(28px)}  to{opacity:1;transform:translateX(0)} }
 @keyframes drift-screen-back { from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:translateX(0)} }
+@keyframes drift-el-in       { from{opacity:0;transform:translateY(14px)}  to{opacity:1;transform:none} }
 .recipe-carousel::-webkit-scrollbar { display: none }
 .scrolling-cards-track::-webkit-scrollbar { display: none }
 .scrolling-cards-track { -ms-overflow-style: none; scrollbar-width: none; }
@@ -1202,6 +1203,8 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
     onJob: () => void; onEvent: () => void; onCallout: (k: string) => void; animScore: number;
 }) {
     const ease = 'cubic-bezier(0.16,1,0.3,1)';
+    const [hoverEvent, setHoverEvent] = useState(false);
+    const [hoverJob, setHoverJob] = useState(false);
     const TABS = [
         { id:'feed',  label:'Feed', badge:'Live', live:true },
         { id:'info',  label:'City info', badge:null, live:false },
@@ -1211,13 +1214,13 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
     return (
         <div style={{ color:'#fff' }}>
             {/* Nav */}
-            <div style={{ padding:'6px 16px 10px', display:'flex', alignItems:'center', gap:8 }}>
+            <div style={{ padding:'6px 16px 10px', display:'flex', alignItems:'center', gap:8, animation:`drift-el-in 0.35s ${ease} 0.04s both` }}>
                 <span style={{ color:'#AEAEB2', fontSize:'22px', lineHeight:1, fontWeight:300 }}>‹</span>
                 <span style={{ fontWeight:700, fontSize:'16px', letterSpacing:'-0.01em' }}>Prague, Czech Republic</span>
             </div>
 
             {/* Score hero — THE argument in pixels */}
-            <div style={{ margin:'0 14px 14px', borderRadius:18, overflow:'hidden', background:'linear-gradient(145deg,#0e1624 0%,#131020 60%,#0e0e14 100%)', position:'relative', padding:'20px 18px 16px' }}>
+            <div style={{ margin:'0 14px 14px', borderRadius:18, overflow:'hidden', background:'linear-gradient(145deg,#0e1624 0%,#131020 60%,#0e0e14 100%)', position:'relative', padding:'20px 18px 16px', animation:`drift-el-in 0.4s ${ease} 0.1s both` }}>
                 <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 15% 85%, ${accent}30 0%, transparent 55%)`, pointerEvents:'none' }} />
                 <div style={{ position:'absolute', top:0, right:0, width:120, height:120, background:`radial-gradient(ellipse at 80% 20%, ${accent}15 0%, transparent 60%)`, pointerEvents:'none' }} />
                 <div style={{ position:'relative', display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
@@ -1241,7 +1244,7 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
             </div>
 
             {/* Tab bar — counts are the design argument */}
-            <div style={{ padding:'0 14px 12px', display:'flex', gap:5 }}>
+            <div style={{ padding:'0 14px 12px', display:'flex', gap:5, animation:`drift-el-in 0.4s ${ease} 0.18s both` }}>
                 {TABS.map(t => (
                     <button key={t.id} onClick={() => { setTab(t.id); onCallout(`tab_${t.id}`); }} style={{ display:'flex', alignItems:'center', gap:5, padding:'7px 11px', borderRadius:20, border:'none', fontFamily:'inherit', fontSize:'12px', cursor:'pointer', flexShrink:0, background:tab===t.id?accent:'rgba(255,255,255,0.08)', color:tab===t.id?'#fff':'rgba(255,255,255,0.5)', fontWeight:tab===t.id?700:500, transition:`all 0.22s ${ease}`, boxShadow:tab===t.id?`0 4px 20px ${accent}55`:'none' }}>
                         {t.label}
@@ -1251,7 +1254,7 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
             </div>
 
             {/* Tab content */}
-            <div style={{ padding:'0 14px 20px' }}>
+            <div style={{ padding:'0 14px 16px', animation:`drift-el-in 0.4s ${ease} 0.26s both` }}>
                 {tab==='info' && (
                     <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                         <div style={{ background:'#2C2C2E', borderRadius:14, padding:'14px' }}>
@@ -1269,8 +1272,12 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
                     </div>
                 )}
                 {tab==='event' && (
-                    <div onClick={onEvent} style={{ background:'linear-gradient(145deg,#1C1C2E,#2C1C2E)', borderRadius:14, padding:'16px', cursor:'pointer', border:`1.5px solid ${accent}35`, position:'relative', overflow:'hidden' }}>
-                        <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 80% 80%, ${accent}20, transparent 60%)`, pointerEvents:'none' }} />
+                    <div
+                        onClick={onEvent}
+                        onMouseEnter={() => setHoverEvent(true)}
+                        onMouseLeave={() => setHoverEvent(false)}
+                        style={{ background: hoverEvent ? 'linear-gradient(145deg,#232340,#3a2040)' : 'linear-gradient(145deg,#1C1C2E,#2C1C2E)', borderRadius:14, padding:'16px', cursor:'pointer', border:`1.5px solid ${hoverEvent ? accent : accent+'35'}`, position:'relative', overflow:'hidden', transform: hoverEvent ? 'translateY(-2px)' : 'none', boxShadow: hoverEvent ? `0 12px 36px ${accent}30` : 'none', transition:`all 0.22s ${ease}` }}>
+                        <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 80% 80%, ${accent}${hoverEvent?'35':'20'}, transparent 60%)`, pointerEvents:'none', transition:`all 0.22s ${ease}` }} />
                         <div style={{ position:'relative' }}>
                             <div style={{ fontSize:'11px', color:accent, fontWeight:700, letterSpacing:'0.08em', marginBottom:8 }}>UPCOMING · JUN 12</div>
                             <div style={{ fontWeight:800, fontSize:'16px', marginBottom:4, letterSpacing:'-0.01em' }}>Run For Hal Prague 2024</div>
@@ -1281,7 +1288,11 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
                     </div>
                 )}
                 {tab==='job' && (
-                    <div onClick={onJob} style={{ background:'#2C2C2E', borderRadius:14, padding:'16px', cursor:'pointer' }}>
+                    <div
+                        onClick={onJob}
+                        onMouseEnter={() => setHoverJob(true)}
+                        onMouseLeave={() => setHoverJob(false)}
+                        style={{ background: hoverJob ? '#3a3a3c' : '#2C2C2E', borderRadius:14, padding:'16px', cursor:'pointer', border:`1px solid ${hoverJob ? 'rgba(255,255,255,0.18)' : 'transparent'}`, transform: hoverJob ? 'translateY(-2px)' : 'none', boxShadow: hoverJob ? '0 12px 32px rgba(0,0,0,0.5)' : 'none', transition:`all 0.22s ${ease}` }}>
                         <div style={{ fontSize:'11px', color:'rgba(255,255,255,0.35)', marginBottom:6, letterSpacing:'0.06em', textTransform:'uppercase' }}>FEATURED · JUST POSTED</div>
                         <div style={{ fontWeight:800, fontSize:'16px', marginBottom:4, letterSpacing:'-0.01em' }}>Graphic Designer</div>
                         <div style={{ fontSize:'13px', color:'#AEAEB2', marginBottom:14 }}>DuelNow · $50 USD/hr · Remote</div>
@@ -1300,7 +1311,7 @@ function DriftCityScreen({ accent, tab, setTab, onJob, onEvent, onCallout, animS
                             { handle:'@sara.ui',    time:'15m', text:'Running the Run For Hal 5K on the 12th. Anyone?', color:'#FF6B6B' },
                             { handle:'@0xjamie',   time:'1h',  text:'Locked ETH-pay contract for July. Prague stays. 🔒', color:'#FFE66D' },
                         ].map((item,i) => (
-                            <div key={i} style={{ background:'#2C2C2E', borderRadius:12, padding:'12px 14px', display:'flex', gap:10, alignItems:'flex-start', animation:`drift-fade 0.3s ease ${i*0.08}s both` }}>
+                            <div key={i} style={{ background:'#2C2C2E', borderRadius:12, padding:'12px 14px', display:'flex', gap:10, alignItems:'flex-start', animation:`drift-el-in 0.3s ${ease} ${i*0.08}s both` }}>
                                 <div style={{ width:32, height:32, borderRadius:'50%', background:item.color, flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'13px', fontWeight:900, color:'#1C1C1E' }}>{item.handle[1].toUpperCase()}</div>
                                 <div style={{ minWidth:0 }}>
                                     <div style={{ display:'flex', gap:6, alignItems:'center', marginBottom:3 }}>
@@ -1336,7 +1347,7 @@ function DriftJobScreen({ accent, onBack, onCallout }: { accent: string; onBack:
     return (
         <div style={{ color:'#fff', paddingBottom:20 }}>
             {/* Nav */}
-            <div style={{ padding:'6px 16px 10px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <div style={{ padding:'6px 16px 10px', display:'flex', alignItems:'center', justifyContent:'space-between', animation:`drift-el-in 0.35s ${ease} 0.04s both` }}>
                 <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                     <button onClick={onBack} style={{ background:'none', border:'none', color:accent, fontSize:'22px', cursor:'pointer', padding:0, lineHeight:1, fontWeight:300 }}>‹</button>
                     <span style={{ fontWeight:700, fontSize:'16px', letterSpacing:'-0.01em' }}>Vacancy details</span>
@@ -1353,7 +1364,7 @@ function DriftJobScreen({ accent, onBack, onCallout }: { accent: string; onBack:
             )}
 
             {/* Job hero card */}
-            <div style={{ margin:'0 14px 12px', background:'linear-gradient(145deg,#1C1C1E,#252525)', borderRadius:16, padding:'18px 16px', position:'relative', overflow:'hidden' }}>
+            <div style={{ margin:'0 14px 12px', background:'linear-gradient(145deg,#1C1C1E,#252525)', borderRadius:16, padding:'18px 16px', position:'relative', overflow:'hidden', animation:`drift-el-in 0.4s ${ease} 0.1s both` }}>
                 <div style={{ position:'absolute', inset:0, background:`radial-gradient(ellipse at 90% 10%, ${accent}18 0%, transparent 50%)`, pointerEvents:'none' }} />
                 <div style={{ position:'relative' }}>
                     {/* Company */}
@@ -1382,7 +1393,7 @@ function DriftJobScreen({ accent, onBack, onCallout }: { accent: string; onBack:
             </div>
 
             {/* Payment pills — THE design argument: visible before the click */}
-            <div style={{ margin:'0 14px 12px' }}>
+            <div style={{ margin:'0 14px 14px', animation:`drift-el-in 0.4s ${ease} 0.18s both` }}>
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
                     <span style={{ fontSize:'11px', fontWeight:700, color:'rgba(255,255,255,0.35)', letterSpacing:'0.1em', textTransform:'uppercase' }}>Payment currencies</span>
                     <span style={{ fontSize:'11px', color:accent, fontWeight:700 }}>↑ tap to try</span>
@@ -1401,12 +1412,7 @@ function DriftJobScreen({ accent, onBack, onCallout }: { accent: string; onBack:
                 </div>
             </div>
 
-            {/* Description */}
-            <div style={{ margin:'0 14px 14px', background:'#2C2C2E', borderRadius:14, padding:'14px' }}>
-                <div style={{ fontWeight:700, fontSize:'14px', marginBottom:8 }}>Position Overview</div>
-                <div style={{ fontSize:'13px', color:'#AEAEB2', lineHeight:1.65 }}>Seeking a creative Graphic Designer for visually impactful graphics across digital channels. Strong portfolio required.</div>
-            </div>
-            <div style={{ margin:'0 14px' }}>
+            <div style={{ margin:'0 14px', animation:`drift-el-in 0.4s ${ease} 0.26s both` }}>
                 <button style={{ width:'100%', padding:'15px', borderRadius:14, background:accent, color:'#fff', border:'none', fontFamily:'inherit', fontWeight:800, fontSize:'15px', cursor:'pointer', boxShadow:`0 8px 28px ${accent}50`, letterSpacing:'-0.01em' }}>Apply now</button>
             </div>
         </div>
@@ -1445,10 +1451,11 @@ function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBac
         }
     };
 
+    const ease = 'cubic-bezier(0.16,1,0.3,1)';
     return (
         <div style={{ color:'#fff', fontSize:'13px', paddingBottom:20 }}>
             {/* Header */}
-            <div style={{ padding:'4px 16px 10px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+            <div style={{ padding:'4px 16px 10px', display:'flex', alignItems:'center', justifyContent:'space-between', animation:`drift-el-in 0.35s ${ease} 0.04s both` }}>
                 <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                     <button onClick={onBack} style={{ background:'none', border:'none', color:accent, fontSize:'22px', cursor:'pointer', padding:0, lineHeight:1 }}>‹</button>
                     <span style={{ fontWeight:700, fontSize:'15px' }}>Run For Hal Prague</span>
@@ -1480,6 +1487,7 @@ function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBac
                     cursor:'pointer',
                     position:'relative',
                     padding:'18px 16px 16px',
+                    animation:`drift-el-in 0.4s ${ease} 0.1s both`,
                 }}
             >
                 {/* Radial glow behind the number */}
@@ -1523,7 +1531,7 @@ function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBac
             )}
 
             {/* Event meta — visually subordinate */}
-            <div style={{ margin:'0 16px 10px', background:'rgba(255,255,255,0.04)', borderRadius:12, padding:'12px 14px' }}>
+            <div style={{ margin:'0 16px 10px', background:'rgba(255,255,255,0.04)', borderRadius:12, padding:'12px 14px', animation:`drift-el-in 0.4s ${ease} 0.18s both` }}>
                 <div style={{ fontWeight:700, fontSize:'14px', marginBottom:8 }}>Run For Hal Prague 2024</div>
                 <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
                     <div style={{ display:'flex', alignItems:'center', gap:8, fontSize:'12px', color:'rgba(255,255,255,0.55)' }}>
@@ -1542,14 +1550,14 @@ function DriftEventScreen({ accent, onBack, onCallout }: { accent: string; onBac
             </div>
 
             {/* About — lowest hierarchy */}
-            <div style={{ margin:'0 16px 14px', padding:'0 2px' }}>
+            <div style={{ margin:'0 16px 14px', padding:'0 2px', animation:`drift-el-in 0.4s ${ease} 0.24s both` }}>
                 <div style={{ fontSize:'13px', color:'rgba(255,255,255,0.45)', lineHeight:1.7 }}>
                     A 5km social run/walk around Prague Old Town, honouring Hal Finney. All abilities welcome.
                 </div>
             </div>
 
             {/* CTA */}
-            <div style={{ margin:'0 16px' }}>
+            <div style={{ margin:'0 16px', animation:`drift-el-in 0.4s ${ease} 0.3s both` }}>
                 <button
                     onClick={handleJoin}
                     style={{
@@ -1585,8 +1593,22 @@ function DriftAppDemo({ accent }: { accent: string }) {
     const [callout, setCallout]   = useState<{label:string;text:string}|null>(null);
     const [visited, setVisited]   = useState<Set<DriftScreen>>(new Set(['city']));
     const [animScore, setAnimScore] = useState(0);
+    const [phoneHover, setPhoneHover] = useState(false);
+    const [visible, setVisible]   = useState(false);
+    const stageRef = useRef<HTMLDivElement>(null);
     const timerRef = useRef<ReturnType<typeof setTimeout>|null>(null);
     const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
+    // Scroll reveal
+    useEffect(() => {
+        const el = stageRef.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { setVisible(true); obs.disconnect(); }
+        }, { threshold: 0.12 });
+        obs.observe(el);
+        return () => obs.disconnect();
+    }, []);
 
     // Score animation on mount + initial callout hint
     useEffect(() => {
@@ -1619,18 +1641,21 @@ function DriftAppDemo({ accent }: { accent: string }) {
 
     return (
         /* Dark atmospheric stage — matches phone's dark UI, creates immersive showcase feel */
-        <div style={{ borderRadius:20, overflow:'hidden', background:'linear-gradient(160deg,#0c0c14 0%,#15100a 60%,#0e0d0c 100%)', position:'relative', padding:'44px 32px 36px' }}>
+        <div ref={stageRef} style={{ borderRadius:20, overflow:'hidden', background:'linear-gradient(160deg,#0c0c14 0%,#15100a 60%,#0e0d0c 100%)', position:'relative', padding:'44px 32px 36px', opacity: visible?1:0, transform: visible?'none':'translateY(32px)', transition:`opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
             {/* Ambient glow behind phone — accent bleeds through */}
             <div style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:340, height:260, background:`radial-gradient(ellipse at 50% 0%, ${accent}22 0%, transparent 68%)`, pointerEvents:'none' }} />
 
             {/* Phone — centered, dramatic shadow */}
-            <div style={{ display:'flex', justifyContent:'center', marginBottom:36, position:'relative', zIndex:1 }}>
-                <div style={{ width:300, borderRadius:44, background:'#1C1C1E', border:'9px solid #0A0A0A', boxShadow:`0 0 0 1px #2a2a2a, 0 48px 96px rgba(0,0,0,0.85), 0 0 70px ${accent}20`, overflow:'hidden', height:600 }}>
+            <div style={{ display:'flex', justifyContent:'center', marginBottom:36, position:'relative', zIndex:1, opacity: visible?1:0, transform: visible?'none':'translateY(20px)', transition:`opacity 0.7s ${ease} 0.12s, transform 0.7s ${ease} 0.12s` }}>
+                <div
+                    onMouseEnter={() => setPhoneHover(true)}
+                    onMouseLeave={() => setPhoneHover(false)}
+                    style={{ width:300, borderRadius:44, background:'#1C1C1E', border:'9px solid #0A0A0A', boxShadow: phoneHover ? `0 0 0 1px #3a3a3a, 0 60px 120px rgba(0,0,0,0.9), 0 0 90px ${accent}35` : `0 0 0 1px #2a2a2a, 0 48px 96px rgba(0,0,0,0.85), 0 0 70px ${accent}20`, overflow:'hidden', height:600, transform: phoneHover ? 'translateY(-6px) scale(1.012)' : 'none', transition:`all 0.35s ${ease}` }}>
                     <div style={{ padding:'14px 20px 4px', display:'flex', justifyContent:'space-between' }}>
                         <span style={{ fontSize:'12px', fontWeight:700, color:'#fff' }}>9:41</span>
                         <span style={{ fontSize:'10px', color:'#fff', opacity:0.7 }}>●●● WiFi ■</span>
                     </div>
-                    <div key={screen} style={{ animation: `${screenDir >= 0 ? 'drift-screen-fwd' : 'drift-screen-back'} 0.26s cubic-bezier(0.16,1,0.3,1) both`, height:'calc(100% - 38px)', overflowY:'auto' }}>
+                    <div key={screen} style={{ animation: `${screenDir >= 0 ? 'drift-screen-fwd' : 'drift-screen-back'} 0.26s cubic-bezier(0.16,1,0.3,1) both`, overflow:'hidden' }}>
                         {screen === 'city'  && <DriftCityScreen  accent={accent} tab={cityTab} setTab={setCityTab} onJob={() => handleScreen('job')} onEvent={() => handleScreen('event')} onCallout={showCallout} animScore={animScore} />}
                         {screen === 'job'   && <DriftJobScreen   accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
                         {screen === 'event' && <DriftEventScreen accent={accent} onBack={() => handleScreen('city')} onCallout={showCallout} />}
@@ -1639,7 +1664,7 @@ function DriftAppDemo({ accent }: { accent: string }) {
             </div>
 
             {/* Journey indicator — dot nodes, no boxes */}
-            <div style={{ display:'flex', justifyContent:'center', alignItems:'flex-start', position:'relative', zIndex:1, marginBottom:28 }}>
+            <div style={{ display:'flex', justifyContent:'center', alignItems:'flex-start', position:'relative', zIndex:1, marginBottom:28, opacity: visible?1:0, transform: visible?'none':'translateY(12px)', transition:`opacity 0.6s ${ease} 0.35s, transform 0.6s ${ease} 0.35s` }}>
                 {DRIFT_JOURNEY.map((node, i) => {
                     const isActive  = screen === node.id;
                     const isVisited = visited.has(node.id);
