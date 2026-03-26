@@ -1102,42 +1102,15 @@ function RecipeCollapse({ accent }: { accent: string }) {
     );
 }
 
-// ── Profita — PersonaLens (light fintech — award-winning bank app) ────────────
+// ── Profita — Pain: raw data confusion → Relief: adapted clarity ─────────────
 
-const PROFITA_PERSONAS = {
-    sarocha: {
-        name: 'Sarocha T.', role: 'Novice Investor · First investment',
-        initial: 'S', color: '#C9A84C', borderColor: '#E0CFA0',
-        heroType: 'stars' as const,
-        fundName: 'LH Conservative Mixed Fund',
-        fundSub: 'Low risk · Recommended for beginners',
-        cta: 'Start with ฿1,000', ctaBg: '#1B3A5C',
-    },
-    anan: {
-        name: 'Anan K.', role: 'Analyst · Active portfolio manager',
-        initial: 'A', color: '#059669', borderColor: '#A7F3D0',
-        heroType: 'return' as const,
-        fundName: 'LH Equity Asia ex-Japan',
-        fundSub: '4★ Morningstar · Asia ex-Japan region',
-        cta: 'Compare funds →', ctaBg: '#059669',
-    },
-    oraya: {
-        name: 'Oraya W.', role: 'ESG Investor · Values-driven',
-        initial: 'O', color: '#16A34A', borderColor: '#BBF7D0',
-        heroType: 'esg' as const,
-        fundName: 'KTAM ESG Equity Fund',
-        fundSub: 'ESG composite A+ · CO₂ reduction leader',
-        cta: 'Explore ethical funds', ctaBg: '#15803D',
-    },
-} as const;
-type ProfitaPersona = keyof typeof PROFITA_PERSONAS;
+type ProfitaView = 'raw' | 'novice' | 'analyst';
 
 function PersonaLens({ accent: _accent }: { accent: string }) {
     const stageRef = useRef<HTMLDivElement>(null);
     const [visible, setVisible] = useState(false);
-    const [persona, setPersona] = useState<ProfitaPersona>('sarocha');
+    const [view, setView] = useState<ProfitaView>('raw');
     const ease = 'cubic-bezier(0.16,1,0.3,1)';
-    const p = PROFITA_PERSONAS[persona];
 
     useEffect(() => {
         const el = stageRef.current; if (!el) return;
@@ -1145,96 +1118,94 @@ function PersonaLens({ accent: _accent }: { accent: string }) {
         obs.observe(el); return () => obs.disconnect();
     }, []);
 
+    const RAW_METRICS = [
+        ['3Y CAGR', '14.8%'], ['Sharpe', '0.81'], ['Std Dev', '6.2%'],
+        ['Max Drawdown', '-8.3%'], ['Beta', '0.72'], ['Expense', '0.65%'],
+    ];
+
     return (
         <div ref={stageRef} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
             <div style={{ marginBottom: 24 }}>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C9A84C', marginBottom: 8 }}>Interactive Demo</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>One app. Three completely different investors.</div>
-                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>Switch investors to feel how the same fund adapts. Sarocha gets stars. Anan gets data. Oraya gets values.</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>Same fund. What you see depends on who you are.</div>
+                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>Start from the confusion — then choose your perspective.</div>
             </div>
-            {/* Light fintech stage — warm cream, not dark crypto */}
             <div style={{ background: 'linear-gradient(160deg, #F8F5EE 0%, #EEE9DC 100%)', borderRadius: 20, padding: '32px 28px', border: '1px solid #DDD5C0', boxShadow: '0 4px 24px rgba(27,58,92,0.07)' }}>
-                {/* Persona selector */}
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginBottom: 10 }}>
-                    {(Object.keys(PROFITA_PERSONAS) as ProfitaPersona[]).map(k => {
-                        const pp = PROFITA_PERSONAS[k];
-                        const active = persona === k;
-                        return (
-                            <SmartTooltip key={k} wide delay={300} content={<DriftTip label={`Persona — ${pp.name}`} title={pp.role} body={k === 'sarocha' ? 'Novice: needs confidence, not data. The app removes all complexity for her — stars instead of Sharpe ratios.' : k === 'anan' ? 'Analyst: needs raw data fast. The app stays out of his way — +14.8% at 56px, data grid below.' : 'ESG-focused: values are her primary filter. The catalogue restructures around ESG — A+ at hero scale.'} />}>
-                                <button onClick={() => setPersona(k)} style={{ width: 44, height: 44, borderRadius: '50%', background: active ? pp.color : `${pp.color}15`, border: `2.5px solid ${active ? pp.color : `${pp.color}45`}`, cursor: 'pointer', fontSize: 14, fontWeight: 800, color: active ? '#fff' : pp.color, transition: `all 0.3s ${ease}`, boxShadow: active ? `0 0 0 4px ${pp.color}20` : 'none', transform: active ? 'scale(1.12)' : 'scale(1)' }}>{pp.initial}</button>
-                            </SmartTooltip>
-                        );
-                    })}
-                </div>
-                {/* Persona label */}
-                <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#1B3A5C', transition: `color 0.4s ${ease}` }}>{p.name}</div>
-                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{p.role}</div>
-                </div>
-                {/* Fund card — morphs between 3 investors */}
-                <div style={{ maxWidth: 440, margin: '0 auto', background: '#fff', borderRadius: 16, padding: '28px 24px', border: `1.5px solid ${p.borderColor}`, boxShadow: `0 8px 32px rgba(0,0,0,0.07), 0 0 0 3px ${p.color}0a`, transition: `border-color 0.5s ${ease}, box-shadow 0.5s ${ease}` }}>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: '#999', letterSpacing: '0.02em', marginBottom: 20 }}>{p.fundName}</div>
-                    {/* Hero morph — fixed height so card doesn't jump */}
-                    <div style={{ position: 'relative', height: 128, marginBottom: 20 }}>
-                        {/* Sarocha: just stars — no data, calm, spacious */}
-                        <div style={{ position: 'absolute', inset: 0, opacity: persona === 'sarocha' ? 1 : 0, transform: persona === 'sarocha' ? 'none' : 'translateY(-10px)', transition: `opacity 0.4s ${ease}, transform 0.4s ${ease}`, pointerEvents: persona === 'sarocha' ? 'auto' : 'none' }}>
-                            <SmartTooltip wide delay={280} content={<DriftTip label="Decision 02" title="Stars replace Sharpe ratio" body="Sarocha closes the app when she sees '0.81 Sharpe'. Five stars answers 'is this good?' without requiring financial literacy." />}>
-                                <div style={{ cursor: 'default' }}>
-                                    <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>{'★★★★★'.split('').map((s, i) => <span key={i} style={{ fontSize: 42, color: '#F59E0B', filter: 'drop-shadow(0 2px 8px #F59E0B40)' }}>{s}</span>)}</div>
-                                    <div style={{ fontSize: 11, color: '#aaa' }}>Morningstar Overall Rating</div>
-                                    <div style={{ marginTop: 10, fontSize: 11, padding: '5px 11px', borderRadius: 8, background: '#FEF9EE', border: '1px solid #F0E0A0', display: 'inline-block', color: '#8B6914', fontWeight: 600 }}>Conservative · Stable growth</div>
+                {/* Fund card — morphs between states */}
+                <div style={{ maxWidth: 440, margin: '0 auto 24px', background: '#fff', borderRadius: 16, padding: '24px', border: `1.5px solid ${view === 'analyst' ? '#A7F3D0' : view === 'novice' ? '#E0CFA0' : '#E5E0D5'}`, boxShadow: '0 4px 20px rgba(0,0,0,0.06)', transition: `border-color 0.5s ${ease}`, position: 'relative' }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: '#999', marginBottom: 16 }}>LH Conservative Mixed Fund</div>
+                    {/* RAW — wall of numbers, no context, no hierarchy */}
+                    <div style={{ opacity: view === 'raw' ? 1 : 0, transition: `opacity 0.3s ${ease}`, pointerEvents: view === 'raw' ? 'auto' : 'none', position: view === 'raw' ? 'relative' : 'absolute', top: view === 'raw' ? undefined : 52, left: view === 'raw' ? undefined : 24, right: view === 'raw' ? undefined : 24 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, marginBottom: 14 }}>
+                            {RAW_METRICS.map(([k, v]) => (
+                                <div key={k} style={{ padding: '8px 10px', borderRadius: 8, background: '#F9F7F4', border: '1px solid #EDE8E0' }}>
+                                    <div style={{ fontSize: 9, color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{k}</div>
+                                    <div style={{ fontSize: 14, fontWeight: 700, color: '#333' }}>{v}</div>
                                 </div>
-                            </SmartTooltip>
+                            ))}
                         </div>
-                        {/* Anan: return % massive + raw data grid */}
-                        <div style={{ position: 'absolute', inset: 0, opacity: persona === 'anan' ? 1 : 0, transform: persona === 'anan' ? 'none' : 'translateY(10px)', transition: `opacity 0.4s ${ease} 0.05s, transform 0.4s ${ease} 0.05s`, pointerEvents: persona === 'anan' ? 'auto' : 'none' }}>
-                            <SmartTooltip wide delay={280} content={<DriftTip label="Decision 02" title="Return at hero scale for analysts" body="Anan's primary signal is performance. +14.8% at 56px scanned in half a second. Stars are secondary — he knows what they mean." />}>
-                                <div style={{ cursor: 'default' }}>
-                                    <div style={{ fontSize: 58, fontWeight: 900, color: '#059669', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>+14.8%</div>
-                                    <div style={{ display: 'flex', gap: 24 }}>
-                                        {[['Sharpe', '0.81'], ['Std Dev', '6.2%'], ['Expense', '0.65%']].map(([k, v]) => (
-                                            <div key={k}>
-                                                <div style={{ fontSize: 9, color: '#bbb', marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{k}</div>
-                                                <div style={{ fontSize: 13, fontWeight: 700, color: '#1B3A5C' }}>{v}</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </SmartTooltip>
-                        </div>
-                        {/* Oraya: ESG A+ + impact bars */}
-                        <div style={{ position: 'absolute', inset: 0, opacity: persona === 'oraya' ? 1 : 0, transform: persona === 'oraya' ? 'none' : 'translateY(10px)', transition: `opacity 0.4s ${ease} 0.05s, transform 0.4s ${ease} 0.05s`, pointerEvents: persona === 'oraya' ? 'auto' : 'none' }}>
-                            <SmartTooltip wide delay={280} content={<DriftTip label="Decision 03" title="ESG score at hero scale" body="Oraya qualifies by values first. A+ at 58px = same hierarchy as Anan's +14.8%. One app, different primary signal." />}>
-                                <div style={{ cursor: 'default' }}>
-                                    <div style={{ fontSize: 58, fontWeight: 900, color: '#16A34A', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>A+</div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                                        {[['CO₂ Reduction', 82], ['Governance', 94], ['Social Impact', 88]].map(([label, val]) => (
-                                            <div key={String(label)} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                <div style={{ fontSize: 9, color: '#888', width: 88, textTransform: 'uppercase', letterSpacing: '0.04em', flexShrink: 0 }}>{label}</div>
-                                                <div style={{ flex: 1, height: 4, background: '#D1FAE5', borderRadius: 2, overflow: 'hidden' }}>
-                                                    <div style={{ width: `${val}%`, height: '100%', background: '#16A34A', borderRadius: 2, transition: `width 0.7s ${ease}` }} />
-                                                </div>
-                                                <div style={{ fontSize: 10, fontWeight: 700, color: '#16A34A', width: 22, textAlign: 'right' }}>{val}</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </SmartTooltip>
+                        <div style={{ fontSize: 12, color: '#92610a', textAlign: 'center', padding: '10px', background: '#FEF9EE', borderRadius: 8, border: '1px solid #F0E0A0' }}>
+                            Is this fund good? You'd need a finance degree to know.
                         </div>
                     </div>
-                    <div style={{ fontSize: 11, color: '#bbb', marginBottom: 20 }}>{p.fundSub}</div>
-                    <SmartTooltip wide delay={300} content={<DriftTip label="Decision 04" title="CTA adapts to intent" body={persona === 'sarocha' ? 'Concrete amount anchors the ask — ฿1,000 is less intimidating than "Invest Now".' : persona === 'anan' ? 'Analyst intent is refinement. He wants to compare, not confirm.' : 'Values-driven framing — "Explore" signals alignment, not transaction.'} />}>
-                        <button style={{ width: '100%', padding: '13px', borderRadius: 10, background: p.ctaBg, color: '#fff', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer', transition: `background 0.45s ${ease}` }}>{p.cta}</button>
-                    </SmartTooltip>
+                    {/* NOVICE — calm, stars only, nothing else */}
+                    <div style={{ opacity: view === 'novice' ? 1 : 0, transition: `opacity 0.4s ${ease} 0.1s`, pointerEvents: view === 'novice' ? 'auto' : 'none', position: view === 'novice' ? 'relative' : 'absolute', top: view === 'novice' ? undefined : 52, left: view === 'novice' ? undefined : 24, right: view === 'novice' ? undefined : 24 }}>
+                        <SmartTooltip wide delay={280} content={<DriftTip label="Decision 02" title="Stars replace Sharpe ratio" body="Sarocha closes the app when she sees 0.81 Sharpe. ★★★★★ answers 'is this good?' without requiring any financial literacy." />}>
+                            <div style={{ cursor: 'default' }}>
+                                <div style={{ display: 'flex', gap: 5, marginBottom: 14 }}>
+                                    {'★★★★★'.split('').map((s, i) => <span key={i} style={{ fontSize: 40, color: '#F59E0B', filter: 'drop-shadow(0 2px 6px #F59E0B35)' }}>{s}</span>)}
+                                </div>
+                                <div style={{ fontSize: 12, color: '#aaa', marginBottom: 20 }}>Top-rated · Conservative · Good for beginners</div>
+                                <button style={{ width: '100%', padding: '13px', borderRadius: 10, background: '#1B3A5C', color: '#fff', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer' }}>Start with ฿1,000</button>
+                            </div>
+                        </SmartTooltip>
+                    </div>
+                    {/* ANALYST — same data, now structured with hierarchy */}
+                    <div style={{ opacity: view === 'analyst' ? 1 : 0, transition: `opacity 0.4s ${ease} 0.1s`, pointerEvents: view === 'analyst' ? 'auto' : 'none', position: view === 'analyst' ? 'relative' : 'absolute', top: view === 'analyst' ? undefined : 52, left: view === 'analyst' ? undefined : 24, right: view === 'analyst' ? undefined : 24 }}>
+                        <SmartTooltip wide delay={280} content={<DriftTip label="Decision 02" title="Return at hero scale for analysts" body="Anan's primary signal is performance. +14.8% at 54px scanned in half a second — same data as the raw card, now with the right hierarchy." />}>
+                            <div style={{ cursor: 'default' }}>
+                                <div style={{ fontSize: 54, fontWeight: 900, color: '#059669', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>+14.8%</div>
+                                <div style={{ display: 'flex', gap: 22, marginBottom: 20 }}>
+                                    {[['Sharpe', '0.81'], ['Std Dev', '6.2%'], ['Expense', '0.65%']].map(([k, v]) => (
+                                        <div key={k}>
+                                            <div style={{ fontSize: 9, color: '#bbb', marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{k}</div>
+                                            <div style={{ fontSize: 13, fontWeight: 700, color: '#1B3A5C' }}>{v}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button style={{ width: '100%', padding: '13px', borderRadius: 10, background: '#059669', color: '#fff', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer' }}>Compare funds →</button>
+                            </div>
+                        </SmartTooltip>
+                    </div>
                 </div>
+                {/* Choice buttons — only shown at raw state */}
+                {view === 'raw' && (
+                    <div style={{ display: 'flex', gap: 10, animation: `drift-el-in 0.4s ${ease} both` }}>
+                        <SmartTooltip wide delay={300} content={<DriftTip label="Design decision" title="Stars replace Sharpe ratio" body="Novice investors close the app when they see raw metrics. Stars give a reference frame without requiring financial literacy." />}>
+                            <button onClick={() => setView('novice')} style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#1B3A5C', color: '#fff', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                                I'm new to investing
+                            </button>
+                        </SmartTooltip>
+                        <SmartTooltip wide delay={300} content={<DriftTip label="Design decision" title="Same data — adapted hierarchy" body="Analysts need raw numbers, not tooltips explaining what a Sharpe ratio is. The data stays — only the visual hierarchy changes." />}>
+                            <button onClick={() => setView('analyst')} style={{ flex: 1, padding: '14px', borderRadius: 12, background: 'transparent', color: '#1B3A5C', fontSize: 13, fontWeight: 700, border: '2px solid #1B3A5C', cursor: 'pointer' }}>
+                                I'm an analyst
+                            </button>
+                        </SmartTooltip>
+                    </div>
+                )}
+                {view !== 'raw' && (
+                    <div style={{ textAlign: 'center', animation: `drift-el-in 0.4s ${ease} both` }}>
+                        <button onClick={() => setView('raw')} style={{ fontSize: 11, color: '#aaa', background: 'none', border: 'none', cursor: 'pointer', padding: '8px 16px', textDecoration: 'underline' }}>← See the raw data again</button>
+                    </div>
+                )}
             </div>
         </div>
     );
 }
 
-// ─── Drift — Qualify a city in 3 numbers (warm dark) ─────────────────────────
+// ── Drift — Pain: 3 apps 15 min → Relief: 1 screen 30 sec ────────────────────
 
-/** Structured tooltip card for demo design rationale */
+/** Structured tooltip card */
 function DriftTip({ label, title, body }: { label: string; title: string; body: string }) {
     return (
         <div>
@@ -1245,19 +1216,7 @@ function DriftTip({ label, title, body }: { label: string; title: string; body: 
     );
 }
 
-const DRIFT_AVATAR_COLORS = ['#8B5CF6', '#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
-function DriftAvatarStack({ size = 30, count = 99 }: { size?: number; count?: number }) {
-    return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ display: 'flex' }}>
-                {DRIFT_AVATAR_COLORS.map((c, i) => (
-                    <div key={i} style={{ width: size, height: size, borderRadius: '50%', background: `radial-gradient(circle at 38% 35%, ${c}ee 0%, ${c}88 100%)`, border: '2.5px solid #1C1208', marginLeft: i > 0 ? -(size * 0.28) : 0, position: 'relative', zIndex: 5 - i, boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }} />
-                ))}
-            </div>
-            <span style={{ fontSize: '13px', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>{count >= 99 ? '99+' : count}</span>
-        </div>
-    );
-}
+
 
 const DRIFT_CITIES_DATA = {
     Prague:  { flag: '🇨🇿', score: '9.2', cost: '$3,200', jobs: 20, nomads: 124, accent: '#E07830', bg: 'linear-gradient(160deg, #1C1208 0%, #271908 60%, #1C1208 100%)' },
@@ -1270,7 +1229,7 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
     const stageRef = useRef<HTMLDivElement>(null);
     const [visible, setVisible] = useState(false);
     const [city, setCity] = useState<DCity>('Prague');
-    const [step, setStep] = useState(0);
+    const [merged, setMerged] = useState(false);
     const ease = 'cubic-bezier(0.16,1,0.3,1)';
     const cd = DRIFT_CITIES_DATA[city];
 
@@ -1280,113 +1239,112 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
         obs.observe(el); return () => obs.disconnect();
     }, []);
 
-    useEffect(() => {
-        setStep(0);
-        const timers = [
-            setTimeout(() => setStep(1), 350),
-            setTimeout(() => setStep(2), 950),
-            setTimeout(() => setStep(3), 1550),
-            setTimeout(() => setStep(4), 2150),
-        ];
-        return () => timers.forEach(clearTimeout);
-    }, [city]);
-
-    const qualifiers = [
-        { value: cd.score, unit: ' / 10', label: 'Nomad Score', check: 'Livability ✓', tip: 'One number synthesises internet speed, cost, safety, and nomad density. One scan qualifies — or skips — the city without reading a word.' },
-        { value: String(cd.jobs), unit: ' open', label: `Remote jobs in ${city}`, check: 'Work market ✓', tip: 'Job count on the city level. Answers "is there work here?" before clicking into a single listing. 20 roles means you stay — 2 means you move on.' },
-        { value: String(cd.nomads), unit: '', label: 'Nomads active this week', check: 'Community ✓', tip: 'Active nomad count visible before you land. The scene already exists — you just have to show up.' },
+    const APPS = [
+        { name: 'Nomad List', icon: '🌍', value: cd.score, unit: '/10', label: 'Livability score', step: 'Open app, search city, check score', color: '#F59E0B' },
+        { name: 'Remote.co',  icon: '💼', value: String(cd.jobs),   unit: ' jobs',   label: 'Remote jobs open', step: 'Open app, filter by city, count roles', color: '#6366F1' },
+        { name: 'Meetup',     icon: '🤝', value: String(cd.nomads), unit: ' nomads', label: 'Active community',  step: 'Open app, find nomad groups, guess',  color: '#10B981' },
     ];
 
     return (
         <div ref={stageRef} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
             <div style={{ marginBottom: 24 }}>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: cd.accent, marginBottom: 8 }}>Interactive Demo</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>Qualify a city in 3 numbers.</div>
-                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>Switch city — watch the decision happen. No Nomad List. No job board. No Meetup tab.</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>3 apps. 15 minutes. One relocation decision.</div>
+                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>This is how every nomad researches a city today.</div>
             </div>
             {/* City selector */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
                 {(Object.keys(DRIFT_CITIES_DATA) as DCity[]).map(c => (
-                    <SmartTooltip key={c} wide delay={250} content={<DriftTip label="City Profile" title={`Switch to ${c}`} body="Each city has its own score, job count, and nomad community — all in one profile. Nomad List + remote job board + Meetup, collapsed into 3 numbers." />}>
-                        <button onClick={() => setCity(c)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, background: city === c ? DRIFT_CITIES_DATA[c].accent : 'rgba(255,255,255,0.05)', color: city === c ? '#fff' : 'rgba(255,255,255,0.68)', border: `1px solid ${city === c ? DRIFT_CITIES_DATA[c].accent : 'rgba(255,255,255,0.14)'}`, cursor: 'pointer', fontSize: 11, fontWeight: 700, transition: `all 0.2s ${ease}`, transform: city === c ? 'scale(1.04)' : 'scale(1)' }}>
-                            <span>{DRIFT_CITIES_DATA[c].flag}</span><span>{c}</span>
-                        </button>
-                    </SmartTooltip>
+                    <button key={c} onClick={() => { setCity(c); setMerged(false); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, background: city === c ? DRIFT_CITIES_DATA[c].accent : 'rgba(255,255,255,0.05)', color: city === c ? '#fff' : 'rgba(255,255,255,0.68)', border: `1px solid ${city === c ? DRIFT_CITIES_DATA[c].accent : 'rgba(255,255,255,0.14)'}`, cursor: 'pointer', fontSize: 11, fontWeight: 700, transition: `all 0.2s ${ease}` }}>
+                        <span>{DRIFT_CITIES_DATA[c].flag}</span><span>{c}</span>
+                    </button>
                 ))}
             </div>
-            {/* City card */}
-            <div key={city} style={{ background: cd.bg, borderRadius: 16, padding: '28px 24px', border: `1px solid ${cd.accent}22`, boxShadow: `0 20px 56px rgba(0,0,0,0.55), 0 0 60px ${cd.accent}08`, animation: `drift-el-in 0.4s ${ease} both` }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
-                    <span style={{ fontSize: 32 }}>{cd.flag}</span>
-                    <div>
-                        <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>{city}</div>
-                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.52)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{cd.cost} / month</div>
-                    </div>
-                </div>
-                {/* 3 qualifiers — animate in sequence */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 24 }}>
-                    {qualifiers.map((q, i) => (
-                        <SmartTooltip key={i} wide delay={300} content={<DriftTip label={`Signal ${i + 1} of 3`} title={q.check.replace(' ✓', '')} body={q.tip} />}>
-                            <div style={{ opacity: step > i ? 1 : 0, transform: step > i ? 'none' : 'translateY(14px)', background: step > i ? `${cd.accent}12` : 'rgba(255,255,255,0.03)', borderRadius: 12, padding: '16px 14px', border: `1px solid ${step > i ? `${cd.accent}30` : 'rgba(255,255,255,0.05)'}`, transition: `opacity 0.4s ${ease}, transform 0.4s ${ease}, border-color 0.4s ${ease}, background 0.4s ${ease}`, cursor: 'default' }}>
-                                <div style={{ fontSize: 34, fontWeight: 900, color: step > i ? cd.accent : 'rgba(255,255,255,0.15)', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 5, transition: `color 0.4s ${ease}` }}>
-                                    {q.value}<span style={{ fontSize: 13, fontWeight: 600 }}>{q.unit}</span>
-                                </div>
-                                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', marginBottom: 8, lineHeight: 1.4 }}>{q.label}</div>
-                                <div style={{ fontSize: 9, fontWeight: 800, color: '#4ade80', opacity: step > i ? 1 : 0, transform: step > i ? 'none' : 'translateY(4px)', transition: `opacity 0.3s ${ease} 0.15s, transform 0.3s ${ease} 0.15s`, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{q.check}</div>
+            {/* Fragmented state — pain */}
+            <div style={{ opacity: merged ? 0 : 1, transform: merged ? 'translateY(-8px) scale(0.98)' : 'none', transition: `opacity 0.35s ${ease}, transform 0.35s ${ease}`, pointerEvents: merged ? 'none' : 'auto', position: merged ? 'absolute' : 'relative', width: '100%' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, marginBottom: 12 }}>
+                    {APPS.map((app, i) => (
+                        <div key={i} style={{ background: 'linear-gradient(160deg,#1C1208,#221508)', borderRadius: 12, padding: '16px 14px', border: `1px solid ${app.color}22` }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                                <span style={{ fontSize: 14 }}>{app.icon}</span>
+                                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{app.name}</span>
                             </div>
-                        </SmartTooltip>
+                            <div style={{ fontSize: 28, fontWeight: 900, color: app.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>
+                                {app.value}<span style={{ fontSize: 12 }}>{app.unit}</span>
+                            </div>
+                            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.38)', marginBottom: 10 }}>{app.label} · {city}</div>
+                            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.28)', padding: '4px 7px', background: 'rgba(255,255,255,0.04)', borderRadius: 5, border: '1px solid rgba(255,255,255,0.05)', lineHeight: 1.5 }}>{app.step}</div>
+                        </div>
                     ))}
                 </div>
-                {/* Conclusion — appears after all 3 */}
-                <div style={{ opacity: step >= 4 ? 1 : 0, transform: step >= 4 ? 'none' : 'translateY(8px)', transition: `opacity 0.5s ${ease}, transform 0.5s ${ease}`, borderTop: `1px solid rgba(255,255,255,0.07)`, paddingTop: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 3 }}>Decision: move to {city}.</div>
-                        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>3 signals. No app-switching. No second tab.</div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, padding: '10px 14px', borderRadius: 10, background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.15)' }}>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>Tab-switching · losing context · starting over each time</span>
+                    <span style={{ fontSize: 14, fontWeight: 900, color: '#EF4444' }}>~15 min</span>
+                </div>
+                <button onClick={() => setMerged(true)} style={{ width: '100%', padding: '14px', borderRadius: 12, background: cd.accent, color: '#fff', fontSize: 13, fontWeight: 800, border: 'none', cursor: 'pointer', transition: `background 0.3s ${ease}` }}>
+                    See how Drift handles this →
+                </button>
+            </div>
+            {/* Unified state — relief */}
+            <div style={{ opacity: merged ? 1 : 0, transform: merged ? 'none' : 'translateY(12px)', transition: `opacity 0.45s ${ease} 0.1s, transform 0.45s ${ease} 0.1s`, pointerEvents: merged ? 'auto' : 'none', position: merged ? 'relative' : 'absolute', width: merged ? undefined : '100%', top: merged ? undefined : 0 }}>
+                <div key={city} style={{ background: cd.bg, borderRadius: 16, padding: '24px', border: `1px solid ${cd.accent}22`, boxShadow: `0 20px 56px rgba(0,0,0,0.55), 0 0 60px ${cd.accent}08` }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                        <span style={{ fontSize: 28 }}>{cd.flag}</span>
+                        <div>
+                            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>{city}</div>
+                            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.52)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{cd.cost} / month</div>
+                        </div>
                     </div>
-                    <DriftAvatarStack size={24} count={cd.nomads} />
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 16 }}>
+                        {APPS.map((app, i) => (
+                            <SmartTooltip key={i} wide delay={300} content={<DriftTip label="Consolidation" title={`${app.name} → Drift`} body={`This used to require opening ${app.name} separately. Drift surfaces it on the city card — no tab-switching, no context loss.`} />}>
+                                <div style={{ background: `${app.color}12`, borderRadius: 10, padding: '14px 12px', border: `1px solid ${app.color}30`, animation: `drift-el-in 0.4s ${ease} ${i * 0.1}s both`, cursor: 'default' }}>
+                                    <div style={{ fontSize: 28, fontWeight: 900, color: app.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 5 }}>
+                                        {app.value}<span style={{ fontSize: 12 }}>{app.unit}</span>
+                                    </div>
+                                    <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.55)', marginBottom: 6 }}>{app.label}</div>
+                                    <div style={{ fontSize: 9, fontWeight: 800, color: '#4ade80', letterSpacing: '0.04em', textTransform: 'uppercase' }}>✓ from {app.name}</div>
+                                </div>
+                            </SmartTooltip>
+                        ))}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 10, background: 'rgba(74,222,128,0.07)', border: '1px solid rgba(74,222,128,0.2)', marginBottom: 14 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Decision: move to {city}.</div>
+                        <span style={{ fontSize: 14, fontWeight: 900, color: '#4ade80' }}>~30 sec</span>
+                    </div>
+                    <button onClick={() => setMerged(false)} style={{ width: '100%', padding: '10px', borderRadius: 10, background: 'transparent', color: 'rgba(255,255,255,0.38)', fontSize: 11, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}>← Back to the old way</button>
                 </div>
             </div>
         </div>
     );
 }
 
-// ─── Roomvu — Homepage Demo (light — instant content generation) ──────────────
+// ── Roomvu — Pain: 3.5h manual → Relief: 6 videos in 0 min ──────────────────
 type RVCity = 'Vancouver' | 'Toronto' | 'Calgary' | 'Montreal';
-type RVCat  = 'all' | 'market' | 'listings' | 'mobile';
-
 const RV_CITIES: RVCity[] = ['Vancouver', 'Toronto', 'Calgary', 'Montreal'];
-const RV_CATS: { id: RVCat; label: string }[] = [
-    { id: 'all', label: 'All' }, { id: 'market', label: 'Market Reports' }, { id: 'listings', label: 'Listings' }, { id: 'mobile', label: 'Mobile' },
+
+const RV_SIX_VIDEOS: { thumb: string; sub: string; dur: string; titleFn: (c: RVCity) => string }[] = [
+    { thumb: 'linear-gradient(135deg,#1B3A5C,#2d6a8e)', sub: 'Market Report', dur: '2:30', titleFn: c => `Q4 Market Report — ${c}` },
+    { thumb: 'linear-gradient(135deg,#1e4a2a,#2d7a3e)', sub: 'Listing',       dur: '1:45', titleFn: c => `Top Listings — ${c} Downtown` },
+    { thumb: 'linear-gradient(135deg,#3a1e4a,#6a3a7a)', sub: 'Mobile',        dur: '3:10', titleFn: c => `5 Things Buyers Want in ${c}` },
+    { thumb: 'linear-gradient(135deg,#1a2e4a,#243f6e)', sub: 'Market Report', dur: '4:00', titleFn: c => `Housing Outlook: ${c} 2024` },
+    { thumb: 'linear-gradient(135deg,#243e18,#3a6424)', sub: 'Listing',       dur: '2:00', titleFn: c => `New Properties — ${c} West` },
+    { thumb: 'linear-gradient(135deg,#3a1630,#602454)', sub: 'Mobile',        dur: '2:45', titleFn: c => `How to Win — ${c} Bidding War` },
 ];
-const RV_VIDEOS: Record<RVCat, { thumb: string; sub: string; dur: string; titleFn: (c: RVCity) => string }[]> = {
-    all: [
-        { thumb: 'linear-gradient(135deg,#1B3A5C 0%,#2d6a8e 100%)', sub: 'Market Report', dur: '2:30', titleFn: c => `Q4 Market Report — ${c}` },
-        { thumb: 'linear-gradient(135deg,#1e4a2a 0%,#2d7a3e 100%)', sub: 'Listing',       dur: '1:45', titleFn: c => `Top Listings — ${c} Downtown` },
-        { thumb: 'linear-gradient(135deg,#3a1e4a 0%,#6a3a7a 100%)', sub: 'Mobile',        dur: '3:10', titleFn: c => `5 Things Buyers Want in ${c}` },
-    ],
-    market: [
-        { thumb: 'linear-gradient(135deg,#1B3A5C 0%,#2d6a8e 100%)', sub: 'Market Report', dur: '2:30', titleFn: c => `Q4 Market Report — ${c}` },
-        { thumb: 'linear-gradient(135deg,#1a2e4a 0%,#243f6e 100%)', sub: 'Market Report', dur: '4:00', titleFn: c => `Housing Outlook: ${c} 2024` },
-        { thumb: 'linear-gradient(135deg,#0e1e3a 0%,#1a3060 100%)', sub: 'Market Report', dur: '3:15', titleFn: c => `${c} Year-End Forecast` },
-    ],
-    listings: [
-        { thumb: 'linear-gradient(135deg,#1e4a2a 0%,#2d7a3e 100%)', sub: 'Listing', dur: '1:45', titleFn: c => `Top Listings — ${c} Downtown` },
-        { thumb: 'linear-gradient(135deg,#243e18 0%,#3a6424 100%)', sub: 'Listing', dur: '2:00', titleFn: c => `New Properties — ${c} West` },
-        { thumb: 'linear-gradient(135deg,#1c3212 0%,#2e501e 100%)', sub: 'Listing', dur: '1:30', titleFn: c => `Featured ${c} Properties` },
-    ],
-    mobile: [
-        { thumb: 'linear-gradient(135deg,#3a1e4a 0%,#6a3a7a 100%)', sub: 'Mobile', dur: '3:10', titleFn: c => `5 Things Buyers Want in ${c}` },
-        { thumb: 'linear-gradient(135deg,#3a1630 0%,#602454 100%)', sub: 'Mobile', dur: '2:45', titleFn: c => `How to Win — ${c} Bidding War` },
-        { thumb: 'linear-gradient(135deg,#2e1228 0%,#4e2044 100%)', sub: 'Mobile', dur: '2:20', titleFn: (_c: RVCity) => `First-Time Buyer Checklist` },
-    ],
-};
+
+const MANUAL_STEPS = [
+    { task: 'Write script',   time: '45 min', icon: '✍️' },
+    { task: 'Record video',   time: '60 min', icon: '🎥' },
+    { task: 'Edit & cut',     time: '90 min', icon: '✂️' },
+    { task: 'Brand & export', time: '45 min', icon: '📤' },
+];
 
 function RVSkeletonCard() {
     return (
-        <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid #E5E7EB' }}>
-            <div style={{ height: 76, background: '#F3F4F6', animation: 'skeleton-pulse 1.2s ease-in-out infinite' }} />
-            <div style={{ padding: '10px', background: '#fff' }}>
-                <div style={{ height: 9, background: '#F3F4F6', borderRadius: 4, marginBottom: 6, animation: 'skeleton-pulse 1.2s ease-in-out infinite 0.1s' }} />
+        <div style={{ borderRadius: 8, overflow: 'hidden', border: '1px solid #E5E7EB' }}>
+            <div style={{ height: 70, background: '#F3F4F6', animation: 'skeleton-pulse 1.2s ease-in-out infinite' }} />
+            <div style={{ padding: '8px', background: '#fff' }}>
+                <div style={{ height: 8, background: '#F3F4F6', borderRadius: 4, marginBottom: 5, animation: 'skeleton-pulse 1.2s ease-in-out infinite 0.1s' }} />
                 <div style={{ height: 7, background: '#F3F4F6', borderRadius: 4, width: '55%', animation: 'skeleton-pulse 1.2s ease-in-out infinite 0.2s' }} />
             </div>
         </div>
@@ -1396,11 +1354,10 @@ function RVSkeletonCard() {
 function RoomvuHomepageDemo({ accent }: { accent: string }) {
     const stageRef = useRef<HTMLDivElement>(null);
     const [visible, setVisible] = useState(false);
+    const [mode, setMode] = useState<'manual' | 'roomvu'>('manual');
     const [city, setCity] = useState<RVCity>('Vancouver');
-    const [cat, setCat] = useState<RVCat>('all');
     const [loading, setLoading] = useState(false);
     const ease = 'cubic-bezier(0.16,1,0.3,1)';
-    const videos = RV_VIDEOS[cat];
 
     useEffect(() => {
         const el = stageRef.current; if (!el) return;
@@ -1418,82 +1375,95 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
         <div ref={stageRef} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
             <div style={{ marginBottom: 24 }}>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent, marginBottom: 8 }}>Interactive Demo</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>A homepage that knows where you are.</div>
-                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>Switch city — your entire content library regenerates in one click. No manual creation needed.</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>Video drives 403% more inquiries. Making it takes 3.5 hours.</div>
+                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>That's why most agents still don't use it.</div>
             </div>
-            {/* Light stage — professional real estate tool, not SaaS dashboard */}
-            <div style={{ background: '#fff', borderRadius: 16, padding: '28px 24px', border: '1px solid #E5E7EB', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-                {/* City picker */}
-                <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
-                    {RV_CITIES.map(c => (
-                        <SmartTooltip key={c} wide delay={250} content={<DriftTip label="Decision 01" title="Location as first-class organiser" body="3 of 6 high-severity audit findings traced to missing location context. The city picker is the fix — location first, content second." />}>
-                            <button onClick={() => switchCity(c)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '6px 13px', borderRadius: 7, background: city === c ? accent : '#F9FAFB', border: `1px solid ${city === c ? accent : '#E5E7EB'}`, cursor: 'pointer', fontSize: 11, fontWeight: 700, color: city === c ? '#fff' : '#374151', transition: `all 0.2s ${ease}`, opacity: loading ? 0.6 : 1 }}>
-                                <span style={{ fontSize: 10 }}>📍</span><span>{c}</span>
-                            </button>
-                        </SmartTooltip>
-                    ))}
+            <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E5E7EB', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+                {/* Mode toggle */}
+                <div style={{ display: 'flex', borderBottom: '1px solid #E5E7EB' }}>
+                    <button onClick={() => setMode('manual')} style={{ flex: 1, padding: '13px', fontSize: 12, fontWeight: 700, color: mode === 'manual' ? '#111827' : '#9CA3AF', background: mode === 'manual' ? '#F9FAFB' : '#fff', border: 'none', borderRight: '1px solid #E5E7EB', cursor: 'pointer', transition: `all 0.2s ${ease}` }}>
+                        Without Roomvu
+                    </button>
+                    <button onClick={() => setMode('roomvu')} style={{ flex: 1, padding: '13px', fontSize: 12, fontWeight: 700, color: mode === 'roomvu' ? accent : '#9CA3AF', background: mode === 'roomvu' ? `${accent}08` : '#fff', border: 'none', cursor: 'pointer', transition: `all 0.2s ${ease}` }}>
+                        With Roomvu
+                    </button>
                 </div>
-                {/* Hero headline — city name is structural, not a filter */}
-                <SmartTooltip wide delay={350} content={<DriftTip label="Decision 01" title="City name in the headline" body="The page IS for Vancouver agents. Not a national page with a Vancouver filter applied. Location propagates into identity." />}>
-                    <div style={{ marginBottom: 20, cursor: 'default' }}>
-                        <div style={{ fontSize: 22, fontWeight: 800, color: '#111827', letterSpacing: '-0.03em', lineHeight: 1.25 }}>
-                            Real estate videos for{' '}
-                            <span key={city} style={{ color: accent, animation: `drift-el-in 0.35s ${ease} both`, display: 'inline-block' }}>{city}</span>
-                            {' '}agents.
-                        </div>
-                        <div style={{ fontSize: 11, color: '#9CA3AF', marginTop: 6 }}>Ready-to-share · Brand-consistent · Updated weekly</div>
-                    </div>
-                </SmartTooltip>
-                {/* Category tabs — light segmented control */}
-                <div style={{ display: 'flex', gap: 0, background: '#F3F4F6', borderRadius: 10, padding: 3, marginBottom: 16 }}>
-                    {RV_CATS.map(c => (
-                        <SmartTooltip key={c.id} wide delay={250} content={<DriftTip label="Decision 02" title={`Browse before search`} body="Agents don't know what to search for — they need to see what exists. Categories surface the full content taxonomy before the first tap." />}>
-                            <button onClick={() => setCat(c.id)} style={{ flex: 1, padding: '7px 8px', borderRadius: 8, background: cat === c.id ? '#fff' : 'transparent', border: cat === c.id ? '1px solid #E5E7EB' : '1px solid transparent', cursor: 'pointer', fontSize: 10, fontWeight: 700, color: cat === c.id ? '#111827' : '#6B7280', transition: `all 0.2s ${ease}`, whiteSpace: 'nowrap', boxShadow: cat === c.id ? '0 1px 3px rgba(0,0,0,0.08)' : 'none' }}>{c.label}</button>
-                        </SmartTooltip>
-                    ))}
-                </div>
-                {/* Video grid: skeleton → real content floods in */}
-                {loading ? (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
-                        {[0, 1, 2].map(i => <RVSkeletonCard key={i} />)}
-                    </div>
-                ) : (
-                    <div key={`${city}-${cat}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
-                        {videos.map((v, i) => {
-                            const title = v.titleFn(city);
-                            const parts = title.split(city);
-                            return (
-                                <SmartTooltip key={i} wide delay={300} content={<DriftTip label="Decision 01" title="City in every title" body="Agents qualify relevance from the grid without opening each video. City name in the title is the first and most important filter." />}>
-                                    <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid #E5E7EB', animation: `drift-el-in 0.32s ${ease} ${i * 0.08}s both`, cursor: 'default' }}>
-                                        <div style={{ height: 80, background: v.thumb, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                                            <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.28)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                <span style={{ fontSize: 9, marginLeft: 2, color: '#fff' }}>▶</span>
-                                            </div>
-                                            <div style={{ position: 'absolute', bottom: 5, right: 7, fontSize: 8, fontWeight: 700, color: '#fff', background: 'rgba(0,0,0,0.5)', padding: '1px 5px', borderRadius: 3 }}>{v.dur}</div>
-                                        </div>
-                                        <div style={{ padding: '8px 10px', background: '#fff' }}>
-                                            <div style={{ fontSize: 10, fontWeight: 600, color: '#111827', lineHeight: 1.4, marginBottom: 3 }}>
-                                                {parts.length > 1 ? <>{parts[0]}<span style={{ color: accent, fontWeight: 800 }}>{city}</span>{parts[1]}</> : title}
-                                            </div>
-                                            <div style={{ fontSize: 8, color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{v.sub}</div>
-                                        </div>
+                <div style={{ padding: '24px' }}>
+                    {/* Manual — pain state */}
+                    {mode === 'manual' && (
+                        <div style={{ animation: `drift-el-in 0.4s ${ease} both` }}>
+                            <div style={{ fontSize: 11, fontWeight: 600, color: '#6B7280', marginBottom: 12 }}>Creating one market report video for Vancouver:</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
+                                {MANUAL_STEPS.map((s, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 8, background: '#F9FAFB', border: '1px solid #E5E7EB' }}>
+                                        <span style={{ fontSize: 15 }}>{s.icon}</span>
+                                        <span style={{ flex: 1, fontSize: 12, color: '#374151', fontWeight: 500 }}>{s.task}</span>
+                                        <span style={{ fontSize: 12, fontWeight: 700, color: '#EF4444' }}>{s.time}</span>
                                     </div>
-                                </SmartTooltip>
-                            );
-                        })}
-                    </div>
-                )}
-                {/* Ready badge — appears after load */}
-                {!loading && (
-                    <div key={`badge-${city}-${cat}`} style={{ marginTop: 12, textAlign: 'center', animation: `drift-el-in 0.4s ${ease} 0.3s both` }}>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: accent, background: `${accent}10`, border: `1px solid ${accent}28`, padding: '4px 14px', borderRadius: 100 }}>✓ {videos.length} videos ready for {city}</span>
-                    </div>
-                )}
+                                ))}
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 10, background: '#FEF2F2', border: '1px solid #FECACA', marginBottom: 10 }}>
+                                <span style={{ fontSize: 12, color: '#991B1B', fontWeight: 600 }}>Total — per video, per city</span>
+                                <span style={{ fontSize: 22, fontWeight: 900, color: '#EF4444' }}>3.5 hours</span>
+                            </div>
+                            <div style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center', fontStyle: 'italic' }}>
+                                So most agents just don't. Their competitors do.
+                            </div>
+                        </div>
+                    )}
+                    {/* Roomvu — relief state */}
+                    {mode === 'roomvu' && (
+                        <div style={{ animation: `drift-el-in 0.4s ${ease} both` }}>
+                            <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+                                {RV_CITIES.map(c => (
+                                    <SmartTooltip key={c} wide delay={250} content={<DriftTip label="Decision 01" title="Content is city-scoped by default" body="Every video in Roomvu is city-scoped. Switching city regenerates the entire library — not a filter on top of a national catalogue." />}>
+                                        <button onClick={() => switchCity(c)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '6px 12px', borderRadius: 7, background: city === c ? accent : '#F9FAFB', border: `1px solid ${city === c ? accent : '#E5E7EB'}`, cursor: 'pointer', fontSize: 11, fontWeight: 700, color: city === c ? '#fff' : '#374151', transition: `all 0.2s ${ease}` }}>
+                                            <span style={{ fontSize: 10 }}>📍</span>{c}
+                                        </button>
+                                    </SmartTooltip>
+                                ))}
+                            </div>
+                            {loading ? (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+                                    {[0,1,2,3,4,5].map(i => <RVSkeletonCard key={i} />)}
+                                </div>
+                            ) : (
+                                <div key={city} style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8 }}>
+                                    {RV_SIX_VIDEOS.map((v, i) => {
+                                        const title = v.titleFn(city);
+                                        const parts = title.split(city);
+                                        return (
+                                            <div key={i} style={{ borderRadius: 8, overflow: 'hidden', border: '1px solid #E5E7EB', animation: `drift-el-in 0.28s ${ease} ${i * 0.06}s both` }}>
+                                                <div style={{ height: 70, background: v.thumb, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                                                    <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <span style={{ fontSize: 8, marginLeft: 2, color: '#fff' }}>▶</span>
+                                                    </div>
+                                                    <div style={{ position: 'absolute', bottom: 4, right: 6, fontSize: 7, fontWeight: 700, color: '#fff', background: 'rgba(0,0,0,0.5)', padding: '1px 4px', borderRadius: 3 }}>{v.dur}</div>
+                                                </div>
+                                                <div style={{ padding: '7px 9px', background: '#fff' }}>
+                                                    <div style={{ fontSize: 9, fontWeight: 600, color: '#111827', lineHeight: 1.4, marginBottom: 2 }}>
+                                                        {parts.length > 1 ? <>{parts[0]}<span style={{ color: accent, fontWeight: 800 }}>{city}</span>{parts[1]}</> : title}
+                                                    </div>
+                                                    <div style={{ fontSize: 7, color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{v.sub}</div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                            {!loading && (
+                                <div key={`ready-${city}`} style={{ marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', animation: `drift-el-in 0.4s ${ease} 0.45s both` }}>
+                                    <span style={{ fontSize: 11, fontWeight: 700, color: accent }}>✓ 6 videos ready for {city}</span>
+                                    <span style={{ fontSize: 13, fontWeight: 900, color: '#059669' }}>0 minutes</span>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
 }
-
 
 function DemoSection({ data }: { data: any }) {
     const accent = useContext(ProjectAccentCtx);
