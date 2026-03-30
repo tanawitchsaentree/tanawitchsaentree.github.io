@@ -58,7 +58,9 @@ const MODAL_CSS = `
 @keyframes m-bar-wipe  { from { width:0; opacity:0 } to { width:40px; opacity:1 } }
 @keyframes m-word-up   { from { opacity:0; transform:translateY(22px) } to { opacity:1; transform:none } }
 @keyframes m-shimmer   { 0%{background-position:200% center} 100%{background-position:-200% center} }
-@keyframes blink       { 0%,100%{opacity:0.3} 50%{opacity:1} }
+@keyframes blink       { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+@keyframes dot-breathe { 0%,100%{opacity:0.45} 50%{opacity:0.88} }
+@keyframes persona-pulse { 0%{opacity:0;transform:translate(-50%,-50%) scale(1)} 18%{opacity:0.14} 100%{opacity:0;transform:translate(-50%,-50%) scale(2.3)} }
 @keyframes drift-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.9)} }
 @keyframes drift-fade  { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
 @keyframes drift-toast { 0%{opacity:0;transform:translateY(-6px)} 15%,85%{opacity:1;transform:none} 100%{opacity:0} }
@@ -69,6 +71,12 @@ const MODAL_CSS = `
 .recipe-carousel::-webkit-scrollbar { display: none }
 .scrolling-cards-track::-webkit-scrollbar { display: none }
 .scrolling-cards-track { -ms-overflow-style: none; scrollbar-width: none; }
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Serif+Display:ital@0;1&family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+.ds-atomic-scroll::-webkit-scrollbar { display: none }
+.ds-atomic-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+@keyframes ds-live-blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+@keyframes ds-row-flash { 0%{background:rgba(52,211,153,0.22)} 100%{background:transparent} }
+@keyframes ds-num-pop { 0%{transform:scale(1)} 40%{transform:scale(1.14)} 100%{transform:scale(1)} }
 `;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -135,6 +143,7 @@ const PROJECT_LOADERS: Record<string, () => Promise<{ default: ProjectData }>> =
     'stellar-recipe-app': () => import('../data/projects/stellar-recipe-app.json') as any,
     'roomvu-redesign': () => import('../data/projects/roomvu-redesign.json') as any,
     'drift-nomad-app': () => import('../data/projects/drift-nomad-app.json') as any,
+    'invitrace-design-system': () => import('../data/projects/invitrace-design-system.json') as any,
 };
 export const KNOWN_PROJECT_IDS = Object.keys(PROJECT_LOADERS);
 
@@ -149,8 +158,8 @@ function ImagePlaceholder({ height = 320, label = 'Visual placeholder' }: { heig
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--muted-foreground)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.35 }}>
                 <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
             </svg>
-            <div style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--muted-foreground)', opacity: 0.45 }}>Image needed</div>
-            <div style={{ fontSize: '12px', color: 'var(--muted-foreground)', textAlign: 'center', maxWidth: '72%', lineHeight: 1.6, opacity: 0.7 }}>{label}</div>
+            <div style={{ fontSize: '16px', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--muted-foreground)', opacity: 0.45 }}>Image needed</div>
+            <div style={{ fontSize: '16px', color: 'var(--muted-foreground)', textAlign: 'center', maxWidth: '72%', lineHeight: 1.6, opacity: 0.7 }}>{label}</div>
         </div>
     );
 }
@@ -169,11 +178,17 @@ function renderRich(text: string): React.ReactNode {
     });
 }
 function Eyebrow({ text }: { text: string }) {
+    const accent = useContext(ProjectAccentCtx);
     return (
         <div style={{
+            display: 'flex', alignItems: 'center', gap: 7,
             fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)',
-            textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 16,
-        }}>{text}</div>
+            textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16,
+            fontWeight: 600,
+        }}>
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: accent, flexShrink: 0, display: 'inline-block' }} />
+            {text}
+        </div>
     );
 }
 
@@ -194,8 +209,8 @@ function HeroSection({ data, meta }: { data: any; meta: ProjectMeta }) {
             </div>
             <div style={{ display: 'flex', gap: 64, alignItems: 'flex-start' }}>
                 <div style={{ flex: '1 1 0', minWidth: 0 }}>
-                    <h2 style={{ fontSize: 'var(--modal-display)', fontWeight: 700, lineHeight: 1.15, margin: '0 0 24px', color: 'var(--foreground)' }}>{data.headline}</h2>
-                    <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--foreground)' }}>{renderRich(data.body)}</div>
+                    <h2 style={{ fontSize: 'var(--modal-display)', fontWeight: 800, lineHeight: 1.1, margin: '0 0 24px', color: 'var(--foreground)', letterSpacing: '-0.03em' }}>{data.headline}</h2>
+                    <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)' }}>{renderRich(data.body)}</div>
                 </div>
                 <div style={{ width: 160, flexShrink: 0, paddingTop: 6 }}>
                     {data.stats.map((s: { label: string; value: string }) => (
@@ -216,12 +231,12 @@ function StatementSection({ data, motion }: { data: any; motion?: MotionSpec }) 
         <div ref={ref} style={{ marginBottom: 64 }}>
             <div style={entranceStyle(0, visible)}>
                 <Eyebrow text={data.eyebrow} />
-                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 24px', color: 'var(--foreground)' }}>{data.headline}</h3>
-                <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--foreground)', marginBottom: 32 }}>{renderRich(data.body)}</div>
+                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 20px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.headline}</h3>
+                <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)', marginBottom: 32 }}>{renderRich(data.body)}</div>
                 {data.next && (
                     <div style={{ padding: '16px 20px', background: 'var(--muted)', borderRadius: 8, borderLeft: '3px solid var(--foreground)' }}>
                         <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Next Step</div>
-                        <p style={{ margin: 0, fontSize: 'var(--modal-body)', lineHeight: 1.6, color: 'var(--foreground)' }}>{data.next}</p>
+                        <p style={{ margin: 0, fontSize: 'var(--modal-body)', lineHeight: 1.6, color: 'var(--muted-foreground)' }}>{data.next}</p>
                     </div>
                 )}
                 {data.image && <div style={{ marginTop: 32 }}><ImagePlaceholder height={280} label={data.image_hint ?? 'Visual — coming soon'} /></div>}
@@ -237,12 +252,12 @@ function TextMediaSection({ data, motion }: { data: any; motion?: MotionSpec }) 
     const textBlock = (
         <div style={{ flex: '1 1 0', minWidth: 0, ...entranceStyle(0, visible) }}>
             <Eyebrow text={data.eyebrow} />
-            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 16px', color: 'var(--foreground)' }}>{data.headline}</h3>
-            <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--foreground)', marginBottom: 24 }}>{renderRich(data.body)}</div>
+            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 14px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.headline}</h3>
+            <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)', marginBottom: 24 }}>{renderRich(data.body)}</div>
             {listItems.length > 0 && (
                 <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {listItems.map((item, i) => (
-                        <li key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', fontSize: 'var(--modal-body)', color: 'var(--foreground)' }}>
+                        <li key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', fontSize: 'var(--modal-body)', color: 'var(--muted-foreground)' }}>
                             <span style={{ opacity: 0.4, flexShrink: 0, marginTop: 2 }}>—</span>
                             <span style={{ lineHeight: 1.6 }}>{item}</span>
                         </li>
@@ -269,7 +284,7 @@ function DecisionsSection({ data, motion }: { data: any; motion?: MotionSpec }) 
         <div ref={ref} style={{ marginBottom: 64 }}>
             <div style={entranceStyle(0, visible)}>
                 <Eyebrow text={data.eyebrow} />
-                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 40px', color: 'var(--foreground)' }}>{data.headline}</h3>
+                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 36px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.headline}</h3>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {data.items.map((item: { number: string; title: string; description: string }, i: number) => (
@@ -280,7 +295,7 @@ function DecisionsSection({ data, motion }: { data: any; motion?: MotionSpec }) 
                         <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', fontWeight: 600, flexShrink: 0, width: 28, paddingTop: 2 }}>{item.number}</div>
                         <div style={{ flex: 1 }}>
                             <div style={{ fontWeight: 600, fontSize: 'var(--modal-body)', color: 'var(--foreground)', marginBottom: 8 }}>{item.title}</div>
-                            <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--foreground)' }}>{renderRich(item.description)}</div>
+                            <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)' }}>{renderRich(item.description)}</div>
                         </div>
                     </div>
                 ))}
@@ -300,12 +315,13 @@ function PinnedCardsSection({ data, motion }: { data: any; motion?: MotionSpec }
             <Eyebrow text={data.eyebrow} />
             <h3 style={{
                 fontSize: 'var(--modal-heading)', fontWeight: 700,
-                lineHeight: 1.3, margin: '0 0 48px', color: 'var(--foreground)',
+                lineHeight: 1.25, margin: '0 0 40px', color: 'var(--foreground)',
+                letterSpacing: '-0.025em',
             }}>
                 {data.headline}
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
-                {data.items.map((item: { number: string; title: string; description: string }, i: number) => (
+                {data.items.map((item: any, i: number) => (
                     <PinnedCard
                         key={i}
                         number={item.number}
@@ -314,6 +330,11 @@ function PinnedCardsSection({ data, motion }: { data: any; motion?: MotionSpec }
                         index={i}
                         visible={visible}
                         delay={i * (m.stagger ?? 0.12)}
+                        problem={item.problem}
+                        options={item.options}
+                        chosen={item.chosen}
+                        rationale={item.rationale}
+                        cost={item.cost}
                     />
                 ))}
             </div>
@@ -336,7 +357,7 @@ function BigNumberSection({ data, motion }: { data: any; motion?: MotionSpec }) 
                     {data.value}
                     {data.unit && <span style={{ fontSize: '0.35em', fontWeight: 700, marginLeft: '0.15em', verticalAlign: 'super', display: 'inline-block' }}>{data.unit}</span>}
                 </div>
-                <div style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, color: 'var(--foreground)', marginBottom: data.body ? 16 : 0 }}>{data.label}</div>
+                <div style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, color: 'var(--foreground)', marginBottom: data.body ? 16 : 0, letterSpacing: '-0.025em' }}>{data.label}</div>
                 {data.body && <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--muted-foreground)', maxWidth: 520, margin: '0 auto' }}>{data.body}</p>}
             </div>
         </div>
@@ -382,7 +403,7 @@ function StatGridSection({ data, motion }: { data: any; motion?: MotionSpec }) {
                             }}>{stat.label}</div>
                             {stat.context && (
                                 <div style={{
-                                    fontSize: '11px', lineHeight: 1.5,
+                                    fontSize: '16px', lineHeight: 1.5,
                                     color: hovered === i ? 'var(--foreground)' : 'var(--muted-foreground)',
                                     fontWeight: hovered === i ? 600 : 400,
                                     transition: 'color 0.2s, font-weight 0.2s',
@@ -536,7 +557,7 @@ function AuditTableSection({ data }: { data: any; motion?: MotionSpec }) {
         <div ref={ref} style={{ marginBottom: 64 }}>
             {data.eyebrow && <Eyebrow text={data.eyebrow} />}
             {data.title && (
-                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, margin: '0 0 20px', color: 'var(--foreground)', lineHeight: 1.3 }}>
+                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, margin: '0 0 20px', color: 'var(--foreground)', lineHeight: 1.25, letterSpacing: '-0.025em' }}>
                     {data.title}
                 </h3>
             )}
@@ -547,7 +568,7 @@ function AuditTableSection({ data }: { data: any; motion?: MotionSpec }) {
                 {filterOptions.map(f => (
                     <button key={f} onClick={() => setFilter(f)} style={{
                         padding: '5px 14px', borderRadius: 100, fontFamily: 'inherit',
-                        fontSize: '11px', letterSpacing: '0.04em', cursor: 'pointer',
+                        fontSize: '16px', letterSpacing: '0.04em', cursor: 'pointer',
                         fontWeight: filter === f ? 700 : 500,
                         border: `1px solid ${filter === f ? 'var(--foreground)' : 'var(--border)'}`,
                         background: filter === f ? 'var(--foreground)' : 'transparent',
@@ -571,7 +592,7 @@ function AuditTableSection({ data }: { data: any; motion?: MotionSpec }) {
                 }}>
                     {(data.columns ?? ['Area', 'Finding', 'Severity', 'Recommendation']).map((col: string, i: number) => (
                         <div key={i} style={{
-                            fontSize: '10px', fontWeight: 700, textTransform: 'uppercase',
+                            fontSize: '16px', fontWeight: 700, textTransform: 'uppercase',
                             letterSpacing: '0.1em', color: 'var(--muted-foreground)',
                         }}>
                             {col}
@@ -596,12 +617,12 @@ function AuditTableSection({ data }: { data: any; motion?: MotionSpec }) {
                                 transition: `opacity 0.45s ${i * 0.07 + 0.15}s ${ease}, transform 0.45s ${i * 0.07 + 0.15}s ${ease}, background 0.2s ease`,
                             }}
                         >
-                            <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--foreground)', paddingRight: 12, paddingTop: 1, lineHeight: 1.5 }}>{row.area}</div>
-                            <div style={{ fontSize: 'var(--modal-body)', color: 'var(--foreground)', lineHeight: 1.65, paddingRight: 20 }}>{row.finding}</div>
+                            <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--foreground)', paddingRight: 12, paddingTop: 1, lineHeight: 1.5 }}>{row.area}</div>
+                            <div style={{ fontSize: 'var(--modal-body)', color: 'var(--muted-foreground)', lineHeight: 1.65, paddingRight: 20 }}>{row.finding}</div>
                             <div style={{ paddingTop: 2 }}>
                                 <span style={{
                                     display: 'inline-block', padding: '3px 10px', borderRadius: 100,
-                                    fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
+                                    fontSize: '16px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
                                     color: SEV_COLOR[row.severity] ?? 'var(--foreground)',
                                     background: SEV_BG[row.severity] ?? 'var(--muted)',
                                 }}>
@@ -652,37 +673,37 @@ function ConfidenceScanner({ accent }: { accent: string }) {
     return (
         <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-                <div style={{ fontSize: '11px', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'var(--font-mono)' }}>
+                <div style={{ fontSize: '16px', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'var(--font-mono)' }}>
                     IDAS Queue — {SCAN_DOCS.length} documents
                 </div>
-                <button onClick={() => setRevealed(r => !r)} style={{ padding: '7px 16px', borderRadius: 8, fontFamily: 'inherit', cursor: 'pointer', fontSize: '12px', fontWeight: 600, background: revealed ? 'var(--background)' : accent, color: revealed ? 'var(--muted-foreground)' : '#fff', border: `1px solid ${revealed ? 'var(--border)' : accent}`, transition: `all 0.25s ${ease}` }}>
+                <button onClick={() => setRevealed(r => !r)} style={{ padding: '7px 16px', borderRadius: 8, fontFamily: 'inherit', cursor: 'pointer', fontSize: '16px', fontWeight: 600, background: revealed ? 'var(--background)' : accent, color: revealed ? 'var(--muted-foreground)' : '#fff', border: `1px solid ${revealed ? 'var(--border)' : accent}`, transition: `all 0.25s ${ease}` }}>
                     {revealed ? 'Hide signal' : '⚡ Enable signal'}
                 </button>
             </div>
             <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 116px 1fr 50px', padding: '8px 14px', borderBottom: '1px solid var(--border)', background: 'var(--background)' }}>
                     {['Document', 'Category', 'Confidence', ''].map(h => (
-                        <div key={h} style={{ fontSize: '10px', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</div>
+                        <div key={h} style={{ fontSize: '16px', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</div>
                     ))}
                 </div>
                 {SCAN_DOCS.map((doc, i) => {
                     const s = getSignal(doc.confidence);
                     return (
                         <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 116px 1fr 50px', padding: '11px 14px', alignItems: 'center', background: revealed ? s.bg : 'var(--muted)', borderLeft: `3px solid ${revealed ? s.bar : 'transparent'}`, borderBottom: i < SCAN_DOCS.length - 1 ? '1px solid var(--border)' : 'none', transition: `background 0.45s ${i * 0.08}s ${ease}, border-color 0.45s ${i * 0.08}s ${ease}` }}>
-                            <div style={{ fontSize: '12px', color: 'var(--foreground)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', opacity: 0.8 }}>{doc.name}</div>
-                            <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: 100, background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--muted-foreground)', width: 'fit-content' }}>{doc.category}</span>
+                            <div style={{ fontSize: '16px', color: 'var(--foreground)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', opacity: 0.8 }}>{doc.name}</div>
+                            <span style={{ fontSize: 'var(--modal-floor)', padding: '2px 8px', borderRadius: 100, background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--muted-foreground)', width: 'fit-content' }}>{doc.category}</span>
                             <div style={{ paddingRight: 12 }}>
                                 <div style={{ height: 3, borderRadius: 2, background: 'var(--border)' }}>
                                     <div style={{ height: '100%', borderRadius: 2, background: revealed ? s.bar : 'transparent', width: revealed ? `${doc.confidence}%` : '0%', transition: `width 0.55s ${i * 0.08 + 0.1}s ${ease}, background 0.3s ease` }} />
                                 </div>
                             </div>
-                            <div style={{ fontSize: '11px', fontWeight: 700, textAlign: 'right', color: revealed ? s.text : 'transparent', transition: `color 0.25s ${i * 0.08 + 0.4}s ease`, fontFamily: 'var(--font-mono)' }}>{doc.confidence}%</div>
+                            <div style={{ fontSize: '16px', fontWeight: 700, textAlign: 'right', color: revealed ? s.text : 'transparent', transition: `color 0.25s ${i * 0.08 + 0.4}s ease`, fontFamily: 'var(--font-mono)' }}>{doc.confidence}%</div>
                         </div>
                     );
                 })}
             </div>
             <div style={{ marginTop: 10, padding: '9px 14px', borderRadius: 8, background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.2)', opacity: revealed ? 1 : 0, transition: `opacity 0.4s ${SCAN_DOCS.length * 0.08 + 0.3}s ease` }}>
-                <span style={{ fontSize: '12px', color: '#dc2626' }}>⚠ {redCount} flagged for immediate review · {checkCount} need checking — you wouldn't have known without the signal.</span>
+                <span style={{ fontSize: '16px', color: '#dc2626' }}>⚠ {redCount} flagged for immediate review · {checkCount} need checking — you wouldn't have known without the signal.</span>
             </div>
         </div>
     );
@@ -783,7 +804,7 @@ function AiThinkingDots() {
                 <span key={i} style={{
                     display: 'inline-block', width: 5, height: 5, borderRadius: '50%',
                     background: 'var(--muted-foreground)',
-                    animation: `blink 1.1s ${i * 0.18}s infinite ease-in-out`,
+                    animation: `dot-breathe 1.6s ${i * 0.22}s infinite ease-in-out`,
                 }} />
             ))}
         </span>
@@ -901,8 +922,8 @@ function RecipeCollapse({ accent }: { accent: string }) {
                 padding: '12px 16px', borderRadius: 12, marginBottom: 16,
                 background: 'var(--muted)', border: '1px solid var(--border)', minHeight: 44,
             }}>
-                <div style={{ fontSize: '18px', flexShrink: 0, lineHeight: 1 }}>🤖</div>
-                <div style={{ flex: 1, minWidth: 0, fontSize: '12px', color: 'var(--foreground)', lineHeight: 1.6 }}>
+                <div style={{ fontSize: '20px', flexShrink: 0, lineHeight: 1 }}>🤖</div>
+                <div style={{ flex: 1, minWidth: 0, fontSize: '16px', color: 'var(--foreground)', lineHeight: 1.6 }}>
                     {aiThinking ? <AiThinkingDots /> : (
                         <span>
                             {aiDisplayed}
@@ -910,7 +931,7 @@ function RecipeCollapse({ accent }: { accent: string }) {
                         </span>
                     )}
                 </div>
-                <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-foreground)', opacity: 0.45, flexShrink: 0 }}>AI Chef</div>
+                <div style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-foreground)', opacity: 0.45, flexShrink: 0 }}>AI Chef</div>
             </div>
 
             {/* ── NOISE GRID (visible until match) ─────────────────────────── */}
@@ -928,10 +949,10 @@ function RecipeCollapse({ accent }: { accent: string }) {
                         border: '1.5px dashed var(--border)', background: 'var(--background)',
                     }}>
                         <div style={{ fontSize: '26px', marginBottom: 10 }}>🤔</div>
-                        <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--foreground)', marginBottom: 5 }}>
+                        <div style={{ fontSize: '20px', fontWeight: 600, color: 'var(--foreground)', marginBottom: 5 }}>
                             No recipe with just those.
                         </div>
-                        <div style={{ fontSize: '12px', color: 'var(--muted-foreground)', marginBottom: 16 }}>
+                        <div style={{ fontSize: '16px', color: 'var(--muted-foreground)', marginBottom: 16 }}>
                             {suggestions.length > 0 ? 'One of these would unlock something:' : 'Try removing one and starting over.'}
                         </div>
                         {suggestions.length > 0 && (
@@ -939,7 +960,7 @@ function RecipeCollapse({ accent }: { accent: string }) {
                                 {suggestions.map(ing => (
                                     <button key={ing.id} onClick={() => toggle(ing.id)} style={{
                                         padding: '6px 14px', borderRadius: 100, fontFamily: 'inherit',
-                                        cursor: 'pointer', fontSize: '12px', fontWeight: 600,
+                                        cursor: 'pointer', fontSize: '16px', fontWeight: 600,
                                         background: `${accent}12`, color: accent,
                                         border: `1px solid ${accent}40`,
                                         transition: `all 0.2s ${ease}`,
@@ -954,7 +975,7 @@ function RecipeCollapse({ accent }: { accent: string }) {
                             <div key={name} style={{
                                 padding: '8px 10px', borderRadius: 8,
                                 background: 'var(--background)', border: '1px solid var(--border)',
-                                fontSize: '11px', color: 'var(--muted-foreground)',
+                                fontSize: '16px', color: 'var(--muted-foreground)',
                                 textAlign: 'center', lineHeight: 1.4, opacity: 0.5,
                             }}>{name}</div>
                         ))}
@@ -982,7 +1003,7 @@ function RecipeCollapse({ accent }: { accent: string }) {
                             <div style={{ fontSize: '32px', lineHeight: 1, flexShrink: 0 }}>{match.recipe.emoji}</div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 5 }}>
-                                    <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: accent }}>
+                                    <span style={{ fontSize: '16px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: accent }}>
                                         {matchLabel} · {match.recipe.time}
                                     </span>
                                     <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
@@ -995,37 +1016,37 @@ function RecipeCollapse({ accent }: { accent: string }) {
                                         ))}
                                     </div>
                                 </div>
-                                <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--foreground)', marginBottom: 6, lineHeight: 1.2 }}>
+                                <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--foreground)', marginBottom: 6, lineHeight: 1.2 }}>
                                     {match.recipe.name}
                                 </div>
-                                <p style={{ margin: '0 0 14px', fontSize: '13px', lineHeight: 1.6, color: 'var(--muted-foreground)' }}>
+                                <p style={{ margin: '0 0 14px', fontSize: '16px', lineHeight: 1.6, color: 'var(--muted-foreground)' }}>
                                     {match.recipe.desc}
                                 </p>
                                 <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', alignItems: 'center' }}>
                                     {usedList.map(n => {
                                         const ing = INGREDIENTS_LIST.find(d => d.id === n);
                                         return ing ? (
-                                            <span key={n} style={{ fontSize: '11px', padding: '3px 9px', borderRadius: 100, background: `${accent}15`, border: `1px solid ${accent}`, color: accent, fontWeight: 600 }}>✓ {ing.emoji} {ing.label}</span>
+                                            <span key={n} style={{ fontSize: 'var(--modal-floor)', padding: '3px 9px', borderRadius: 100, background: `${accent}15`, border: `1px solid ${accent}`, color: accent, fontWeight: 600 }}>✓ {ing.emoji} {ing.label}</span>
                                         ) : null;
                                     })}
                                     {missingList.map(n => {
                                         const ing = INGREDIENTS_LIST.find(d => d.id === n);
                                         return ing ? (
-                                            <span key={n} style={{ fontSize: '11px', padding: '3px 9px', borderRadius: 100, background: 'transparent', border: '1.5px dashed var(--border)', color: 'var(--muted-foreground)' }}>{ing.emoji} {ing.label}</span>
+                                            <span key={n} style={{ fontSize: 'var(--modal-floor)', padding: '3px 9px', borderRadius: 100, background: 'transparent', border: '1.5px dashed var(--border)', color: 'var(--muted-foreground)' }}>{ing.emoji} {ing.label}</span>
                                         ) : null;
                                     })}
-                                    {extraList.length > 0 && <span style={{ fontSize: '10px', color: 'var(--muted-foreground)', opacity: 0.4, margin: '0 1px' }}>·</span>}
+                                    {extraList.length > 0 && <span style={{ fontSize: '16px', color: 'var(--muted-foreground)', opacity: 0.4, margin: '0 1px' }}>·</span>}
                                     {extraList.map(n => {
                                         const ing = INGREDIENTS_LIST.find(d => d.id === n);
                                         return ing ? (
-                                            <span key={n} style={{ fontSize: '11px', padding: '3px 9px', borderRadius: 100, background: 'var(--muted)', border: '1px solid var(--border)', color: 'var(--muted-foreground)', opacity: 0.55 }}>{ing.emoji} {ing.label}</span>
+                                            <span key={n} style={{ fontSize: 'var(--modal-floor)', padding: '3px 9px', borderRadius: 100, background: 'var(--muted)', border: '1px solid var(--border)', color: 'var(--muted-foreground)', opacity: 0.55 }}>{ing.emoji} {ing.label}</span>
                                         ) : null;
                                     })}
                                 </div>
                                 <div style={{ display: 'flex', gap: 12, marginTop: 10, flexWrap: 'wrap' }}>
-                                    {usedList.length > 0 && <span style={{ fontSize: '10px', color: accent, opacity: 0.7 }}>✓ in recipe</span>}
-                                    {missingList.length > 0 && <span style={{ fontSize: '10px', color: 'var(--muted-foreground)', opacity: 0.6 }}>-- still need</span>}
-                                    {extraList.length > 0 && <span style={{ fontSize: '10px', color: 'var(--muted-foreground)', opacity: 0.5 }}>· extra</span>}
+                                    {usedList.length > 0 && <span style={{ fontSize: '16px', color: accent, opacity: 0.7 }}>✓ in recipe</span>}
+                                    {missingList.length > 0 && <span style={{ fontSize: '16px', color: 'var(--muted-foreground)', opacity: 0.6 }}>-- still need</span>}
+                                    {extraList.length > 0 && <span style={{ fontSize: '16px', color: 'var(--muted-foreground)', opacity: 0.5 }}>· extra</span>}
                                 </div>
                             </div>
                         </div>
@@ -1035,14 +1056,14 @@ function RecipeCollapse({ accent }: { accent: string }) {
 
             {/* ── KITCHENWARE FILTER ────────────────────────────────────────── */}
             <div style={{ marginBottom: 14 }}>
-                <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted-foreground)', opacity: 0.45, textAlign: 'center', marginBottom: 8 }}>Kitchenware</div>
+                <div style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted-foreground)', opacity: 0.45, textAlign: 'center', marginBottom: 8 }}>Kitchenware</div>
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
                     {KITCHENWARE.map(ware => {
                         const active = selectedWare.has(ware.id);
                         return (
                             <button key={ware.id} onClick={() => toggleWare(ware.id)} style={{
                                 padding: '7px 14px', borderRadius: 100, fontFamily: 'inherit',
-                                cursor: 'pointer', fontSize: '12px', fontWeight: active ? 700 : 500,
+                                cursor: 'pointer', fontSize: '16px', fontWeight: active ? 700 : 500,
                                 background: active ? `${accent}18` : 'var(--background)',
                                 color: active ? accent : 'var(--muted-foreground)',
                                 border: `1.5px solid ${active ? accent : 'var(--border)'}`,
@@ -1056,7 +1077,7 @@ function RecipeCollapse({ accent }: { accent: string }) {
 
             {/* ── INGREDIENT CAROUSEL (grab to scroll) ─────────────────────── */}
             <div style={{ marginBottom: 10 }}>
-                <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted-foreground)', opacity: 0.45, textAlign: 'center', marginBottom: 8 }}>Ingredients</div>
+                <div style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted-foreground)', opacity: 0.45, textAlign: 'center', marginBottom: 8 }}>Ingredients</div>
                 <div style={{ position: 'relative' }}>
                     <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 48, background: 'linear-gradient(to right, var(--muted), transparent)', zIndex: 2, pointerEvents: 'none' }} />
                     <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 48, background: 'linear-gradient(to left, var(--muted), transparent)', zIndex: 2, pointerEvents: 'none' }} />
@@ -1075,7 +1096,7 @@ function RecipeCollapse({ accent }: { accent: string }) {
                             return (
                                 <button key={ing.id} onClick={() => { if (!hasDragged.current) toggle(ing.id); }} style={{
                                     padding: '8px 16px', borderRadius: 100, fontFamily: 'inherit',
-                                    cursor: 'pointer', fontSize: '13px', fontWeight: active ? 700 : 500,
+                                    cursor: 'pointer', fontSize: '16px', fontWeight: active ? 700 : 500,
                                     background: active ? accent : 'var(--background)',
                                     color: active ? '#fff' : 'var(--foreground)',
                                     border: `1.5px solid ${active ? accent : 'var(--border)'}`,
@@ -1092,7 +1113,7 @@ function RecipeCollapse({ accent }: { accent: string }) {
 
             {/* ── STATUS HINT ───────────────────────────────────────────────── */}
             <div style={{
-                textAlign: 'center', fontSize: '11px', minHeight: 16,
+                textAlign: 'center', fontSize: '16px', minHeight: 16,
                 color: match?.score === 1 ? accent : 'var(--muted-foreground)',
                 transition: 'color 0.3s',
             }}>
@@ -1126,68 +1147,95 @@ function PersonaLens({ accent: _accent }: { accent: string }) {
     return (
         <div ref={stageRef} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
             <div style={{ marginBottom: 24 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C9A84C', marginBottom: 8 }}>Interactive Demo</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>Same fund. What you see depends on who you are.</div>
-                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>Start from the confusion — then choose your perspective.</div>
+                <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C9A84C', marginBottom: 8 }}>Interactive Demo</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>Same fund. What you see depends on who you are.</div>
+                <div style={{ fontSize: 16, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>Start from the confusion — then choose your perspective.</div>
             </div>
-            <div style={{ background: 'linear-gradient(160deg, #F8F5EE 0%, #EEE9DC 100%)', borderRadius: 20, padding: '32px 28px', border: '1px solid #DDD5C0', boxShadow: '0 4px 24px rgba(27,58,92,0.07)' }}>
-                {/* Fund card — morphs between states */}
-                <div style={{ maxWidth: 440, margin: '0 auto 24px', background: '#fff', borderRadius: 16, padding: '24px', border: `1.5px solid ${view === 'analyst' ? '#A7F3D0' : view === 'novice' ? '#E0CFA0' : '#E5E0D5'}`, boxShadow: '0 4px 20px rgba(0,0,0,0.06)', transition: `border-color 0.5s ${ease}`, position: 'relative' }}>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: '#999', marginBottom: 16 }}>LH Conservative Mixed Fund</div>
-                    {/* RAW — wall of numbers, no context, no hierarchy */}
-                    <div style={{ opacity: view === 'raw' ? 1 : 0, transition: `opacity 0.3s ${ease}`, pointerEvents: view === 'raw' ? 'auto' : 'none', position: view === 'raw' ? 'relative' : 'absolute', top: view === 'raw' ? undefined : 52, left: view === 'raw' ? undefined : 24, right: view === 'raw' ? undefined : 24 }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, marginBottom: 14 }}>
-                            {RAW_METRICS.map(([k, v]) => (
-                                <div key={k} style={{ padding: '8px 10px', borderRadius: 8, background: '#F9F7F4', border: '1px solid #EDE8E0' }}>
-                                    <div style={{ fontSize: 9, color: '#bbb', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>{k}</div>
-                                    <div style={{ fontSize: 14, fontWeight: 700, color: '#333' }}>{v}</div>
-                                </div>
-                            ))}
+            <div style={{ background: '#F7F6F4', borderRadius: 20, padding: '28px', border: '1px solid #E2DDD6', boxShadow: '0 2px 16px rgba(0,0,0,0.05)' }}>
+                {/* Fund card */}
+                <div style={{ maxWidth: 460, margin: '0 auto 20px', background: '#fff', borderRadius: 14, overflow: 'hidden', border: `1px solid ${view === 'analyst' ? '#A7F3D0' : view === 'novice' ? '#E0CFA0' : '#E8E4DE'}`, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', transition: `border-color 0.5s ${ease}` }}>
+                    {/* Card header — always visible */}
+                    <div style={{ padding: '16px 20px 14px', borderBottom: '1px solid #F0EDE8', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+                        <div>
+                            <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.09em', color: '#A09585', marginBottom: 4 }}>Mutual Fund</div>
+                            <div style={{ fontSize: 20, fontWeight: 800, color: '#1A1714', letterSpacing: '-0.02em', lineHeight: 1.2 }}>LH Conservative Mixed</div>
                         </div>
-                        <div style={{ fontSize: 12, color: '#92610a', textAlign: 'center', padding: '10px', background: '#FEF9EE', borderRadius: 8, border: '1px solid #F0E0A0' }}>
-                            Is this fund good? You'd need a finance degree to know.
+                        <div style={{
+                            fontSize: 'var(--modal-floor)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, marginTop: 2, whiteSpace: 'nowrap',
+                            background: view === 'analyst' ? '#DCFCE7' : view === 'novice' ? '#FEF9EE' : '#F0EDE8',
+                            color: view === 'analyst' ? '#059669' : view === 'novice' ? '#92610A' : '#7A6E5F',
+                            transition: `background 0.4s ${ease}, color 0.4s ${ease}`,
+                        }}>
+                            {view === 'analyst' ? '▲ Top quartile' : view === 'novice' ? '★★★★★ Top-rated' : 'Conservative'}
                         </div>
                     </div>
-                    {/* NOVICE — calm, stars only, nothing else */}
-                    <div style={{ opacity: view === 'novice' ? 1 : 0, transition: `opacity 0.4s ${ease} 0.1s`, pointerEvents: view === 'novice' ? 'auto' : 'none', position: view === 'novice' ? 'relative' : 'absolute', top: view === 'novice' ? undefined : 52, left: view === 'novice' ? undefined : 24, right: view === 'novice' ? undefined : 24 }}>
-                        <SmartTooltip wide delay={280} content={<DriftTip label="Decision 02" title="Stars replace Sharpe ratio" body="Sarocha closes the app when she sees 0.81 Sharpe. ★★★★★ answers 'is this good?' without requiring any financial literacy." />}>
-                            <div style={{ cursor: 'default' }}>
-                                <div style={{ display: 'flex', gap: 5, marginBottom: 14 }}>
-                                    {'★★★★★'.split('').map((s, i) => <span key={i} style={{ fontSize: 40, color: '#F59E0B', filter: 'drop-shadow(0 2px 6px #F59E0B35)' }}>{s}</span>)}
+
+                    {/* Card body — render only active view, key forces remount + fade */}
+                    <div style={{ padding: '20px' }}>
+                        {view === 'raw' && (
+                            <div key="raw" style={{ animation: `drift-el-in 0.35s ${ease} both` }}>
+                                {RAW_METRICS.map(([k, v], i) => (
+                                    <div key={k} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: i < RAW_METRICS.length - 1 ? '1px solid #F0EDE8' : 'none' }}>
+                                        <span style={{ fontSize: 'var(--modal-floor)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#A09585' }}>{k}</span>
+                                        <span style={{ fontSize: 20, fontWeight: 700, color: '#1A1714', letterSpacing: '-0.01em' }}>{v}</span>
+                                    </div>
+                                ))}
+                                <div style={{ fontSize: 16, color: '#92610a', marginTop: 14, padding: '10px 14px', background: '#FEF9EE', borderRadius: 8, border: '1px solid #F0E0A0' }}>
+                                    Is this fund good? You'd need a finance degree to know.
                                 </div>
-                                <div style={{ fontSize: 12, color: '#aaa', marginBottom: 20 }}>Top-rated · Conservative · Good for beginners</div>
-                                <button style={{ width: '100%', padding: '13px', borderRadius: 10, background: '#1B3A5C', color: '#fff', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer' }}>Start with ฿1,000</button>
                             </div>
-                        </SmartTooltip>
-                    </div>
-                    {/* ANALYST — same data, now structured with hierarchy */}
-                    <div style={{ opacity: view === 'analyst' ? 1 : 0, transition: `opacity 0.4s ${ease} 0.1s`, pointerEvents: view === 'analyst' ? 'auto' : 'none', position: view === 'analyst' ? 'relative' : 'absolute', top: view === 'analyst' ? undefined : 52, left: view === 'analyst' ? undefined : 24, right: view === 'analyst' ? undefined : 24 }}>
-                        <SmartTooltip wide delay={280} content={<DriftTip label="Decision 02" title="Return at hero scale for analysts" body="Anan's primary signal is performance. +14.8% at 54px scanned in half a second — same data as the raw card, now with the right hierarchy." />}>
-                            <div style={{ cursor: 'default' }}>
-                                <div style={{ fontSize: 54, fontWeight: 900, color: '#059669', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 12 }}>+14.8%</div>
-                                <div style={{ display: 'flex', gap: 22, marginBottom: 20 }}>
-                                    {[['Sharpe', '0.81'], ['Std Dev', '6.2%'], ['Expense', '0.65%']].map(([k, v]) => (
-                                        <div key={k}>
-                                            <div style={{ fontSize: 9, color: '#bbb', marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{k}</div>
-                                            <div style={{ fontSize: 13, fontWeight: 700, color: '#1B3A5C' }}>{v}</div>
+                        )}
+
+                        {view === 'novice' && (
+                            <SmartTooltip wide delay={280} content={<DriftTip label="Decision 02" title="Stars replace Sharpe ratio" body="Sarocha closes the app when she sees 0.81 Sharpe. ★★★★★ answers 'is this good?' without requiring any financial literacy." />}>
+                                <div key="novice" style={{ animation: `drift-el-in 0.35s ${ease} both`, cursor: 'default' }}>
+                                    <div style={{ display: 'flex', gap: 4, marginBottom: 12 }}>
+                                        {'★★★★★'.split('').map((s, i) => <span key={i} style={{ fontSize: 38, color: '#F59E0B', filter: 'drop-shadow(0 2px 6px #F59E0B30)' }}>{s}</span>)}
+                                    </div>
+                                    <div style={{ fontSize: 16, color: '#6B5F50', marginBottom: 20, lineHeight: 1.5 }}>Top-rated · Conservative · Good for beginners</div>
+                                    <button style={{ width: '100%', padding: '13px', borderRadius: 10, background: '#1B3A5C', color: '#fff', fontSize: 16, fontWeight: 700, border: 'none', cursor: 'pointer' }}>Start with ฿1,000</button>
+                                </div>
+                            </SmartTooltip>
+                        )}
+
+                        {view === 'analyst' && (
+                            <SmartTooltip wide delay={280} content={<DriftTip label="Decision 02" title="Return at hero scale for analysts" body="Anan's primary signal is performance. +14.8% scanned in half a second — same data as raw, now with the right hierarchy." />}>
+                                <div key="analyst" style={{ animation: `drift-el-in 0.35s ${ease} both`, cursor: 'default' }}>
+                                    {/* Hero — label above, number below (DiscoveryLens pattern) */}
+                                    <div style={{ marginBottom: 16 }}>
+                                        <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.09em', color: '#A09585', marginBottom: 6 }}>3-Year CAGR</div>
+                                        <div style={{ fontSize: 56, fontWeight: 900, color: '#059669', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 8 }}>+14.8%</div>
+                                        {/* Projection — muted, only bold number in accent */}
+                                        <div style={{ fontSize: 16, color: '#6B5F50', lineHeight: 1.5 }}>
+                                            Outperforms category avg by <span style={{ fontWeight: 700, color: '#059669' }}>+2.1%</span> · 85% confidence
                                         </div>
-                                    ))}
+                                    </div>
+                                    {/* Secondary metrics as columns with dividers */}
+                                    <div style={{ borderTop: '1px solid #F0EDE8', paddingTop: 14, display: 'flex' }}>
+                                        {[['Sharpe', '0.81'], ['Std Dev', '6.2%'], ['Expense', '0.65%']].map(([k, v], i) => (
+                                            <div key={k} style={{ flex: 1, paddingLeft: i > 0 ? 16 : 0, paddingRight: i < 2 ? 16 : 0, borderRight: i < 2 ? '1px solid #F0EDE8' : 'none' }}>
+                                                <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#A09585', marginBottom: 4 }}>{k}</div>
+                                                <div style={{ fontSize: 20, fontWeight: 700, color: '#1A1714' }}>{v}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button style={{ width: '100%', marginTop: 16, padding: '13px', borderRadius: 10, background: '#059669', color: '#fff', fontSize: 16, fontWeight: 700, border: 'none', cursor: 'pointer' }}>Compare funds →</button>
                                 </div>
-                                <button style={{ width: '100%', padding: '13px', borderRadius: 10, background: '#059669', color: '#fff', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer' }}>Compare funds →</button>
-                            </div>
-                        </SmartTooltip>
+                            </SmartTooltip>
+                        )}
                     </div>
                 </div>
-                {/* Choice buttons — only shown at raw state */}
+
+                {/* Choice buttons */}
                 {view === 'raw' && (
                     <div style={{ display: 'flex', gap: 10, animation: `drift-el-in 0.4s ${ease} both` }}>
                         <SmartTooltip wide delay={300} content={<DriftTip label="Design decision" title="Stars replace Sharpe ratio" body="Novice investors close the app when they see raw metrics. Stars give a reference frame without requiring financial literacy." />}>
-                            <button onClick={() => setView('novice')} style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#1B3A5C', color: '#fff', fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                            <button onClick={() => setView('novice')} style={{ flex: 1, padding: '14px', borderRadius: 12, background: '#1B3A5C', color: '#fff', fontSize: 16, fontWeight: 700, border: 'none', cursor: 'pointer' }}>
                                 I'm new to investing
                             </button>
                         </SmartTooltip>
                         <SmartTooltip wide delay={300} content={<DriftTip label="Design decision" title="Same data — adapted hierarchy" body="Analysts need raw numbers, not tooltips explaining what a Sharpe ratio is. The data stays — only the visual hierarchy changes." />}>
-                            <button onClick={() => setView('analyst')} style={{ flex: 1, padding: '14px', borderRadius: 12, background: 'transparent', color: '#1B3A5C', fontSize: 13, fontWeight: 700, border: '2px solid #1B3A5C', cursor: 'pointer' }}>
+                            <button onClick={() => setView('analyst')} style={{ flex: 1, padding: '14px', borderRadius: 12, background: 'transparent', color: '#1B3A5C', fontSize: 16, fontWeight: 700, border: '2px solid #1B3A5C', cursor: 'pointer' }}>
                                 I'm an analyst
                             </button>
                         </SmartTooltip>
@@ -1195,7 +1243,7 @@ function PersonaLens({ accent: _accent }: { accent: string }) {
                 )}
                 {view !== 'raw' && (
                     <div style={{ textAlign: 'center', animation: `drift-el-in 0.4s ${ease} both` }}>
-                        <button onClick={() => setView('raw')} style={{ fontSize: 11, color: '#aaa', background: 'none', border: 'none', cursor: 'pointer', padding: '8px 16px', textDecoration: 'underline' }}>← See the raw data again</button>
+                        <button onClick={() => setView('raw')} style={{ fontSize: 16, color: '#A09585', background: 'none', border: 'none', cursor: 'pointer', padding: '8px 16px' }}>← See the raw data again</button>
                     </div>
                 )}
             </div>
@@ -1209,9 +1257,9 @@ function PersonaLens({ accent: _accent }: { accent: string }) {
 function DriftTip({ label, title, body }: { label: string; title: string; body: string }) {
     return (
         <div>
-            <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5, opacity: 0.45 }}>{label}</div>
-            <div style={{ fontSize: '13px', fontWeight: 700, marginBottom: 5, lineHeight: 1.3 }}>{title}</div>
-            <div style={{ fontSize: '11px', lineHeight: 1.65, opacity: 0.65 }}>{body}</div>
+            <div style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5, opacity: 0.45 }}>{label}</div>
+            <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: 5, lineHeight: 1.3 }}>{title}</div>
+            <div style={{ fontSize: '16px', lineHeight: 1.65, opacity: 0.65 }}>{body}</div>
         </div>
     );
 }
@@ -1248,40 +1296,48 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
     return (
         <div ref={stageRef} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
             <div style={{ marginBottom: 24 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: cd.accent, marginBottom: 8 }}>Interactive Demo</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>3 apps. 15 minutes. One relocation decision.</div>
-                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>This is how every nomad researches a city today.</div>
+                <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: cd.accent, marginBottom: 8 }}>Interactive Demo</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>3 apps. 15 minutes. One relocation decision.</div>
+                <div style={{ fontSize: 16, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>This is how every nomad researches a city today.</div>
             </div>
             {/* City selector */}
             <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
                 {(Object.keys(DRIFT_CITIES_DATA) as DCity[]).map(c => (
-                    <button key={c} onClick={() => { setCity(c); setMerged(false); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, background: city === c ? DRIFT_CITIES_DATA[c].accent : 'rgba(255,255,255,0.05)', color: city === c ? '#fff' : 'rgba(255,255,255,0.68)', border: `1px solid ${city === c ? DRIFT_CITIES_DATA[c].accent : 'rgba(255,255,255,0.14)'}`, cursor: 'pointer', fontSize: 11, fontWeight: 700, transition: `all 0.2s ${ease}` }}>
+                    <button key={c} onClick={() => { setCity(c); setMerged(false); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, background: city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--muted)', color: city === c ? '#fff' : 'var(--foreground)', border: `1px solid ${city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--border)'}`, cursor: 'pointer', fontSize: 16, fontWeight: 700, transition: `all 0.2s ${ease}` }}>
                         <span>{DRIFT_CITIES_DATA[c].flag}</span><span>{c}</span>
                     </button>
                 ))}
             </div>
-            {/* Fragmented state — pain */}
+            {/* Pain state — light checklist, visually opposite of dark Drift state */}
             <div style={{ opacity: merged ? 0 : 1, transform: merged ? 'translateY(-8px) scale(0.98)' : 'none', transition: `opacity 0.35s ${ease}, transform 0.35s ${ease}`, pointerEvents: merged ? 'none' : 'auto', position: merged ? 'absolute' : 'relative', width: '100%' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 8, marginBottom: 12 }}>
+                <div style={{ background: 'var(--background)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', marginBottom: 12 }}>
+                    {/* Header */}
+                    <div style={{ padding: '11px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Without Drift — your research process</span>
+                        <span style={{ fontSize: 'var(--modal-floor)', color: '#EF4444', fontWeight: 700, background: 'rgba(239,68,68,0.08)', padding: '3px 10px', borderRadius: 20 }}>~15 min</span>
+                    </div>
+                    {/* Step rows */}
                     {APPS.map((app, i) => (
-                        <div key={i} style={{ background: 'linear-gradient(160deg,#1C1208,#221508)', borderRadius: 12, padding: '16px 14px', border: `1px solid ${app.color}22` }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-                                <span style={{ fontSize: 14 }}>{app.icon}</span>
-                                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{app.name}</span>
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 16px', borderBottom: i < APPS.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                            <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--muted-foreground)', flexShrink: 0 }}>{i + 1}</div>
+                            <span style={{ fontSize: 18, flexShrink: 0 }}>{app.icon}</span>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--foreground)', marginBottom: 2 }}>{app.name}</div>
+                                <div style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)' }}>{app.step} → write it down</div>
                             </div>
-                            <div style={{ fontSize: 28, fontWeight: 900, color: app.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 4 }}>
-                                {app.value}<span style={{ fontSize: 12 }}>{app.unit}</span>
+                            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                                <div style={{ fontSize: 20, fontWeight: 800, color: app.color, letterSpacing: '-0.02em', lineHeight: 1 }}>{app.value}<span style={{ fontSize: 13 }}>{app.unit}</span></div>
+                                <div style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)', marginTop: 2 }}>~5 min</div>
                             </div>
-                            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.38)', marginBottom: 10 }}>{app.label} · {city}</div>
-                            <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.28)', padding: '4px 7px', background: 'rgba(255,255,255,0.04)', borderRadius: 5, border: '1px solid rgba(255,255,255,0.05)', lineHeight: 1.5 }}>{app.step}</div>
                         </div>
                     ))}
+                    {/* Total */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 16px', background: 'rgba(239,68,68,0.04)', borderTop: '1px solid rgba(239,68,68,0.12)' }}>
+                        <span style={{ fontSize: 16, color: 'var(--muted-foreground)' }}>3 separate apps. Numbers don't talk to each other.</span>
+                        <span style={{ fontSize: 16, fontWeight: 700, color: '#EF4444' }}>Decide by gut</span>
+                    </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, padding: '10px 14px', borderRadius: 10, background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.15)' }}>
-                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>Tab-switching · losing context · starting over each time</span>
-                    <span style={{ fontSize: 14, fontWeight: 900, color: '#EF4444' }}>~15 min</span>
-                </div>
-                <button onClick={() => setMerged(true)} style={{ width: '100%', padding: '14px', borderRadius: 12, background: cd.accent, color: '#fff', fontSize: 13, fontWeight: 800, border: 'none', cursor: 'pointer', transition: `background 0.3s ${ease}` }}>
+                <button onClick={() => setMerged(true)} style={{ width: '100%', padding: '14px', borderRadius: 12, background: cd.accent, color: '#fff', fontSize: 16, fontWeight: 800, border: 'none', cursor: 'pointer', transition: `background 0.3s ${ease}` }}>
                     See how Drift handles this →
                 </button>
             </div>
@@ -1292,7 +1348,7 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
                         <span style={{ fontSize: 28 }}>{cd.flag}</span>
                         <div>
                             <div style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>{city}</div>
-                            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.52)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{cd.cost} / month</div>
+                            <div style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{cd.cost} / month</div>
                         </div>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 16 }}>
@@ -1300,19 +1356,19 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
                             <SmartTooltip key={i} wide delay={300} content={<DriftTip label="Consolidation" title={`${app.name} → Drift`} body={`This used to require opening ${app.name} separately. Drift surfaces it on the city card — no tab-switching, no context loss.`} />}>
                                 <div style={{ background: `${app.color}12`, borderRadius: 10, padding: '14px 12px', border: `1px solid ${app.color}30`, animation: `drift-el-in 0.4s ${ease} ${i * 0.1}s both`, cursor: 'default' }}>
                                     <div style={{ fontSize: 28, fontWeight: 900, color: app.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 5 }}>
-                                        {app.value}<span style={{ fontSize: 12 }}>{app.unit}</span>
+                                        {app.value}<span style={{ fontSize: 16 }}>{app.unit}</span>
                                     </div>
-                                    <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.55)', marginBottom: 6 }}>{app.label}</div>
-                                    <div style={{ fontSize: 9, fontWeight: 800, color: '#4ade80', letterSpacing: '0.04em', textTransform: 'uppercase' }}>✓ from {app.name}</div>
+                                    <div style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', marginBottom: 6 }}>{app.label}</div>
+                                    <div style={{ fontSize: 16, fontWeight: 800, color: '#4ade80', letterSpacing: '0.04em', textTransform: 'uppercase' }}>✓ from {app.name}</div>
                                 </div>
                             </SmartTooltip>
                         ))}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 10, background: 'rgba(74,222,128,0.07)', border: '1px solid rgba(74,222,128,0.2)', marginBottom: 14 }}>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Decision: move to {city}.</div>
-                        <span style={{ fontSize: 14, fontWeight: 900, color: '#4ade80' }}>~30 sec</span>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>Decision: move to {city}.</div>
+                        <span style={{ fontSize: 20, fontWeight: 900, color: '#4ade80' }}>~30 sec</span>
                     </div>
-                    <button onClick={() => setMerged(false)} style={{ width: '100%', padding: '10px', borderRadius: 10, background: 'transparent', color: 'rgba(255,255,255,0.38)', fontSize: 11, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer' }}>← Back to the old way</button>
+                    <button onClick={() => setMerged(false)} style={{ width: '100%', padding: '10px', borderRadius: 10, background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 16, border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer' }}>← Back to the old way</button>
                 </div>
             </div>
         </div>
@@ -1374,17 +1430,17 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
     return (
         <div ref={stageRef} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
             <div style={{ marginBottom: 24 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent, marginBottom: 8 }}>Interactive Demo</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>Video drives 403% more inquiries. Making it takes 3.5 hours.</div>
-                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>That's why most agents still don't use it.</div>
+                <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: accent, marginBottom: 8 }}>Interactive Demo</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>Video drives 403% more inquiries. Making it takes 3.5 hours.</div>
+                <div style={{ fontSize: 16, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>That's why most agents still don't use it.</div>
             </div>
             <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #E5E7EB', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
                 {/* Mode toggle */}
                 <div style={{ display: 'flex', borderBottom: '1px solid #E5E7EB' }}>
-                    <button onClick={() => setMode('manual')} style={{ flex: 1, padding: '13px', fontSize: 12, fontWeight: 700, color: mode === 'manual' ? '#111827' : '#9CA3AF', background: mode === 'manual' ? '#F9FAFB' : '#fff', border: 'none', borderRight: '1px solid #E5E7EB', cursor: 'pointer', transition: `all 0.2s ${ease}` }}>
+                    <button onClick={() => setMode('manual')} style={{ flex: 1, padding: '13px', fontSize: 16, fontWeight: 700, color: mode === 'manual' ? '#111827' : '#9CA3AF', background: mode === 'manual' ? '#F9FAFB' : '#fff', border: 'none', borderRight: '1px solid #E5E7EB', cursor: 'pointer', transition: `all 0.2s ${ease}` }}>
                         Without Roomvu
                     </button>
-                    <button onClick={() => setMode('roomvu')} style={{ flex: 1, padding: '13px', fontSize: 12, fontWeight: 700, color: mode === 'roomvu' ? accent : '#9CA3AF', background: mode === 'roomvu' ? `${accent}08` : '#fff', border: 'none', cursor: 'pointer', transition: `all 0.2s ${ease}` }}>
+                    <button onClick={() => setMode('roomvu')} style={{ flex: 1, padding: '13px', fontSize: 16, fontWeight: 700, color: mode === 'roomvu' ? accent : '#9CA3AF', background: mode === 'roomvu' ? `${accent}08` : '#fff', border: 'none', cursor: 'pointer', transition: `all 0.2s ${ease}` }}>
                         With Roomvu
                     </button>
                 </div>
@@ -1392,21 +1448,21 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
                     {/* Manual — pain state */}
                     {mode === 'manual' && (
                         <div style={{ animation: `drift-el-in 0.4s ${ease} both` }}>
-                            <div style={{ fontSize: 11, fontWeight: 600, color: '#6B7280', marginBottom: 12 }}>Creating one market report video for Vancouver:</div>
+                            <div style={{ fontSize: 16, fontWeight: 600, color: '#6B7280', marginBottom: 12 }}>Creating one market report video for Vancouver:</div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
                                 {MANUAL_STEPS.map((s, i) => (
                                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 8, background: '#F9FAFB', border: '1px solid #E5E7EB' }}>
-                                        <span style={{ fontSize: 15 }}>{s.icon}</span>
-                                        <span style={{ flex: 1, fontSize: 12, color: '#374151', fontWeight: 500 }}>{s.task}</span>
-                                        <span style={{ fontSize: 12, fontWeight: 700, color: '#EF4444' }}>{s.time}</span>
+                                        <span style={{ fontSize: 16 }}>{s.icon}</span>
+                                        <span style={{ flex: 1, fontSize: 16, color: '#374151', fontWeight: 500 }}>{s.task}</span>
+                                        <span style={{ fontSize: 16, fontWeight: 700, color: '#EF4444' }}>{s.time}</span>
                                     </div>
                                 ))}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 10, background: '#FEF2F2', border: '1px solid #FECACA', marginBottom: 10 }}>
-                                <span style={{ fontSize: 12, color: '#991B1B', fontWeight: 600 }}>Total — per video, per city</span>
-                                <span style={{ fontSize: 22, fontWeight: 900, color: '#EF4444' }}>3.5 hours</span>
+                                <span style={{ fontSize: 16, color: '#991B1B', fontWeight: 600 }}>Total — per video, per city</span>
+                                <span style={{ fontSize: 25, fontWeight: 900, color: '#EF4444' }}>3.5 hours</span>
                             </div>
-                            <div style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center', fontStyle: 'italic' }}>
+                            <div style={{ fontSize: 16, color: '#9CA3AF', textAlign: 'center', fontStyle: 'italic' }}>
                                 So most agents just don't. Their competitors do.
                             </div>
                         </div>
@@ -1417,8 +1473,8 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
                             <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
                                 {RV_CITIES.map(c => (
                                     <SmartTooltip key={c} wide delay={250} content={<DriftTip label="Decision 01" title="Content is city-scoped by default" body="Every video in Roomvu is city-scoped. Switching city regenerates the entire library — not a filter on top of a national catalogue." />}>
-                                        <button onClick={() => switchCity(c)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '6px 12px', borderRadius: 7, background: city === c ? accent : '#F9FAFB', border: `1px solid ${city === c ? accent : '#E5E7EB'}`, cursor: 'pointer', fontSize: 11, fontWeight: 700, color: city === c ? '#fff' : '#374151', transition: `all 0.2s ${ease}` }}>
-                                            <span style={{ fontSize: 10 }}>📍</span>{c}
+                                        <button onClick={() => switchCity(c)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '6px 12px', borderRadius: 7, background: city === c ? accent : '#F9FAFB', border: `1px solid ${city === c ? accent : '#E5E7EB'}`, cursor: 'pointer', fontSize: 16, fontWeight: 700, color: city === c ? '#fff' : '#374151', transition: `all 0.2s ${ease}` }}>
+                                            <span style={{ fontSize: 16 }}>📍</span>{c}
                                         </button>
                                     </SmartTooltip>
                                 ))}
@@ -1436,15 +1492,15 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
                                             <div key={i} style={{ borderRadius: 8, overflow: 'hidden', border: '1px solid #E5E7EB', animation: `drift-el-in 0.28s ${ease} ${i * 0.06}s both` }}>
                                                 <div style={{ height: 70, background: v.thumb, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                                                     <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                        <span style={{ fontSize: 8, marginLeft: 2, color: '#fff' }}>▶</span>
+                                                        <span style={{ fontSize: 16, marginLeft: 2, color: '#fff' }}>▶</span>
                                                     </div>
-                                                    <div style={{ position: 'absolute', bottom: 4, right: 6, fontSize: 7, fontWeight: 700, color: '#fff', background: 'rgba(0,0,0,0.5)', padding: '1px 4px', borderRadius: 3 }}>{v.dur}</div>
+                                                    <div style={{ position: 'absolute', bottom: 4, right: 6, fontSize: 16, fontWeight: 700, color: '#fff', background: 'rgba(0,0,0,0.5)', padding: '1px 4px', borderRadius: 3 }}>{v.dur}</div>
                                                 </div>
                                                 <div style={{ padding: '7px 9px', background: '#fff' }}>
-                                                    <div style={{ fontSize: 9, fontWeight: 600, color: '#111827', lineHeight: 1.4, marginBottom: 2 }}>
+                                                    <div style={{ fontSize: 16, fontWeight: 600, color: '#111827', lineHeight: 1.4, marginBottom: 2 }}>
                                                         {parts.length > 1 ? <>{parts[0]}<span style={{ color: accent, fontWeight: 800 }}>{city}</span>{parts[1]}</> : title}
                                                     </div>
-                                                    <div style={{ fontSize: 7, color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{v.sub}</div>
+                                                    <div style={{ fontSize: 16, color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{v.sub}</div>
                                                 </div>
                                             </div>
                                         );
@@ -1453,8 +1509,8 @@ function RoomvuHomepageDemo({ accent }: { accent: string }) {
                             )}
                             {!loading && (
                                 <div key={`ready-${city}`} style={{ marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', animation: `drift-el-in 0.4s ${ease} 0.45s both` }}>
-                                    <span style={{ fontSize: 11, fontWeight: 700, color: accent }}>✓ 6 videos ready for {city}</span>
-                                    <span style={{ fontSize: 13, fontWeight: 900, color: '#059669' }}>0 minutes</span>
+                                    <span style={{ fontSize: 16, fontWeight: 700, color: accent }}>✓ 6 videos ready for {city}</span>
+                                    <span style={{ fontSize: 16, fontWeight: 900, color: '#059669' }}>0 minutes</span>
                                 </div>
                             )}
                         </div>
@@ -1478,7 +1534,7 @@ function DemoSection({ data }: { data: any }) {
     return (
         <div ref={ref} style={{ marginBottom: 72, opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
             {data.eyebrow && <Eyebrow text={data.eyebrow} />}
-            {data.headline && <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 8px', color: 'var(--foreground)' }}>{data.headline}</h3>}
+            {data.headline && <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 8px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.headline}</h3>}
             {data.description && <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--muted-foreground)', margin: '0 0 24px' }}>{data.description}</p>}
             <div style={{ padding: '24px', borderRadius: 16, border: '1px solid var(--border)', background: 'var(--muted)' }}>{demo}</div>
         </div>
@@ -1487,115 +1543,275 @@ function DemoSection({ data }: { data: any }) {
 
 // ─── Profita Section Renderers ────────────────────────────────────────────────
 
-// COVER — parallax hero, 80vh, word-by-word title reveal
+// COVER — 2-column hero: gradient text title left, glass stat card right
 function CoverSection({ data }: { data: any }) {
     const [visible, setVisible] = useState(false);
+    const [count, setCount] = useState(0);
+    const [isWide, setIsWide] = useState(() => window.innerWidth >= 720);
     const scrollPct = useCoverScroll();
     const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
-    useEffect(() => { const t = setTimeout(() => setVisible(true), 60); return () => clearTimeout(t); }, []);
 
-    const words = (data.title ?? '').split(' ');
-    // Parallax: content drifts up + fades, bg scale zooms
-    const bgScale = 1 + scrollPct * 0.1;
-    const contentY = scrollPct * -72;
-    const contentOpacity = Math.max(0, 1 - scrollPct * 2.2);
+    useEffect(() => {
+        const t = setTimeout(() => setVisible(true), 60);
+        return () => clearTimeout(t);
+    }, []);
+
+    useEffect(() => {
+        const update = () => setIsWide(window.innerWidth >= 720);
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
+    }, []);
+
+    // Counter animation for return % or fraction numerator
+    useEffect(() => {
+        if (!visible || !data.perf_stat) return;
+        const isFraction = data.perf_stat.format === 'fraction';
+        const target = isFraction ? parseInt(data.perf_stat.value) : parseFloat(data.perf_stat.value);
+        const dur = isFraction ? 1200 : 1800; const start = performance.now();
+        const tick = (now: number) => {
+            const p = Math.min((now - start) / dur, 1);
+            const e = 1 - Math.pow(1 - p, 4);
+            setCount(isFraction ? Math.round(target * e) : parseFloat((target * e).toFixed(1)));
+            if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    }, [visible, data.perf_stat]);
+
+    const bgScale = 1 + scrollPct * 0.07;
+    const contentY = scrollPct * -60;
+    const contentOpacity = Math.max(0, 1 - scrollPct * 2.0);
+    const gold = '#C9A84C';
 
     return (
         <div style={{
-            margin: '0 -40px', minHeight: '82vh',
+            margin: '0 -40px', minHeight: '85vh',
             background: data.bg_color || '#1B3A5C',
             display: 'flex', alignItems: 'center',
             marginBottom: 80, position: 'relative', overflow: 'hidden',
         }}>
-            {/* Parallax radial bg */}
+            {/* Bg: top-right gold glow */}
             <div style={{
-                position: 'absolute', inset: 0,
-                background: `radial-gradient(ellipse 100% 70% at 65% 45%, rgba(201,168,76,0.1) 0%, transparent 65%)`,
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                background: `radial-gradient(ellipse 70% 60% at 85% 12%, rgba(201,168,76,0.14) 0%, transparent 55%)`,
                 transform: `scale(${bgScale})`,
-                pointerEvents: 'none',
             }} />
-            {/* Subtle grid pattern */}
+            {/* Bg: bottom-left depth shadow */}
             <div style={{
-                position: 'absolute', inset: 0, opacity: 0.04,
-                backgroundImage: 'linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)',
-                backgroundSize: '40px 40px',
-                pointerEvents: 'none',
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                background: `radial-gradient(ellipse 55% 50% at 5% 95%, rgba(0,0,0,0.4) 0%, transparent 60%)`,
+            }} />
+            {/* Bg: fine dot grid */}
+            <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.028,
+                backgroundImage: `radial-gradient(circle, rgba(201,168,76,1) 1px, transparent 1px)`,
+                backgroundSize: '30px 30px',
+            }} />
+            {/* Bottom border accent */}
+            <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0, height: 1,
+                background: `linear-gradient(to right, transparent 5%, rgba(201,168,76,0.2) 40%, rgba(201,168,76,0.2) 60%, transparent 95%)`,
             }} />
 
+            {/* Content grid */}
             <div style={{
                 width: '100%', padding: '100px 40px 80px',
                 opacity: contentOpacity,
                 transform: `translateY(${contentY}px)`,
+                display: 'grid',
+                gridTemplateColumns: isWide ? '1fr 1fr' : '1fr',
+                gap: '40px 56px',
+                alignItems: 'center',
             }}>
-                {/* Award badge */}
-                {data.award_badge && (
-                    <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 8,
-                        marginBottom: 36, padding: '6px 16px', borderRadius: 100,
-                        border: '1px solid rgba(201,168,76,0.4)', background: 'rgba(201,168,76,0.08)',
-                        opacity: visible ? 1 : 0,
-                        transform: visible ? 'none' : 'translateY(-10px)',
-                        transition: `opacity 0.6s ${ease}, transform 0.6s ${ease}`,
-                    }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="8 21 12 17 16 21" /><line x1="12" y1="17" x2="12" y2="11" />
-                            <path d="M7 4H17l-1 7a4 4 0 01-8 0L7 4z" />
-                        </svg>
-                        <span style={{ fontSize: '12px', color: '#C9A84C', fontWeight: 600, letterSpacing: '0.05em' }}>{data.eyebrow}</span>
-                    </div>
-                )}
-
-                {/* Title — word by word */}
-                <h2 style={{
-                    fontSize: 'clamp(36px, 5.5vw, 68px)', fontWeight: 700, lineHeight: 1.08,
-                    margin: '0 0 28px', color: '#C9A84C',
-                    display: 'flex', flexWrap: 'wrap', gap: '0 0.28em',
-                }}>
-                    {words.map((word: string, i: number) => (
-                        <span key={i} style={{
-                            display: 'inline-block',
+                {/* ── Left: text ── */}
+                <div>
+                    {/* Award badge */}
+                    {data.award_badge && (
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 7,
+                            marginBottom: 24, padding: '5px 12px 5px 8px', borderRadius: 100,
+                            border: `1px solid rgba(201,168,76,0.28)`,
+                            background: 'rgba(201,168,76,0.07)',
                             opacity: visible ? 1 : 0,
-                            transform: visible ? 'none' : 'translateY(24px)',
-                            transition: `opacity 0.7s ${i * 0.08}s ${ease}, transform 0.7s ${i * 0.08}s ${ease}`,
-                        }}>{word}</span>
-                    ))}
-                </h2>
-
-                {/* Subtitle */}
-                <p style={{
-                    fontSize: 'var(--modal-body)', lineHeight: 1.85,
-                    color: 'rgba(255,255,255,0.6)', margin: '0 0 48px', maxWidth: 520,
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? 'none' : 'translateY(16px)',
-                    transition: `opacity 0.8s 0.45s ${ease}, transform 0.8s 0.45s ${ease}`,
-                }}>{data.subtitle}</p>
-
-                {/* Stats */}
-                {data.stats && (
-                    <div style={{
-                        display: 'flex', gap: 48, flexWrap: 'wrap',
-                        opacity: visible ? 1 : 0,
-                        transition: `opacity 0.8s 0.62s ${ease}`,
-                    }}>
-                        {data.stats.map((s: any, i: number) => (
-                            <div key={i}>
-                                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8 }}>{s.label}</div>
-                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#fff' }}>{s.value}</div>
+                            transform: visible ? 'none' : 'translateY(-8px)',
+                            transition: `opacity 0.5s ${ease}, transform 0.5s ${ease}`,
+                        }}>
+                            <div style={{
+                                width: 20, height: 20, borderRadius: '50%',
+                                background: 'rgba(201,168,76,0.14)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}>
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="8 21 12 17 16 21" />
+                                    <line x1="12" y1="17" x2="12" y2="11" />
+                                    <path d="M7 4H17l-1 7a4 4 0 01-8 0L7 4z" />
+                                </svg>
                             </div>
-                        ))}
+                            <span style={{ fontSize: '12px', color: gold, fontWeight: 600, letterSpacing: '0.04em' }}>
+                                {data.eyebrow}
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Title — gradient text */}
+                    <h2 style={{
+                        fontSize: 'clamp(38px, 5.5vw, 68px)',
+                        fontWeight: 900,
+                        lineHeight: 0.95,
+                        letterSpacing: '-0.04em',
+                        margin: '0 0 16px',
+                        background: `linear-gradient(140deg, ${gold} 0%, #F2E0A0 45%, ${gold} 85%)`,
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        opacity: visible ? 1 : 0,
+                        transform: visible ? 'none' : 'translateY(22px)',
+                        transition: `opacity 0.7s 0.1s ${ease}, transform 0.7s 0.1s ${ease}`,
+                    }}>
+                        {data.title}
+                    </h2>
+
+                    {/* Tagline */}
+                    {data.tagline && (
+                        <div style={{
+                            fontSize: 'clamp(15px, 1.8vw, 20px)',
+                            fontWeight: 700,
+                            color: 'rgba(255,255,255,0.85)',
+                            letterSpacing: '-0.02em',
+                            lineHeight: 1.3,
+                            marginBottom: 18,
+                            opacity: visible ? 1 : 0,
+                            transform: visible ? 'none' : 'translateY(14px)',
+                            transition: `opacity 0.7s 0.22s ${ease}, transform 0.7s 0.22s ${ease}`,
+                        }}>
+                            {data.tagline}
+                        </div>
+                    )}
+
+                    {/* Subtitle */}
+                    <p style={{
+                        fontSize: 'var(--modal-body)', lineHeight: 1.75,
+                        color: 'rgba(255,255,255,0.48)',
+                        margin: 0, maxWidth: 420,
+                        opacity: visible ? 1 : 0,
+                        transform: visible ? 'none' : 'translateY(10px)',
+                        transition: `opacity 0.8s 0.36s ${ease}, transform 0.8s 0.36s ${ease}`,
+                    }}>
+                        {data.subtitle}
+                    </p>
+                </div>
+
+                {/* ── Right: glass performance card ── */}
+                {data.perf_stat && (
+                    <div style={{
+                        opacity: visible ? 1 : 0,
+                        transform: visible ? 'none' : 'translateY(28px) scale(0.96)',
+                        transition: `opacity 0.9s 0.48s ${ease}, transform 0.9s 0.48s ${ease}`,
+                    }}>
+                        <div style={{
+                            background: 'rgba(255,255,255,0.04)',
+                            border: `1px solid rgba(201,168,76,0.2)`,
+                            borderRadius: 22,
+                            padding: '26px 26px 20px',
+                            backdropFilter: 'blur(16px)',
+                            WebkitBackdropFilter: 'blur(16px)',
+                            position: 'relative', overflow: 'hidden',
+                        }}>
+                            {/* Inner glow top-right */}
+                            <div style={{
+                                position: 'absolute', top: 0, right: 0,
+                                width: '65%', height: '55%',
+                                background: `radial-gradient(ellipse at top right, rgba(16,185,129,0.09), transparent 70%)`,
+                                pointerEvents: 'none',
+                            }} />
+
+                            {/* Eyebrow */}
+                            <div style={{
+                                fontSize: '11px', fontWeight: 700,
+                                textTransform: 'uppercase', letterSpacing: '0.1em',
+                                color: 'rgba(255,255,255,0.38)', marginBottom: 12,
+                            }}>
+                                {data.perf_stat.label}
+                            </div>
+
+                            {/* Return % OR fraction stat, counts up */}
+                            <div style={{
+                                fontSize: 'clamp(36px, 5vw, 56px)',
+                                fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1,
+                                marginBottom: 8,
+                                background: 'linear-gradient(135deg, #10B981 0%, #6EE7B7 55%, #10B981 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text',
+                            }}>
+                                {data.perf_stat.format === 'fraction'
+                                    ? `${Math.round(count as number)}/${data.perf_stat.denominator}`
+                                    : `+${(count as number).toFixed(1)}%`}
+                            </div>
+
+                            {/* Secondary row: risk score OR text label */}
+                            {data.perf_stat.format === 'fraction' ? (
+                                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', fontWeight: 500, marginBottom: 20 }}>
+                                    {data.perf_stat.secondary_label}
+                                </div>
+                            ) : (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+                                    <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>
+                                        Risk Score
+                                    </span>
+                                    <span style={{
+                                        fontSize: '12px', fontWeight: 700, color: '#10B981',
+                                        background: 'rgba(16,185,129,0.13)',
+                                        padding: '2px 9px', borderRadius: 20,
+                                    }}>
+                                        {data.perf_stat.risk} / 100
+                                    </span>
+                                    <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.08em' }}>
+                                        LOW
+                                    </span>
+                                </div>
+                            )}
+
+                            {/* Sparkline: performance curve or adoption S-curve */}
+                            <svg width="100%" height="50" viewBox="0 0 260 50" preserveAspectRatio="none" style={{ display: 'block', marginBottom: 14 }}>
+                                <defs>
+                                    <linearGradient id="cov-fill" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="rgba(16,185,129,0.22)" />
+                                        <stop offset="100%" stopColor="rgba(16,185,129,0)" />
+                                    </linearGradient>
+                                </defs>
+                                {data.perf_stat.format === 'fraction' ? (
+                                    <>
+                                        <path d="M 0,46 C 40,46 60,44 100,32 C 140,18 160,8 260,4 L 260,50 L 0,50 Z" fill="url(#cov-fill)" />
+                                        <path d="M 0,46 C 40,46 60,44 100,32 C 140,18 160,8 260,4" fill="none" stroke="#10B981" strokeWidth="1.8" strokeLinecap="round" />
+                                        <circle cx="260" cy="4" r="3.5" fill="#10B981" />
+                                    </>
+                                ) : (
+                                    <>
+                                        <path d="M 0,46 C 65,46 130,26 260,4 L 260,50 L 0,50 Z" fill="url(#cov-fill)" />
+                                        <path d="M 0,46 C 65,46 130,26 260,4" fill="none" stroke="#10B981" strokeWidth="1.8" strokeLinecap="round" />
+                                        <circle cx="260" cy="4" r="3.5" fill="#10B981" />
+                                    </>
+                                )}
+                            </svg>
+
+                            {/* Detail */}
+                            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.03em' }}>
+                                {data.perf_stat.detail}
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>
 
             {/* Scroll indicator */}
             <div style={{
-                position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                opacity: visible && scrollPct < 0.05 ? 0.5 : 0,
+                position: 'absolute', bottom: 26, left: '50%', transform: 'translateX(-50%)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+                opacity: visible && scrollPct < 0.05 ? 0.38 : 0,
                 transition: 'opacity 0.5s',
             }}>
-                <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>scroll</div>
-                <div style={{ width: 1, height: 28, background: 'linear-gradient(to bottom, rgba(255,255,255,0.4), transparent)' }} />
+                <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>scroll</div>
+                <div style={{ width: 1, height: 22, background: `linear-gradient(to bottom, rgba(201,168,76,0.5), transparent)` }} />
             </div>
         </div>
     );
@@ -1618,7 +1834,7 @@ function AwardBlock({ title, event }: { title: string; event: string }) {
                 cursor: 'default',
             }}
         >
-            <div style={{ fontSize: '11px', fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Awarded</div>
+            <div style={{ fontSize: '16px', fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Awarded</div>
             <div style={{
                 fontSize: '16px', fontWeight: 700, color: 'var(--foreground)', marginBottom: 4,
                 transform: hovered ? 'scale(1.015)' : 'scale(1)',
@@ -1644,10 +1860,10 @@ function ProjectOverviewSection({ data }: { data: any }) {
                 transform: visible ? 'none' : 'translateX(-24px)',
                 transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}`,
             }}>
-                {data.label && <div style={{ fontSize: '11px', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20 }}>{data.label}</div>}
-                <h3 style={{ fontSize: '17px', fontWeight: 700, lineHeight: 1.35, margin: '0 0 32px', color: 'var(--foreground)' }}>{data.title}</h3>
+                {data.label && <div style={{ fontSize: '16px', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20 }}>{data.label}</div>}
+                <h3 style={{ fontSize: '17px', fontWeight: 700, lineHeight: 1.25, margin: '0 0 32px', color: 'var(--foreground)', letterSpacing: '-0.02em' }}>{data.title}</h3>
                 <div style={{ marginBottom: 28 }}>
-                    <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>My Role</div>
+                    <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>My Role</div>
                     {data.my_role?.map((r: string) => (
                         <div key={r} style={{ fontSize: 'var(--modal-meta)', color: 'var(--foreground)', marginBottom: 5, lineHeight: 1.4 }}>{r}</div>
                     ))}
@@ -1655,7 +1871,7 @@ function ProjectOverviewSection({ data }: { data: any }) {
                 <div style={{ display: 'flex', gap: 28 }}>
                     {[{ label: 'Client', val: data.client }, { label: 'Year', val: data.year }].map(({ label, val }) => (
                         <div key={label}>
-                            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{label}</div>
+                            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{label}</div>
                             <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--foreground)', fontWeight: 500 }}>{val}</div>
                         </div>
                     ))}
@@ -1669,8 +1885,8 @@ function ProjectOverviewSection({ data }: { data: any }) {
                 transition: `opacity 0.7s 0.1s ${ease}, transform 0.7s 0.1s ${ease}`,
             }}>
                 <div style={{ marginBottom: 28 }}>
-                    <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Overview</div>
-                    <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.85, color: 'var(--foreground)', margin: 0 }}>{data.overview}</p>
+                    <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Overview</div>
+                    <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)', margin: 0 }}>{data.overview}</p>
                 </div>
                 {data.award && <AwardBlock title={data.award.title} event={data.award.event} />}
             </div>
@@ -1684,10 +1900,10 @@ function IntroStatementSection({ data }: { data: any }) {
     return (
         <div ref={ref} style={{ margin: '0 -40px', padding: '80px 40px', background: data.bg_color || '#1B3A5C', marginBottom: 72, position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: -20, right: 24, fontSize: '180px', lineHeight: 1, color: 'rgba(201,168,76,0.07)', fontFamily: 'Georgia, serif', pointerEvents: 'none', userSelect: 'none' }}>"</div>
-            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 20, opacity: visible ? 1 : 0, transition: 'opacity 0.6s' }}>{data.eyebrow}</div>
+            <div style={{ fontSize: '16px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 20, opacity: visible ? 1 : 0, transition: 'opacity 0.6s' }}>{data.eyebrow}</div>
             <h3 style={{
-                fontSize: 'clamp(26px, 4vw, 44px)', fontWeight: 700, lineHeight: 1.18,
-                margin: '0 0 28px', color: '#C9A84C', maxWidth: 680,
+                fontSize: 'clamp(26px, 4vw, 44px)', fontWeight: 800, lineHeight: 1.1,
+                margin: '0 0 28px', color: '#C9A84C', maxWidth: 680, letterSpacing: '-0.03em',
                 opacity: visible ? 1 : 0,
                 filter: visible ? 'blur(0)' : 'blur(10px)',
                 transform: visible ? 'none' : 'translateY(16px)',
@@ -1712,9 +1928,9 @@ function DesignBriefSection({ data }: { data: any }) {
     return (
         <div ref={ref} style={{ marginBottom: 72 }}>
             <Eyebrow text={data.eyebrow} />
-            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 16px', color: 'var(--foreground)' }}>{data.title}</h3>
-            <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.8, color: 'var(--muted-foreground)', margin: '0 0 44px', maxWidth: 640 }}>{data.body}</p>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--foreground)', marginBottom: 22, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Questions to consider</div>
+            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 14px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.title}</h3>
+            <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)', margin: '0 0 44px', maxWidth: 640 }}>{data.body}</p>
+            <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--foreground)', marginBottom: 22, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Questions to consider</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
                 {data.questions?.map((q: any, i: number) => (
                     <div key={q.number}
@@ -1742,8 +1958,8 @@ function DesignBriefSection({ data }: { data: any }) {
                             pointerEvents: 'none', userSelect: 'none',
                             transition: 'color 0.25s',
                         }}>{q.number}</div>
-                        <div style={{ fontSize: '15px', fontWeight: 700, color: hovered === i ? '#4A7AB5' : 'var(--muted-foreground)', marginBottom: 14, transition: 'color 0.2s', position: 'relative' }}>Q{q.number}</div>
-                        <p style={{ margin: 0, fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--foreground)', position: 'relative' }}>
+                        <div style={{ fontSize: '16px', fontWeight: 700, color: hovered === i ? '#4A7AB5' : 'var(--muted-foreground)', marginBottom: 14, transition: 'color 0.2s', position: 'relative' }}>Q{q.number}</div>
+                        <p style={{ margin: 0, fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)', position: 'relative' }}>
                             {q.text}{' '}
                             <strong style={{ color: '#C9A84C', fontWeight: 600 }}>{q.highlight}</strong>
                             {q.suffix ? ` ${q.suffix}` : ''}
@@ -1761,7 +1977,7 @@ function ResearchMethodSection({ data }: { data: any }) {
     const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
     return (
         <div ref={ref} style={{ marginBottom: 72 }}>
-            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 44px', color: 'var(--foreground)', maxWidth: 580 }}>{data.title}</h3>
+            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 44px', color: 'var(--foreground)', maxWidth: 580, letterSpacing: '-0.025em' }}>{data.title}</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {data.methods?.map((m: any, i: number) => (
                     <div key={i} style={{
@@ -1788,36 +2004,44 @@ function ResearchMethodSection({ data }: { data: any }) {
     );
 }
 
-// QUOTE — Apple blur-clear reveal, large decorative mark
+// QUOTE — editorial left-border callout
 function QuoteSection({ data }: { data: any }) {
     const [ref, visible] = useInView(0.25);
+    const accent = useContext(ProjectAccentCtx);
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
     return (
-        <div ref={ref} style={{ margin: '0 -40px 72px', padding: '88px 40px', background: 'var(--muted)', position: 'relative', overflow: 'hidden' }}>
-            {/* Large decorative quote mark */}
+        <div ref={ref} style={{ marginBottom: 72 }}>
             <div style={{
-                position: 'absolute', top: -24, left: 16, fontSize: '220px', lineHeight: 1,
-                color: 'var(--border)', fontFamily: 'Georgia, serif',
-                pointerEvents: 'none', userSelect: 'none',
-                opacity: visible ? 0.6 : 0,
-                transform: visible ? 'none' : 'scale(0.8) translateX(-20px)',
-                transition: 'opacity 1.2s, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}>"</div>
-            <p style={{
-                margin: '0 auto', maxWidth: 640, position: 'relative',
-                fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 500, lineHeight: 1.55,
-                color: 'var(--foreground)', textAlign: 'center',
+                borderLeft: `3px solid ${accent}`,
+                paddingLeft: 28,
                 opacity: visible ? 1 : 0,
-                filter: visible ? 'blur(0px)' : 'blur(12px)',
-                transform: visible ? 'scale(1)' : 'scale(0.97)',
-                transition: 'opacity 0.9s 0.15s, filter 0.9s 0.15s, transform 0.9s 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}>{data.text}</p>
-            {data.attribution && (
+                transform: visible ? 'none' : 'translateX(-14px)',
+                transition: `opacity 0.65s ${ease}, transform 0.65s ${ease}`,
+            }}>
                 <div style={{
-                    textAlign: 'center', marginTop: 28, fontSize: 'var(--modal-meta)',
-                    color: 'var(--muted-foreground)', fontStyle: 'italic',
-                    opacity: visible ? 1 : 0, transition: 'opacity 0.7s 0.45s',
-                }}>— {data.attribution}</div>
-            )}
+                    fontSize: '11px', fontWeight: 800,
+                    textTransform: 'uppercase', letterSpacing: '0.13em',
+                    color: accent, marginBottom: 14, opacity: 0.8,
+                }}>
+                    {data.prefix || 'HMW'}
+                </div>
+                <p style={{
+                    margin: 0,
+                    fontSize: 'clamp(17px, 2vw, 24px)',
+                    fontWeight: 600, lineHeight: 1.55,
+                    color: 'var(--foreground)', letterSpacing: '-0.01em',
+                }}>
+                    {data.text}
+                </p>
+                {data.attribution && (
+                    <div style={{
+                        marginTop: 14, fontSize: 'var(--modal-meta)',
+                        color: 'var(--muted-foreground)',
+                        opacity: visible ? 1 : 0,
+                        transition: `opacity 0.6s 0.3s`,
+                    }}>— {data.attribution}</div>
+                )}
+            </div>
         </div>
     );
 }
@@ -1895,7 +2119,7 @@ function ScrollingCardsSection({ data }: { data: any }) {
         <div ref={ref} style={{ marginBottom: 64 }}>
             {data.eyebrow && <Eyebrow text={data.eyebrow} />}
             {data.title && (
-                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, margin: '0 0 24px', color: 'var(--foreground)', lineHeight: 1.3 }}>
+                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, margin: '0 0 24px', color: 'var(--foreground)', lineHeight: 1.25, letterSpacing: '-0.025em' }}>
                     {data.title}
                 </h3>
             )}
@@ -1927,11 +2151,11 @@ function ScrollingCardsSection({ data }: { data: any }) {
                         {item.tag && (
                             <span style={{
                                 display: 'inline-block', padding: '3px 11px', borderRadius: 100, marginBottom: 18,
-                                fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em',
+                                fontSize: '16px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em',
                                 background: `${accent}20`, color: accent,
                             }}>{item.tag}</span>
                         )}
-                        <h4 style={{ fontSize: '15px', fontWeight: 700, margin: '0 0 10px', color: 'var(--foreground)', lineHeight: 1.35 }}>{item.title}</h4>
+                        <h4 style={{ fontSize: '16px', fontWeight: 700, margin: '0 0 10px', color: 'var(--foreground)', lineHeight: 1.35 }}>{item.title}</h4>
                         <p style={{ fontSize: 'var(--modal-body)', color: 'var(--muted-foreground)', lineHeight: 1.7, margin: 0 }}>{item.body}</p>
                     </div>
                 ))}
@@ -2011,7 +2235,7 @@ function AffinityMapSection({ data }: { data: any }) {
     return (
         <div ref={ref} style={{ marginBottom: 72 }}>
             <h3 style={{
-                fontSize: 'clamp(22px, 3vw, 36px)', fontWeight: 700, lineHeight: 1.22, margin: '0 0 36px', color: 'var(--foreground)',
+                fontSize: 'clamp(22px, 3vw, 36px)', fontWeight: 700, lineHeight: 1.15, margin: '0 0 36px', color: 'var(--foreground)', letterSpacing: '-0.03em',
                 opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(32px)',
                 transition: `opacity 0.8s ${ease}, transform 0.8s ${ease}`,
             }}>{data.title}</h3>
@@ -2034,7 +2258,7 @@ function AffinityMapSection({ data }: { data: any }) {
                             }}>
                                 <span style={{ fontWeight: 600, fontSize: 'var(--modal-body)', color: 'var(--foreground)', textAlign: 'left' }}>{cluster.category}</span>
                                 <span style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-                                    <span style={{ fontSize: '12px', color: 'var(--muted-foreground)', background: 'var(--muted)', padding: '2px 8px', borderRadius: 100 }}>{cluster.items.length}</span>
+                                    <span style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)', background: 'var(--muted)', padding: '2px 8px', borderRadius: 100 }}>{cluster.items.length}</span>
                                     <ChevronDown size={14} color="var(--muted-foreground)" style={{ transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)' }} />
                                 </span>
                             </button>
@@ -2047,7 +2271,7 @@ function AffinityMapSection({ data }: { data: any }) {
                                 <div style={{ padding: '8px 22px 22px', display: 'flex', flexWrap: 'wrap', gap: 7 }}>
                                     {cluster.items?.map((item: string, ii: number) => (
                                         <span key={item} style={{
-                                            fontSize: '12px', padding: '5px 13px', borderRadius: 100,
+                                            fontSize: 'var(--modal-floor)', padding: '5px 13px', borderRadius: 100,
                                             background: 'var(--muted)', border: '1px solid var(--border)',
                                             color: 'var(--foreground)', lineHeight: 1.5,
                                             opacity: isOpen ? 1 : 0,
@@ -2065,88 +2289,232 @@ function AffinityMapSection({ data }: { data: any }) {
     );
 }
 
-// PERSONAS — directional slide tab transition, stagger card fields
+// PERSONAS — orbital diagram: multi-persona = click to switch; single persona = attribute orbit
 function PersonasSection({ data }: { data: any }) {
     const [active, setActive] = useState(0);
-    const [fading, setFading] = useState(false);
-    const [dir, setDir] = useState(1); // 1 = forward, -1 = backward
+    const stageRef = useRef<HTMLDivElement>(null);
+    const [visible, setVisible] = useState(false);
     const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    const items: any[] = data.items || [];
+    const p = items[active];
 
-    const switchTo = (i: number) => {
-        if (i === active) return;
-        setDir(i > active ? 1 : -1);
-        setFading(true);
-        setTimeout(() => { setActive(i); setFading(false); }, 180);
+    useEffect(() => {
+        const el = stageRef.current; if (!el) return;
+        const obs = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { setVisible(true); obs.disconnect(); }
+        }, { threshold: 0.1 });
+        obs.observe(el); return () => obs.disconnect();
+    }, []);
+
+    if (!p) return null;
+
+    const COLORS = ['#4A7AB5', '#C9A84C', '#059669', '#8B5CF6', '#EF4444'];
+    const ORBIT_R = 145;
+
+    const getPos = (i: number, total: number) => {
+        const angle = -90 + (360 / total) * i;
+        const rad = (angle * Math.PI) / 180;
+        return { x: Math.cos(rad) * ORBIT_R, y: Math.sin(rad) * ORBIT_R };
     };
-    const p = data.items?.[active];
+
+    // Single-persona mode: attribute cards orbit the persona
+    const attrCards = items.length === 1 ? [
+        { label: 'Goal', text: p.goal },
+        { label: 'Needs', text: p.needs },
+        { label: 'Frustrations', text: p.frustrations },
+        { label: 'In the App', text: p.why_use },
+    ].filter(a => a.text).slice(0, 4) : [];
+
+    const orbitItems = items.length === 1 ? attrCards : items;
+    const activeColor = COLORS[active % COLORS.length];
+
     const fields = [
         { key: 'biography', label: 'Biography' },
         { key: 'goal', label: 'Goal' },
         { key: 'needs', label: 'Needs' },
         { key: 'frustrations', label: 'Frustrations' },
     ];
-    if (!p) return null;
-    return (
-        <div style={{ marginBottom: 72 }}>
-            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 28px', color: 'var(--foreground)' }}>{data.title}</h3>
 
-            {/* Tab bar */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 28, flexWrap: 'wrap' }}>
-                {data.items?.map((item: any, i: number) => (
-                    <button key={i} onClick={() => switchTo(i)} style={{
-                        padding: '9px 22px', borderRadius: 100, fontFamily: 'inherit',
-                        fontSize: 'var(--modal-meta)', fontWeight: active === i ? 700 : 500, cursor: 'pointer',
-                        border: `1.5px solid ${active === i ? 'var(--foreground)' : 'var(--border)'}`,
-                        background: active === i ? 'var(--foreground)' : 'transparent',
-                        color: active === i ? 'var(--background)' : 'var(--muted-foreground)',
-                        transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                    }}>
-                        {item.name}
-                        <span style={{ marginLeft: 8, fontSize: '10px', opacity: 0.55, fontWeight: 400 }}>{item.type}</span>
-                    </button>
+    return (
+        <div ref={stageRef} style={{ marginBottom: 72, opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(20px)', transition: `opacity 0.6s ${ease}, transform 0.6s ${ease}` }}>
+            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 8px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.title}</h3>
+            {items.length > 1 && (
+                <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)', margin: '0 0 36px' }}>
+                    Click a persona to explore their perspective.
+                </p>
+            )}
+
+            {/* ── Orbital stage ── */}
+            <div style={{ position: 'relative', height: 400, maxWidth: 560, margin: '0 auto', overflow: 'hidden' }}>
+
+                {/* Orbit ring */}
+                <div style={{
+                    position: 'absolute', top: '50%', left: '50%',
+                    width: ORBIT_R * 2 + 48, height: ORBIT_R * 2 + 48,
+                    borderRadius: '50%', border: '1px solid var(--border)',
+                    transform: 'translate(-50%, -50%)', pointerEvents: 'none',
+                }} />
+                {/* Inner decorative ring */}
+                <div style={{
+                    position: 'absolute', top: '50%', left: '50%',
+                    width: 160, height: 160, borderRadius: '50%',
+                    border: '1px dashed var(--border)', opacity: 0.5,
+                    transform: 'translate(-50%, -50%)', pointerEvents: 'none',
+                }} />
+
+
+                {/* Pulse rings — seamless loop (start+end at opacity:0, no jump) */}
+                {[0, 1].map(i => (
+                    <div key={i} className="persona-pulse-ring" style={{
+                        position: 'absolute', top: '50%', left: '50%',
+                        width: 116, height: 116, borderRadius: '50%',
+                        border: `1.5px solid ${activeColor}`,
+                        animation: `persona-pulse ${6}s ${i * 3}s ease-out infinite`,
+                        pointerEvents: 'none', zIndex: 2,
+                    }} />
                 ))}
+
+                {/* Center circle */}
+                <div style={{
+                    position: 'absolute', top: '50%', left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 116, height: 116, borderRadius: '50%',
+                    background: 'var(--background)',
+                    border: `2px solid ${activeColor}`,
+                    boxShadow: `0 0 0 5px ${activeColor}14`,
+                    transition: `border-color 0.4s ${ease}, box-shadow 0.4s ${ease}`,
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    gap: 3, zIndex: 4, textAlign: 'center', padding: '0 8px',
+                }}>
+                    <div style={{
+                        width: 36, height: 36, borderRadius: '50%',
+                        background: `${activeColor}1A`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 15, fontWeight: 800, color: activeColor, marginBottom: 3,
+                        transition: `background 0.4s ${ease}, color 0.4s ${ease}`,
+                    }}>
+                        {p.name.charAt(0)}
+                    </div>
+                    <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--foreground)', lineHeight: 1.2 }}>
+                        {p.name.split(' ')[0]}
+                    </div>
+                    <div style={{ fontSize: '10px', color: 'var(--muted-foreground)', lineHeight: 1.1 }}>
+                        {p.type.split(' ')[0]}
+                    </div>
+                </div>
+
+                {/* Connector dot + orbit card for each item */}
+                {orbitItems.map((item: any, i: number) => {
+                    const pos = getPos(i, orbitItems.length);
+                    const isActive = items.length > 1 ? i === active : true;
+                    const color = COLORS[i % COLORS.length];
+                    const dotR = (ORBIT_R * 2 + 48) / 2;
+                    const angle = -90 + (360 / orbitItems.length) * i;
+                    const rad = (angle * Math.PI) / 180;
+                    const dotX = Math.cos(rad) * dotR;
+                    const dotY = Math.sin(rad) * dotR;
+
+                    return (
+                        <React.Fragment key={i}>
+                            {/* Connector dot on orbit ring */}
+                            <div style={{
+                                position: 'absolute', top: '50%', left: '50%',
+                                transform: `translate(calc(-50% + ${dotX}px), calc(-50% + ${dotY}px))`,
+                                width: isActive ? 10 : 7, height: isActive ? 10 : 7,
+                                borderRadius: '50%',
+                                background: isActive ? color : 'var(--border)',
+                                border: `2px solid var(--background)`,
+                                boxShadow: isActive ? `0 0 0 3px ${color}28` : 'none',
+                                transition: `all 0.4s ${ease}`,
+                                zIndex: 5, pointerEvents: 'none',
+                            }} />
+
+                            {/* Card — outer div: positioning, inner div: float animation */}
+                            <div style={{
+                                position: 'absolute', top: '50%', left: '50%',
+                                transform: `translate(calc(-50% + ${pos.x}px), calc(-50% + ${pos.y}px))`,
+                                zIndex: 3,
+                            }}>
+                                <div
+                                    onClick={() => items.length > 1 && setActive(i)}
+                                    className="float-persona-card"
+                                    style={{
+                                        width: 140,
+                                        padding: '11px 13px',
+                                        borderRadius: 12,
+                                        background: 'var(--background)',
+                                        border: `1.5px solid ${isActive ? color : 'var(--border)'}`,
+                                        boxShadow: isActive ? `0 4px 18px ${color}1E` : '0 2px 8px rgba(0,0,0,0.05)',
+                                        cursor: items.length > 1 ? 'pointer' : 'default',
+                                        transition: `border-color 0.3s ${ease}, box-shadow 0.3s ${ease}`,
+                                        animation: `float-persona ${5 + i * 0.7}s ${i * 1.1}s ease-in-out infinite`,
+                                    }}
+                                >
+                                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: color, marginBottom: 7, transition: `background 0.3s ${ease}` }} />
+                                    {items.length > 1 ? (
+                                        <>
+                                            <div style={{ fontSize: 'var(--modal-meta)', fontWeight: 700, color: 'var(--foreground)', marginBottom: 3, lineHeight: 1.2 }}>{item.name}</div>
+                                            <div style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)', lineHeight: 1.3 }}>{item.type}</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>{item.label}</div>
+                                            <div style={{ fontSize: 'var(--modal-floor)', color: 'var(--foreground)', lineHeight: 1.45, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.text}</div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </React.Fragment>
+                    );
+                })}
             </div>
 
-            {/* Persona card */}
-            <div style={{
-                opacity: fading ? 0 : 1,
-                transform: fading ? `translateX(${dir * -24}px)` : 'none',
-                transition: fading ? 'opacity 0.18s ease-in, transform 0.18s ease-in' : `opacity 0.35s ${ease}, transform 0.35s ${ease}`,
-                border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', display: 'flex', flexWrap: 'wrap',
-            }}>
-                {/* Left identity */}
-                <div style={{ flex: '0 0 220px', padding: '32px 28px', background: 'var(--muted)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column' }}>
-                    {/* Avatar shimmer */}
-                    <div style={{
-                        width: 60, height: 60, borderRadius: '50%', marginBottom: 20,
-                        background: 'linear-gradient(135deg, var(--border) 0%, var(--muted-foreground) 50%, var(--border) 100%)',
-                        backgroundSize: '200% auto',
-                        animation: 'none',
-                    }} />
-                    <div style={{ fontSize: '22px', fontWeight: 700, color: 'var(--foreground)', marginBottom: 4 }}>{p.name}</div>
-                    <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', marginBottom: 28, paddingBottom: 24, borderBottom: '1px solid var(--border)' }}>{p.type}</div>
-                    {p.why_use && (
-                        <div>
-                            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Why Use the App</div>
-                            <div style={{ fontSize: '12px', lineHeight: 1.75, color: 'var(--foreground)' }}>{renderRich(p.why_use)}</div>
+            {/* ── Detail panel (multi-persona only) ── */}
+            {items.length > 1 && (
+                <div key={active} style={{
+                    marginTop: 28,
+                    animation: `drift-el-in 0.4s ${ease} both`,
+                    border: '1px solid var(--border)',
+                    borderTop: `3px solid ${activeColor}`,
+                    borderRadius: 14, overflow: 'hidden',
+                    transition: `border-top-color 0.35s ${ease}`,
+                }}>
+                    {/* Identity header row */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '20px 24px', borderBottom: '1px solid var(--border)', background: 'var(--muted)' }}>
+                        <div style={{
+                            width: 44, height: 44, borderRadius: '50%', flexShrink: 0,
+                            background: `${activeColor}1A`,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: 16, fontWeight: 800, color: activeColor,
+                            transition: `background 0.35s ${ease}, color 0.35s ${ease}`,
+                        }}>
+                            {p.name.charAt(0)}
                         </div>
-                    )}
-                </div>
-                {/* Right details — fields stagger in on key change */}
-                <div style={{ flex: 1, padding: '32px', minWidth: 0 }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px 32px' }}>
-                        {fields.map((f, fi) => p[f.key] && (
-                            <div key={`${active}-${f.key}`} style={{
-                                gridColumn: f.key === 'biography' ? '1 / -1' : undefined,
-                                animation: `m-row-in 0.45s ${fi * 0.06}s ${ease} both`,
-                            }}>
-                                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>{f.label}</div>
-                                <div style={{ fontSize: 'var(--modal-meta)', lineHeight: 1.8, color: 'var(--foreground)' }}>{renderRich(p[f.key])}</div>
+                        <div>
+                            <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--foreground)', lineHeight: 1.2 }}>{p.name}</div>
+                            <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', marginTop: 2 }}>{p.type}</div>
+                        </div>
+                    </div>
+
+                    {/* Fields — single column for easy reading */}
+                    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+                        {[...fields, { key: 'why_use', label: 'In the App' }].map((f, fi) => p[f.key] && (
+                            <div key={`${active}-${f.key}`} style={{ animation: `m-row-in 0.4s ${fi * 0.05}s ${ease} both` }}>
+                                <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: activeColor, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 6, transition: `color 0.35s ${ease}` }}>{f.label}</div>
+                                <div style={{ fontSize: 'var(--modal-meta)', lineHeight: 1.7, color: 'var(--muted-foreground)' }}>{renderRich(p[f.key])}</div>
                             </div>
                         ))}
                     </div>
                 </div>
-            </div>
+            )}
+
+            {/* Single-persona: why_use strip */}
+            {items.length === 1 && p.why_use && (
+                <div style={{ marginTop: 28, padding: '20px 24px', borderRadius: 14, background: 'var(--muted)', border: '1px solid var(--border)' }}>
+                    <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>In the app</div>
+                    <div style={{ fontSize: 'var(--modal-meta)', lineHeight: 1.7, color: 'var(--muted-foreground)' }}>{renderRich(p.why_use)}</div>
+                </div>
+            )}
         </div>
     );
 }
@@ -2165,7 +2533,7 @@ function FeatureMatrixSection({ data }: { data: any }) {
     if (!col) return null;
     return (
         <div style={{ marginBottom: 72 }}>
-            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 12px', color: 'var(--foreground)' }}>{data.title}</h3>
+            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 12px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.title}</h3>
             <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--muted-foreground)', margin: '0 0 28px' }}>{data.description}</p>
             {/* Tabs */}
             <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '1px solid var(--border)' }}>
@@ -2197,10 +2565,10 @@ function FeatureMatrixSection({ data }: { data: any }) {
                         }} />
                         <div style={{ flex: 1 }}>
                             <div style={{ fontWeight: 600, fontSize: 'var(--modal-body)', color: 'var(--foreground)', marginBottom: 4 }}>{f.name}</div>
-                            <div style={{ fontSize: '12px', lineHeight: 1.65, color: 'var(--muted-foreground)' }}>{f.rationale}</div>
+                            <div style={{ fontSize: '16px', lineHeight: 1.65, color: 'var(--muted-foreground)' }}>{f.rationale}</div>
                         </div>
                         <span style={{
-                            fontSize: '11px', padding: '3px 10px', borderRadius: 100,
+                            fontSize: 'var(--modal-floor)', padding: '3px 10px', borderRadius: 100,
                             background: f.priority === 'high' ? 'rgba(74,122,181,0.15)' : 'var(--muted)',
                             color: f.priority === 'high' ? '#4A7AB5' : 'var(--muted-foreground)',
                             fontWeight: 600, flexShrink: 0,
@@ -2221,7 +2589,7 @@ function UserFlowSection({ data }: { data: any }) {
     const springEase = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
     return (
         <div style={{ marginBottom: 72 }}>
-            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 12px', color: 'var(--foreground)' }}>{data.title}</h3>
+            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 12px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.title}</h3>
             <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--muted-foreground)', margin: '0 0 32px' }}>{data.description}</p>
             {/* Each step+arrow is an atomic flex unit — prevents orphaned arrows on wrap */}
             <div ref={ref} style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 0', alignItems: 'center' }}>
@@ -2245,7 +2613,7 @@ function UserFlowSection({ data }: { data: any }) {
                                         ? (isTerminal ? 'var(--foreground)' : 'var(--foreground)')
                                         : (isTerminal ? 'var(--foreground)' : 'var(--muted)'),
                                     color: (isHovered || isTerminal) ? 'var(--background)' : 'var(--foreground)',
-                                    fontSize: '12px', fontWeight: isTerminal ? 700 : 500,
+                                    fontSize: '16px', fontWeight: isTerminal ? 700 : 500,
                                     whiteSpace: 'nowrap', cursor: 'default',
                                     opacity: visible ? (isDimmed ? 0.35 : 1) : 0,
                                     transform: visible
@@ -2255,7 +2623,7 @@ function UserFlowSection({ data }: { data: any }) {
                                     transition: `opacity 0.35s ${d}s ${ease}, transform 0.45s ${d}s ${springEase}, background 0.2s, border-color 0.2s, box-shadow 0.25s, color 0.15s`,
                                 }}>
                                 {!isTerminal && (
-                                    <span style={{ color: isHovered ? 'rgba(255,255,255,0.5)' : 'var(--muted-foreground)', marginRight: 5, fontSize: '10px', fontFamily: 'var(--font-mono)', transition: 'color 0.15s' }}>
+                                    <span style={{ color: isHovered ? 'rgba(255,255,255,0.5)' : 'var(--muted-foreground)', marginRight: 5, fontSize: '16px', fontFamily: 'var(--font-mono)', transition: 'color 0.15s' }}>
                                         {i}
                                     </span>
                                 )}
@@ -2304,7 +2672,7 @@ function WireframesSection({ data }: { data: any }) {
 
     return (
         <div ref={ref} style={{ marginBottom: 72 }}>
-            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.3, margin: '0 0 36px', color: 'var(--foreground)' }}>{data.title}</h3>
+            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 36px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.title}</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
                 {[0, 1, 2].map(i => (
                     <div key={i} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : `translateY(${16 + i * 10}px) scale(0.95)`, transition: `opacity 0.6s ${i * 0.1}s ${ease}, transform 0.6s ${i * 0.1}s ${ease}` }}>
@@ -2346,8 +2714,8 @@ function MockupShowcaseSection({ data }: { data: any }) {
     return (
         <div ref={ref} style={{ margin: '0 -40px', padding: '88px 40px', background: data.bg_color || '#0A1628', marginBottom: 72 }}>
             <h3 style={{
-                fontSize: 'clamp(28px, 4.5vw, 56px)', fontWeight: 700, textAlign: 'center',
-                color: '#fff', margin: '0 0 60px', lineHeight: 1.1,
+                fontSize: 'clamp(28px, 4.5vw, 56px)', fontWeight: 800, textAlign: 'center',
+                color: '#fff', margin: '0 0 60px', lineHeight: 1.05, letterSpacing: '-0.03em',
                 opacity: visible ? 1 : 0,
                 transform: visible ? 'none' : 'translateY(28px)',
                 transition: `opacity 0.8s ${ease}, transform 0.8s ${ease}`,
@@ -2377,7 +2745,7 @@ function MockupShowcaseSection({ data }: { data: any }) {
             </div>
             <p style={{
                 margin: '0 auto', maxWidth: 580, fontSize: 'var(--modal-body)', lineHeight: 1.85,
-                color: 'rgba(255,255,255,0.55)', textAlign: 'center',
+                color: 'rgba(255,255,255,0.75)', textAlign: 'center',
                 opacity: visible ? 1 : 0, transition: `opacity 0.7s 0.4s ${ease}`,
             }}>{data.description}</p>
         </div>
@@ -2398,11 +2766,11 @@ function VisualDesignSection({ data }: { data: any }) {
                     transform: visible ? 'none' : 'translateX(-24px)',
                     transition: `opacity 0.8s ${ease}, transform 0.8s ${ease}`,
                 }}>
-                    <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>{data.eyebrow}</div>
+                    <div style={{ fontSize: '16px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>{data.eyebrow}</div>
                     {/* Word-by-word reveal */}
                     <h3 style={{
-                        fontSize: 'clamp(32px, 5vw, 58px)', fontWeight: 700, margin: '0 0 24px',
-                        color: '#fff', lineHeight: 1.05,
+                        fontSize: 'clamp(32px, 5vw, 58px)', fontWeight: 800, margin: '0 0 24px',
+                        color: '#fff', lineHeight: 1.0, letterSpacing: '-0.035em',
                         display: 'flex', flexWrap: 'wrap', gap: '0 0.22em',
                     }}>
                         {words.map((w: string, i: number) => (
@@ -2647,11 +3015,11 @@ function WordRevealSection({ data }: { data: any }) {
             {emojis.length > 0 && <FloatingEmojis emojis={emojis} active={progress > 0} />}
             <div style={{ position: 'relative', zIndex: 1 }}>
                 {data.eyebrow && (
-                    <div style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted-foreground)', marginBottom: 32 }}>
+                    <div style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted-foreground)', marginBottom: 32 }}>
                         {data.eyebrow}
                     </div>
                 )}
-                <p style={{ fontSize: 'clamp(22px, 3.5vw, 40px)', fontWeight: 700, lineHeight: 1.35, margin: 0, letterSpacing: '-0.01em' }}>
+                <p style={{ fontSize: 'clamp(22px, 3.5vw, 40px)', fontWeight: 800, lineHeight: 1.25, margin: 0, letterSpacing: '-0.03em' }}>
                     {words.map((word: string, i: number) => {
                         const threshold = i / words.length;
                         const lit = progress >= threshold;
@@ -2671,6 +3039,755 @@ function WordRevealSection({ data }: { data: any }) {
                 </p>
             </div>
         </div>
+    );
+}
+
+// ─── Robo Demo Section ────────────────────────────────────────────────────────
+function RoboDemoSection({ data }: { data: any }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [visible, setVisible] = useState(false);
+    const [counts, setCounts] = useState({ before: 0, after: 0 });
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
+    useEffect(() => {
+        const el = ref.current; if (!el) return;
+        const io = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) { setVisible(true); io.disconnect(); }
+        }, { threshold: 0.25 });
+        io.observe(el); return () => io.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (!visible) return;
+        const dur = 1100; const start = performance.now();
+        const tick = (now: number) => {
+            const p = Math.min((now - start) / dur, 1);
+            const e = 1 - Math.pow(1 - p, 3);
+            setCounts({ before: Math.round(74 * e), after: Math.round(28 * e) });
+            if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    }, [visible]);
+
+    const cards = [
+        {
+            label: 'Manual Selection',
+            metricLabel: 'Portfolio Risk Score',
+            hero: counts.before,
+            badge: '↑ High Risk',
+            badgeColor: '#EF4444',
+            delta: '2 funds  ·  1 sector  ·  over-concentrated',
+            period: 'Without ROBO',
+            accent: '#EF4444',
+            fillFrom: 'rgba(239,68,68,0.16)',
+            fillTo: 'rgba(239,68,68,0)',
+            // Jagged volatile line
+            linePath: 'M 0,70 L 28,38 L 48,58 L 68,16 L 88,52 L 108,20 L 130,56 L 152,26 L 172,54 L 200,20',
+        },
+        {
+            label: 'After ROBO Advisor',
+            metricLabel: 'Portfolio Risk Score',
+            hero: counts.after,
+            badge: '↓ 62% lower risk',
+            badgeColor: '#10B981',
+            delta: '5 funds  ·  4 sectors  ·  AI-diversified',
+            period: 'AI optimized',
+            accent: '#10B981',
+            fillFrom: 'rgba(16,185,129,0.14)',
+            fillTo: 'rgba(16,185,129,0)',
+            // Smooth upward curve
+            linePath: 'M 0,72 C 55,72 110,42 200,12',
+        },
+    ];
+
+    return (
+        <div ref={ref} style={{ marginBottom: 72, opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(20px)', transition: `opacity 0.6s ${ease}, transform 0.6s ${ease}` }}>
+            {data.eyebrow && (
+                <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--muted-foreground)', marginBottom: 8 }}>
+                    {data.eyebrow}
+                </div>
+            )}
+            <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 6px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>
+                {data.headline}
+            </h3>
+            {data.subtitle && (
+                <p style={{ fontSize: 'var(--modal-body)', color: 'var(--muted-foreground)', lineHeight: 1.65, margin: '0 0 28px' }}>
+                    {data.subtitle}
+                </p>
+            )}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {cards.map((card, ci) => {
+                    const gradId = `rg-${ci}`;
+                    const areaPath = `${card.linePath} L 200,80 L 0,80 Z`;
+                    return (
+                        <div key={ci} style={{
+                            background: 'var(--card)',
+                            borderRadius: 18,
+                            border: '1px solid var(--border)',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 6px 24px rgba(0,0,0,0.05)',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            alignItems: 'stretch',
+                            minHeight: 136,
+                            animation: visible ? `m-row-in 0.55s ${0.08 + ci * 0.18}s ${ease} both` : 'none',
+                        }}>
+                            {/* Left — text */}
+                            <div style={{ flex: 1, padding: '18px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                                    <span style={{ fontSize: 'var(--modal-meta)', fontWeight: 500, color: 'var(--muted-foreground)' }}>{card.label}</span>
+                                    <span style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: card.badgeColor, whiteSpace: 'nowrap' }}>{card.badge}</span>
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: 58, fontWeight: 800, color: 'var(--foreground)', lineHeight: 1, letterSpacing: '-0.04em', marginBottom: 5 }}>
+                                        {card.hero}
+                                    </div>
+                                    <div style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)', fontWeight: 500 }}>{card.delta}</div>
+                                </div>
+                            </div>
+
+                            {/* Right — chart bleeding to edge */}
+                            <div style={{ width: '42%', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+                                <svg
+                                    width="100%" height="100%"
+                                    viewBox="0 0 200 80"
+                                    preserveAspectRatio="none"
+                                    style={{ display: 'block', position: 'absolute', inset: 0 }}
+                                >
+                                    <defs>
+                                        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor={card.fillFrom} />
+                                            <stop offset="100%" stopColor={card.fillTo} />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d={areaPath} fill={`url(#${gradId})`} />
+                                    <path d={card.linePath} fill="none" stroke={card.accent} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                                    {/* End dot */}
+                                    <circle cx={200} cy={ci === 0 ? 20 : 12} r="3.5" fill={card.accent} />
+                                </svg>
+                                {/* Tooltip pill — bottom-right */}
+                                <div style={{
+                                    position: 'absolute', right: 12, bottom: 14,
+                                    background: 'var(--background)',
+                                    border: '1px solid var(--border)',
+                                    borderRadius: 8, padding: '4px 10px',
+                                    fontSize: '10px', fontWeight: 600,
+                                    color: 'var(--foreground)',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.09)',
+                                    whiteSpace: 'nowrap', lineHeight: 1.5,
+                                }}>
+                                    <div>Risk: {card.hero || (ci === 0 ? 74 : 28)}</div>
+                                    <div style={{ color: 'var(--muted-foreground)', fontWeight: 400 }}>{card.period}</div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
+// ─── DS Tokens — Component X-Ray with layered token chain (Invitrace) ─────────
+function DsTokensSection({ data }: { data: any }) {
+    const [ref, visible] = useInView(0.1);
+    const [activeId, setActiveId] = useState<string>(data.tokens?.[0]?.id ?? '');
+    const [hoverId, setHoverId] = useState<string | null>(null);
+    const accent = useContext(ProjectAccentCtx);
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
+    const displayId = hoverId ?? activeId;
+    const tokens: any[] = data.tokens ?? [];
+    const activeToken = tokens.find(t => t.id === displayId) ?? tokens[0];
+    // Use explicit button_color from data so dark-bg projects don't render invisible buttons
+    const btnColor = data.button_color ?? accent;
+
+    // 4-layer color scheme: Raw → Primitive → Semantic → Component
+    const layerMeta: Record<string, { color: string; label: string }> = {
+        Raw:       { color: '#6B7280', label: 'Raw Value' },
+        Primitive: { color: '#A78BFA', label: 'Primitive Token' },
+        Semantic:  { color: '#60A5FA', label: 'Semantic Token' },
+        Component: { color: '#34D399', label: 'Component Token' },
+    };
+
+    // Overlay helpers: show anatomy annotation when a token is selected
+    const is = (id: string) => displayId === id;
+
+    const cornerPositions = [
+        { top: 0, left: 0 }, { top: 0, right: 0 },
+        { bottom: 0, left: 0 }, { bottom: 0, right: 0 },
+    ];
+
+    return (
+        <section ref={ref} style={{ padding: '80px 0 72px' }}>
+            {/* Header */}
+            <div style={{ opacity: visible ? 1 : 0, transition: `opacity 0.5s ${ease}` }}>
+                <div style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 700,
+                    textTransform: 'uppercase', letterSpacing: '0.12em',
+                    color: 'var(--muted-foreground)', marginBottom: 10,
+                }}>
+                    {data.eyebrow}
+                </div>
+                <h2 style={{
+                    fontSize: 'var(--modal-heading)', fontWeight: 800, marginBottom: 10,
+                    color: 'var(--foreground)', letterSpacing: '-0.025em', lineHeight: 1.2,
+                }}>
+                    {data.headline}
+                </h2>
+                <p style={{
+                    fontSize: 'var(--modal-body)', color: 'var(--muted-foreground)',
+                    marginBottom: 40, maxWidth: 480, lineHeight: 1.65,
+                }}>
+                    {data.subtitle}
+                </p>
+            </div>
+
+            {/* Main: X-Ray canvas + Token chain */}
+            <div style={{
+                display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 16,
+                opacity: visible ? 1 : 0,
+                transform: visible ? 'none' : 'translateY(20px)',
+                transition: `opacity 0.6s 0.2s ${ease}, transform 0.6s 0.2s ${ease}`,
+            }}>
+
+                {/* ── Left: component preview canvas ── */}
+                <div style={{
+                    background: 'var(--muted)',
+                    borderRadius: 16,
+                    border: '1px solid var(--border)',
+                    padding: '36px 40px 24px',
+                    display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', position: 'relative', overflow: 'hidden',
+                }}>
+                    {/* Subtle dot-grid */}
+                    <div style={{
+                        position: 'absolute', inset: 0, pointerEvents: 'none',
+                        backgroundImage: 'radial-gradient(circle, var(--border) 1px, transparent 1px)',
+                        backgroundSize: '22px 22px',
+                    }} />
+                    {/* Soft radial glow behind button */}
+                    <div style={{
+                        position: 'absolute', top: '50%', left: '50%',
+                        transform: 'translate(-50%, -60%)',
+                        width: 300, height: 200,
+                        background: `radial-gradient(ellipse, ${btnColor}20 0%, transparent 70%)`,
+                        pointerEvents: 'none',
+                    }} />
+
+                    {/* Component frame label */}
+                    <div style={{
+                        position: 'absolute', top: 14, left: 16,
+                        fontSize: '10px', fontFamily: 'var(--font-mono)',
+                        color: 'var(--muted-foreground)', letterSpacing: '0.06em', opacity: 0.6,
+                    }}>
+                        {data.component_name ?? 'Button / Primary'}
+                    </div>
+
+                    {/* Button + anatomy overlays */}
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 40px', position: 'relative' }}>
+                        <div style={{ position: 'relative', display: 'inline-block' }}>
+
+                            {/* H-Padding anatomy */}
+                            {is('space-h') && (
+                                <div style={{ position: 'absolute', inset: 0, borderRadius: 8, pointerEvents: 'none' }}>
+                                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 20, background: `${btnColor}28`, borderRight: `1.5px dashed ${btnColor}` }} />
+                                    <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 20, background: `${btnColor}28`, borderLeft: `1.5px dashed ${btnColor}` }} />
+                                </div>
+                            )}
+                            {/* V-Padding anatomy */}
+                            {is('space-v') && (
+                                <div style={{ position: 'absolute', inset: 0, borderRadius: 8, pointerEvents: 'none' }}>
+                                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 11, background: `${btnColor}28`, borderBottom: `1.5px dashed ${btnColor}` }} />
+                                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 11, background: `${btnColor}28`, borderTop: `1.5px dashed ${btnColor}` }} />
+                                </div>
+                            )}
+                            {/* Corner radius anatomy */}
+                            {is('radius') && cornerPositions.map((pos, i) => (
+                                <div key={i} style={{
+                                    position: 'absolute', width: 18, height: 18,
+                                    ...pos,
+                                    borderTop:    pos.bottom === undefined ? `2px solid ${btnColor}` : undefined,
+                                    borderBottom: pos.top    === undefined ? `2px solid ${btnColor}` : undefined,
+                                    borderLeft:   pos.right  === undefined ? `2px solid ${btnColor}` : undefined,
+                                    borderRight:  pos.left   === undefined ? `2px solid ${btnColor}` : undefined,
+                                    borderTopLeftRadius:     (pos.top    !== undefined && pos.left  !== undefined) ? 8 : undefined,
+                                    borderTopRightRadius:    (pos.top    !== undefined && pos.right !== undefined) ? 8 : undefined,
+                                    borderBottomLeftRadius:  (pos.bottom !== undefined && pos.left  !== undefined) ? 8 : undefined,
+                                    borderBottomRightRadius: (pos.bottom !== undefined && pos.right !== undefined) ? 8 : undefined,
+                                    pointerEvents: 'none',
+                                }} />
+                            ))}
+
+                            {/* The button */}
+                            <button style={{
+                                display: 'block',
+                                background: btnColor,
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '8px',
+                                padding: '11px 20px',
+                                fontSize: '14px', fontWeight: 500,
+                                fontFamily: 'var(--font-sans)',
+                                letterSpacing: '0.01em',
+                                cursor: 'default', pointerEvents: 'none',
+                                boxShadow: is('bg')
+                                    ? `0 0 0 3px ${btnColor}80, 0 0 48px ${btnColor}50`
+                                    : `0 4px 24px ${btnColor}38, 0 1px 4px ${btnColor}20`,
+                                transition: 'box-shadow 0.25s',
+                                position: 'relative',
+                            }}>
+                                <span style={{
+                                    background: is('text') ? 'rgba(255,255,255,0.22)' : is('font') ? 'rgba(255,255,255,0.10)' : 'none',
+                                    borderRadius: 3,
+                                    padding: (is('text') || is('font')) ? '1px 3px' : '0',
+                                    transition: 'all 0.2s',
+                                }}>
+                                    {data.button_label ?? 'Confirm Review'}
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Token property tabs — bottom of canvas */}
+                    <div style={{
+                        display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center',
+                        paddingTop: 18, borderTop: '1px solid var(--border)', width: '100%',
+                    }}>
+                        {tokens.map((token: any) => (
+                            <button
+                                key={token.id}
+                                onClick={() => setActiveId(token.id)}
+                                onMouseEnter={() => setHoverId(token.id)}
+                                onMouseLeave={() => setHoverId(null)}
+                                style={{
+                                    padding: '5px 13px', borderRadius: 20,
+                                    background: activeId === token.id ? btnColor : 'var(--background)',
+                                    border: `1px solid ${activeId === token.id ? btnColor : 'var(--border)'}`,
+                                    color: activeId === token.id ? '#fff' : 'var(--muted-foreground)',
+                                    fontSize: '10px', fontWeight: 600,
+                                    fontFamily: 'var(--font-mono)',
+                                    cursor: 'pointer', letterSpacing: '0.06em',
+                                    textTransform: 'uppercase', transition: 'all 0.18s',
+                                }}
+                            >
+                                {token.description}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* ── Right: 4-layer token chain ── */}
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '4px 0 4px 4px' }}>
+                    {/* Chain label */}
+                    <div style={{
+                        fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700,
+                        textTransform: 'uppercase', letterSpacing: '0.1em',
+                        color: 'var(--muted-foreground)', marginBottom: 18,
+                    }}>
+                        {activeToken?.description} · chain
+                    </div>
+
+                    {/* Chain cards — keyed on displayId so they re-animate on switch */}
+                    <div key={displayId} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                        {(activeToken?.chain ?? []).map((level: any, i: number) => {
+                            const lm = layerMeta[level.layer] ?? { color: '#888', label: level.layer };
+                            const isLast = i === (activeToken.chain.length - 1);
+                            return (
+                                <React.Fragment key={level.layer}>
+                                    <div style={{
+                                        padding: '13px 16px', borderRadius: 10,
+                                        border: `1px solid ${lm.color}28`,
+                                        background: `${lm.color}0A`,
+                                        animation: 'm-fade-up 0.32s ease-out both',
+                                        animationDelay: `${i * 0.07}s`,
+                                    }}>
+                                        {/* Layer label */}
+                                        <div style={{
+                                            fontSize: '9px', fontWeight: 800,
+                                            textTransform: 'uppercase', letterSpacing: '0.12em',
+                                            color: lm.color, marginBottom: 5,
+                                        }}>
+                                            {lm.label}
+                                        </div>
+                                        {/* Token name */}
+                                        <div style={{
+                                            fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 600,
+                                            color: 'var(--foreground)', marginBottom: level.detail ? 3 : 0,
+                                            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                                        }}>
+                                            {level.name}
+                                        </div>
+                                        {level.detail && (
+                                            <div style={{ fontSize: '11px', color: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' }}>
+                                                {level.detail}
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/* Arrow connector between layers */}
+                                    {!isLast && (
+                                        <div style={{ padding: '3px 0 3px 20px', animation: 'm-fade-up 0.3s ease-out both', animationDelay: `${i * 0.07 + 0.04}s` }}>
+                                            <svg width="10" height="14" viewBox="0 0 10 14" fill="none">
+                                                <path d="M5 0 L5 10 M2 7 L5 12 L8 7"
+                                                    stroke={lm.color} strokeWidth="1.5"
+                                                    strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
+                                            </svg>
+                                        </div>
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+// ─── DS Atomic — Component portability across products ───────────────────────
+
+function DsAtomicSection({ data }: { data: any }) {
+    const [ref, visible] = useInView(0.05);
+    const [tick, setTick] = useState(0);
+    const hScrollRef = useRef<HTMLDivElement>(null);
+    const [scrollLeft, setScrollLeft] = useState(0);
+    const [containerW, setContainerW] = useState(0);
+    const ease = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
+    // Live tick — drives all animated values
+    useEffect(() => {
+        const id = setInterval(() => setTick(n => n + 1), 2200);
+        return () => clearInterval(id);
+    }, []);
+
+    const tx = 'background 0.35s, color 0.35s, border-color 0.35s, box-shadow 0.35s, transform 0.2s';
+
+    // Invitrace palette (single product — showcasing card states)
+    const IV_BODY  = '"Space Grotesk", system-ui, sans-serif';
+    const IV_TITLE = '"Instrument Serif", Georgia, serif';
+    const IV = {
+        bg: '#FFFFFF', surface: '#F4F4F5', border: '#E4E4E7',
+        brand: '#059669', brandFg: '#FFFFFF', avatarBg: '#ECFDF5',
+        text: '#09090B', muted: '#71717A', iconBg: '#F0FDF4',
+    };
+
+    type CardState = {
+        id: string; colLabel: string; tabLabel: string;
+        statusText: string; statusBg: string; statusColor: string;
+        cta1: string; cta2: string;
+        accentBorder?: string; cardBg?: string; dimmed?: boolean;
+        ctaBg?: string; shadow?: string;
+        liveStatus?: () => string;
+    };
+
+    const CARD_STATES: CardState[] = [
+        {
+            id: 'upcoming', colLabel: '01 — Upcoming', tabLabel: 'Upcoming',
+            statusText: 'Tomorrow · 9:00 AM', statusBg: '#ECFDF5', statusColor: '#059669',
+            accentBorder: '#05966950',
+            cta1: 'Confirm Appointment', cta2: 'Reschedule',
+        },
+        {
+            id: 'in-session', colLabel: '02 — In Session', tabLabel: 'In Session',
+            statusText: '● In Session', statusBg: '#DCFCE7', statusColor: '#16A34A',
+            accentBorder: '#059669', shadow: `0 0 0 3px #05966920`,
+            cta1: 'Open Notes', cta2: 'End Session',
+            liveStatus: () => tick % 2 === 0 ? '● In Session' : '○ In Session',
+        },
+        {
+            id: 'completed', colLabel: '03 — Completed', tabLabel: 'Completed',
+            statusText: 'Completed · Apr 1', statusBg: '#F4F4F5', statusColor: '#71717A',
+            accentBorder: '#E4E4E7', dimmed: true,
+            cta1: 'View Summary', cta2: 'Book Follow-up',
+            ctaBg: '#71717A',
+        },
+        {
+            id: 'cancelled', colLabel: '04 — Cancelled', tabLabel: 'Cancelled',
+            statusText: 'Cancelled', statusBg: '#FEF2F2', statusColor: '#EF4444',
+            accentBorder: '#EF444430', cardBg: '#FFFAFA',
+            cta1: 'Rebook', cta2: 'Dismiss',
+            ctaBg: '#EF4444',
+        },
+        {
+            id: 'urgent', colLabel: '05 — Urgent', tabLabel: 'Urgent',
+            statusText: '⚠ Urgent Review', statusBg: '#FFF7ED', statusColor: '#DC2626',
+            accentBorder: '#DC2626', shadow: `0 0 0 2px #DC262630`,
+            cta1: 'Review Now', cta2: 'Delegate',
+            ctaBg: '#DC2626',
+            liveStatus: () => tick % 2 === 0 ? '⚠ Urgent Review' : '⚠ Urgent Review',
+        },
+    ];
+
+    const STATE_COLORS = ['#A78BFA', '#34D399', '#94A3B8', '#F87171', '#FB923C'];
+
+    const COL_WIDTHS = [360, 360, 360, 360, 360];
+    const COL_GAP = 14;
+    const PAD_LEFT = 40;
+    // Cumulative start positions (in scroll-content coordinates, after paddingLeft)
+    const colStarts = COL_WIDTHS.reduce<number[]>((acc, _w, i) => {
+        acc.push(i === 0 ? 0 : acc[i - 1] + COL_WIDTHS[i - 1] + COL_GAP);
+        return acc;
+    }, []);
+    const colCenters = COL_WIDTHS.map((w, i) => PAD_LEFT + colStarts[i] + w / 2);
+
+    useEffect(() => {
+        const el = hScrollRef.current;
+        if (!el) return;
+        const onScroll = () => setScrollLeft(el.scrollLeft);
+        const onWheel = (e: WheelEvent) => {
+            if (el.scrollWidth > el.clientWidth) {
+                e.preventDefault();
+                el.scrollLeft += e.deltaY + e.deltaX;
+            }
+        };
+        el.addEventListener('scroll', onScroll, { passive: true });
+        el.addEventListener('wheel', onWheel, { passive: false });
+        const ro = new ResizeObserver(() => setContainerW(el.clientWidth));
+        ro.observe(el);
+        setContainerW(el.clientWidth);
+        return () => {
+            el.removeEventListener('scroll', onScroll);
+            el.removeEventListener('wheel', onWheel);
+            ro.disconnect();
+        };
+    }, []);
+
+    const getColStyle = (colIndex: number): React.CSSProperties => {
+        if (containerW === 0) return {};
+        const viewCenter = scrollLeft + containerW / 2;
+        const offset = (colCenters[colIndex] - viewCenter) / containerW;
+        const abs = Math.abs(offset);
+        const scale = Math.max(0.88, 1 - abs * 0.24);
+        const opacity = Math.max(0.4, 1 - abs * 0.72);
+        const translateY = offset * offset * 20;
+        return {
+            transform: `scale(${scale.toFixed(4)}) translateY(${translateY.toFixed(2)}px)`,
+            opacity,
+            transition: `transform 0.07s linear, opacity 0.07s linear, ${tx}`,
+        };
+    };
+
+    const activeColIdx = containerW > 0
+        ? colCenters.reduce((best, center, i) => {
+            const viewCenter = scrollLeft + containerW / 2;
+            return Math.abs(center - viewCenter) < Math.abs(colCenters[best] - viewCenter) ? i : best;
+        }, 0)
+        : 0;
+
+    const renderStateCard = (s: CardState) => {
+        const statusText = s.liveStatus ? s.liveStatus() : s.statusText;
+        const cardBrand = s.ctaBg ?? IV.brand;
+        const isSession = s.id === 'in-session';
+        const isUrgent = s.id === 'urgent';
+        return (
+            <div style={{ borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.10)', fontFamily: IV_BODY }}>
+                {/* App bar */}
+                <div style={{ padding: '9px 14px', background: IV.surface, borderBottom: `1px solid ${IV.border}`, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 22, height: 22, borderRadius: 6, background: IV.brand, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <span style={{ fontSize: '8px', fontWeight: 800, color: IV.brandFg }}>IV</span>
+                    </div>
+                    <span style={{ fontSize: '11px', fontWeight: 600, color: IV.text }}>Invitrace Health</span>
+                    <div style={{ marginLeft: 'auto', display: 'flex', gap: 4 }}>
+                        {[0,1,2].map(d => <div key={d} style={{ width: 4, height: 4, borderRadius: '50%', background: IV.muted, opacity: 0.35 }} />)}
+                    </div>
+                </div>
+                {/* App body */}
+                <div style={{ display: 'flex', background: IV.bg }}>
+                    {/* Sidebar */}
+                    <div style={{ width: 88, background: IV.surface, borderRight: `1px solid ${IV.border}`, padding: '12px 7px', flexShrink: 0 }}>
+                        <div style={{ fontSize: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: IV.muted, marginBottom: 8, paddingLeft: 5 }}>Menu</div>
+                        {(['Dashboard', 'Appointments', 'Patients', 'Reports'] as const).map(item => {
+                            const active = item === 'Appointments';
+                            return (
+                                <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 6px', borderRadius: 6, marginBottom: 2, background: active ? IV.avatarBg : 'transparent' }}>
+                                    <div style={{ width: 4, height: 4, borderRadius: '50%', background: active ? IV.brand : IV.border, flexShrink: 0 }} />
+                                    <span style={{ fontSize: '9px', fontWeight: active ? 600 : 400, color: active ? IV.brand : IV.text }}>{item}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    {/* Main */}
+                    <div style={{ flex: 1, padding: '14px 15px', minHeight: 500, overflowY: 'auto' }}>
+                        <div style={{ fontSize: '13px', fontWeight: 700, color: IV.text, marginBottom: 2, fontFamily: IV_TITLE }}>Appointments</div>
+                        <div style={{ fontSize: '10px', color: IV.muted, marginBottom: 14 }}>Monday, Apr 1 · 3 scheduled</div>
+                        {/* Other dimmed rows */}
+                        {[{ init: 'JK', name: 'James K.', time: '11:00 AM' }, { init: 'AL', name: 'Anna L.', time: '2:00 PM' }].map(p => (
+                            <div key={p.name} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px', borderRadius: 9, border: `1px solid ${IV.border}`, marginBottom: 7, opacity: 0.4, background: IV.bg }}>
+                                <div style={{ width: 26, height: 26, borderRadius: '50%', background: IV.avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                    <span style={{ fontSize: '8px', fontWeight: 700, color: IV.brand }}>{p.init}</span>
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '10px', fontWeight: 500, color: IV.text }}>{p.name}</div>
+                                    <div style={{ fontSize: '9px', color: IV.muted }}>{p.time}</div>
+                                </div>
+                                <span style={{ background: IV.avatarBg, color: IV.brand, borderRadius: 20, padding: '2px 7px', fontSize: '8px', fontWeight: 600 }}>Upcoming</span>
+                            </div>
+                        ))}
+                        {/* Featured card */}
+                        <div style={{
+                            background: s.cardBg ?? IV.bg,
+                            border: `1.5px solid ${s.accentBorder ?? IV.brand + '55'}`,
+                            borderRadius: 13,
+                            opacity: s.dimmed ? 0.72 : 1,
+                            boxShadow: s.shadow ?? '0 2px 14px rgba(0,0,0,0.07)',
+                            transition: tx,
+                        }}>
+                            {/* Card avatar + name + status */}
+                            <div style={{ padding: '14px 15px 12px', borderBottom: `1px solid ${IV.border}` }}>
+                                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                                    <div style={{ width: 38, height: 38, borderRadius: 10, background: IV.avatarBg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${IV.border}` }}>
+                                        <span style={{ fontSize: '10px', fontWeight: 700, color: IV.brand }}>SC</span>
+                                    </div>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{ fontSize: '14px', fontWeight: 700, color: IV.text, lineHeight: 1.25, fontFamily: IV_TITLE, marginBottom: 2 }}>Dr. Sarah Chen</div>
+                                        <div style={{ fontSize: '10px', color: IV.muted }}>Cardiologist · MUSC Health</div>
+                                    </div>
+                                    <span style={{
+                                        background: s.statusBg, color: s.statusColor,
+                                        borderRadius: 20, padding: '3px 9px', fontSize: '9px', fontWeight: 700,
+                                        flexShrink: 0, whiteSpace: 'nowrap',
+                                        animation: (isSession || isUrgent) ? 'ds-live-blink 1.4s ease-in-out infinite' : 'none',
+                                    }}>
+                                        {statusText}
+                                    </span>
+                                </div>
+                            </div>
+                            {/* Date + location */}
+                            <div style={{ padding: '11px 15px', borderBottom: `1px solid ${IV.border}` }}>
+                                <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
+                                    <div style={{ width: 24, height: 24, borderRadius: 7, background: IV.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                        <svg width="11" height="11" viewBox="0 0 13 13" fill="none">
+                                            <rect x="1" y="2" width="11" height="10" rx="2" stroke={IV.brand} strokeWidth="1.3"/>
+                                            <line x1="4" y1="1" x2="4" y2="3.5" stroke={IV.brand} strokeWidth="1.3" strokeLinecap="round"/>
+                                            <line x1="9" y1="1" x2="9" y2="3.5" stroke={IV.brand} strokeWidth="1.3" strokeLinecap="round"/>
+                                            <line x1="1" y1="5.5" x2="12" y2="5.5" stroke={IV.brand} strokeWidth="1.3"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '11px', fontWeight: 600, color: IV.text }}>Tomorrow, Apr 1</div>
+                                        <div style={{ fontSize: '10px', color: IV.muted }}>9:00 AM · 30 min</div>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                                    <div style={{ width: 24, height: 24, borderRadius: 7, background: IV.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                        <svg width="9" height="12" viewBox="0 0 11 14" fill="none">
+                                            <path d="M5.5 1C3.01 1 1 3.01 1 5.5C1 8.73 5.5 13 5.5 13C5.5 13 10 8.73 10 5.5C10 3.01 7.99 1 5.5 1Z" stroke={IV.brand} strokeWidth="1.3"/>
+                                            <circle cx="5.5" cy="5.5" r="1.5" stroke={IV.brand} strokeWidth="1.3"/>
+                                        </svg>
+                                    </div>
+                                    <div style={{ fontSize: '11px', fontWeight: 500, color: IV.text }}>Video Consultation</div>
+                                </div>
+                            </div>
+                            {/* CTAs */}
+                            <div style={{ padding: '10px 15px', display: 'flex', gap: 7 }}>
+                                <button style={{ flex: 1, background: cardBrand, color: IV.brandFg, border: 'none', borderRadius: 8, padding: '9px 0', fontSize: '11px', fontWeight: 700, cursor: 'pointer', fontFamily: IV_BODY }}>{s.cta1}</button>
+                                <button style={{ flex: 1, background: 'transparent', color: IV.text, border: `1.5px solid ${IV.border}`, borderRadius: 8, padding: '9px 0', fontSize: '11px', fontWeight: 400, cursor: 'pointer', fontFamily: IV_BODY, opacity: s.dimmed ? 0.5 : 0.75 }}>{s.cta2}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <section ref={ref} style={{ padding: '80px 0 80px', margin: '0 -40px' }}>
+            {/* Header + state tab selector */}
+            <div style={{
+                marginBottom: 32, paddingLeft: 40, paddingRight: 40,
+                opacity: visible ? 1 : 0, transition: `opacity 0.5s ${ease}`,
+            }}>
+                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, marginBottom: 24 }}>
+                    <div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--muted-foreground)', marginBottom: 10 }}>
+                            {data.eyebrow}
+                        </div>
+                        <h2 style={{ fontSize: 'var(--modal-heading)', fontWeight: 800, marginBottom: 8, color: 'var(--foreground)', letterSpacing: '-0.025em', lineHeight: 1.2 }}>
+                            {data.headline}
+                        </h2>
+                        <p style={{ fontSize: 'var(--modal-body)', color: 'var(--muted-foreground)', maxWidth: 480, lineHeight: 1.65 }}>
+                            {data.subtitle}
+                        </p>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 16px', border: '1px dashed var(--border)', borderRadius: 20, flexShrink: 0 }}>
+                        <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#059669' }} />
+                        <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--foreground)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>AppointmentCard · 5 states</span>
+                    </div>
+                </div>
+                {/* State tab bar */}
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                    {CARD_STATES.map((s, i) => {
+                        const active = activeColIdx === i;
+                        return (
+                            <button
+                                key={s.id}
+                                onClick={() => {
+                                    const el = hScrollRef.current;
+                                    if (!el) return;
+                                    const target = colCenters[i] - el.clientWidth / 2;
+                                    el.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+                                }}
+                                style={{
+                                    padding: '7px 16px', borderRadius: 20, cursor: 'pointer', fontSize: '12px', fontWeight: 600,
+                                    background: active ? STATE_COLORS[i] : 'transparent',
+                                    color: active ? '#fff' : 'var(--muted-foreground)',
+                                    border: `1.5px solid ${active ? STATE_COLORS[i] : 'var(--border)'}`,
+                                    transition: 'all 0.22s cubic-bezier(0.16,1,0.3,1)',
+                                }}
+                            >
+                                {s.tabLabel}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* 5-state horizontal scroll */}
+            <div
+                ref={hScrollRef}
+                className="ds-atomic-scroll"
+                style={{
+                    display: 'flex', gap: COL_GAP, overflowX: 'auto',
+                    paddingLeft: PAD_LEFT, paddingRight: PAD_LEFT,
+                    paddingBottom: 28, paddingTop: 10,
+                    scrollSnapType: 'x proximity',
+                    opacity: visible ? 1 : 0,
+                    transition: `opacity 0.65s 0.18s ${ease}`,
+                    alignItems: 'flex-start',
+                }}
+            >
+                {CARD_STATES.map((s, i) => (
+                    <div key={s.id} style={{ flexShrink: 0, width: 360, scrollSnapAlign: 'start', ...getColStyle(i) }}>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: STATE_COLORS[i], marginBottom: 10 }}>
+                            {s.colLabel}
+                        </div>
+                        {renderStateCard(s)}
+                    </div>
+                ))}
+            </div>
+
+            {/* Dots */}
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 4 }}>
+                {CARD_STATES.map((s, i) => (
+                    <div
+                        key={i}
+                        title={s.tabLabel}
+                        onClick={() => {
+                            const el = hScrollRef.current;
+                            if (!el) return;
+                            const target = colCenters[i] - el.clientWidth / 2;
+                            el.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+                        }}
+                        style={{
+                            width: activeColIdx === i ? 22 : 7, height: 7, borderRadius: 4,
+                            background: activeColIdx === i ? STATE_COLORS[i] : 'var(--border)',
+                            transition: 'all 0.3s cubic-bezier(0.16,1,0.3,1)',
+                            cursor: 'pointer', flexShrink: 0,
+                        }}
+                    />
+                ))}
+            </div>
+        </section>
     );
 }
 
@@ -2704,6 +3821,9 @@ function SectionRenderer({ section, meta }: { section: Section; meta: ProjectMet
         case 'affinity_map': return <AffinityMapSection data={section.data} />;
         case 'personas': return <PersonasSection data={section.data} />;
         case 'feature_matrix': return <FeatureMatrixSection data={section.data} />;
+        case 'robo_demo': return <RoboDemoSection data={section.data} />;
+        case 'ds_tokens': return <DsTokensSection data={section.data} />;
+        case 'ds_atomic': return <DsAtomicSection data={section.data} />;
         case 'user_flow': return <UserFlowSection data={section.data} />;
         case 'wireframes': return <WireframesSection data={section.data} />;
         case 'mockup_showcase': return <MockupShowcaseSection data={section.data} />;
@@ -2767,16 +3887,16 @@ function ModalFooter({ currentId, onOpenProject, onClose }: {
 
                 {/* Labels */}
                 <div style={{ position: 'absolute', top: 24, left: 28 }}>
-                    <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6 }}>
+                    <div style={{ fontSize: 16, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: 6 }}>
                         Next project
                     </div>
                 </div>
                 <div style={{ position: 'absolute', bottom: 24, left: 28, right: 28, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
                     <div>
-                        <div style={{ fontSize: 22, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: 4 }}>
+                        <div style={{ fontSize: 25, fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: 4 }}>
                             {next.title}
                         </div>
-                        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.03em' }}>
+                        <div style={{ fontSize: 16, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.03em' }}>
                             {next.type}
                         </div>
                     </div>
@@ -2802,7 +3922,7 @@ function ModalFooter({ currentId, onOpenProject, onClose }: {
                     onClick={onClose}
                     style={{
                         background: 'none', border: 'none', cursor: 'pointer',
-                        fontSize: 12, color: 'var(--muted-foreground)',
+                        fontSize: 16, color: 'var(--muted-foreground)',
                         fontFamily: 'inherit', letterSpacing: '0.05em',
                         transition: 'color 0.2s',
                         padding: '8px 16px',
@@ -2925,7 +4045,7 @@ export default function ProjectModal({ projectId, onClose, onOpenProject }: Proj
                 <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, pointerEvents: 'auto' }}>
                     <button onClick={handleClose} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px', borderRadius: 6, transition: 'opacity 0.2s', color: 'var(--foreground)', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.opacity = '0.6'} onMouseLeave={e => e.currentTarget.style.opacity = '1'} aria-label="Back">
                         <span style={{ width: 8, height: 8, borderRadius: '50%', background: data?.meta.cover_color ?? 'var(--foreground)', display: 'block', flexShrink: 0 }} />
-                        <span style={{ fontSize: 'var(--text-base)', fontWeight: 500, lineHeight: 1 }}>Nate</span>
+                        <span style={{ fontSize: 'var(--text-base)', fontWeight: 500, lineHeight: 1 }}>Nat</span>
                     </button>
                     <ChevronRight size={12} style={{ color: 'var(--muted-foreground)', flexShrink: 0 }} />
                     <span style={{ fontSize: 'var(--text-base)', fontFamily: 'inherit', color: 'var(--foreground)', opacity: data ? 1 : 0, transition: 'opacity 0.4s ease', maxWidth: 320, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -2938,11 +4058,11 @@ export default function ProjectModal({ projectId, onClose, onOpenProject }: Proj
             <div style={{ position: 'relative', height: '100%', overflow: 'hidden' }}>
                 {/* Sidebar */}
                 <nav style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 160, padding: '80px 0 40px 32px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2, zIndex: 5, opacity: sidebarVisible ? 1 : 0, transform: sidebarVisible ? 'translateX(0)' : 'translateX(-10px)', transition: `opacity 0.6s ${ease}, transform 0.6s ${ease}` }}>
-                    <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: '6px 0', fontSize: '13px', color: 'var(--muted-foreground)', marginBottom: 16, fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--foreground)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--muted-foreground)'}>Home</button>
+                    <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: '6px 0', fontSize: '16px', color: 'var(--muted-foreground)', marginBottom: 16, fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--foreground)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--muted-foreground)'}>Home</button>
                     {sidebarSections.map(s => {
                         const isActive = activeSection === s.id;
                         return (
-                            <button key={s.id} onClick={() => sectionRefs.current[s.id]?.scrollIntoView({ behavior: 'smooth', block: 'center' })} style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: '5px 0 5px 10px', fontSize: '13px', fontWeight: isActive ? 600 : 400, color: isActive ? 'var(--foreground)' : 'var(--muted-foreground)', transition: 'color 0.25s, border-color 0.25s', lineHeight: 1.5, fontFamily: 'inherit', borderLeft: `2px solid ${isActive ? (data?.meta.cover_color ?? 'var(--foreground)') : 'transparent'}`, marginLeft: -2 }} onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = 'var(--foreground)'; }} onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--muted-foreground)'; }}>
+                            <button key={s.id} onClick={() => sectionRefs.current[s.id]?.scrollIntoView({ behavior: 'smooth', block: 'center' })} style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: '5px 0 5px 10px', fontSize: '16px', fontWeight: isActive ? 600 : 400, color: isActive ? 'var(--foreground)' : 'var(--muted-foreground)', transition: 'color 0.25s, border-color 0.25s', lineHeight: 1.5, fontFamily: 'inherit', borderLeft: `2px solid ${isActive ? (data?.meta.cover_color ?? 'var(--foreground)') : 'transparent'}`, marginLeft: -2 }} onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = 'var(--foreground)'; }} onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--muted-foreground)'; }}>
                                 {s.label}
                             </button>
                         );

@@ -66,7 +66,7 @@ export class RuleBasedEngine implements ChatEngine {
             case 'query_contact':    return 'Finding contact details...';
             case 'query_education':  return 'Looking up his education...';
             case 'availability':     return 'Checking his availability...';
-            case 'ask_nate':         return 'Introducing Nate...';
+            case 'ask_nate':         return 'Introducing Nat...';
             case 'challenges':       return 'Being honest about the hard parts...';
             case 'personal_trivia':  return 'Sharing the personal side...';
             case 'ask_lumo':         return 'That\'s about me...';
@@ -254,7 +254,7 @@ export class RuleBasedEngine implements ChatEngine {
                 return this.buildStaticResponse('greeting', this.defaultSuggestions());
             case 'ask_lumo':
                 return this.buildStaticResponse('ask_lumo', [
-                    { label: 'Tell me about Nate', payload: "Who is Nate?" },
+                    { label: 'Tell me about Nat', payload: "Who is Nat?" },
                     { label: 'Experience', payload: "What's his experience?" },
                 ]);
             case 'ask_nate':
@@ -413,7 +413,7 @@ export class RuleBasedEngine implements ChatEngine {
         }));
 
         return {
-            text: `Nate has ${profile.experience.summary.total_years} years of experience across ${profile.experience.summary.company_count} companies:\n\n${lines}\n\nAsk about any company for the full story.`,
+            text: `Nat has ${profile.experience.summary.total_years} years of experience across ${profile.experience.summary.company_count} companies:\n\n${lines}\n\nAsk about any company for the full story.`,
             suggestions: companySuggestions
         };
     }
@@ -435,7 +435,7 @@ export class RuleBasedEngine implements ChatEngine {
             : '';
 
         return {
-            text: `Nate's core strengths:\n\n${expertSkills.join('\n')}${advancedSection}`,
+            text: `Nat's core strengths:\n\n${expertSkills.join('\n')}${advancedSection}`,
             suggestions: [
                 { label: 'Design Systems deep dive', payload: 'Tell me about design systems' },
                 { label: 'User research side', payload: 'Tell me about user research' },
@@ -462,7 +462,7 @@ export class RuleBasedEngine implements ChatEngine {
         });
 
         return {
-            text: `Nate's education:\n\n${lines.join('\n')}\n\n${profile.education[0].conversational}`,
+            text: `Nat's education:\n\n${lines.join('\n')}\n\n${profile.education[0].conversational}`,
             suggestions: [
                 { label: 'Career timeline →', payload: "What's his work experience?" },
                 { label: 'Design skills ⚡', payload: "What are his skills?" },
@@ -474,7 +474,7 @@ export class RuleBasedEngine implements ChatEngine {
         const avail = profile.identity.availability;
         const id = profile.identity;
         return {
-            text: `Nate is currently ${avail.status} at ${id.current_title.company}, but is open to ${avail.open_to}. His preference is ${avail.preferences} — so if that sounds like you, reach out!`,
+            text: `Nat is currently ${avail.status} at ${id.current_title.company}, but is open to ${avail.open_to}. His preference is ${avail.preferences} — so if that sounds like you, reach out!`,
             suggestions: [
                 { label: 'Say hi 👋', payload: 'How to contact?' },
                 { label: 'His background →', payload: "What's his experience?" },
@@ -487,7 +487,7 @@ export class RuleBasedEngine implements ChatEngine {
         const loc = profile.identity.location;
         const themes = profile.career_narrative.career_themes;
         return {
-            text: `Nate is based in ${loc.city}, ${loc.country}${loc.remote_friendly ? ' (open to remote)' : ''}. Outside of work: photography, complex board games, and exploring new tech. In his own words — "${themes.growth}"`,
+            text: `Nat is based in ${loc.city}, ${loc.country}${loc.remote_friendly ? ' (open to remote)' : ''}. Outside of work: photography, complex board games, and exploring new tech. In his own words — "${themes.growth}"`,
             suggestions: [
                 { label: 'His design career →', payload: "What's his experience?" },
                 { label: 'Say hi 👋', payload: 'How to contact?' },
@@ -521,7 +521,7 @@ export class RuleBasedEngine implements ChatEngine {
             [
                 { label: 'His design career →', payload: "What's his experience?" },
                 { label: 'Core skills ⚡', payload: "What are his skills?" },
-                { label: 'Who is Nate?', payload: 'Who is Nate?' },
+                { label: 'Who is Nat?', payload: 'Who is Nat?' },
             ],
             [
                 { label: 'Career timeline →', payload: "What's his experience?" },

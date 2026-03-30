@@ -63,12 +63,18 @@ function PushPin({ color }: { color: string }) {
 export interface PinnedCardProps {
     number: string;
     title: string;
-    description: string;
+    description?: string;
     /** 0-based — drives rotation, tint, pin color, and left/right alignment */
     index: number;
     visible?: boolean;
     /** seconds — stagger delay for entrance animation */
     delay?: number;
+    /** Structured decision fields — when present, replaces description render */
+    problem?: string;
+    options?: Array<{ key: string; text: string }>;
+    chosen?: string;
+    rationale?: string;
+    cost?: string;
 }
 
 export function PinnedCard({
@@ -78,6 +84,11 @@ export function PinnedCard({
     index,
     visible = true,
     delay = 0,
+    problem,
+    options,
+    chosen,
+    rationale,
+    cost,
 }: PinnedCardProps) {
     const isRight = index % 2 !== 0;
     const rotation = ROTATIONS[index % ROTATIONS.length];
@@ -154,14 +165,63 @@ export function PinnedCard({
                     {title}
                 </div>
 
-                <div
-                    style={{
-                        fontSize: 'var(--modal-body)', lineHeight: 1.7,
-                        color: 'var(--muted-foreground)', position: 'relative',
-                    }}
-                >
-                    {renderRich(description)}
-                </div>
+                {/* Structured decision layout */}
+                {options ? (
+                    <div style={{ position: 'relative' }}>
+                        {problem && (
+                            <div style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)', lineHeight: 1.65, marginBottom: 14 }}>
+                                {problem}
+                            </div>
+                        )}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: cost || rationale ? 12 : 0 }}>
+                            {options.map(opt => {
+                                const isChosen = opt.key === chosen;
+                                return (
+                                    <div key={opt.key} style={{
+                                        display: 'flex', alignItems: 'flex-start', gap: 10,
+                                        padding: '9px 12px', borderRadius: 9,
+                                        background: isChosen ? `${pinColor}11` : 'transparent',
+                                        border: `1px solid ${isChosen ? `${pinColor}40` : 'var(--border)'}`,
+                                        opacity: isChosen ? 1 : 0.48,
+                                    }}>
+                                        <div style={{
+                                            width: 20, height: 20, borderRadius: '50%', flexShrink: 0, marginTop: 1,
+                                            background: isChosen ? pinColor : 'transparent',
+                                            border: `1.5px solid ${isChosen ? pinColor : 'var(--border)'}`,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: '9px', fontWeight: 800,
+                                            color: isChosen ? '#fff' : 'var(--muted-foreground)',
+                                        }}>
+                                            {opt.key}
+                                        </div>
+                                        <span style={{
+                                            fontSize: 'var(--modal-floor)', lineHeight: 1.55,
+                                            color: isChosen ? 'var(--foreground)' : 'var(--muted-foreground)',
+                                            fontWeight: isChosen ? 500 : 400,
+                                        }}>
+                                            {opt.text}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        {rationale && (
+                            <div style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)', lineHeight: 1.55, marginBottom: cost ? 10 : 0, paddingLeft: 2 }}>
+                                {rationale}
+                            </div>
+                        )}
+                        {cost && (
+                            <div style={{ padding: '8px 12px', background: 'rgba(239,68,68,0.05)', borderLeft: '2px solid rgba(239,68,68,0.3)', borderRadius: '0 6px 6px 0' }}>
+                                <span style={{ fontSize: '10px', fontWeight: 700, color: 'rgba(239,68,68,0.6)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Cost → </span>
+                                <span style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)', lineHeight: 1.5 }}>{cost}</span>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--muted-foreground)', position: 'relative' }}>
+                        {renderRich(description ?? '')}
+                    </div>
+                )}
             </div>
         </div>
     );

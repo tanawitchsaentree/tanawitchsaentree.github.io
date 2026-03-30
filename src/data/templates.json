@@ -1,7 +1,7 @@
 {
     "en": {
         "professional": [
-            "At {entity}, Nate {action_past} a {subject} that reduced {impact_area} by {impact_metric} for {impact_context}.",
+            "At {entity}, Nat {action_past} a {subject} that reduced {impact_area} by {impact_metric} for {impact_context}.",
             "He served as {role} at {entity}, where he {action_past} the {subject}.",
             "Notable Achievement: {action_continuous_capitalize} a {subject} at {entity}, achieving {impact_metric} in {impact_area}."
         ],

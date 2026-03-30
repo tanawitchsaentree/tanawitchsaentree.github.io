@@ -22,7 +22,7 @@
         },
         "node_experience_summary": {
             "id": "node_experience_summary",
-            "message": "Nate has 8+ years of experience, leading design at Invitrace Health and building systems at Peakaccount.",
+            "message": "Nat has 8+ years of experience, leading design at Invitrace Health and building systems at Peakaccount.",
             "suggestions": [
                 "Show Projects",
                 "Deep Dive"
@@ -61,7 +61,7 @@
             "message": "**Invitrace Health**: Created a unified patient monitoring dashboard used by 50+ clinics. Reduced data entry time by 40%.",
             "suggestions": [
                 "Next Project",
-                "Contact Nate"
+                "Contact Nat"
             ],
             "transitions": [
                 {
@@ -76,7 +76,7 @@
         },
         "node_contact_card": {
             "id": "node_contact_card",
-            "message": "You can reach Nate at **tanawitch.s@gmail.com** or connect on LinkedIn.",
+            "message": "You can reach Nat at **tanawitch.s@gmail.com** or connect on LinkedIn.",
             "suggestions": [
                 "Download Resume",
                 "Back to Start"
@@ -111,7 +111,7 @@
             "message": "**Peakaccount**: Redesigned the mobile app for fintech users, achieving a 4.8/5 App Store rating.",
             "suggestions": [
                 "Next Project",
-                "Contact Nate"
+                "Contact Nat"
             ],
             "transitions": [
                 {
@@ -129,7 +129,7 @@
             "message": "**CP Origin**: Standardized a design system across multiple property platforms, achieving 100% component reuse.",
             "suggestions": [
                 "Back to Projects",
-                "Contact Nate"
+                "Contact Nat"
             ],
             "transitions": [
                 {
@@ -146,7 +146,7 @@
     "extras": {
         "surprises": [
             {
-                "content": "Fun Fact: Nate once designed a font based on Bangkok street signs.",
+                "content": "Fun Fact: Nat once designed a font based on Bangkok street signs.",
                 "followup": "Typography is his secret weapon.",
                 "weight": 20
             },

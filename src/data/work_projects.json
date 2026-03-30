@@ -42,5 +42,13 @@
         "projectId": "drift-nomad-app",
         "size": "large",
         "aspect": "21/9"
+    },
+    {
+        "id": 5,
+        "title": "Invitrace Design System",
+        "type": "Design System · Health-Tech",
+        "cover_color": "#0D3B2B",
+        "projectId": "invitrace-design-system",
+        "size": "small"
     }
 ]

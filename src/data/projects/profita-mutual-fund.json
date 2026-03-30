@@ -14,10 +14,17 @@
       "type": "cover",
       "data": {
         "eyebrow": "Awarded Best App for Customer Experience",
-        "title": "Mutual Fund Invest App — Profita",
+        "title": "Profita",
+        "tagline": "One app. Three investors. No compromises.",
         "subtitle": "An investment app that serves three completely different types of investor — novice, intermediate, and values-driven — without building three separate products.",
         "bg_color": "#1B3A5C",
-        "award_badge": true
+        "award_badge": true,
+        "perf_stat": {
+          "value": "14.8",
+          "label": "3-Year Portfolio Return",
+          "risk": "28",
+          "detail": "AI-selected · 5 funds · 4 sectors"
+        }
       }
     },
     {
@@ -102,6 +109,7 @@
       "id": "hmw",
       "type": "quote",
       "data": {
+        "prefix": "Research Question",
         "text": "How might we create a welcoming and educational onboarding experience for new users in the mutual fund app?"
       }
     },
@@ -276,24 +284,63 @@
           {
             "number": "01",
             "title": "ROBO Advisor as opt-in path, not the default",
-            "description": "**Problem →** Novice investors don't know how to select funds. But making ROBO the default removes the sense of agency from intermediate investors who came specifically to manage their own portfolio.\n\n**A:** ROBO as default, manual opt-out — lowest friction for novices. **B:** Manual browsing as default, ROBO as explicit mode. **C:** Adaptive — an experience-level question at onboarding routes each user to a different starting point.\n\n**Chose C** — routes users appropriately from the first tap without forcing either group to fight the default. **Cost:** Experience level is self-reported and unreliable. A novice who answers 'intermediate' to seem confident skips the ROBO path and lands in the interface designed for Anan, not Sarocha."
+            "problem": "Novice investors don't know how to select funds. But making ROBO the default removes the sense of agency from intermediate investors who came specifically to manage their own portfolio.",
+            "options": [
+              { "key": "A", "text": "ROBO as default, manual opt-out — lowest friction for novices" },
+              { "key": "B", "text": "Manual browsing as default, ROBO as an explicit mode to switch into" },
+              { "key": "C", "text": "Adaptive — experience-level question at onboarding routes each user to a different starting point" }
+            ],
+            "chosen": "C",
+            "rationale": "Routes users appropriately from the first tap without forcing either group to fight the default.",
+            "cost": "Experience level is self-reported. A novice who answers 'intermediate' to seem confident skips ROBO and lands in the interface designed for Anan, not Sarocha."
           },
           {
             "number": "02",
             "title": "Morningstar star as the leading credibility signal — not raw returns",
-            "description": "**Problem →** Novice users saw '3-year return: 12.4%' and 'Sharpe ratio: 0.81' and asked: 'is that good?' They had no reference frame. Every comparison they attempted was guesswork.\n\n**A:** Show all performance data upfront — clean, doesn't patronize experienced users. **B:** Front-load the Morningstar star rating (1–5) as a recognised third-party signal; detailed data accessible below.\n\n**Chose B** — gives novice users a reference point without requiring financial literacy. **Cost:** Experienced investors who distrust Morningstar (arguing ratings lag real performance) find the star system slightly in their way. The interface was optimised for Sarocha and asks Anan to look past it."
+            "problem": "Novice users saw '3-year return: 12.4%' and 'Sharpe ratio: 0.81' and asked: 'is that good?' They had no reference frame. Every comparison was guesswork.",
+            "options": [
+              { "key": "A", "text": "Show all performance data upfront — clean, doesn't patronize experienced users" },
+              { "key": "B", "text": "Front-load the Morningstar star rating (1–5) as a recognised third-party signal; detailed data accessible below" }
+            ],
+            "chosen": "B",
+            "rationale": "Gives novice users a reference point without requiring any financial literacy.",
+            "cost": "Experienced investors who distrust Morningstar find the star system slightly in their way. The interface asks Anan to look past it."
           },
           {
             "number": "03",
             "title": "ESG as a view-restructuring filter, not a tag",
-            "description": "**Problem →** ESG-focused investors don't use sustainability as a preference toggle — it's a qualifying criterion. If ESG is a tag on fund cards, Oraya still scrolls through 200+ funds to find the 14 that qualify. The signal arrives too late.\n\n**A:** ESG tag on cards — visible, but the user still browses everything. **B:** ESG as a primary filter that collapses the entire catalogue to sustainable funds only, immediately.\n\n**Chose B** — restructures discovery for users who would never invest outside ESG regardless. **Cost:** Users who want to compare ESG versus non-ESG funds for performance reasons can't do that while the filter is active. The filter is all-or-nothing."
+            "problem": "ESG-focused investors don't use sustainability as a preference toggle — it's a qualifying criterion. If ESG is a tag on cards, users still scroll through 200+ funds to find the 14 that qualify.",
+            "options": [
+              { "key": "A", "text": "ESG tag on individual fund cards — visible, but user still browses the full catalogue" },
+              { "key": "B", "text": "ESG as a primary filter that collapses the entire catalogue to qualifying funds only, immediately" }
+            ],
+            "chosen": "B",
+            "rationale": "Restructures discovery for users who would never invest outside ESG regardless.",
+            "cost": "Users who want to compare ESG vs non-ESG performance can't do that while the filter is active. It's all-or-nothing."
           },
           {
             "number": "04",
             "title": "Implicit profiling through behaviour, not onboarding surveys",
-            "description": "**Problem →** AI personalisation requires knowing what a user likes, knows, and has invested in. An onboarding survey asking 'what funds interest you?' produces aspirational answers, not accurate ones.\n\n**A:** Detailed onboarding survey — builds profile upfront, enables immediate personalisation. **B:** Minimal profile at signup; learn from every interaction — what users generate, save, skip, compare.\n\n**Chose B** — behavioral data is more accurate than stated preferences. **Cost:** The first several sessions feel generic. New users who churn after 3 sessions never experience the system's intelligence. The personalisation promise is a long-game payoff that requires the user to stay."
+            "problem": "AI personalisation requires knowing what a user likes. An onboarding survey asking 'what funds interest you?' produces aspirational answers, not accurate ones.",
+            "options": [
+              { "key": "A", "text": "Detailed onboarding survey — builds profile upfront, enables immediate personalisation" },
+              { "key": "B", "text": "Minimal profile at signup; learn from every interaction — what users save, skip, compare" }
+            ],
+            "chosen": "B",
+            "rationale": "Behavioral data is more accurate than stated preferences. The system learns without asking.",
+            "cost": "The first several sessions feel generic. Users who churn after 3 sessions never experience the intelligence. Personalisation is a long-game payoff."
           }
         ]
+      }
+    },
+    {
+      "id": "robo-ai",
+      "label": "AI in Action",
+      "type": "robo_demo",
+      "data": {
+        "eyebrow": "ROBO Advisor",
+        "headline": "AI cuts portfolio risk by 62% — automatically.",
+        "subtitle": "Same ฿500,000 goal. One portfolio built by gut instinct, one composed by the AI. The difference is visible."
       }
     },
     {

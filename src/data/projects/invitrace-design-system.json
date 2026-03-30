@@ -1,0 +1,299 @@
+{
+    "id": "invitrace-design-system",
+    "meta": {
+        "title": "Invitrace Design System",
+        "subtitle": "Token-first system for a team of 10 across 8 health products",
+        "company": "Invitrace",
+        "year": "2024",
+        "duration": "8 months",
+        "role": "Lead Designer",
+        "team_size": "10",
+        "cover_color": "#0D3B2B",
+        "tags": ["Design System", "Health-Tech", "Figma", "Tokens", "B2B"]
+    },
+    "sections": [
+        {
+            "id": "hero",
+            "type": "cover",
+            "data": {
+                "eyebrow": "Design System · Health-Tech · 8 Products",
+                "title": "Invitrace\nDesign System",
+                "tagline": "From 8 products drifting apart to one design language.",
+                "subtitle": "A token-first system built to unify 10 designers across 8 clinical health products — cutting onboarding from 14 days to 4.",
+                "bg_color": "#0D3B2B",
+                "perf_stat": {
+                    "value": "6",
+                    "denominator": "8",
+                    "format": "fraction",
+                    "label": "Products Migrated",
+                    "secondary_label": "3-month build · 5-month rollout",
+                    "detail": "45 components · 130 tokens"
+                }
+            }
+        },
+        {
+            "id": "overview",
+            "label": "Overview",
+            "type": "project_overview",
+            "data": {
+                "label": "Case Study",
+                "title": "Invitrace — One design language for eight clinical products.",
+                "my_role": ["Lead Designer", "Systems Thinking", "Figma Architecture", "Stakeholder Alignment"],
+                "client": "Invitrace",
+                "year": "2024",
+                "overview": "Invitrace builds clinical health software for enterprise clients — eight products, all maintained by the same team of 10 designers. Each product had grown independently, accumulating its own component conventions, spacing decisions, and color interpretations. There was no shared token layer, no canonical component set, no single place a designer could look up how something worked. This project was about changing that — not just building a library, but creating the infrastructure that makes consistent decisions automatic."
+            }
+        },
+        {
+            "id": "problem",
+            "label": "The Problem",
+            "type": "statement",
+            "data": {
+                "eyebrow": "The Problem",
+                "headline": "Ten designers. Eight products. Zero shared ground.",
+                "body": "Invitrace makes health software for clinical clients. Eight products. All built by the same team. All looking different.\n\nThe onboarding process for new designers was a 14-day tour of tribal knowledge — 'here's how this product does it' repeated eight times, because every product had its own conventions. Nobody had ever decided anything was canonical. Every input field, button, modal, and table had its own logic, inherited from whoever first built it. The team wasn't undisciplined. The problem was structural: there was no system to be consistent with."
+            }
+        },
+        {
+            "id": "shift",
+            "label": "The Shift",
+            "type": "before_after",
+            "data": {
+                "eyebrow": "Before → After",
+                "before": {
+                    "label": "Before the system",
+                    "items": [
+                        "Every component decision made per-product, from scratch",
+                        "New designer onboarding: 14 days of product-by-product knowledge transfer",
+                        "Developers received Figma files with unexplained hex values and no token keys",
+                        "Design reviews spent half the time reconciling component drift between products",
+                        "8 products, 8 spacing systems, 8 button styles — no obvious reason for any of them"
+                    ]
+                },
+                "after": {
+                    "label": "With the design system",
+                    "items": [
+                        "45 components with usage rules, documented variants, and mapped tokens",
+                        "New designer onboarding: 4 days with structured system reference",
+                        "Developers receive token-mapped specs with code-ready variable names",
+                        "Design reviews focused on product decisions — not style arbitration",
+                        "One design language across 6 products, with 2 in staged migration"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "discovery",
+            "label": "What We Found",
+            "type": "insight_cards",
+            "data": {
+                "eyebrow": "Research",
+                "headline": "What the designers actually needed.",
+                "items": [
+                    {
+                        "icon": "🔎",
+                        "title": "The problem wasn't discipline — it was the absence of defaults",
+                        "body": "Designers weren't ignoring conventions. There weren't any written down. Every decision was stored in someone's head. When they left, the knowledge left with them. The system needed to make the right choice the easiest choice."
+                    },
+                    {
+                        "icon": "🔧",
+                        "title": "Developers were the silent losers",
+                        "body": "Engineers received 40-screen Figma files with no token keys, no documented states, no logic for edge cases. They built what they could infer. When the inference was wrong, the fix cost three tickets."
+                    },
+                    {
+                        "icon": "📌",
+                        "title": "The 2 unmigrated products weren't resistant — they were constrained",
+                        "body": "Two products used deeply custom chart rendering that sat outside what the token layer could reach without breaking functionality. The correct decision was to defer migration, not force it."
+                    },
+                    {
+                        "icon": "⚡",
+                        "title": "The adoption unlock was speed, not documentation",
+                        "body": "Designers adopted the system when using it became faster than not using it. Thorough Figma coverage mattered more than a Notion wiki. The best documentation is a component that doesn't need explaining."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "component-anatomy",
+            "label": "System in Practice",
+            "type": "ds_tokens",
+            "data": {
+                "eyebrow": "Design Tokens",
+                "headline": "Every decision has a name.",
+                "component_name": "Button / Primary",
+                "button_label": "Confirm Review",
+                "button_color": "#059669",
+                "subtitle": "130 tokens. 4 layers. Raw hex to component variable — every property traceable back to its origin.",
+                "tokens": [
+                    {
+                        "id": "bg", "description": "Background",
+                        "chain": [
+                            { "layer": "Raw",       "name": "#059669",                "detail": "Hex value" },
+                            { "layer": "Primitive", "name": "--green-600",            "detail": "→ #059669" },
+                            { "layer": "Semantic",  "name": "--color-action-primary", "detail": "→ green-600" },
+                            { "layer": "Component", "name": "--btn-bg-default",       "detail": "→ color-action-primary" }
+                        ]
+                    },
+                    {
+                        "id": "text", "description": "Label Color",
+                        "chain": [
+                            { "layer": "Raw",       "name": "#FFFFFF",                "detail": "Hex value" },
+                            { "layer": "Primitive", "name": "--neutral-0",            "detail": "→ #FFFFFF" },
+                            { "layer": "Semantic",  "name": "--color-on-action",      "detail": "→ neutral-0" },
+                            { "layer": "Component", "name": "--btn-label-default",    "detail": "→ color-on-action" }
+                        ]
+                    },
+                    {
+                        "id": "radius", "description": "Corner Radius",
+                        "chain": [
+                            { "layer": "Raw",       "name": "8px",                    "detail": "Base value" },
+                            { "layer": "Primitive", "name": "--size-2",               "detail": "→ 8px" },
+                            { "layer": "Semantic",  "name": "--radius-m",             "detail": "→ size-2" },
+                            { "layer": "Component", "name": "--btn-radius",           "detail": "→ radius-m" }
+                        ]
+                    },
+                    {
+                        "id": "space-h", "description": "H-Padding",
+                        "chain": [
+                            { "layer": "Raw",       "name": "20px",                   "detail": "Base value" },
+                            { "layer": "Primitive", "name": "--size-5",               "detail": "→ 20px" },
+                            { "layer": "Semantic",  "name": "--space-x-m",            "detail": "→ size-5" },
+                            { "layer": "Component", "name": "--btn-padding-x",        "detail": "→ space-x-m" }
+                        ]
+                    },
+                    {
+                        "id": "space-v", "description": "V-Padding",
+                        "chain": [
+                            { "layer": "Raw",       "name": "11px",                   "detail": "Base value" },
+                            { "layer": "Primitive", "name": "--size-3",               "detail": "→ 11px" },
+                            { "layer": "Semantic",  "name": "--space-y-s",            "detail": "→ size-3" },
+                            { "layer": "Component", "name": "--btn-padding-y",        "detail": "→ space-y-s" }
+                        ]
+                    },
+                    {
+                        "id": "font", "description": "Typography",
+                        "chain": [
+                            { "layer": "Raw",       "name": "14px / 500",             "detail": "Size / weight" },
+                            { "layer": "Primitive", "name": "--size-3-5",             "detail": "→ 14px" },
+                            { "layer": "Semantic",  "name": "--font-label-m",         "detail": "→ size-3-5 · w500" },
+                            { "layer": "Component", "name": "--btn-font",             "detail": "→ font-label-m" }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "atomic-system",
+            "label": "Atomic System",
+            "type": "ds_atomic",
+            "data": {
+                "eyebrow": "Component Showcase",
+                "headline": "One component. Every state.",
+                "subtitle": "AppointmentCard handles the full lifecycle — from confirming an appointment to flagging an urgent review — all from the same component.",
+                "themes": [
+                    { "id": "light", "label": "Light" },
+                    { "id": "dark",  "label": "Dark"  },
+                    { "id": "brand", "label": "Brand" }
+                ]
+            }
+        },
+        {
+            "id": "decisions",
+            "label": "Design Decisions",
+            "type": "pinned_cards",
+            "data": {
+                "eyebrow": "Decisions",
+                "headline": "Three calls that shaped the system.",
+                "items": [
+                    {
+                        "number": "01",
+                        "title": "Token source of truth",
+                        "problem": "Where should the token layer live? The team needed tokens that were maintainable, mode-aware, and didn't require external tooling.",
+                        "options": [
+                            { "key": "A", "text": "Tokens Studio — external plugin with JSON export" },
+                            { "key": "B", "text": "Shared Figma library styles only — no token names" },
+                            { "key": "C", "text": "Native Figma Variables with structured semantic naming" }
+                        ],
+                        "chosen": "C",
+                        "rationale": "Figma Variables gave us native scoping, light/dark mode switching, and zero external dependencies. The team was already in Figma all day — no new tools to onboard.",
+                        "cost": "Variables can't export to code directly. We documented the token-to-code mapping manually — a one-time cost with ongoing maintenance."
+                    },
+                    {
+                        "number": "02",
+                        "title": "Library architecture: one or many",
+                        "problem": "Should all 8 products share a single library, or each maintain their own?",
+                        "options": [
+                            { "key": "A", "text": "Separate library per product — maximum isolation" },
+                            { "key": "B", "text": "Single global library — strict shared ownership" },
+                            { "key": "C", "text": "Global base + product extension libraries" }
+                        ],
+                        "chosen": "C",
+                        "rationale": "Option B broke immediately when product teams needed custom chart components. Option A recreated the original problem. C gave products room for custom needs while keeping foundations shared.",
+                        "cost": "Three-library architecture requires versioning extensions alongside the base. Dependency management became a recurring overhead."
+                    },
+                    {
+                        "number": "03",
+                        "title": "Where to put usage documentation",
+                        "problem": "How should designers know when to use a component and when not to? Usage rules buried in Notion weren't working.",
+                        "options": [
+                            { "key": "A", "text": "Notion — separate, searchable, written documentation" },
+                            { "key": "B", "text": "Component descriptions in Figma inspect panel" },
+                            { "key": "C", "text": "Usage annotations embedded directly in the component" }
+                        ],
+                        "chosen": "C",
+                        "rationale": "Designers don't leave Figma mid-task to look things up. Embedding rules at the point of use meant documentation was actually seen. The system became self-teaching.",
+                        "cost": "Every component update requires annotation upkeep. This adds 20–30 minutes per component change that would otherwise be invisible work."
+                    }
+                ]
+            }
+        },
+        {
+            "id": "stat-components",
+            "label": "Components",
+            "type": "big_number",
+            "data": {
+                "eyebrow": "Output",
+                "value": "45",
+                "label": "Core components",
+                "body": "Covering every pattern from form inputs and modals to complex clinical data tables — each with documented variants, states, and usage rules."
+            }
+        },
+        {
+            "id": "stat-tokens",
+            "type": "big_number",
+            "data": {
+                "eyebrow": "Token Architecture",
+                "value": "130",
+                "label": "Design tokens",
+                "body": "Structured across color, typography, spacing, and border radius — with full light/dark mode switching built in via Figma Variables."
+            }
+        },
+        {
+            "id": "stat-onboarding",
+            "type": "big_number",
+            "data": {
+                "eyebrow": "Adoption",
+                "value": "4",
+                "label": "Days to onboard a new designer",
+                "body": "Down from 14. Every designer now starts with the same structured reference instead of a tour of one product's quirks."
+            }
+        },
+        {
+            "id": "reflection",
+            "label": "Reflection",
+            "type": "statement",
+            "data": {
+                "eyebrow": "What I Learned",
+                "headline": "A design system is an organizational decision, not a design decision.",
+                "body": "The hardest part wasn't the component architecture or the token taxonomy. It was convincing people that standardizing something wasn't the same as removing agency.\n\nThe system didn't make designers design less — it changed what they spent time deciding. Less: what should this button look like. More: does this flow make sense. That shift only happened when using the system became faster than not using it. Speed of use is the real adoption mechanism. Everything else is secondary."
+            }
+        },
+        {
+            "id": "close",
+            "type": "word_reveal",
+            "data": {
+                "text": "The system shipped. Six teams use it. The real measure is what nobody has to ask anymore."
+            }
+        }
+    ]
+}

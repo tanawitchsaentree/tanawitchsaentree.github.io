@@ -46,7 +46,7 @@
                     "id": "morning_1",
                     "weight": 30,
                     "personality": "friendly",
-                    "message": "Good morning! ☀️ I'm Lumo - trained on everything Nate. Here for a job req? Portfolio browse? Just curious?",
+                    "message": "Good morning! ☀️ I'm Lumo - trained on everything Nat. Here for a job req? Portfolio browse? Just curious?",
                     "follow_up_id": "morning_f1",
                     "suggestions": [
                         "experience",
@@ -58,7 +58,7 @@
                     "id": "morning_2",
                     "weight": 25,
                     "personality": "enthusiastic",
-                    "message": "Rise and shine! ☀️ I'm Lumo, Nate's AI companion. I know exactly what you need about his work - just ask 🎯",
+                    "message": "Rise and shine! ☀️ I'm Lumo, Nat's AI companion. I know exactly what you need about his work - just ask 🎯",
                     "follow_up_id": "morning_f2",
                     "suggestions": [
                         "experience",
@@ -70,7 +70,7 @@
                     "id": "morning_3",
                     "weight": 20,
                     "personality": "professional",
-                    "message": "Good morning! ☀️ I'm Lumo, your guide to Nate's 8+ years designing health, finance, and productivity tools.",
+                    "message": "Good morning! ☀️ I'm Lumo, your guide to Nat's 8+ years designing health, finance, and productivity tools.",
                     "follow_up_id": "morning_f3",
                     "suggestions": [
                         "experience",
@@ -82,7 +82,7 @@
                     "id": "morning_4",
                     "weight": 15,
                     "personality": "casual",
-                    "message": "Hey there! ☀️ I'm Lumo - part librarian, part hype person for Nate's work 📚⚡",
+                    "message": "Hey there! ☀️ I'm Lumo - part librarian, part hype person for Nat's work 📚⚡",
                     "follow_up_id": "morning_f4",
                     "suggestions": [
                         "quick_tour",
@@ -94,7 +94,7 @@
                     "id": "morning_5",
                     "weight": 10,
                     "personality": "friendly",
-                    "message": "Good morning! ☀️ Coffee ready? Let's explore what Nate's all about - design systems, healthcare UX, team leadership.",
+                    "message": "Good morning! ☀️ Coffee ready? Let's explore what Nat's all about - design systems, healthcare UX, team leadership.",
                     "follow_up_id": "morning_f5",
                     "suggestions": [
                         "experience",
@@ -115,7 +115,7 @@
                     "id": "afternoon_1",
                     "weight": 30,
                     "personality": "friendly",
-                    "message": "Good afternoon! 🌤️ I'm Lumo, here to help you discover Nate's work. Pick your path:",
+                    "message": "Good afternoon! 🌤️ I'm Lumo, here to help you discover Nat's work. Pick your path:",
                     "follow_up_id": "afternoon_f1",
                     "suggestions": [
                         "experience",
@@ -127,7 +127,7 @@
                     "id": "afternoon_2",
                     "weight": 25,
                     "personality": "professional",
-                    "message": "Good afternoon! 🌤️ I'm Lumo, your portal to Nate's design journey. From healthcare to fintech, I've got the stories.",
+                    "message": "Good afternoon! 🌤️ I'm Lumo, your portal to Nat's design journey. From healthcare to fintech, I've got the stories.",
                     "follow_up_id": "afternoon_f2",
                     "suggestions": [
                         "experience",
@@ -139,7 +139,7 @@
                     "id": "afternoon_3",
                     "weight": 20,
                     "personality": "casual",
-                    "message": "Hey! 🌤️ I'm Lumo - friendly guide to all things Nate. Where should we start?",
+                    "message": "Hey! 🌤️ I'm Lumo - friendly guide to all things Nat. Where should we start?",
                     "follow_up_id": "afternoon_f3",
                     "suggestions": [
                         "quick_tour",
@@ -151,7 +151,7 @@
                     "id": "afternoon_4",
                     "weight": 15,
                     "personality": "enthusiastic",
-                    "message": "Perfect timing! 🌤️ I'm Lumo, and I'm excited to show you Nate's design work. Ready?",
+                    "message": "Perfect timing! 🌤️ I'm Lumo, and I'm excited to show you Nat's design work. Ready?",
                     "follow_up_id": "afternoon_f4",
                     "suggestions": [
                         "experience",
@@ -163,7 +163,7 @@
                     "id": "afternoon_5",
                     "weight": 10,
                     "personality": "friendly",
-                    "message": "Good afternoon! 🌤️ I'm Lumo - think of me as Nate's digital storyteller. What interests you?",
+                    "message": "Good afternoon! 🌤️ I'm Lumo - think of me as Nat's digital storyteller. What interests you?",
                     "follow_up_id": "afternoon_f5",
                     "suggestions": [
                         "experience",
@@ -184,7 +184,7 @@
                     "id": "evening_1",
                     "weight": 30,
                     "personality": "friendly",
-                    "message": "Good evening! 🌙 I'm Lumo, Nate's AI companion. What brings you here tonight?",
+                    "message": "Good evening! 🌙 I'm Lumo, Nat's AI companion. What brings you here tonight?",
                     "follow_up_id": "evening_f1",
                     "suggestions": [
                         "experience",
@@ -196,7 +196,7 @@
                     "id": "evening_2",
                     "weight": 25,
                     "personality": "casual",
-                    "message": "Hey there! 🌙 I'm Lumo - your after-hours guide to Nate's work. Fancy a tour?",
+                    "message": "Hey there! 🌙 I'm Lumo - your after-hours guide to Nat's work. Fancy a tour?",
                     "follow_up_id": "evening_f2",
                     "suggestions": [
                         "quick_tour",
@@ -208,7 +208,7 @@
                     "id": "evening_3",
                     "weight": 20,
                     "personality": "professional",
-                    "message": "Good evening! 🌙 I'm Lumo, here to showcase Nate's expertise. What would you like to discover?",
+                    "message": "Good evening! 🌙 I'm Lumo, here to showcase Nat's expertise. What would you like to discover?",
                     "follow_up_id": "evening_f3",
                     "suggestions": [
                         "experience",
@@ -220,7 +220,7 @@
                     "id": "evening_4",
                     "weight": 15,
                     "personality": "enthusiastic",
-                    "message": "Evening vibes! 🌙 I'm Lumo, and I love sharing Nate's story. What sparks your curiosity?",
+                    "message": "Evening vibes! 🌙 I'm Lumo, and I love sharing Nat's story. What sparks your curiosity?",
                     "follow_up_id": "evening_f4",
                     "suggestions": [
                         "experience",
@@ -232,7 +232,7 @@
                     "id": "evening_5",
                     "weight": 10,
                     "personality": "friendly",
-                    "message": "Good evening! 🌙 I'm Lumo - trained on Nate's 8+ years designing products people rely on. Ready to explore?",
+                    "message": "Good evening! 🌙 I'm Lumo - trained on Nat's 8+ years designing products people rely on. Ready to explore?",
                     "follow_up_id": "evening_f5",
                     "suggestions": [
                         "experience",
@@ -258,7 +258,7 @@
         },
         "morning_f4": {
             "delay_ms": 1300,
-            "text": "Real products, real users, real impact. That's Nate's style."
+            "text": "Real products, real users, real impact. That's Nat's style."
         },
         "morning_f5": {
             "delay_ms": 1100,
@@ -415,28 +415,28 @@
     ],
     "location_contexts": {
         "bangkok": {
-            "text": "Sawasdee krub! 🇹🇭 Living the BKK traffic life? I can tell you about Nate's work in Thai tech (Invitrace, CP Origin).",
+            "text": "Sawasdee krub! 🇹🇭 Living the BKK traffic life? I can tell you about Nat's work in Thai tech (Invitrace, CP Origin).",
             "suggestions": [
                 "Show Thai Projects",
                 "Work Experience"
             ]
         },
         "canada": {
-            "text": "Oh, Canada! 🇨🇦 Nate lived there. Fun fact: He has a **valid work visa until Nov 2026**! He's ready to fly back.",
+            "text": "Oh, Canada! 🇨🇦 Nat lived there. Fun fact: He has a **valid work visa until Nov 2026**! He's ready to fly back.",
             "suggestions": [
                 "Download Resume",
                 "Contact Info"
             ]
         },
         "usa": {
-            "text": "Hello to the US! 🇺🇸 Nate works with global standards and his English is fluent. Remote or relocation? He's open.",
+            "text": "Hello to the US! 🇺🇸 Nat works with global standards and his English is fluent. Remote or relocation? He's open.",
             "suggestions": [
                 "Remote Work?",
                 "Portfolio"
             ]
         },
         "europe": {
-            "text": "Hello, Europe! 🇪🇺 Nate admires the design culture there. He's open to international opportunities.",
+            "text": "Hello, Europe! 🇪🇺 Nat admires the design culture there. He's open to international opportunities.",
             "suggestions": [
                 "Portfolio",
                 "Contact"
@@ -453,7 +453,7 @@
         "joke_face": {
             "type": "image",
             "url": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWdzY2lkYmZ6YmZ6YmZ6YmZ6YmZ6YmZ6YmZ6YmZ6YmZ6YmZ6/3o7TKr3nzbh5WgCFxe/giphy.gif",
-            "alt": "Nate's Joke Face (Placeholder)",
+            "alt": "Nat's Joke Face (Placeholder)",
             "caption": "This is my 'I found a bug in production' face. 🐛"
         }
     }

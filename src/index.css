@@ -18,11 +18,12 @@
     --text-base: 12px;
     --text-sm: 10px;
 
-    /* Modal / Long-form reading scale */
-    --modal-display: 28px;
-    --modal-heading: 18px;
-    --modal-body: 14px;
-    --modal-meta: 12px;
+    /* Modal / Long-form reading scale — 11px floor (sparing), ×1.25 ratio */
+    --modal-floor: 11px;
+    --modal-meta: 13px;
+    --modal-body: 15px;
+    --modal-heading: 19px;
+    --modal-display: 24px;
 
     /* Spacing Scale (8px base) */
     --space-1: 4px;
@@ -159,6 +160,7 @@
     color: var(--text-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "kern", "liga", "calt";
     min-height: 100vh;
     display: block;
     /* Safer than flex for root */
@@ -600,6 +602,16 @@ html.twilight .chat-section {
 @keyframes tab-content-in {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: none; }
+}
+
+@keyframes float-persona {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .persona-pulse-ring { animation: none !important; }
+  .float-persona-card { animation: none !important; }
 }
 
 @media (max-width: 768px) {

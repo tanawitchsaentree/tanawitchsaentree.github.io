@@ -35,7 +35,7 @@
         ],
         "responses": [
             {
-                "text": "Something good about Nate? Here's a fun fact:",
+                "text": "Something good about Nat? Here's a fun fact:",
                 "action": "surprise_query"
             },
             {
@@ -152,7 +152,7 @@
             },
             {
                 "label": "Contact Info",
-                "description": "How to reach Nate",
+                "description": "How to reach Nat",
                 "trigger": "contact"
             }
         ]

@@ -500,7 +500,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ mode = 'overlay' }) => {
                     <img src="/lumo_favicon.svg" alt="Lumo" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover' }} />
                     <div>
                         <div style={{ fontWeight: 700, fontSize: '14px', color: 'var(--foreground)', lineHeight: 1.2 }}>Lumo</div>
-                        <div style={{ fontSize: '10px', color: 'var(--muted-foreground)', letterSpacing: '0.04em' }}>Nate's AI · always on</div>
+                        <div style={{ fontSize: '10px', color: 'var(--muted-foreground)', letterSpacing: '0.04em' }}>Nat's AI · always on</div>
                     </div>
                 </div>
 

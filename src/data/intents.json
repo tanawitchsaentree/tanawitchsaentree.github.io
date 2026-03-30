@@ -178,16 +178,16 @@
     },
     "responses": {
         "greeting": [
-            "Hey! I'm Lumo, Nate's assistant. Ask me anything about his work.",
-            "Hi there! I'm Lumo. What would you like to know about Nate?",
-            "Hello! Lumo here — your guide to Nate's background and work. What are you curious about?"
+            "Hey! I'm Lumo, Nat's assistant. Ask me anything about his work.",
+            "Hi there! I'm Lumo. What would you like to know about Nat?",
+            "Hello! Lumo here — your guide to Nat's background and work. What are you curious about?"
         ],
         "ask_lumo": [
-            "I'm Lumo, an AI assistant built to represent Nate's portfolio. Ask me anything about his skills, experience, or how to reach him.",
-            "The name's Lumo! I know everything about Nate's 8+ year design career. What would you like to explore?"
+            "I'm Lumo, an AI assistant built to represent Nat's portfolio. Ask me anything about his skills, experience, or how to reach him.",
+            "The name's Lumo! I know everything about Nat's 8+ year design career. What would you like to explore?"
         ],
         "challenges": [
-            "Nate treats failures as learning iterations. He believes every challenge taught him something valuable about resilience.",
+            "Nat treats failures as learning iterations. He believes every challenge taught him something valuable about resilience.",
             "He's not perfect — but he's great at learning from mistakes. His philosophy: fail fast, learn faster.",
             "His biggest weakness? Caring too much about getting things right. He views challenges as data points for better design."
         ],
@@ -196,12 +196,12 @@
             "Grabbing that for you — one moment!"
         ],
         "competence_confirmed": [
-            "He's specifically qualified for that. Nate brings deep expertise to the table.",
+            "He's specifically qualified for that. Nat brings deep expertise to the table.",
             "Yes — he's more than capable. His track record speaks for itself.",
             "Absolutely. He's handled complex projects like this across multiple industries."
         ],
         "challenge_reframe": [
-            "Nate sees that not as a failure, but as a stepping stone.",
+            "Nat sees that not as a failure, but as a stepping stone.",
             "It wasn't a failure, but a valuable lesson in iteration.",
             "He believes mistakes are just data points for better design."
         ],

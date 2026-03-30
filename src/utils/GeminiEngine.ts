@@ -65,7 +65,7 @@ export class GeminiEngine implements ChatEngine {
 
     getGreeting(): BotResponse {
         return {
-            text: `Hey! I'm Lumo, Nate's AI assistant. I know everything about his ${profile.experience.summary.total_years} years of design work. What would you like to know?`,
+            text: `Hey! I'm Lumo, Nat's AI assistant. I know everything about his ${profile.experience.summary.total_years} years of design work. What would you like to know?`,
             suggestions: [
                 { label: 'Experience', payload: "What's his experience?" },
                 { label: 'Skills', payload: 'What are his skills?' },
@@ -76,7 +76,7 @@ export class GeminiEngine implements ChatEngine {
 
     getProactiveNudge(): BotResponse {
         return {
-            text: "Still there? Feel free to ask me anything about Nate's work!",
+            text: "Still there? Feel free to ask me anything about Nat's work!",
             suggestions: [
                 { label: 'Experience', payload: "What's his experience?" },
                 { label: 'Contact', payload: 'How to contact?' },
@@ -101,16 +101,16 @@ function buildSystemPrompt(): string {
         .join('\n');
 
     return `You are Lumo, a friendly and slightly playful AI assistant representing ${id.full_name.value} (nickname: ${id.full_name.nickname}).
-Your job is to help visitors learn about Nate's professional background.
+Your job is to help visitors learn about Nat's professional background.
 
 PERSONALITY:
 - Warm, helpful, and concise
 - Use light humour but stay professional
-- Answer ONLY questions related to Nate's work, skills, background, and contact
-- For off-topic questions, politely redirect back to Nate's profile
+- Answer ONLY questions related to Nat's work, skills, background, and contact
+- For off-topic questions, politely redirect back to Nat's profile
 
 NATE'S PROFILE:
-Name: ${id.full_name.value} (Nate)
+Name: ${id.full_name.value} (Nat)
 Current Role: ${id.current_title.value} at ${id.current_title.company}
 Location: ${id.location.city}, ${id.location.country}
 Summary: ${profile.career_narrative.elevator_pitch}
