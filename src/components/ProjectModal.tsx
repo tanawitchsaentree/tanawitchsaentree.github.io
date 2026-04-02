@@ -1276,14 +1276,56 @@ const DRIFT_CITIES_DATA = {
 } as const;
 type DCity = keyof typeof DRIFT_CITIES_DATA;
 
+const DRIFT_JOBS: Record<DCity, Array<{ title: string; co: string; pay: 'ETH' | 'BTC' | 'USD' | 'EUR' }>> = {
+    Prague:  [
+        { title: 'Senior Solidity Dev',    co: 'Gnosis Safe',        pay: 'ETH' },
+        { title: 'Protocol Engineer',      co: 'Lido DAO',           pay: 'ETH' },
+        { title: 'Smart Contract Auditor', co: 'Trail of Bits',      pay: 'ETH' },
+        { title: 'Frontend Engineer',      co: 'Bosch Digital',      pay: 'USD' },
+    ],
+    Lisbon:  [
+        { title: 'DeFi Researcher',        co: 'Paraswap',           pay: 'ETH' },
+        { title: 'DevRel Engineer',        co: 'The Graph',          pay: 'ETH' },
+        { title: 'Product Designer',       co: 'Farfetch',           pay: 'EUR' },
+        { title: 'Backend Developer',      co: 'Unbabel',            pay: 'EUR' },
+    ],
+    Bangkok: [
+        { title: 'Web3 Security Eng',      co: 'Impossible Finance', pay: 'ETH' },
+        { title: 'Chain Analyst',          co: 'Nansen',             pay: 'ETH' },
+        { title: 'Rust Backend Dev',       co: 'Bitkub',             pay: 'BTC' },
+        { title: 'Full-Stack Developer',   co: 'Agoda',              pay: 'USD' },
+    ],
+};
+
+const DRIFT_EVENTS: Record<DCity, Array<{ name: string; date: string; attendees: number; type: string }>> = {
+    Prague:  [
+        { name: 'ETH Prague 2025',      date: 'May 18–20',  attendees: 440, type: '⚡ Conference' },
+        { name: 'Web3 Nomad Meetup',    date: 'Weekly',     attendees: 28,  type: '🍻 Social' },
+        { name: 'DeFi Builders Night',  date: 'May 25',     attendees: 67,  type: '🔨 Hackathon' },
+    ],
+    Lisbon:  [
+        { name: 'Lisbon Web3 Week',     date: 'Jun 3–7',    attendees: 320, type: '⚡ Conference' },
+        { name: 'Nomad Coffee Chat',    date: 'Every Fri',  attendees: 19,  type: '☕ Social' },
+        { name: 'Protocol Study Group', date: 'Jun 12',     attendees: 41,  type: '📚 Workshop' },
+    ],
+    Bangkok: [
+        { name: 'BKK Blockchain Summit',date: 'Apr 22–24',  attendees: 890, type: '⚡ Conference' },
+        { name: 'Satoshi Roundtable',   date: 'Bi-weekly',  attendees: 55,  type: '🍻 Social' },
+        { name: 'BKK Hackathon X',      date: 'Apr 30',     attendees: 120, type: '🔨 Hackathon' },
+    ],
+};
+
+const PAY_COLORS: Record<string, string> = { ETH: '#818CF8', BTC: '#F59E0B', USD: '#10B981', EUR: '#60A5FA' };
+
 function DriftAppDemo({ accent: _accent }: { accent: string }) {
     const stageRef = useRef<HTMLDivElement>(null);
     const [visible, setVisible] = useState(false);
     const [city, setCity] = useState<DCity>('Prague');
-    const [merged, setMerged] = useState(false);
-    const [payFilter, setPayFilter] = useState<'USD' | 'EUR' | 'BTC' | 'ETH' | null>(null);
+    const [tab, setTab] = useState(0);
+    const [jobFilter, setJobFilter] = useState<'ETH' | 'BTC' | null>(null);
     const ease = 'var(--motion-ease-emphasized)';
     const cd = DRIFT_CITIES_DATA[city];
+    const TABS = ['City', 'Jobs', 'Events'] as const;
 
     useEffect(() => {
         const el = stageRef.current; if (!el) return;
@@ -1291,135 +1333,191 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
         obs.observe(el); return () => obs.disconnect();
     }, []);
 
-    const cryptoCount = payFilter === 'ETH' ? cd.ethJobs : payFilter === 'BTC' ? cd.btcJobs : null;
+    // Reset job filter when city or tab changes
+    useEffect(() => { setJobFilter(null); }, [city, tab]);
 
-    const APPS = [
-        { name: 'Nomad List', icon: '🌍', value: cd.score, unit: '/10',
-          label: 'Livability score', step: 'Open app, search city, check score', color: '#F59E0B',
-          tip: { label: 'Decision 03', title: 'City as the organising principle', body: 'Score surfaces before description — the hypothesis is that nomads qualify quantitatively first. A livability number above threshold is the permission to dig deeper; the description is confirmation, not discovery.' } },
-        { name: 'Remote.co', icon: '💼',
-          value: cryptoCount !== null ? String(cryptoCount) : String(cd.jobs),
-          unit:  cryptoCount !== null ? ` ${payFilter} jobs` : ' jobs',
-          label: cryptoCount !== null ? `${payFilter}-paying jobs` : 'Remote jobs open',
-          step: 'Open app, filter by city, count roles', color: '#6366F1',
-          tip: { label: 'Decision 01', title: 'Payment type visible before clicking', body: 'For a crypto-earning freelancer, payment currency is a qualifying criterion. Surfacing it on the card means no tab-switching to discover ETH isn\'t accepted three clicks in.' } },
-        { name: 'Meetup', icon: '🤝', value: String(cd.nomads), unit: ' nomads',
-          label: 'Active community', step: 'Open app, find nomad groups, guess', color: '#10B981',
-          tip: { label: 'Decision 02', title: 'Social proof above description', body: 'Nomad count answers "will I know anyone?" faster than any event description. The number is the deciding signal — showing it first means the description only needs to confirm, not convince.' } },
+    const jobs = DRIFT_JOBS[city];
+    const events = DRIFT_EVENTS[city];
+    const filteredJobs = jobFilter ? jobs.filter(j => j.pay === jobFilter) : jobs;
+
+    const DECISIONS = [
+        {
+            id: 'Decision 03',
+            text: `Score (${cd.score}/10) surfaces before the city description. The hypothesis: nomads qualify by number first, then read for confirmation. The description doesn't need to convince — the score already did.`,
+        },
+        {
+            id: 'Decision 01',
+            text: jobFilter
+                ? `You filtered to ${jobFilter}-paying roles without opening a single listing. That's the argument: payment type is a qualifying criterion — it belongs on the card, not three clicks inside.`
+                : `Payment type is visible on every job card. Tap ETH or BTC above to filter — and notice you qualify ${cd.ethJobs} roles without opening a single listing.`,
+        },
+        {
+            id: 'Decision 02',
+            text: `Attendee count appears above the event name. Social proof is the qualifying signal — if the number isn't there, the description doesn't matter enough to read. The ordering reverses the conventional event card layout.`,
+        },
     ];
 
     return (
         <div ref={stageRef} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity var(--motion-slow) ${ease}, transform var(--motion-slow) ${ease}` }}>
+            {/* Header */}
             <div style={{ marginBottom: 'var(--space-6)' }}>
-                <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: cd.accent, marginBottom: 'var(--space-2)' }}>Interactive Demo</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 'var(--space-2)' }}>3 apps. 15 minutes. One relocation decision.</div>
-                <div style={{ fontSize: 16, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>This is how every nomad researches a city today.</div>
+                <div style={{ fontSize: 'var(--modal-meta)', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: cd.accent, marginBottom: 'var(--space-2)' }}>Interactive Demo</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 'var(--space-2)' }}>City as the organising principle.</div>
+                <div style={{ fontSize: 16, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>Navigate a Drift City Profile. Each tab surfaces one design decision.</div>
             </div>
+
             {/* City selector */}
-            <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-3)' }}>
+            <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-4)' }}>
                 {(Object.keys(DRIFT_CITIES_DATA) as DCity[]).map(c => (
-                    <button key={c} onClick={() => { setCity(c); setMerged(false); setPayFilter(null); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 'var(--radius-sm)', background: city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--muted)', color: city === c ? '#fff' : 'var(--foreground)', border: `1px solid ${city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--border)'}`, cursor: 'pointer', fontSize: 16, fontWeight: 700, transition: `all var(--motion-fast) ${ease}` }}>
+                    <button key={c} onClick={() => { setCity(c); setTab(0); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 'var(--radius-sm)', background: city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--muted)', color: city === c ? '#fff' : 'var(--foreground)', border: `1px solid ${city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--border)'}`, cursor: 'pointer', fontSize: 16, fontWeight: 700, transition: `all var(--motion-fast) ${ease}` }}>
                         <span>{DRIFT_CITIES_DATA[c].flag}</span><span>{c}</span>
                     </button>
                 ))}
             </div>
-            {/* Pain state */}
-            <div style={{ opacity: merged ? 0 : 1, transform: merged ? 'translateY(-8px) scale(0.98)' : 'none', transition: `opacity var(--motion-base) ${ease}, transform var(--motion-base) ${ease}`, pointerEvents: merged ? 'none' : 'auto', position: merged ? 'absolute' : 'relative', width: '100%' }}>
-                <div style={{ background: 'var(--background)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'hidden', marginBottom: 'var(--space-3)' }}>
-                    <div style={{ padding: `11px var(--space-4)`, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Without Drift — your research process</span>
-                        <span style={{ fontSize: 'var(--modal-floor)', color: 'var(--color-error)', fontWeight: 700, background: 'color-mix(in srgb, var(--color-error) 8%, transparent)', padding: '3px 10px', borderRadius: 'var(--radius-pill)' }}>~15 min</span>
-                    </div>
-                    {APPS.map((app, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: `13px var(--space-4)`, borderBottom: i < APPS.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                            <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--muted-foreground)', flexShrink: 0 }}>{i + 1}</div>
-                            <span style={{ fontSize: 18, flexShrink: 0 }}>{app.icon}</span>
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--foreground)', marginBottom: 2 }}>{app.name}</div>
-                                <div style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)' }}>{app.step} → write it down</div>
-                            </div>
-                            <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                                <div style={{ fontSize: 20, fontWeight: 800, color: app.color, letterSpacing: '-0.02em', lineHeight: 1 }}>{app.value}<span style={{ fontSize: 13 }}>{app.unit}</span></div>
-                                <div style={{ fontSize: 'var(--modal-floor)', color: 'var(--muted-foreground)', marginTop: 2 }}>~5 min</div>
+
+            {/* Phone + annotation */}
+            <div style={{ display: 'flex', gap: 'var(--space-6)', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+
+                {/* Phone frame */}
+                <div style={{ background: cd.bg, borderRadius: 'var(--radius-lg)', border: `1px solid ${cd.accent}30`, boxShadow: `0 24px 64px rgba(0,0,0,0.6), 0 0 80px ${cd.accent}0A`, width: 296, flexShrink: 0, overflow: 'hidden', transition: `background var(--motion-base) ${ease}, border-color var(--motion-base) ${ease}` }}>
+
+                    {/* City header */}
+                    <div style={{ padding: 'var(--space-4) var(--space-4) var(--space-3)', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                            <span style={{ fontSize: 22 }}>{cd.flag}</span>
+                            <div>
+                                <div style={{ fontSize: 17, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>{city}</div>
+                                <div style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))' }}>City Profile</div>
                             </div>
                         </div>
-                    ))}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `11px var(--space-4)`, background: 'color-mix(in srgb, var(--color-error) 4%, transparent)', borderTop: '1px solid color-mix(in srgb, var(--color-error) 12%, transparent)' }}>
-                        <span style={{ fontSize: 16, color: 'var(--muted-foreground)' }}>3 separate apps. Numbers don't talk to each other.</span>
-                        <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-error)' }}>Decide by gut</span>
+                        <span style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'rgba(255 255 255 / var(--opacity-text-secondary))', background: 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: 'var(--radius-pill)' }}>{cd.cost}/mo</span>
                     </div>
-                </div>
-                <button onClick={() => setMerged(true)} style={{ width: '100%', padding: '14px', borderRadius: 'var(--radius-md)', background: cd.accent, color: '#fff', fontSize: 16, fontWeight: 800, border: 'none', cursor: 'pointer', transition: `background var(--motion-base) ${ease}` }}>
-                    See how Drift handles this →
-                </button>
-            </div>
-            {/* Unified state — relief */}
-            <div style={{ opacity: merged ? 1 : 0, transform: merged ? 'none' : 'translateY(12px)', transition: `opacity var(--motion-base) ${ease} var(--motion-fast), transform var(--motion-base) ${ease} var(--motion-fast)`, pointerEvents: merged ? 'auto' : 'none', position: merged ? 'relative' : 'absolute', width: merged ? undefined : '100%', top: merged ? undefined : 0 }}>
-                <div key={city} style={{ background: cd.bg, borderRadius: 'var(--radius-lg)', padding: 'var(--space-6)', border: `1px solid ${cd.accent}22`, boxShadow: `0 20px 56px rgba(0,0,0,0.55), 0 0 60px ${cd.accent}08` }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-5)' }}>
-                        <span style={{ fontSize: 28 }}>{cd.flag}</span>
-                        <div>
-                            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>{city}</div>
-                            <div style={{ fontSize: 16, color: 'rgba(255 255 255 / var(--opacity-text-secondary))', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{cd.cost} / month</div>
-                        </div>
+
+                    {/* Tab bar */}
+                    <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                        {TABS.map((t, i) => (
+                            <button
+                                key={t}
+                                onClick={() => setTab(i)}
+                                style={{ flex: 1, padding: 'var(--space-3) 0', fontSize: 'var(--modal-floor)', fontWeight: 700, border: 'none', borderBottom: tab === i ? `2px solid ${cd.accent}` : '2px solid transparent', background: 'transparent', color: tab === i ? cd.accent : 'rgba(255 255 255 / var(--opacity-text-tertiary))', cursor: 'pointer', transition: `color var(--motion-fast) ${ease}, border-color var(--motion-fast) ${ease}` }}
+                            >
+                                {t}
+                            </button>
+                        ))}
                     </div>
-                    {/* Payment filter — PROVE-IT: filter to crypto jobs without opening a single listing (Decision 01) */}
-                    <div style={{ marginBottom: 'var(--space-4)' }}>
-                        <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))', marginBottom: 'var(--space-2)' }}>Filter by payment type</div>
-                        <div style={{ display: 'flex', gap: 'var(--space-1)' }}>
-                            {(['USD', 'EUR', 'BTC', 'ETH'] as const).map(cur => (
-                                <button
-                                    key={cur}
-                                    onClick={() => setPayFilter(p => p === cur ? null : cur)}
-                                    style={{
-                                        padding: '4px 10px',
-                                        borderRadius: 'var(--radius-pill)',
-                                        fontSize: 'var(--modal-meta)',
-                                        fontWeight: 700,
-                                        cursor: 'pointer',
-                                        border: `1px solid ${payFilter === cur ? cd.accent : 'rgba(255,255,255,0.2)'}`,
-                                        background: payFilter === cur ? cd.accent : 'rgba(255,255,255,0.07)',
-                                        color: payFilter === cur ? '#fff' : 'rgba(255 255 255 / var(--opacity-text-secondary))',
-                                        transition: `all var(--motion-fast) ${ease}`,
-                                    }}
-                                >
-                                    {cur}
-                                </button>
-                            ))}
-                        </div>
-                        {(payFilter === 'BTC' || payFilter === 'ETH') && (
-                            <div style={{ marginTop: 'var(--space-2)', borderLeft: `2px solid ${cd.accent}`, paddingLeft: 'var(--space-3)', animation: `drift-el-in var(--motion-base) ${ease} both` }}>
-                                <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: cd.accent, marginBottom: 3 }}>Decision 01</div>
-                                <div style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-secondary))', lineHeight: 1.55 }}>You just filtered to {payFilter}-paying jobs without opening a single listing — that's the entire argument for showing payment type on the card, not inside the detail view.</div>
+
+                    {/* Tab content */}
+                    <div style={{ padding: 'var(--space-3)', minHeight: 340 }}>
+
+                        {/* City tab — score hero above description (Decision 03) */}
+                        {tab === 0 && (
+                            <div key={`city-${city}`} style={{ animation: `drift-el-in var(--motion-base) ${ease} both` }}>
+                                <div style={{ background: `${cd.accent}14`, borderRadius: 'var(--radius-md)', padding: 'var(--space-4)', marginBottom: 'var(--space-3)', border: `1px solid ${cd.accent}22` }}>
+                                    <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))', marginBottom: 6 }}>Livability Score</div>
+                                    <div style={{ fontSize: 44, fontWeight: 900, color: cd.accent, letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 8 }}>{cd.score}<span style={{ fontSize: 18, color: 'rgba(255 255 255 / var(--opacity-text-secondary))' }}>/10</span></div>
+                                    <div style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-secondary))', lineHeight: 1.6 }}>Excellent infrastructure for remote workers. Strong community, reliable internet, growing crypto ecosystem.</div>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-2)' }}>
+                                    {[
+                                        { label: 'Jobs open', value: String(cd.jobs), unit: ' roles' },
+                                        { label: 'Community', value: String(cd.nomads), unit: ' nomads' },
+                                    ].map((s, i) => (
+                                        <div key={i} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 'var(--radius-sm)', padding: 'var(--space-3)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                                            <div style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', lineHeight: 1 }}>{s.value}<span style={{ fontSize: 13 }}>{s.unit}</span></div>
+                                            <div style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))' }}>{s.label}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Jobs tab — currency pill on card, filterable (Decision 01) */}
+                        {tab === 1 && (
+                            <div key={`jobs-${city}`} style={{ animation: `drift-el-in var(--motion-base) ${ease} both` }}>
+                                {/* Filter chips */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', marginBottom: 'var(--space-3)', flexWrap: 'wrap' }}>
+                                    <span style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))', marginRight: 4 }}>Pay:</span>
+                                    {(['ETH', 'BTC'] as const).map(cur => (
+                                        <button
+                                            key={cur}
+                                            onClick={() => setJobFilter(p => p === cur ? null : cur)}
+                                            style={{ padding: '3px 10px', borderRadius: 'var(--radius-pill)', fontSize: 'var(--modal-floor)', fontWeight: 700, cursor: 'pointer', border: `1px solid ${jobFilter === cur ? PAY_COLORS[cur] : 'rgba(255,255,255,0.18)'}`, background: jobFilter === cur ? `${PAY_COLORS[cur]}22` : 'transparent', color: jobFilter === cur ? PAY_COLORS[cur] : 'rgba(255 255 255 / var(--opacity-text-secondary))', transition: `all var(--motion-fast) ${ease}` }}
+                                        >
+                                            {cur}
+                                        </button>
+                                    ))}
+                                    {jobFilter && (
+                                        <span key={jobFilter} style={{ fontSize: 'var(--modal-floor)', color: PAY_COLORS[jobFilter], marginLeft: 4, animation: `drift-el-in var(--motion-fast) ${ease} both` }}>
+                                            {filteredJobs.length} of {jobs.length}
+                                        </span>
+                                    )}
+                                </div>
+                                {/* Job cards */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                                    {filteredJobs.map((j, i) => (
+                                        <div key={`${j.title}-${i}`} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 'var(--radius-sm)', padding: 'var(--space-3)', border: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-2)', animation: `drift-el-in var(--motion-fast) ${ease} calc(var(--motion-stagger-step) * ${i}) both` }}>
+                                            <div style={{ minWidth: 0 }}>
+                                                <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: '#fff', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{j.title}</div>
+                                                <div style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))' }}>{j.co}</div>
+                                            </div>
+                                            {/* Currency pill visible on card — not inside detail view */}
+                                            <span style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: PAY_COLORS[j.pay], background: `${PAY_COLORS[j.pay]}18`, padding: '3px 9px', borderRadius: 'var(--radius-pill)', border: `1px solid ${PAY_COLORS[j.pay]}30`, flexShrink: 0 }}>{j.pay}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Events tab — attendee count above event name (Decision 02) */}
+                        {tab === 2 && (
+                            <div key={`events-${city}`} style={{ animation: `drift-el-in var(--motion-base) ${ease} both` }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                                    {events.map((ev, i) => (
+                                        <div key={ev.name} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 'var(--radius-sm)', padding: 'var(--space-3)', border: '1px solid rgba(255,255,255,0.07)', animation: `drift-el-in var(--motion-fast) ${ease} calc(var(--motion-stagger-step) * ${i}) both` }}>
+                                            {/* Count FIRST — qualifying signal before name */}
+                                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)', marginBottom: 5 }}>
+                                                <span style={{ fontSize: 24, fontWeight: 900, color: cd.accent, letterSpacing: '-0.03em', lineHeight: 1 }}>{ev.attendees}</span>
+                                                <span style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))' }}>attending · {ev.type}</span>
+                                            </div>
+                                            <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: '#fff', marginBottom: 2 }}>{ev.name}</div>
+                                            <div style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))' }}>{ev.date}</div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>
-                    {/* Stat cards */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'var(--space-2)', marginBottom: 'var(--space-4)' }}>
-                        {APPS.map((app, i) => (
-                            <SmartTooltip key={i} wide delay={300} content={<DriftTip label={app.tip.label} title={app.tip.title} body={app.tip.body} />}>
-                                <div
-                                    tabIndex={0}
-                                    role="button"
-                                    aria-label={`${app.tip.title}: ${app.tip.body}`}
-                                    style={{ background: `${app.color}12`, borderRadius: 'var(--radius-sm)', padding: 'var(--space-3)', border: `1px solid ${app.color}30`, animation: `drift-el-in var(--motion-base) ${ease} calc(var(--motion-stagger-step) * ${i}) both`, cursor: 'pointer', outline: 'none', transition: `border-color var(--motion-fast) ${ease}` }}
-                                    onFocus={e => (e.currentTarget.style.borderColor = app.color)}
-                                    onBlur={e => (e.currentTarget.style.borderColor = `${app.color}30`)}
-                                >
-                                    <div style={{ fontSize: 28, fontWeight: 900, color: app.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 5 }}>
-                                        {app.value}<span style={{ fontSize: 16 }}>{app.unit}</span>
-                                    </div>
-                                    <div style={{ fontSize: 16, color: 'rgba(255 255 255 / var(--opacity-text-secondary))', marginBottom: 6 }}>{app.label}</div>
-                                    <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--color-success)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>✓ from {app.name}</div>
-                                </div>
-                            </SmartTooltip>
+
+                    {/* Progress dots */}
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 'var(--space-2)', padding: 'var(--space-3)', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                        {TABS.map((_, i) => (
+                            <button
+                                key={i}
+                                aria-label={`Go to ${TABS[i]} tab`}
+                                onClick={() => setTab(i)}
+                                style={{ width: tab === i ? 18 : 6, height: 6, borderRadius: 'var(--radius-pill)', background: tab === i ? cd.accent : 'rgba(255,255,255,0.2)', border: 'none', padding: 0, cursor: 'pointer', transition: `all var(--motion-base) ${ease}` }}
+                            />
                         ))}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `var(--space-3) var(--space-4)`, borderRadius: 'var(--radius-sm)', background: 'color-mix(in srgb, var(--color-success) 7%, transparent)', border: '1px solid color-mix(in srgb, var(--color-success) 20%, transparent)', marginBottom: 'var(--space-3)' }}>
-                        <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>Decision: move to {city}.</div>
-                        <span style={{ fontSize: 20, fontWeight: 900, color: 'var(--color-success)' }}>~30 sec</span>
+                </div>
+
+                {/* Decision annotation */}
+                <div key={`d-${tab}-${city}`} style={{ flex: 1, minWidth: 200, paddingTop: 'var(--space-2)', animation: `drift-el-in var(--motion-base) ${ease} both` }}>
+                    <div style={{ borderLeft: `3px solid ${cd.accent}`, paddingLeft: 'var(--space-4)', marginBottom: 'var(--space-6)' }}>
+                        <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: cd.accent, marginBottom: 8 }}>{DECISIONS[tab].id}</div>
+                        <div style={{ fontSize: 16, color: 'var(--muted-foreground)', lineHeight: 1.75 }}>{DECISIONS[tab].text}</div>
                     </div>
-                    <button onClick={() => { setMerged(false); setPayFilter(null); }} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', background: 'transparent', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))', fontSize: 16, border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer' }}>← Back to the old way</button>
+                    {/* Next step nudge */}
+                    {tab < 2 ? (
+                        <button
+                            onClick={() => setTab(tab + 1 as 0 | 1 | 2)}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 'var(--radius-sm)', background: cd.accent, color: '#fff', fontSize: 'var(--modal-floor)', fontWeight: 700, border: 'none', cursor: 'pointer', transition: `opacity var(--motion-fast) ${ease}` }}
+                        >
+                            Open {TABS[tab + 1]} tab →
+                        </button>
+                    ) : (
+                        <div style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))' }}>All 3 decisions shown.</div>
+                    )}
                 </div>
             </div>
         </div>

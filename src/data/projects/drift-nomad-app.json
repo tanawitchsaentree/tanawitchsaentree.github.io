@@ -32,7 +32,7 @@
         },
         {
             "id": "scale",
-            "label": "Scale",
+            "label": "Context",
             "type": "big_number",
             "meta": {
                 "intent": "prove",
@@ -43,11 +43,11 @@
                 "disclosure": "inline"
             },
             "data": {
-                "eyebrow": "The Market",
+                "eyebrow": "The Context",
                 "value": "35M",
                 "unit": "digital nomads",
                 "label": "worldwide in 2023 — up 131% since 2019",
-                "body": "Source: MBO Partners State of Independence 2023. A generation of workers who move between cities has already arrived. The tooling to support how they actually make relocation decisions hasn't caught up — and the gap between nomad population growth and the product infrastructure built for them is exactly where Drift positions itself."
+                "body": "Source: MBO Partners State of Independence 2023. A generation of workers who move between cities has already arrived. The tooling to support how they actually make relocation decisions hasn't caught up — the research is still split across five apps, none of which know about the others."
             }
         },
         {
@@ -75,15 +75,42 @@
                     ]
                 },
                 "after": {
-                    "label": "What Drift proposes",
+                    "label": "The design hypotheses",
                     "items": [
-                        "City Profile — score, cost, and nomad count in one view above the fold",
-                        "Job tab on City — 20 open remote roles in Prague, without leaving the city page",
-                        "Event tab on City — upcoming IRL meetups with attendee count visible",
-                        "Feed tab — live activity from nomads currently in the city",
-                        "One bookmark action across jobs and events — building a Prague shortlist, not three lists"
+                        "Score and cost matter more than description — qualification is numerical first, qualitative second",
+                        "Payment type is a qualifying criterion; it should be visible before the click, not inside the listing",
+                        "Event attendance — who's going — is the deciding signal before what the event is",
+                        "Jobs and events stay on the city page — the city is the frame, not the task type",
+                        "A save action should work identically across jobs and events — the intent is the same"
                     ]
                 }
+            }
+        },
+        {
+            "id": "persona",
+            "label": "Persona",
+            "type": "personas",
+            "meta": {
+                "intent": "explain",
+                "density": "medium",
+                "max_words": 300,
+                "max_blocks": 1,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
+            "data": {
+                "title": "The user Drift bets on.",
+                "items": [
+                    {
+                        "name": "The crypto-native nomad",
+                        "type": "Composite · based on app's evident target user",
+                        "biography": "Earns in USDC or ETH. Moves cities every two to three months — not backpacking, but not settling either. Evaluates relocations the way some people evaluate apartments: score first, vibe second. Finds community through Bitcoin meetups and Telegram nomad groups rather than LinkedIn or Eventbrite.",
+                        "goal": "Find a city with a livable cost-to-income ratio, an active crypto-friendly remote job market, and enough nomads already there that the first two weeks don't feel like starting from zero.",
+                        "needs": "Quantitative city signals up front — not buried under a city description. Crypto payment options visible before clicking into a job listing. Event social proof (who's going) visible before the event description (what it is).",
+                        "frustrations": "Opening listing after listing to find one that pays in crypto. City research spread across four apps that don't share context. Showing up to a new city and discovering the nomad scene existed two weeks ago — and the next meetup is in a month.",
+                        "why_use": "Opens City Profile → checks Score and Cost before reading a word of description. Scans Job 20 count on the tab to gauge market depth before opening any listings. Checks Event 3 tab to see what's happening in the next two weeks. The numbers on the tabs are the entire first pass — text comes second. If the numbers pass threshold, Prague is shortlisted before a single listing is opened. If they don't, the city is skipped."
+                    }
+                ]
             }
         },
         {
@@ -100,12 +127,12 @@
             },
             "data": {
                 "text": "The three apps aren't the problem. They're the symptom. Jobs, city research, and community discovery are organised by task type — when for a nomad, they're all the same question: 'Should I move to Prague?'",
-                "attribution": "Drift design hypothesis — organise around the city, not the task"
+                "attribution": "— hypothesis that shaped every layout decision"
             }
         },
         {
             "id": "screens",
-            "label": "Screens",
+            "label": "Structure",
             "type": "scrolling_cards",
             "meta": {
                 "intent": "explain",
@@ -127,7 +154,7 @@
                     {
                         "tag": "Vacancy",
                         "title": "Four currencies. One surface.",
-                        "body": "Payment options (USD · Euro · BTC · ETH) appear as equal pill badges on the card — not inside the detail view. For a freelancer whose income is already in crypto, this is a qualifying signal that needs to be visible before the click. Opening 15 listings to find one that pays in ETH is friction that compounds."
+                        "body": "Payment options (USD · Euro · BTC · ETH) appear as equal pill badges on the card — not inside the detail view. For a freelancer whose income is already in crypto, this is a qualifying signal that needs to be visible before the click. Opening listing after listing to find one that pays in ETH is friction that compounds."
                     },
                     {
                         "tag": "Event",
@@ -156,7 +183,7 @@
                     {
                         "number": "01",
                         "title": "Payment options on the card, not the detail",
-                        "description": "**Problem →** A crypto-earning freelancer treats payment type as a qualifying criterion — not a detail. Burying BTC/ETH inside the job detail means opening 15 listings to find the one that pays in the right currency.\n\n**A:** Payment shown in detail view only — standard card pattern, preserves readability. **B:** Currency pills on the card surface.\n\n**Chose B** — card-level visibility lets users filter by scanning, not clicking. **Cost:** Four pills consume space that could show two more lines of role description. The bet is that payment type matters more to this user than extra requirements text."
+                        "description": "**Problem →** A crypto-earning freelancer treats payment type as a qualifying criterion — not a detail. Burying BTC/ETH inside the job detail means opening listing after listing to find the one that pays in the right currency.\n\n**A:** Payment shown in detail view only — standard card pattern, preserves readability. **B:** Currency pills on the card surface.\n\n**Chose B** — card-level visibility lets users filter by scanning, not clicking. **Cost:** Four pills consume space that could show two more lines of role description. The bet is that payment type matters more to this user than extra requirements text."
                     },
                     {
                         "number": "02",
@@ -189,8 +216,8 @@
                 "disclosure": "inline"
             },
             "data": {
-                "title": "How the three screens connect",
-                "description": "A nomad's relocation decision is a single session — not three separate app sessions. Drift's screens are designed as a sequential funnel: qualify the city, find the work, confirm the community. Each screen earns the right to the next: a livability score above threshold is the permission to dig into jobs, and job depth is the permission to check whether the social scene already exists.",
+                "title": "Qualify fast. Go deep only when it passes.",
+                "description": "A nomad's relocation decision is a single session — not three separate app sessions. Each screen earns the right to the next: the score is permission to open the Job tab. The job depth is permission to check whether the community already exists. If Prague fails at step one, none of the rest gets read.",
                 "steps": [
                     "Open city profile for Prague",
                     "Check Score (9.2) and Cost ($3,200/mo)",
@@ -201,33 +228,6 @@
                     "See 'Run For Hal Prague' — 99+ nomads joined",
                     "Tap 'Interest to join'",
                     "Decision made: booking Prague"
-                ]
-            }
-        },
-        {
-            "id": "persona",
-            "label": "Persona",
-            "type": "personas",
-            "meta": {
-                "intent": "explain",
-                "density": "medium",
-                "max_words": 300,
-                "max_blocks": 1,
-                "proof_required": "none",
-                "disclosure": "inline"
-            },
-            "data": {
-                "title": "Who this is designed for",
-                "items": [
-                    {
-                        "name": "The crypto-native nomad",
-                        "type": "Composite · based on app's evident target user",
-                        "biography": "Earns in USDC or ETH. Moves cities every two to three months — not backpacking, but not settling either. Evaluates relocations the way some people evaluate apartments: score first, vibe second. Finds community through Bitcoin meetups and Telegram nomad groups rather than LinkedIn or Eventbrite.",
-                        "goal": "Find a city with a livable cost-to-income ratio, an active crypto-friendly remote job market, and enough nomads already there that the first two weeks don't feel like starting from zero.",
-                        "needs": "Quantitative city signals up front — not buried under a city description. Crypto payment options visible before clicking into a job listing. Event social proof (who's going) visible before the event description (what it is).",
-                        "frustrations": "Opening 15 job listings to find the one that pays in crypto. City research spread across four apps that don't share context. Showing up to a new city and discovering the nomad scene existed two weeks ago — and the next meetup is in a month.",
-                        "why_use": "Opens City Profile → checks Score and Cost before reading a word of the description. Scans Job 20 count on the tab to gauge market depth before opening any listings. Checks Event 3 tab to see what's happening in the next two weeks. The numbers on the tabs are the entire first pass — text comes second. If the numbers pass threshold, Prague is shortlisted in under 90 seconds. If they don't, the city is skipped without opening a single listing."
-                    }
                 ]
             }
         },
@@ -245,7 +245,7 @@
             },
             "data": {
                 "eyebrow": "Interactive Demo",
-                "title": "3 apps. 1 surface. 30 seconds.",
+                "title": "City as the organising principle.",
                 "variant": "drift_app"
             }
         },
@@ -262,7 +262,7 @@
                 "disclosure": "inline"
             },
             "data": {
-                "eyebrow": "Design Concept",
+                "eyebrow": "Reflection",
                 "headline": "What this sprint explored — and what it didn't.",
                 "body": "Drift is a concept, not a shipped product. The sprint explored one hypothesis: organising city discovery, jobs, and community around a place — rather than a task type — forces specific decisions about information hierarchy and social proof ordering. The payment-type-on-card, social-proof-above-description, and count-badge-on-tab decisions all follow from that one reframing. What the concept does not validate: whether the crypto-native nomad audience is large enough to build for, whether a tab-heavy city hub creates navigation debt, or whether a unified bookmark across content types produces useful shortlists. Those remain open questions that would require user testing to resolve."
             }
