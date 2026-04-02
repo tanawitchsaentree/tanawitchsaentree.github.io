@@ -68,6 +68,9 @@ const MODAL_CSS = `
 @keyframes drift-screen-fwd  { from{opacity:0;transform:translateX(28px)}  to{opacity:1;transform:translateX(0)} }
 @keyframes drift-screen-back { from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:translateX(0)} }
 @keyframes drift-el-in       { from{opacity:0;transform:translateY(14px)}  to{opacity:1;transform:none} }
+@media (prefers-reduced-motion: reduce) {
+  @keyframes drift-el-in { from{opacity:0} to{opacity:1} }
+}
 .recipe-carousel::-webkit-scrollbar { display: none }
 .scrolling-cards-track::-webkit-scrollbar { display: none }
 .scrolling-cards-track { -ms-overflow-style: none; scrollbar-width: none; }
@@ -231,7 +234,7 @@ function StatementSection({ data, motion }: { data: any; motion?: MotionSpec }) 
         <div ref={ref} style={{ marginBottom: 64 }}>
             <div style={entranceStyle(0, visible)}>
                 <Eyebrow text={data.eyebrow} />
-                <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 20px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.headline}</h3>
+                <h3 className="reveal-heading" style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 20px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.headline}</h3>
                 <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)', marginBottom: 32 }}>{renderRich(data.body)}</div>
                 {data.next && (
                     <div style={{ padding: '16px 20px', background: 'var(--muted)', borderRadius: 8, borderLeft: '3px solid var(--foreground)' }}>
@@ -1257,9 +1260,9 @@ function PersonaLens({ accent: _accent }: { accent: string }) {
 function DriftTip({ label, title, body }: { label: string; title: string; body: string }) {
     return (
         <div>
-            <div style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5, opacity: 0.45 }}>{label}</div>
+            <div style={{ fontSize: '16px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5, color: 'var(--muted-foreground)' }}>{label}</div>
             <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: 5, lineHeight: 1.3 }}>{title}</div>
-            <div style={{ fontSize: '16px', lineHeight: 1.65, opacity: 0.65 }}>{body}</div>
+            <div style={{ fontSize: '16px', lineHeight: 1.65, color: 'var(--muted-foreground)' }}>{body}</div>
         </div>
     );
 }
@@ -1267,9 +1270,9 @@ function DriftTip({ label, title, body }: { label: string; title: string; body: 
 
 
 const DRIFT_CITIES_DATA = {
-    Prague:  { flag: '🇨🇿', score: '9.2', cost: '$3,200', jobs: 20, nomads: 124, accent: '#E07830', bg: 'linear-gradient(160deg, #1C1208 0%, #271908 60%, #1C1208 100%)' },
-    Lisbon:  { flag: '🇵🇹', score: '8.7', cost: '$2,800', jobs: 14, nomads: 89,  accent: '#818CF8', bg: 'linear-gradient(160deg, #0F0F1C 0%, #16162A 60%, #0F0F1C 100%)' },
-    Bangkok: { flag: '🇹🇭', score: '7.9', cost: '$1,400', jobs: 31, nomads: 203, accent: '#34D399', bg: 'linear-gradient(160deg, #0A1410 0%, #0F1C16 60%, #0A1410 100%)' },
+    Prague:  { flag: '🇨🇿', score: '9.2', cost: '$3,200', jobs: 20, ethJobs: 8,  btcJobs: 5,  nomads: 124, accent: '#E07830', bg: 'linear-gradient(160deg, #1C1208 0%, #271908 60%, #1C1208 100%)' },
+    Lisbon:  { flag: '🇵🇹', score: '8.7', cost: '$2,800', jobs: 14, ethJobs: 4,  btcJobs: 3,  nomads: 89,  accent: '#818CF8', bg: 'linear-gradient(160deg, #0F0F1C 0%, #16162A 60%, #0F0F1C 100%)' },
+    Bangkok: { flag: '🇹🇭', score: '7.9', cost: '$1,400', jobs: 31, ethJobs: 14, btcJobs: 9,  nomads: 203, accent: '#34D399', bg: 'linear-gradient(160deg, #0A1410 0%, #0F1C16 60%, #0A1410 100%)' },
 } as const;
 type DCity = keyof typeof DRIFT_CITIES_DATA;
 
@@ -1278,7 +1281,8 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
     const [visible, setVisible] = useState(false);
     const [city, setCity] = useState<DCity>('Prague');
     const [merged, setMerged] = useState(false);
-    const ease = 'cubic-bezier(0.16,1,0.3,1)';
+    const [payFilter, setPayFilter] = useState<'USD' | 'EUR' | 'BTC' | 'ETH' | null>(null);
+    const ease = 'var(--motion-ease-emphasized)';
     const cd = DRIFT_CITIES_DATA[city];
 
     useEffect(() => {
@@ -1287,38 +1291,47 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
         obs.observe(el); return () => obs.disconnect();
     }, []);
 
+    const cryptoCount = payFilter === 'ETH' ? cd.ethJobs : payFilter === 'BTC' ? cd.btcJobs : null;
+
     const APPS = [
-        { name: 'Nomad List', icon: '🌍', value: cd.score, unit: '/10', label: 'Livability score', step: 'Open app, search city, check score', color: '#F59E0B' },
-        { name: 'Remote.co',  icon: '💼', value: String(cd.jobs),   unit: ' jobs',   label: 'Remote jobs open', step: 'Open app, filter by city, count roles', color: '#6366F1' },
-        { name: 'Meetup',     icon: '🤝', value: String(cd.nomads), unit: ' nomads', label: 'Active community',  step: 'Open app, find nomad groups, guess',  color: '#10B981' },
+        { name: 'Nomad List', icon: '🌍', value: cd.score, unit: '/10',
+          label: 'Livability score', step: 'Open app, search city, check score', color: '#F59E0B',
+          tip: { label: 'Decision 03', title: 'City as the organising principle', body: 'Score surfaces before description — the hypothesis is that nomads qualify quantitatively first. A livability number above threshold is the permission to dig deeper; the description is confirmation, not discovery.' } },
+        { name: 'Remote.co', icon: '💼',
+          value: cryptoCount !== null ? String(cryptoCount) : String(cd.jobs),
+          unit:  cryptoCount !== null ? ` ${payFilter} jobs` : ' jobs',
+          label: cryptoCount !== null ? `${payFilter}-paying jobs` : 'Remote jobs open',
+          step: 'Open app, filter by city, count roles', color: '#6366F1',
+          tip: { label: 'Decision 01', title: 'Payment type visible before clicking', body: 'For a crypto-earning freelancer, payment currency is a qualifying criterion. Surfacing it on the card means no tab-switching to discover ETH isn\'t accepted three clicks in.' } },
+        { name: 'Meetup', icon: '🤝', value: String(cd.nomads), unit: ' nomads',
+          label: 'Active community', step: 'Open app, find nomad groups, guess', color: '#10B981',
+          tip: { label: 'Decision 02', title: 'Social proof above description', body: 'Nomad count answers "will I know anyone?" faster than any event description. The number is the deciding signal — showing it first means the description only needs to confirm, not convince.' } },
     ];
 
     return (
-        <div ref={stageRef} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity 0.7s ${ease}, transform 0.7s ${ease}` }}>
-            <div style={{ marginBottom: 24 }}>
-                <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: cd.accent, marginBottom: 8 }}>Interactive Demo</div>
-                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 6 }}>3 apps. 15 minutes. One relocation decision.</div>
+        <div ref={stageRef} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: `opacity var(--motion-slow) ${ease}, transform var(--motion-slow) ${ease}` }}>
+            <div style={{ marginBottom: 'var(--space-6)' }}>
+                <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: cd.accent, marginBottom: 'var(--space-2)' }}>Interactive Demo</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: 'var(--space-2)' }}>3 apps. 15 minutes. One relocation decision.</div>
                 <div style={{ fontSize: 16, color: 'var(--muted-foreground)', lineHeight: 1.6 }}>This is how every nomad researches a city today.</div>
             </div>
             {/* City selector */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+            <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-3)' }}>
                 {(Object.keys(DRIFT_CITIES_DATA) as DCity[]).map(c => (
-                    <button key={c} onClick={() => { setCity(c); setMerged(false); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, background: city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--muted)', color: city === c ? '#fff' : 'var(--foreground)', border: `1px solid ${city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--border)'}`, cursor: 'pointer', fontSize: 16, fontWeight: 700, transition: `all 0.2s ${ease}` }}>
+                    <button key={c} onClick={() => { setCity(c); setMerged(false); setPayFilter(null); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 'var(--radius-sm)', background: city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--muted)', color: city === c ? '#fff' : 'var(--foreground)', border: `1px solid ${city === c ? DRIFT_CITIES_DATA[c].accent : 'var(--border)'}`, cursor: 'pointer', fontSize: 16, fontWeight: 700, transition: `all var(--motion-fast) ${ease}` }}>
                         <span>{DRIFT_CITIES_DATA[c].flag}</span><span>{c}</span>
                     </button>
                 ))}
             </div>
-            {/* Pain state — light checklist, visually opposite of dark Drift state */}
-            <div style={{ opacity: merged ? 0 : 1, transform: merged ? 'translateY(-8px) scale(0.98)' : 'none', transition: `opacity 0.35s ${ease}, transform 0.35s ${ease}`, pointerEvents: merged ? 'none' : 'auto', position: merged ? 'absolute' : 'relative', width: '100%' }}>
-                <div style={{ background: 'var(--background)', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', marginBottom: 12 }}>
-                    {/* Header */}
-                    <div style={{ padding: '11px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            {/* Pain state */}
+            <div style={{ opacity: merged ? 0 : 1, transform: merged ? 'translateY(-8px) scale(0.98)' : 'none', transition: `opacity var(--motion-base) ${ease}, transform var(--motion-base) ${ease}`, pointerEvents: merged ? 'none' : 'auto', position: merged ? 'absolute' : 'relative', width: '100%' }}>
+                <div style={{ background: 'var(--background)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'hidden', marginBottom: 'var(--space-3)' }}>
+                    <div style={{ padding: `11px var(--space-4)`, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <span style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Without Drift — your research process</span>
-                        <span style={{ fontSize: 'var(--modal-floor)', color: '#EF4444', fontWeight: 700, background: 'rgba(239,68,68,0.08)', padding: '3px 10px', borderRadius: 20 }}>~15 min</span>
+                        <span style={{ fontSize: 'var(--modal-floor)', color: 'var(--color-error)', fontWeight: 700, background: 'color-mix(in srgb, var(--color-error) 8%, transparent)', padding: '3px 10px', borderRadius: 'var(--radius-pill)' }}>~15 min</span>
                     </div>
-                    {/* Step rows */}
                     {APPS.map((app, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 16px', borderBottom: i < APPS.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: `13px var(--space-4)`, borderBottom: i < APPS.length - 1 ? '1px solid var(--border)' : 'none' }}>
                             <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--muted-foreground)', flexShrink: 0 }}>{i + 1}</div>
                             <span style={{ fontSize: 18, flexShrink: 0 }}>{app.icon}</span>
                             <div style={{ flex: 1, minWidth: 0 }}>
@@ -1331,44 +1344,82 @@ function DriftAppDemo({ accent: _accent }: { accent: string }) {
                             </div>
                         </div>
                     ))}
-                    {/* Total */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 16px', background: 'rgba(239,68,68,0.04)', borderTop: '1px solid rgba(239,68,68,0.12)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `11px var(--space-4)`, background: 'color-mix(in srgb, var(--color-error) 4%, transparent)', borderTop: '1px solid color-mix(in srgb, var(--color-error) 12%, transparent)' }}>
                         <span style={{ fontSize: 16, color: 'var(--muted-foreground)' }}>3 separate apps. Numbers don't talk to each other.</span>
-                        <span style={{ fontSize: 16, fontWeight: 700, color: '#EF4444' }}>Decide by gut</span>
+                        <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-error)' }}>Decide by gut</span>
                     </div>
                 </div>
-                <button onClick={() => setMerged(true)} style={{ width: '100%', padding: '14px', borderRadius: 12, background: cd.accent, color: '#fff', fontSize: 16, fontWeight: 800, border: 'none', cursor: 'pointer', transition: `background 0.3s ${ease}` }}>
+                <button onClick={() => setMerged(true)} style={{ width: '100%', padding: '14px', borderRadius: 'var(--radius-md)', background: cd.accent, color: '#fff', fontSize: 16, fontWeight: 800, border: 'none', cursor: 'pointer', transition: `background var(--motion-base) ${ease}` }}>
                     See how Drift handles this →
                 </button>
             </div>
             {/* Unified state — relief */}
-            <div style={{ opacity: merged ? 1 : 0, transform: merged ? 'none' : 'translateY(12px)', transition: `opacity 0.45s ${ease} 0.1s, transform 0.45s ${ease} 0.1s`, pointerEvents: merged ? 'auto' : 'none', position: merged ? 'relative' : 'absolute', width: merged ? undefined : '100%', top: merged ? undefined : 0 }}>
-                <div key={city} style={{ background: cd.bg, borderRadius: 16, padding: '24px', border: `1px solid ${cd.accent}22`, boxShadow: `0 20px 56px rgba(0,0,0,0.55), 0 0 60px ${cd.accent}08` }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+            <div style={{ opacity: merged ? 1 : 0, transform: merged ? 'none' : 'translateY(12px)', transition: `opacity var(--motion-base) ${ease} var(--motion-fast), transform var(--motion-base) ${ease} var(--motion-fast)`, pointerEvents: merged ? 'auto' : 'none', position: merged ? 'relative' : 'absolute', width: merged ? undefined : '100%', top: merged ? undefined : 0 }}>
+                <div key={city} style={{ background: cd.bg, borderRadius: 'var(--radius-lg)', padding: 'var(--space-6)', border: `1px solid ${cd.accent}22`, boxShadow: `0 20px 56px rgba(0,0,0,0.55), 0 0 60px ${cd.accent}08` }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-5)' }}>
                         <span style={{ fontSize: 28 }}>{cd.flag}</span>
                         <div>
                             <div style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>{city}</div>
-                            <div style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{cd.cost} / month</div>
+                            <div style={{ fontSize: 16, color: 'rgba(255 255 255 / var(--opacity-text-secondary))', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{cd.cost} / month</div>
                         </div>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, marginBottom: 16 }}>
+                    {/* Payment filter — PROVE-IT: filter to crypto jobs without opening a single listing (Decision 01) */}
+                    <div style={{ marginBottom: 'var(--space-4)' }}>
+                        <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))', marginBottom: 'var(--space-2)' }}>Filter by payment type</div>
+                        <div style={{ display: 'flex', gap: 'var(--space-1)' }}>
+                            {(['USD', 'EUR', 'BTC', 'ETH'] as const).map(cur => (
+                                <button
+                                    key={cur}
+                                    onClick={() => setPayFilter(p => p === cur ? null : cur)}
+                                    style={{
+                                        padding: '4px 10px',
+                                        borderRadius: 'var(--radius-pill)',
+                                        fontSize: 'var(--modal-meta)',
+                                        fontWeight: 700,
+                                        cursor: 'pointer',
+                                        border: `1px solid ${payFilter === cur ? cd.accent : 'rgba(255,255,255,0.2)'}`,
+                                        background: payFilter === cur ? cd.accent : 'rgba(255,255,255,0.07)',
+                                        color: payFilter === cur ? '#fff' : 'rgba(255 255 255 / var(--opacity-text-secondary))',
+                                        transition: `all var(--motion-fast) ${ease}`,
+                                    }}
+                                >
+                                    {cur}
+                                </button>
+                            ))}
+                        </div>
+                        {(payFilter === 'BTC' || payFilter === 'ETH') && (
+                            <div style={{ marginTop: 'var(--space-2)', borderLeft: `2px solid ${cd.accent}`, paddingLeft: 'var(--space-3)', animation: `drift-el-in var(--motion-base) ${ease} both` }}>
+                                <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: cd.accent, marginBottom: 3 }}>Decision 01</div>
+                                <div style={{ fontSize: 'var(--modal-floor)', color: 'rgba(255 255 255 / var(--opacity-text-secondary))', lineHeight: 1.55 }}>You just filtered to {payFilter}-paying jobs without opening a single listing — that's the entire argument for showing payment type on the card, not inside the detail view.</div>
+                            </div>
+                        )}
+                    </div>
+                    {/* Stat cards */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'var(--space-2)', marginBottom: 'var(--space-4)' }}>
                         {APPS.map((app, i) => (
-                            <SmartTooltip key={i} wide delay={300} content={<DriftTip label="Consolidation" title={`${app.name} → Drift`} body={`This used to require opening ${app.name} separately. Drift surfaces it on the city card — no tab-switching, no context loss.`} />}>
-                                <div style={{ background: `${app.color}12`, borderRadius: 10, padding: '14px 12px', border: `1px solid ${app.color}30`, animation: `drift-el-in 0.4s ${ease} ${i * 0.1}s both`, cursor: 'default' }}>
+                            <SmartTooltip key={i} wide delay={300} content={<DriftTip label={app.tip.label} title={app.tip.title} body={app.tip.body} />}>
+                                <div
+                                    tabIndex={0}
+                                    role="button"
+                                    aria-label={`${app.tip.title}: ${app.tip.body}`}
+                                    style={{ background: `${app.color}12`, borderRadius: 'var(--radius-sm)', padding: 'var(--space-3)', border: `1px solid ${app.color}30`, animation: `drift-el-in var(--motion-base) ${ease} calc(var(--motion-stagger-step) * ${i}) both`, cursor: 'pointer', outline: 'none', transition: `border-color var(--motion-fast) ${ease}` }}
+                                    onFocus={e => (e.currentTarget.style.borderColor = app.color)}
+                                    onBlur={e => (e.currentTarget.style.borderColor = `${app.color}30`)}
+                                >
                                     <div style={{ fontSize: 28, fontWeight: 900, color: app.color, letterSpacing: '-0.03em', lineHeight: 1, marginBottom: 5 }}>
                                         {app.value}<span style={{ fontSize: 16 }}>{app.unit}</span>
                                     </div>
-                                    <div style={{ fontSize: 16, color: 'rgba(255,255,255,0.75)', marginBottom: 6 }}>{app.label}</div>
-                                    <div style={{ fontSize: 16, fontWeight: 800, color: '#4ade80', letterSpacing: '0.04em', textTransform: 'uppercase' }}>✓ from {app.name}</div>
+                                    <div style={{ fontSize: 16, color: 'rgba(255 255 255 / var(--opacity-text-secondary))', marginBottom: 6 }}>{app.label}</div>
+                                    <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--color-success)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>✓ from {app.name}</div>
                                 </div>
                             </SmartTooltip>
                         ))}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: 10, background: 'rgba(74,222,128,0.07)', border: '1px solid rgba(74,222,128,0.2)', marginBottom: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `var(--space-3) var(--space-4)`, borderRadius: 'var(--radius-sm)', background: 'color-mix(in srgb, var(--color-success) 7%, transparent)', border: '1px solid color-mix(in srgb, var(--color-success) 20%, transparent)', marginBottom: 'var(--space-3)' }}>
                         <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>Decision: move to {city}.</div>
-                        <span style={{ fontSize: 20, fontWeight: 900, color: '#4ade80' }}>~30 sec</span>
+                        <span style={{ fontSize: 20, fontWeight: 900, color: 'var(--color-success)' }}>~30 sec</span>
                     </div>
-                    <button onClick={() => setMerged(false)} style={{ width: '100%', padding: '10px', borderRadius: 10, background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: 16, border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer' }}>← Back to the old way</button>
+                    <button onClick={() => { setMerged(false); setPayFilter(null); }} style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', background: 'transparent', color: 'rgba(255 255 255 / var(--opacity-text-tertiary))', fontSize: 16, border: '1px solid rgba(255,255,255,0.2)', cursor: 'pointer' }}>← Back to the old way</button>
                 </div>
             </div>
         </div>
@@ -1585,36 +1636,43 @@ function CoverSection({ data }: { data: any }) {
     return (
         <div style={{
             margin: '0 -40px', minHeight: '85vh',
-            background: data.bg_color || '#1B3A5C',
             display: 'flex', alignItems: 'center',
-            marginBottom: 80, position: 'relative', overflow: 'hidden',
+            marginBottom: 80, position: 'relative',
         }}>
+            {/* Full-bleed background — extends beyond content wrapper via fixed positioning */}
+            <div style={{
+                position: 'absolute', top: 0, bottom: 0, left: '50%',
+                transform: 'translateX(-50%)',
+                width: '100vw',
+                background: data.bg_color || '#1B3A5C',
+                zIndex: 0,
+            }} />
             {/* Bg: top-right gold glow */}
             <div style={{
-                position: 'absolute', inset: 0, pointerEvents: 'none',
+                position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
                 background: `radial-gradient(ellipse 70% 60% at 85% 12%, rgba(201,168,76,0.14) 0%, transparent 55%)`,
                 transform: `scale(${bgScale})`,
             }} />
             {/* Bg: bottom-left depth shadow */}
             <div style={{
-                position: 'absolute', inset: 0, pointerEvents: 'none',
+                position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
                 background: `radial-gradient(ellipse 55% 50% at 5% 95%, rgba(0,0,0,0.4) 0%, transparent 60%)`,
             }} />
             {/* Bg: fine dot grid */}
             <div style={{
-                position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.028,
+                position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.028, zIndex: 1,
                 backgroundImage: `radial-gradient(circle, rgba(201,168,76,1) 1px, transparent 1px)`,
                 backgroundSize: '30px 30px',
             }} />
             {/* Bottom border accent */}
             <div style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0, height: 1,
+                position: 'absolute', bottom: 0, left: 0, right: 0, height: 1, zIndex: 2,
                 background: `linear-gradient(to right, transparent 5%, rgba(201,168,76,0.2) 40%, rgba(201,168,76,0.2) 60%, transparent 95%)`,
             }} />
 
             {/* Content grid */}
             <div style={{
-                width: '100%', padding: '100px 40px 80px',
+                width: '100%', padding: '100px 40px 80px', position: 'relative', zIndex: 2,
                 opacity: contentOpacity,
                 transform: `translateY(${contentY}px)`,
                 display: 'grid',
@@ -3520,7 +3578,7 @@ function DsAtomicSection({ data }: { data: any }) {
 
     const STATE_COLORS = ['#A78BFA', '#34D399', '#94A3B8', '#F87171', '#FB923C'];
 
-    const COL_WIDTHS = [360, 360, 360, 360, 360];
+    const COL_WIDTHS = [280, 280, 280, 280, 280];
     const COL_GAP = 14;
     const PAD_LEFT = 40;
     // Cumulative start positions (in scroll-content coordinates, after paddingLeft)
@@ -3535,10 +3593,13 @@ function DsAtomicSection({ data }: { data: any }) {
         if (!el) return;
         const onScroll = () => setScrollLeft(el.scrollLeft);
         const onWheel = (e: WheelEvent) => {
-            if (el.scrollWidth > el.clientWidth) {
-                e.preventDefault();
-                el.scrollLeft += e.deltaY + e.deltaX;
-            }
+            if (el.scrollWidth <= el.clientWidth) return;
+            const delta = e.deltaY + e.deltaX;
+            const atStart = el.scrollLeft <= 0 && delta < 0;
+            const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 1 && delta > 0;
+            if (atStart || atEnd) return;
+            e.preventDefault();
+            el.scrollLeft += delta;
         };
         el.addEventListener('scroll', onScroll, { passive: true });
         el.addEventListener('wheel', onWheel, { passive: false });
@@ -3580,111 +3641,68 @@ function DsAtomicSection({ data }: { data: any }) {
         const isSession = s.id === 'in-session';
         const isUrgent = s.id === 'urgent';
         return (
-            <div style={{ borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.10)', fontFamily: IV_BODY }}>
-                {/* App bar */}
-                <div style={{ padding: '9px 14px', background: IV.surface, borderBottom: `1px solid ${IV.border}`, display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 22, height: 22, borderRadius: 6, background: IV.brand, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <span style={{ fontSize: '8px', fontWeight: 800, color: IV.brandFg }}>IV</span>
-                    </div>
-                    <span style={{ fontSize: '11px', fontWeight: 600, color: IV.text }}>Invitrace Health</span>
-                    <div style={{ marginLeft: 'auto', display: 'flex', gap: 4 }}>
-                        {[0,1,2].map(d => <div key={d} style={{ width: 4, height: 4, borderRadius: '50%', background: IV.muted, opacity: 0.35 }} />)}
-                    </div>
-                </div>
-                {/* App body */}
-                <div style={{ display: 'flex', background: IV.bg }}>
-                    {/* Sidebar */}
-                    <div style={{ width: 88, background: IV.surface, borderRight: `1px solid ${IV.border}`, padding: '12px 7px', flexShrink: 0 }}>
-                        <div style={{ fontSize: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: IV.muted, marginBottom: 8, paddingLeft: 5 }}>Menu</div>
-                        {(['Dashboard', 'Appointments', 'Patients', 'Reports'] as const).map(item => {
-                            const active = item === 'Appointments';
-                            return (
-                                <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 6px', borderRadius: 6, marginBottom: 2, background: active ? IV.avatarBg : 'transparent' }}>
-                                    <div style={{ width: 4, height: 4, borderRadius: '50%', background: active ? IV.brand : IV.border, flexShrink: 0 }} />
-                                    <span style={{ fontSize: '9px', fontWeight: active ? 600 : 400, color: active ? IV.brand : IV.text }}>{item}</span>
-                                </div>
-                            );
-                        })}
-                    </div>
-                    {/* Main */}
-                    <div style={{ flex: 1, padding: '14px 15px', minHeight: 500, overflowY: 'auto' }}>
-                        <div style={{ fontSize: '13px', fontWeight: 700, color: IV.text, marginBottom: 2, fontFamily: IV_TITLE }}>Appointments</div>
-                        <div style={{ fontSize: '10px', color: IV.muted, marginBottom: 14 }}>Monday, Apr 1 · 3 scheduled</div>
-                        {/* Other dimmed rows */}
-                        {[{ init: 'JK', name: 'James K.', time: '11:00 AM' }, { init: 'AL', name: 'Anna L.', time: '2:00 PM' }].map(p => (
-                            <div key={p.name} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px', borderRadius: 9, border: `1px solid ${IV.border}`, marginBottom: 7, opacity: 0.4, background: IV.bg }}>
-                                <div style={{ width: 26, height: 26, borderRadius: '50%', background: IV.avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                    <span style={{ fontSize: '8px', fontWeight: 700, color: IV.brand }}>{p.init}</span>
-                                </div>
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ fontSize: '10px', fontWeight: 500, color: IV.text }}>{p.name}</div>
-                                    <div style={{ fontSize: '9px', color: IV.muted }}>{p.time}</div>
-                                </div>
-                                <span style={{ background: IV.avatarBg, color: IV.brand, borderRadius: 20, padding: '2px 7px', fontSize: '8px', fontWeight: 600 }}>Upcoming</span>
-                            </div>
-                        ))}
-                        {/* Featured card */}
-                        <div style={{
-                            background: s.cardBg ?? IV.bg,
-                            border: `1.5px solid ${s.accentBorder ?? IV.brand + '55'}`,
-                            borderRadius: 13,
-                            opacity: s.dimmed ? 0.72 : 1,
-                            boxShadow: s.shadow ?? '0 2px 14px rgba(0,0,0,0.07)',
-                            transition: tx,
-                        }}>
-                            {/* Card avatar + name + status */}
-                            <div style={{ padding: '14px 15px 12px', borderBottom: `1px solid ${IV.border}` }}>
-                                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                                    <div style={{ width: 38, height: 38, borderRadius: 10, background: IV.avatarBg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${IV.border}` }}>
-                                        <span style={{ fontSize: '10px', fontWeight: 700, color: IV.brand }}>SC</span>
-                                    </div>
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{ fontSize: '14px', fontWeight: 700, color: IV.text, lineHeight: 1.25, fontFamily: IV_TITLE, marginBottom: 2 }}>Dr. Sarah Chen</div>
-                                        <div style={{ fontSize: '10px', color: IV.muted }}>Cardiologist · MUSC Health</div>
-                                    </div>
-                                    <span style={{
-                                        background: s.statusBg, color: s.statusColor,
-                                        borderRadius: 20, padding: '3px 9px', fontSize: '9px', fontWeight: 700,
-                                        flexShrink: 0, whiteSpace: 'nowrap',
-                                        animation: (isSession || isUrgent) ? 'ds-live-blink 1.4s ease-in-out infinite' : 'none',
-                                    }}>
-                                        {statusText}
-                                    </span>
-                                </div>
-                            </div>
-                            {/* Date + location */}
-                            <div style={{ padding: '11px 15px', borderBottom: `1px solid ${IV.border}` }}>
-                                <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
-                                    <div style={{ width: 24, height: 24, borderRadius: 7, background: IV.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                        <svg width="11" height="11" viewBox="0 0 13 13" fill="none">
-                                            <rect x="1" y="2" width="11" height="10" rx="2" stroke={IV.brand} strokeWidth="1.3"/>
-                                            <line x1="4" y1="1" x2="4" y2="3.5" stroke={IV.brand} strokeWidth="1.3" strokeLinecap="round"/>
-                                            <line x1="9" y1="1" x2="9" y2="3.5" stroke={IV.brand} strokeWidth="1.3" strokeLinecap="round"/>
-                                            <line x1="1" y1="5.5" x2="12" y2="5.5" stroke={IV.brand} strokeWidth="1.3"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div style={{ fontSize: '11px', fontWeight: 600, color: IV.text }}>Tomorrow, Apr 1</div>
-                                        <div style={{ fontSize: '10px', color: IV.muted }}>9:00 AM · 30 min</div>
-                                    </div>
-                                </div>
-                                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                                    <div style={{ width: 24, height: 24, borderRadius: 7, background: IV.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                        <svg width="9" height="12" viewBox="0 0 11 14" fill="none">
-                                            <path d="M5.5 1C3.01 1 1 3.01 1 5.5C1 8.73 5.5 13 5.5 13C5.5 13 10 8.73 10 5.5C10 3.01 7.99 1 5.5 1Z" stroke={IV.brand} strokeWidth="1.3"/>
-                                            <circle cx="5.5" cy="5.5" r="1.5" stroke={IV.brand} strokeWidth="1.3"/>
-                                        </svg>
-                                    </div>
-                                    <div style={{ fontSize: '11px', fontWeight: 500, color: IV.text }}>Video Consultation</div>
-                                </div>
-                            </div>
-                            {/* CTAs */}
-                            <div style={{ padding: '10px 15px', display: 'flex', gap: 7 }}>
-                                <button style={{ flex: 1, background: cardBrand, color: IV.brandFg, border: 'none', borderRadius: 8, padding: '9px 0', fontSize: '11px', fontWeight: 700, cursor: 'pointer', fontFamily: IV_BODY }}>{s.cta1}</button>
-                                <button style={{ flex: 1, background: 'transparent', color: IV.text, border: `1.5px solid ${IV.border}`, borderRadius: 8, padding: '9px 0', fontSize: '11px', fontWeight: 400, cursor: 'pointer', fontFamily: IV_BODY, opacity: s.dimmed ? 0.5 : 0.75 }}>{s.cta2}</button>
-                            </div>
+            <div style={{
+                background: s.cardBg ?? IV.bg,
+                border: `1.5px solid ${s.accentBorder ?? IV.brand + '55'}`,
+                borderRadius: 16,
+                opacity: s.dimmed ? 0.72 : 1,
+                boxShadow: s.shadow ?? '0 4px 24px rgba(0,0,0,0.09)',
+                fontFamily: IV_BODY,
+                transition: tx,
+            }}>
+                {/* Avatar + name + status */}
+                <div style={{ padding: '16px 16px 13px', borderBottom: `1px solid ${IV.border}` }}>
+                    <div style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
+                        <div style={{ width: 40, height: 40, borderRadius: 11, background: IV.avatarBg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${IV.border}` }}>
+                            <span style={{ fontSize: '11px', fontWeight: 700, color: IV.brand }}>SC</span>
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: '15px', fontWeight: 700, color: IV.text, lineHeight: 1.2, fontFamily: IV_TITLE, marginBottom: 3 }}>Dr. Sarah Chen</div>
+                            <div style={{ fontSize: '10px', color: IV.muted }}>Cardiologist · MUSC Health</div>
                         </div>
                     </div>
+                    <div style={{ marginTop: 10 }}>
+                        <span style={{
+                            background: s.statusBg, color: s.statusColor,
+                            borderRadius: 20, padding: '4px 10px', fontSize: '10px', fontWeight: 700,
+                            whiteSpace: 'nowrap',
+                            animation: (isSession || isUrgent) ? 'ds-live-blink 1.4s ease-in-out infinite' : 'none',
+                            display: 'inline-block',
+                        }}>
+                            {statusText}
+                        </span>
+                    </div>
+                </div>
+                {/* Date + location */}
+                <div style={{ padding: '12px 16px', borderBottom: `1px solid ${IV.border}` }}>
+                    <div style={{ display: 'flex', gap: 9, alignItems: 'center', marginBottom: 9 }}>
+                        <div style={{ width: 26, height: 26, borderRadius: 8, background: IV.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <svg width="11" height="11" viewBox="0 0 13 13" fill="none">
+                                <rect x="1" y="2" width="11" height="10" rx="2" stroke={IV.brand} strokeWidth="1.3"/>
+                                <line x1="4" y1="1" x2="4" y2="3.5" stroke={IV.brand} strokeWidth="1.3" strokeLinecap="round"/>
+                                <line x1="9" y1="1" x2="9" y2="3.5" stroke={IV.brand} strokeWidth="1.3" strokeLinecap="round"/>
+                                <line x1="1" y1="5.5" x2="12" y2="5.5" stroke={IV.brand} strokeWidth="1.3"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '12px', fontWeight: 600, color: IV.text }}>Tomorrow, Apr 1</div>
+                            <div style={{ fontSize: '10px', color: IV.muted }}>9:00 AM · 30 min</div>
+                        </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 9, alignItems: 'center' }}>
+                        <div style={{ width: 26, height: 26, borderRadius: 8, background: IV.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <svg width="9" height="12" viewBox="0 0 11 14" fill="none">
+                                <path d="M5.5 1C3.01 1 1 3.01 1 5.5C1 8.73 5.5 13 5.5 13C5.5 13 10 8.73 10 5.5C10 3.01 7.99 1 5.5 1Z" stroke={IV.brand} strokeWidth="1.3"/>
+                                <circle cx="5.5" cy="5.5" r="1.5" stroke={IV.brand} strokeWidth="1.3"/>
+                            </svg>
+                        </div>
+                        <div style={{ fontSize: '12px', fontWeight: 500, color: IV.text }}>Video Consultation</div>
+                    </div>
+                </div>
+                {/* CTAs */}
+                <div style={{ padding: '11px 16px', display: 'flex', gap: 8 }}>
+                    <button style={{ flex: 1, background: cardBrand, color: IV.brandFg, border: 'none', borderRadius: 9, padding: '10px 0', fontSize: '11px', fontWeight: 700, cursor: 'pointer', fontFamily: IV_BODY }}>{s.cta1}</button>
+                    <button style={{ flex: 1, background: 'transparent', color: IV.text, border: `1.5px solid ${IV.border}`, borderRadius: 9, padding: '10px 0', fontSize: '11px', fontWeight: 400, cursor: 'pointer', fontFamily: IV_BODY, opacity: s.dimmed ? 0.5 : 0.75 }}>{s.cta2}</button>
                 </div>
             </div>
         );
@@ -3714,32 +3732,6 @@ function DsAtomicSection({ data }: { data: any }) {
                         <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--foreground)', fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>AppointmentCard · 5 states</span>
                     </div>
                 </div>
-                {/* State tab bar */}
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                    {CARD_STATES.map((s, i) => {
-                        const active = activeColIdx === i;
-                        return (
-                            <button
-                                key={s.id}
-                                onClick={() => {
-                                    const el = hScrollRef.current;
-                                    if (!el) return;
-                                    const target = colCenters[i] - el.clientWidth / 2;
-                                    el.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
-                                }}
-                                style={{
-                                    padding: '7px 16px', borderRadius: 20, cursor: 'pointer', fontSize: '12px', fontWeight: 600,
-                                    background: active ? STATE_COLORS[i] : 'transparent',
-                                    color: active ? '#fff' : 'var(--muted-foreground)',
-                                    border: `1.5px solid ${active ? STATE_COLORS[i] : 'var(--border)'}`,
-                                    transition: 'all 0.22s cubic-bezier(0.16,1,0.3,1)',
-                                }}
-                            >
-                                {s.tabLabel}
-                            </button>
-                        );
-                    })}
-                </div>
             </div>
 
             {/* 5-state horizontal scroll */}
@@ -3757,11 +3749,19 @@ function DsAtomicSection({ data }: { data: any }) {
                 }}
             >
                 {CARD_STATES.map((s, i) => (
-                    <div key={s.id} style={{ flexShrink: 0, width: 360, scrollSnapAlign: 'start', ...getColStyle(i) }}>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: STATE_COLORS[i], marginBottom: 10 }}>
-                            {s.colLabel}
+                    <div key={s.id} style={{ flexShrink: 0, width: 280, scrollSnapAlign: 'center', ...getColStyle(i) }}>
+                        {/* Stage */}
+                        <div style={{
+                            background: `linear-gradient(160deg, ${STATE_COLORS[i]}10 0%, ${STATE_COLORS[i]}05 100%)`,
+                            border: `1px solid ${STATE_COLORS[i]}22`,
+                            borderRadius: 20,
+                            padding: '24px 20px 20px',
+                        }}>
+                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: STATE_COLORS[i], marginBottom: 16 }}>
+                                {s.colLabel}
+                            </div>
+                            {renderStateCard(s)}
                         </div>
-                        {renderStateCard(s)}
                     </div>
                 ))}
             </div>
@@ -4057,12 +4057,12 @@ export default function ProjectModal({ projectId, onClose, onOpenProject }: Proj
             {/* Body */}
             <div style={{ position: 'relative', height: '100%', overflow: 'hidden' }}>
                 {/* Sidebar */}
-                <nav style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 160, padding: '80px 0 40px 32px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2, zIndex: 5, opacity: sidebarVisible ? 1 : 0, transform: sidebarVisible ? 'translateX(0)' : 'translateX(-10px)', transition: `opacity 0.6s ${ease}, transform 0.6s ${ease}` }}>
-                    <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: '6px 0', fontSize: '16px', color: 'var(--muted-foreground)', marginBottom: 16, fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--foreground)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--muted-foreground)'}>Home</button>
+                <nav style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 160, padding: '80px 0 40px 32px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2, zIndex: 5, opacity: sidebarVisible ? 1 : 0, transform: sidebarVisible ? 'translateX(0)' : 'translateX(-10px)', transition: `opacity 0.6s ${ease}, transform 0.6s ${ease}`, pointerEvents: 'none' }}>
+                    <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: '6px 0', fontSize: '16px', color: 'var(--muted-foreground)', marginBottom: 16, fontFamily: 'inherit', pointerEvents: 'auto' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--foreground)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--muted-foreground)'}>Home</button>
                     {sidebarSections.map(s => {
                         const isActive = activeSection === s.id;
                         return (
-                            <button key={s.id} onClick={() => sectionRefs.current[s.id]?.scrollIntoView({ behavior: 'smooth', block: 'center' })} style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: '5px 0 5px 10px', fontSize: '16px', fontWeight: isActive ? 600 : 400, color: isActive ? 'var(--foreground)' : 'var(--muted-foreground)', transition: 'color 0.25s, border-color 0.25s', lineHeight: 1.5, fontFamily: 'inherit', borderLeft: `2px solid ${isActive ? (data?.meta.cover_color ?? 'var(--foreground)') : 'transparent'}`, marginLeft: -2 }} onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = 'var(--foreground)'; }} onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--muted-foreground)'; }}>
+                            <button key={s.id} onClick={() => sectionRefs.current[s.id]?.scrollIntoView({ behavior: 'smooth', block: 'center' })} style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: '5px 0 5px 10px', fontSize: '16px', fontWeight: isActive ? 600 : 400, color: isActive ? 'var(--foreground)' : 'var(--muted-foreground)', transition: 'color 0.25s, border-color 0.25s', lineHeight: 1.5, fontFamily: 'inherit', borderLeft: `2px solid ${isActive ? (data?.meta.cover_color ?? 'var(--foreground)') : 'transparent'}`, marginLeft: -2, pointerEvents: 'auto' }} onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = 'var(--foreground)'; }} onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = 'var(--muted-foreground)'; }}>
                                 {s.label}
                             </button>
                         );
@@ -4075,6 +4075,7 @@ export default function ProjectModal({ projectId, onClose, onOpenProject }: Proj
                     onScroll={e => setScrollY(e.currentTarget.scrollTop)}
                     style={{ width: '100%', height: '100%', overflowY: 'auto' }}
                 >
+                    <div className="modal-progress" aria-hidden="true" />
                     <ProjectAccentCtx.Provider value={data?.meta.cover_color ?? '#888888'}>
                     <ModalScrollCtx.Provider value={contentRef}>
                         <div style={{ maxWidth: 900, margin: '0 auto', padding: '72px 40px 120px' }}>

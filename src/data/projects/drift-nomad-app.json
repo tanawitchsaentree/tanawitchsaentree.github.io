@@ -16,6 +16,14 @@
             "id": "overview",
             "label": "Overview",
             "type": "statement",
+            "meta": {
+                "intent": "hook",
+                "density": "low",
+                "max_words": 120,
+                "max_blocks": 1,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
             "data": {
                 "eyebrow": "Design Concept",
                 "headline": "A city isn't a location. It's a decision.",
@@ -24,19 +32,36 @@
         },
         {
             "id": "scale",
+            "label": "Scale",
             "type": "big_number",
+            "meta": {
+                "intent": "prove",
+                "density": "low",
+                "max_words": 80,
+                "max_blocks": 1,
+                "proof_required": "light",
+                "disclosure": "inline"
+            },
             "data": {
                 "eyebrow": "The Market",
                 "value": "35M",
                 "unit": "digital nomads",
                 "label": "worldwide in 2023 — up 131% since 2019",
-                "body": "Source: MBO Partners State of Independence 2023. A generation of workers who move between cities has already arrived. The tooling to support how they actually make relocation decisions hasn't caught up."
+                "body": "Source: MBO Partners State of Independence 2023. A generation of workers who move between cities has already arrived. The tooling to support how they actually make relocation decisions hasn't caught up — and the gap between nomad population growth and the product infrastructure built for them is exactly where Drift positions itself."
             }
         },
         {
             "id": "fragmentation",
             "label": "Problem",
             "type": "before_after",
+            "meta": {
+                "intent": "orient",
+                "density": "medium",
+                "max_words": 250,
+                "max_blocks": 2,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
             "data": {
                 "eyebrow": "The Fragmentation Problem",
                 "before": {
@@ -62,12 +87,37 @@
             }
         },
         {
+            "id": "insight",
+            "label": "Insight",
+            "type": "pull_quote",
+            "meta": {
+                "intent": "explain",
+                "density": "low",
+                "max_words": 70,
+                "max_blocks": 1,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
+            "data": {
+                "text": "The three apps aren't the problem. They're the symptom. Jobs, city research, and community discovery are organised by task type — when for a nomad, they're all the same question: 'Should I move to Prague?'",
+                "attribution": "Drift design hypothesis — organise around the city, not the task"
+            }
+        },
+        {
             "id": "screens",
             "label": "Screens",
             "type": "scrolling_cards",
+            "meta": {
+                "intent": "explain",
+                "density": "medium",
+                "max_words": 200,
+                "max_blocks": 3,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
             "data": {
-                "eyebrow": "Three screens, three hypotheses",
-                "title": "Each screen is an argument about what matters first.",
+                "eyebrow": "Three screens, three arguments",
+                "title": "Each screen bets on what matters first.",
                 "items": [
                     {
                         "tag": "City Profile",
@@ -91,6 +141,14 @@
             "id": "decisions",
             "label": "Decisions",
             "type": "decisions",
+            "meta": {
+                "intent": "prove",
+                "density": "high",
+                "max_words": 500,
+                "max_blocks": 4,
+                "proof_required": "light",
+                "disclosure": "inline"
+            },
             "data": {
                 "eyebrow": "Design Decisions",
                 "headline": "What the layout is arguing — and what it gave up.",
@@ -122,9 +180,17 @@
             "id": "flow",
             "label": "User Flow",
             "type": "user_flow",
+            "meta": {
+                "intent": "orient",
+                "density": "medium",
+                "max_words": 180,
+                "max_blocks": 9,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
             "data": {
                 "title": "How the three screens connect",
-                "description": "A nomad's relocation decision is a single session — not three separate app sessions. Drift's screens are designed as a sequential funnel: qualify the city, find the work, confirm the community.",
+                "description": "A nomad's relocation decision is a single session — not three separate app sessions. Drift's screens are designed as a sequential funnel: qualify the city, find the work, confirm the community. Each screen earns the right to the next: a livability score above threshold is the permission to dig into jobs, and job depth is the permission to check whether the social scene already exists.",
                 "steps": [
                     "Open city profile for Prague",
                     "Check Score (9.2) and Cost ($3,200/mo)",
@@ -142,6 +208,14 @@
             "id": "persona",
             "label": "Persona",
             "type": "personas",
+            "meta": {
+                "intent": "explain",
+                "density": "medium",
+                "max_words": 300,
+                "max_blocks": 1,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
             "data": {
                 "title": "Who this is designed for",
                 "items": [
@@ -152,7 +226,7 @@
                         "goal": "Find a city with a livable cost-to-income ratio, an active crypto-friendly remote job market, and enough nomads already there that the first two weeks don't feel like starting from zero.",
                         "needs": "Quantitative city signals up front — not buried under a city description. Crypto payment options visible before clicking into a job listing. Event social proof (who's going) visible before the event description (what it is).",
                         "frustrations": "Opening 15 job listings to find the one that pays in crypto. City research spread across four apps that don't share context. Showing up to a new city and discovering the nomad scene existed two weeks ago — and the next meetup is in a month.",
-                        "why_use": "Opens City Profile → checks Score and Cost before reading a word of the description. Scans Job 20 count on the tab to gauge market depth before opening any listings. Checks Event 3 tab to see what's happening in the next two weeks. The numbers on the tabs are the entire first pass — text comes second."
+                        "why_use": "Opens City Profile → checks Score and Cost before reading a word of the description. Scans Job 20 count on the tab to gauge market depth before opening any listings. Checks Event 3 tab to see what's happening in the next two weeks. The numbers on the tabs are the entire first pass — text comes second. If the numbers pass threshold, Prague is shortlisted in under 90 seconds. If they don't, the city is skipped without opening a single listing."
                     }
                 ]
             }
@@ -161,18 +235,52 @@
             "id": "demo",
             "label": "Demo",
             "type": "demo",
+            "meta": {
+                "intent": "prove",
+                "density": "medium",
+                "max_words": 60,
+                "max_blocks": 1,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
             "data": {
                 "eyebrow": "Interactive Demo",
-                "title": "Three screens. One decision.",
+                "title": "3 apps. 1 surface. 30 seconds.",
                 "variant": "drift_app"
+            }
+        },
+        {
+            "id": "outcome",
+            "label": "Outcome",
+            "type": "statement",
+            "meta": {
+                "intent": "reflect",
+                "density": "low",
+                "max_words": 120,
+                "max_blocks": 1,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
+            "data": {
+                "eyebrow": "Design Concept",
+                "headline": "What this sprint explored — and what it didn't.",
+                "body": "Drift is a concept, not a shipped product. The sprint explored one hypothesis: organising city discovery, jobs, and community around a place — rather than a task type — forces specific decisions about information hierarchy and social proof ordering. The payment-type-on-card, social-proof-above-description, and count-badge-on-tab decisions all follow from that one reframing. What the concept does not validate: whether the crypto-native nomad audience is large enough to build for, whether a tab-heavy city hub creates navigation debt, or whether a unified bookmark across content types produces useful shortlists. Those remain open questions that would require user testing to resolve."
             }
         },
         {
             "id": "takeaway",
             "type": "word_reveal",
+            "meta": {
+                "intent": "reflect",
+                "density": "low",
+                "max_words": 60,
+                "max_blocks": 1,
+                "proof_required": "none",
+                "disclosure": "inline"
+            },
             "data": {
                 "eyebrow": "Takeaway",
-                "text": "The best city for a nomad isn't the cheapest or the most beautiful. It's the one where you already know someone before you land.",
+                "text": "Nomads qualify cities with signals, not stories. Score before description. Social proof before event details. The ordering isn't aesthetic — it's the entire design argument, visible in three screens.",
                 "emojis": ["🌍", "⚡", "₿", "🏙️", "🤝", "🛫", "🔥"]
             }
         }

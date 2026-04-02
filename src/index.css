@@ -47,6 +47,32 @@
     --space-16: 64px;
     /* 4XL spacing */
 
+    /* Motion tokens */
+    --motion-fast: 0.15s;
+    --motion-base: 0.35s;
+    --motion-slow: 0.65s;
+    --motion-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+    --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+    --motion-stagger-step: 0.08s;
+
+    /* Opacity tiers (for text on colored/dark surfaces) */
+    --opacity-text-primary: 1;
+    --opacity-text-secondary: 0.7;
+    --opacity-text-tertiary: 0.45;
+    --opacity-text-disabled: 0.28;
+
+    /* Border radius scale */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-pill: 9999px;
+
+    /* Semantic colors */
+    --color-error: #EF4444;
+    --color-success: #4ade80;
+    --color-warning: #F59E0B;
+
     /* Colors */
     --background: #FEFCFB;
     --foreground: oklch(0.145 0 0);
@@ -815,6 +841,95 @@ html.twilight .chat-section {
   border-top: none;
   background: transparent;
   padding: var(--space-3) var(--space-4);
+}
+
+/* ─── Mask-reveal headline ───────────────────────────────────────
+   @property lets the browser interpolate --reveal as a <percentage>
+   so the mask-image gradient animates smoothly.
+   Without this, custom properties snap instead of tween.
+   Fallback: headline fully visible (mask = 100% solid black).
+────────────────────────────────────────────────────────────── */
+@property --reveal {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.reveal-heading {
+  --reveal: 0%;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 var(--reveal),
+    transparent calc(var(--reveal) + 18%)
+  );
+  mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 var(--reveal),
+    transparent calc(var(--reveal) + 18%)
+  );
+}
+
+@supports (animation-timeline: view()) {
+  .reveal-heading {
+    animation: mask-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+
+  @keyframes mask-reveal {
+    from { --reveal: 0%;   filter: blur(2px); }
+    to   { --reveal: 100%; filter: blur(0px); }
+  }
+}
+
+/* Fallback: no animation-timeline → show text fully */
+@supports not (animation-timeline: view()) {
+  .reveal-heading {
+    --reveal: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-heading {
+    --reveal: 100%;
+    filter: none;
+    animation: none;
+  }
+}
+
+/* ─── Modal scroll progress bar ─────────────────────────────────
+   Sits sticky at top of the modal's scroll container.
+   scroll(nearest) picks up the modal's own scroll div.
+   Fallback: bar stays invisible (scaleX 0) in unsupported browsers.
+   prefers-reduced-motion: hidden entirely.
+────────────────────────────────────────────────────────────── */
+.modal-progress {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #d9b35f, #2de3a6);
+  z-index: 50;
+  pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .modal-progress {
+    animation: modal-progress-fill linear both;
+    animation-timeline: scroll(nearest);
+  }
+  @keyframes modal-progress-fill {
+    to { transform: scaleX(1); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-progress { display: none; }
 }
 
 /* Mobile Adjustments */
