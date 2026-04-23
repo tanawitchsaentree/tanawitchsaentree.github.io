@@ -15,7 +15,7 @@
         {
             "id": "overview",
             "label": "Overview",
-            "type": "statement",
+            "type": "hero",
             "meta": {
                 "intent": "hook",
                 "density": "low",
@@ -25,6 +25,7 @@
                 "disclosure": "inline"
             },
             "data": {
+                "variant": "concept",
                 "eyebrow": "Design Concept",
                 "headline": "A city isn't a location. It's a decision.",
                 "body": "When a digital nomad considers relocating, they're not asking 'where is Prague?' They're asking three questions simultaneously: Can I afford it? Is there work I can actually get paid for? Will there be people worth knowing when I get there? Right now, those three questions live on three different platforms that don't talk to each other. This concept explores what the design looks like when you structure the answer around the city — not the task — and what hard decisions that forces you to make about information hierarchy, social proof, and what a 'profile' for a place actually needs to contain."
@@ -182,23 +183,47 @@
                 "items": [
                     {
                         "number": "01",
-                        "title": "Payment options on the card, not the detail",
-                        "description": "**Problem →** A crypto-earning freelancer treats payment type as a qualifying criterion — not a detail. Burying BTC/ETH inside the job detail means opening listing after listing to find the one that pays in the right currency.\n\n**A:** Payment shown in detail view only — standard card pattern, preserves readability. **B:** Currency pills on the card surface.\n\n**Chose B** — card-level visibility lets users filter by scanning, not clicking. **Cost:** Four pills consume space that could show two more lines of role description. The bet is that payment type matters more to this user than extra requirements text."
+                        "title": "Payment type on the card, not inside the listing",
+                        "problem": "A crypto-earning freelancer treats payment currency as a qualifying criterion — not a detail. Burying BTC/ETH inside the job detail means opening listing after listing to find one that pays in the right currency.",
+                        "options": [
+                            { "id": "A", "text": "Payment shown in detail view only — standard card pattern, preserves readability and card density." },
+                            { "id": "B", "text": "Currency pills (USD · EUR · BTC · ETH) visible on the job card surface, before any click." }
+                        ],
+                        "choice": "B",
+                        "cost": "Four currency pills consume card space that could show two more lines of role description. The bet: payment type is a qualifying criterion for this user — so it ranks above requirements text."
                     },
                     {
                         "number": "02",
-                        "title": "Social proof above event description",
-                        "description": "**Problem →** Nomads don't primarily attend events for the content — they attend to meet people. A well-described event with zero nomads is less compelling than a vague one with 99 already in.\n\n**A:** Standard layout — event details first, attendee list at the bottom. **B:** 'Nomad joined' count appears high on the page, above the description.\n\n**Chose B** — the social decision happens before the informational one. **Cost:** A newcomer unfamiliar with the event concept has to scroll past the social proof to understand what they're showing up to."
+                        "title": "Social proof above the event description",
+                        "problem": "Nomads don't primarily attend events for the content — they attend to meet people. A well-described event with zero nomads is less compelling than a vague one with 99 already going.",
+                        "options": [
+                            { "id": "A", "text": "Standard event layout — name and description first, attendee list anchored at the bottom." },
+                            { "id": "B", "text": "'99+ nomads joined' count appears high on the card, above the event name and description." }
+                        ],
+                        "choice": "B",
+                        "cost": "A newcomer unfamiliar with the event has to scroll past the social proof signal before understanding what they're showing up to. The social proof may feel like noise before the context exists."
                     },
                     {
                         "number": "03",
-                        "title": "City as a live content hub, not a static profile",
-                        "description": "**Problem →** Events and jobs aren't useful in the abstract — they're useful because they're in Prague. Keeping them on separate platforms strips the location context that makes them relevant.\n\n**A:** City page shows static info only — score, cost, description, map. **B:** City page becomes a hub with tabs for dynamic content: Feed · Events · Jobs.\n\n**Chose B** — the city is the organising principle, not the task type. **Cost:** Tabs require users to discover they exist. Count badges (Event 3 · Job 20) do critical signalling work — without them the tabs read as empty navigation."
+                        "title": "City page as a live hub, not a static profile",
+                        "problem": "Jobs and events aren't useful in the abstract — they're useful because they're in Prague. Keeping them on separate platforms strips the location context that makes them relevant to a relocation decision.",
+                        "options": [
+                            { "id": "A", "text": "City page is static — score, cost, description, map. Jobs and events remain on their own platforms." },
+                            { "id": "B", "text": "City page becomes a hub with tabs for dynamic content: Feed · Events · Jobs, all scoped to that city." }
+                        ],
+                        "choice": "B",
+                        "cost": "Tabs require users to discover they exist. Count badges (Event 3 · Job 20) carry the entire signalling load — without them, the tabs read as empty navigation and the hub feels hollow."
                     },
                     {
                         "number": "04",
                         "title": "One bookmark action across jobs and events",
-                        "description": "**Problem →** A nomad building a Prague shortlist wants to save a job and an event — but these live in different apps with different save actions. The intent is the same; the surfaces are fragmented.\n\n**A:** Type-specific actions — RSVP for events, Save for jobs, different UI per content type. **B:** Single bookmark icon, identical across both screens.\n\n**Chose B** — unified save intent produces a coherent Prague shortlist. **Cost:** On the event screen, bookmark now competes with 'Interest to join'. Two save-like actions create a mild hierarchy problem that was noted but not resolved in this sprint."
+                        "problem": "A nomad building a Prague shortlist wants to save a job and an event, but these live in different apps with different save actions. The intent is identical; the surfaces are fragmented.",
+                        "options": [
+                            { "id": "A", "text": "Type-specific save actions — RSVP for events, Save for jobs, different UI per content type." },
+                            { "id": "B", "text": "Single bookmark icon, visually identical across both job cards and event cards." }
+                        ],
+                        "choice": "B",
+                        "cost": "On the event screen, the bookmark now competes with 'Interest to join' — two save-like actions with overlapping intent. The hierarchy problem was noted but not resolved in this sprint."
                     }
                 ]
             }

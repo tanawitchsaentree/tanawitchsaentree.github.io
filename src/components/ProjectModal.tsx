@@ -197,18 +197,34 @@ function Eyebrow({ text }: { text: string }) {
 
 // ─── Allianz Section Renderers ────────────────────────────────────────────────
 function HeroSection({ data, meta }: { data: any; meta: ProjectMeta }) {
+    const isConcept = data.variant === 'concept';
+    const conceptContext = [
+        { label: 'Type',     value: data.eyebrow ?? 'Design Concept' },
+        { label: 'Year',     value: meta.year },
+        { label: 'Role',     value: meta.role },
+        { label: 'Duration', value: meta.duration },
+    ].filter(s => s.value);
     return (
         <div style={{ marginBottom: 72 }}>
             <div style={{
                 width: 76, height: 76, borderRadius: 18, background: meta.cover_color,
                 marginBottom: 52, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14 2 14 8 20 8" />
-                    <line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" />
-                    <polyline points="10 9 9 9 8 9" />
-                </svg>
+                {isConcept ? (
+                    /* compass/explore icon for concept projects */
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+                    </svg>
+                ) : (
+                    /* document icon for shipped projects */
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                )}
             </div>
             <div style={{ display: 'flex', gap: 64, alignItems: 'flex-start' }}>
                 <div style={{ flex: '1 1 0', minWidth: 0 }}>
@@ -216,12 +232,20 @@ function HeroSection({ data, meta }: { data: any; meta: ProjectMeta }) {
                     <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)' }}>{renderRich(data.body)}</div>
                 </div>
                 <div style={{ width: 160, flexShrink: 0, paddingTop: 6 }}>
-                    {data.stats.map((s: { label: string; value: string }) => (
-                        <div key={s.label} style={{ marginBottom: 24 }}>
-                            <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>{s.label}</div>
-                            <div style={{ fontSize: 'var(--modal-body)', fontWeight: 500, color: 'var(--foreground)', lineHeight: 1.5 }}>{s.value}</div>
-                        </div>
-                    ))}
+                    {isConcept
+                        ? conceptContext.map(s => (
+                            <div key={s.label} style={{ marginBottom: 24 }}>
+                                <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>{s.label}</div>
+                                <div style={{ fontSize: 'var(--modal-body)', fontWeight: 500, color: 'var(--foreground)', lineHeight: 1.5 }}>{s.value}</div>
+                            </div>
+                        ))
+                        : data.stats.map((s: { label: string; value: string }) => (
+                            <div key={s.label} style={{ marginBottom: 24 }}>
+                                <div style={{ fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>{s.label}</div>
+                                <div style={{ fontSize: 'var(--modal-body)', fontWeight: 500, color: 'var(--foreground)', lineHeight: 1.5 }}>{s.value}</div>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
         </div>
@@ -290,18 +314,61 @@ function DecisionsSection({ data, motion }: { data: any; motion?: MotionSpec }) 
                 <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 36px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.headline}</h3>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                {data.items.map((item: { number: string; title: string; description: string }, i: number) => (
-                    <div key={i} style={{
-                        display: 'flex', gap: 24, padding: '24px 0', borderTop: '1px solid var(--border)',
-                        ...entranceStyle(i * m.stagger, visible),
-                    }}>
-                        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', fontWeight: 600, flexShrink: 0, width: 28, paddingTop: 2 }}>{item.number}</div>
-                        <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: 600, fontSize: 'var(--modal-body)', color: 'var(--foreground)', marginBottom: 8 }}>{item.title}</div>
-                            <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)' }}>{renderRich(item.description)}</div>
-                        </div>
+                {data.items.map((item: any, i: number) => (
+                    <div key={i} style={{ padding: '28px 0', borderTop: '1px solid var(--border)', ...entranceStyle(i * m.stagger, visible) }}>
+                        {item.problem
+                            ? <StructuredDecision item={item} />
+                            : (
+                                <div style={{ display: 'flex', gap: 24 }}>
+                                    <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', fontWeight: 600, flexShrink: 0, width: 28, paddingTop: 2 }}>{item.number}</div>
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ fontWeight: 600, fontSize: 'var(--modal-body)', color: 'var(--foreground)', marginBottom: 8 }}>{item.title}</div>
+                                        <div style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)' }}>{renderRich(item.description)}</div>
+                                    </div>
+                                </div>
+                            )
+                        }
                     </div>
                 ))}
+            </div>
+        </div>
+    );
+}
+
+function StructuredDecision({ item }: { item: any }) {
+    const ease = 'var(--motion-ease-standard)';
+    return (
+        <div style={{ display: 'flex', gap: 24 }}>
+            {/* Number */}
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'var(--modal-meta)', color: 'var(--muted-foreground)', fontWeight: 600, flexShrink: 0, width: 28, paddingTop: 4 }}>{item.number}</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+                {/* Title */}
+                <div style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, color: 'var(--foreground)', marginBottom: 20, lineHeight: 1.25, letterSpacing: '-0.02em' }}>{item.title}</div>
+
+                {/* Problem */}
+                <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--muted-foreground)', marginBottom: 6 }}>Problem</div>
+                <p style={{ margin: '0 0 20px', fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--muted-foreground)' }}>{item.problem}</p>
+
+                {/* Options */}
+                <div style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--muted-foreground)', marginBottom: 8 }}>Options</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 }}>
+                    {item.options.map((opt: { id: string; text: string }) => {
+                        const chosen = opt.id === item.choice;
+                        return (
+                            <div key={opt.id} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '10px 14px', borderRadius: 'var(--radius-sm)', border: `1px solid ${chosen ? 'var(--foreground)' : 'var(--border)'}`, background: chosen ? 'var(--foreground)' : 'transparent', transition: `background var(--motion-fast) ${ease}` }}>
+                                <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'var(--modal-meta)', fontWeight: 700, flexShrink: 0, color: chosen ? 'var(--background)' : 'var(--muted-foreground)', paddingTop: 1, minWidth: 16 }}>{opt.id}</span>
+                                <span style={{ fontSize: 'var(--modal-body)', lineHeight: 1.6, color: chosen ? 'var(--background)' : 'var(--muted-foreground)', flex: 1 }}>{opt.text}</span>
+                                {chosen && <span style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, color: 'var(--background)', flexShrink: 0, alignSelf: 'center', opacity: 0.6, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Chose</span>}
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* Cost */}
+                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '10px 14px', borderRadius: 'var(--radius-sm)', background: 'color-mix(in srgb, var(--color-warning) 7%, transparent)', border: '1px solid color-mix(in srgb, var(--color-warning) 22%, transparent)' }}>
+                    <span style={{ fontSize: 'var(--modal-floor)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-warning)', flexShrink: 0, paddingTop: 2 }}>Cost</span>
+                    <span style={{ fontSize: 'var(--modal-body)', lineHeight: 1.65, color: 'var(--muted-foreground)' }}>{item.cost}</span>
+                </div>
             </div>
         </div>
     );
@@ -1685,6 +1752,11 @@ function DemoSection({ data }: { data: any }) {
             {data.eyebrow && <Eyebrow text={data.eyebrow} />}
             {data.headline && <h3 style={{ fontSize: 'var(--modal-heading)', fontWeight: 700, lineHeight: 1.25, margin: '0 0 8px', color: 'var(--foreground)', letterSpacing: '-0.025em' }}>{data.headline}</h3>}
             {data.description && <p style={{ fontSize: 'var(--modal-body)', lineHeight: 1.7, color: 'var(--muted-foreground)', margin: '0 0 24px' }}>{data.description}</p>}
+            {data.image && (
+                <div style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 16, aspectRatio: '16/7' }}>
+                    <img src={data.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                </div>
+            )}
             <div style={{ padding: '24px', borderRadius: 16, border: '1px solid var(--border)', background: 'var(--muted)' }}>{demo}</div>
         </div>
     );
@@ -4123,7 +4195,7 @@ export default function ProjectModal({ projectId, onClose, onOpenProject }: Proj
         />
         <div style={{
             position: 'fixed', inset: '8px',
-            background: 'var(--background)',
+            background: data?.sections[0]?.type === 'cover' ? (data.sections[0].data.bg_color ?? 'var(--background)') : 'var(--background)',
             borderRadius: 16,
             boxShadow: '0 8px 64px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.07)',
             zIndex: 2000, overflow: 'hidden',
@@ -4136,7 +4208,7 @@ export default function ProjectModal({ projectId, onClose, onOpenProject }: Proj
 
             {/* Floating nav */}
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: navHeight, zIndex: 20, pointerEvents: 'none', willChange: 'height' }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, var(--background) 20%, transparent 100%)', opacity: navOpacity * 0.9, pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to bottom, ${data?.sections[0]?.type === 'cover' ? (data.sections[0].data.bg_color ?? 'var(--background)') : 'var(--background)'} 20%, transparent 100%)`, opacity: navOpacity * 0.9, pointerEvents: 'none' }} />
                 <button onClick={handleClose} style={{ position: 'absolute', top: Math.round(navHeight / 2 - 16), right: 16, width: 32, height: 32, borderRadius: '50%', border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 30, pointerEvents: 'auto', flexShrink: 0 }} onMouseEnter={e => e.currentTarget.style.opacity = '0.6'} onMouseLeave={e => e.currentTarget.style.opacity = '1'} aria-label="Close">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                 </button>
@@ -4177,7 +4249,7 @@ export default function ProjectModal({ projectId, onClose, onOpenProject }: Proj
                     <ProjectAccentCtx.Provider value={data?.meta.cover_color ?? '#888888'}>
                     <ModalScrollCtx.Provider value={contentRef}>
                         <div style={{ maxWidth: 900, margin: '0 auto', padding: '72px 40px 120px' }}>
-                            {data?.meta.tags && data.meta.tags.length > 0 && (
+                            {data?.meta.tags && data.meta.tags.length > 0 && data.sections[0]?.type !== 'cover' && (
                                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40 }}>
                                     {data.meta.tags.map(tag => (
                                         <span key={tag} style={{ fontSize: 'var(--modal-meta)', padding: '4px 10px', borderRadius: 100, border: '1px solid var(--border)', color: 'var(--muted-foreground)', letterSpacing: '0.04em' }}>{tag}</span>
