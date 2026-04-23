@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "full_name",
+    "current_role",
+    "career_outlook",
+    "work_experience",
+    "competencies",
+    "intents"
+  ],
+  "properties": {
+    "full_name": {
+      "type": "object",
+      "required": ["primary_response", "extra_notes"],
+      "properties": {
+        "primary_response": { "type": "string" },
+        "extra_notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "current_role": { "type": "string" },
+    "career_outlook": { "type": "string" },
+    "work_experience": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "company",
+          "role",
+          "start_date",
+          "end_date",
+          "description",
+          "link"
+        ],
+        "properties": {
+          "company": { "type": "string" },
+          "role": { "type": "string" },
+          "start_date": { "type": "string" },
+          "end_date": { "type": "string" },
+          "description": { "type": "string" },
+          "link": { "type": "string", "format": "uri" },
+          "summary": { "type": "string" },
+          "achievements": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "competencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "intents": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["keywords", "response"],
+        "properties": {
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "response": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
