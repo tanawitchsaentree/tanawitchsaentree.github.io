@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="100%" style="stop-color:#12121e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7c6bff"/>
+      <stop offset="100%" style="stop-color:#a78bfa"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="80" y1="0" x2="80" y2="630" stroke="#ffffff" stroke-width="0.5" opacity="0.04"/>
+  <line x1="1120" y1="0" x2="1120" y2="630" stroke="#ffffff" stroke-width="0.5" opacity="0.04"/>
+  <line x1="0" y1="80" x2="1200" y2="80" stroke="#ffffff" stroke-width="0.5" opacity="0.04"/>
+  <line x1="0" y1="550" x2="1200" y2="550" stroke="#ffffff" stroke-width="0.5" opacity="0.04"/>
+
+  <!-- Accent bar -->
+  <rect x="80" y="200" width="4" height="180" fill="url(#accent)" rx="2"/>
+
+  <!-- Name -->
+  <text x="112" y="272" font-family="system-ui, -apple-system, 'Helvetica Neue', sans-serif" font-size="56" font-weight="700" fill="#ffffff" letter-spacing="-1">Tanawitch Saentree</text>
+
+  <!-- Title -->
+  <text x="112" y="330" font-family="system-ui, -apple-system, 'Helvetica Neue', sans-serif" font-size="28" font-weight="400" fill="#a78bfa" letter-spacing="0.5">Senior Product Designer</text>
+
+  <!-- Divider -->
+  <line x1="112" y1="358" x2="640" y2="358" stroke="#ffffff" stroke-width="1" opacity="0.12"/>
+
+  <!-- Tags -->
+  <text x="112" y="395" font-family="system-ui, -apple-system, 'Helvetica Neue', sans-serif" font-size="18" fill="#9ca3af" letter-spacing="0.3">B2B SaaS  ·  AI-native  ·  Fintech  ·  Design Systems  ·  Healthcare</text>
+
+  <!-- URL -->
+  <text x="112" y="480" font-family="system-ui, -apple-system, 'Helvetica Neue', sans-serif" font-size="16" fill="#6b7280" letter-spacing="0.5">tanawitchsaentree.github.io</text>
+
+  <!-- Decorative circles (top right) -->
+  <circle cx="1050" cy="180" r="200" fill="none" stroke="#7c6bff" stroke-width="1" opacity="0.08"/>
+  <circle cx="1050" cy="180" r="140" fill="none" stroke="#7c6bff" stroke-width="1" opacity="0.06"/>
+  <circle cx="1050" cy="180" r="80" fill="#7c6bff" opacity="0.06"/>
+</svg>
