@@ -1,0 +1,5 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" fill="#FAFAF7"/>
+  <!-- Pulse / ECG line — minimal medical mark -->
+  <polyline points="8,40 20,40 26,24 32,56 38,32 44,48 50,40 72,40" stroke="#0A0A0A" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,26 @@
+---
+title: "Fallback States"
+slug: "fallback-states"
+tagline: "Designing the AI's failure modes before they reach operators"
+year: "2025"
+tags: ["Error States", "Trust Design"]
+order: 3
+---
+
+## The Problem
+
+Every AI system fails. The question is: how gracefully, and who catches it?
+
+IDAS had no principled fallback logic. When confidence was low, documents either stalled in a queue or were routed to the wrong team with false confidence.
+
+Operators had no signal that something had gone wrong. They only discovered errors downstream.
+
+## Key Insight
+
+Fallback states are a UX problem, not just an engineering one. The system needs to communicate what it doesn't know, not just what it does.
+
+Uncertainty should surface at the point of decision, not after the fact.
+
+## What Changed
+
+Operators gained a clear visibility tier — documents flagged for human review were separated from high-confidence automated routes. False-positive rates dropped in the first quarter post-launch.
