@@ -1,0 +1,398 @@
+@import './tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base ──────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    visibility: visible;
+  }
+
+  body {
+    font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+    font-size: var(--type-base);
+    line-height: 1.6;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv01", "cv02", "cv11";
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Skip-to-content link */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: var(--space-4);
+    z-index: 9999;
+    padding: var(--space-2) var(--space-4);
+    background: var(--fg);
+    color: var(--bg);
+    font-size: var(--type-sm);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: top 0.1s;
+  }
+
+  .skip-link:focus {
+    top: var(--space-4);
+  }
+
+  /* Focus ring — consistent, visible */
+  :focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    display: block;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+    font-feature-settings: normal;
+    line-height: 1.1;
+    letter-spacing: -0.028em;
+    color: var(--fg);
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--border);
+    transition: text-decoration-color var(--duration-fast) var(--ease-out-standard);
+  }
+
+  a:hover {
+    text-decoration-color: var(--fg-muted);
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+}
+
+/* ─── Layout ────────────────────────────────────────────────── */
+@layer utilities {
+  .layout-grid {
+    display: grid;
+    grid-template-columns:
+      [full-start] minmax(var(--gutter-mobile), 1fr)
+      [content-start] minmax(0, var(--max-content))
+      [content-end] minmax(var(--gutter-mobile), 1fr) [full-end];
+  }
+
+  @media (min-width: 768px) {
+    .layout-grid {
+      grid-template-columns:
+        [full-start] minmax(var(--gutter-tablet), 1fr)
+        [content-start] minmax(0, var(--max-content))
+        [content-end] minmax(var(--gutter-tablet), 1fr) [full-end];
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .layout-grid {
+      grid-template-columns:
+        [full-start] minmax(var(--gutter-desktop), 1fr)
+        [content-start] minmax(0, var(--max-content))
+        [content-end] minmax(var(--gutter-desktop), 1fr) [full-end];
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .layout-grid {
+      grid-template-columns:
+        [full-start] minmax(var(--gutter-wide), 1fr)
+        [content-start] minmax(0, var(--max-content))
+        [content-end] minmax(var(--gutter-wide), 1fr) [full-end];
+    }
+  }
+
+  .col-content {
+    grid-column: content;
+  }
+
+  .col-full {
+    grid-column: full;
+  }
+}
+
+/* ─── Universe Switcher — Glass ────────────────────────────── */
+.universe-switcher {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+
+  border-radius: 9999px;
+  border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+
+  background: color-mix(in oklab, var(--bg) 60%, transparent);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+
+  box-shadow: var(--shadow-card);
+}
+
+
+@supports not (backdrop-filter: blur(20px)) {
+  .universe-switcher {
+    background: var(--bg);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .universe-switcher {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--bg);
+  }
+}
+
+.universe-switcher__item {
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  font-size: var(--type-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  border: none;
+  background: transparent;
+}
+
+.universe-switcher__item--inactive {
+  color: var(--fg-muted);
+}
+
+.universe-switcher__item--inactive:hover {
+  color: var(--fg);
+}
+
+.universe-switcher__item--active {
+  color: var(--fg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
+}
+
+.universe-switcher__item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ─── Sticky Split Layout ───────────────────────────────────── */
+.split-layout {
+  display: flex;
+  width: 100vw;
+  height: 100svh;
+  max-height: 100svh;
+  overflow: hidden;
+  /* Anchor to top-left of viewport — bypass any parent offset */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.split-left {
+  /* Static inside a height-locked parent — no sticky needed */
+  flex-shrink: 0;
+  width: 36vw;
+  max-width: 420px;
+  min-width: 280px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 2.5rem 3rem 3rem;
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.split-right {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+/* Mobile: collapse to normal single-column scroll */
+@media (max-width: 767px) {
+  .split-layout {
+    position: static;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+  .split-left {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    padding: 2rem 1.5rem 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .split-right {
+    height: auto;
+    overflow-y: visible;
+  }
+}
+
+/* ─── Scroll lock (modal open) ──────────────────────────────── */
+html.modal-open {
+  overflow: hidden;
+}
+
+/* ─── Scroll hint animation ─────────────────────────────────── */
+@keyframes scroll-hint {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+.animate-scroll-hint {
+  animation: scroll-hint 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll-hint {
+    animation: none;
+  }
+}
+
+/* ─── Universe back-link: suppress underline ───────────────── */
+[data-universe] a.no-underline {
+  text-decoration: none;
+}
+
+/* ─── Universe prose (SubCase content HTML) ─────────────────── */
+.prose-sub-case {
+  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  font-size: var(--type-base);
+  line-height: 1.75;
+  color: var(--fg-muted);
+}
+
+.prose-sub-case h2 {
+  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  font-weight: normal;
+  font-size: var(--type-xl);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose-sub-case h3 {
+  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  font-weight: 500;
+  font-size: var(--type-base);
+  color: var(--fg);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-sub-case p {
+  margin-bottom: 1.25rem;
+}
+
+.prose-sub-case strong {
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.prose-sub-case ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem;
+}
+
+.prose-sub-case li {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-sub-case li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  color: var(--accent-text);
+}
+
+.prose-sub-case a {
+  color: var(--accent-text);
+  text-decoration-color: color-mix(in oklab, var(--accent-text) 40%, transparent);
+}
+
+.prose-sub-case a:hover {
+  text-decoration-color: var(--accent-text);
+}
+
+/* ─── View Transitions ──────────────────────────────────────── */
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes vt-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+::view-transition-old(root) {
+  animation: 280ms cubic-bezier(0.65, 0, 0.35, 1) both vt-fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 360ms cubic-bezier(0.22, 1, 0.36, 1) both vt-fade-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Reduced motion overrides ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

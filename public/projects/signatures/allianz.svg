@@ -1,0 +1,9 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" fill="#FAFAF7"/>
+  <!-- "AI" in IBM Plex Mono style, monochromatic -->
+  <text x="8" y="38" font-family="monospace" font-size="28" font-weight="400" letter-spacing="-1" fill="#0A0A0A" opacity="0.85">AI</text>
+  <!-- thin underline — the signature mark -->
+  <line x1="8" y1="46" x2="72" y2="46" stroke="#0A0A0A" stroke-width="0.5"/>
+  <!-- "01" small, below -->
+  <text x="8" y="64" font-family="monospace" font-size="11" letter-spacing="3" fill="#0A0A0A" opacity="0.3">01</text>
+</svg>

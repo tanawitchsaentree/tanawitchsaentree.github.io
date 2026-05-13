@@ -1,0 +1,105 @@
+/* ─── Design Tokens ─────────────────────────────────────────── */
+/* Cascade order:                                               */
+/*   1. :root — primitives + light mode defaults                */
+/*   2. .dark — dark mode overrides                             */
+
+:root {
+  /* Absolute color primitives */
+  --color-white: #FFFFFF;
+  --color-black: #0A0A0A;
+
+  /* Typography scale — modular ratio 1.25 */
+  --type-xs:   0.75rem;
+  --type-sm:   0.875rem;
+  --type-base: 1rem;
+  --type-lg:   1.125rem;
+  --type-xl:   1.5rem;
+  --type-2xl:  2rem;
+  --type-3xl:  3rem;
+  --type-4xl:  4.5rem;
+  --type-5xl:  7rem;
+
+  /* Spacing — 8pt grid */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-30: 7.5rem;
+  --space-32: 8rem;
+
+  /* Layout */
+  --gutter-mobile:  1.5rem;
+  --gutter-tablet:  3rem;
+  --gutter-desktop: 5rem;
+  --gutter-wide:    7.5rem;
+  --max-content:    80rem;
+  --max-reading:    65ch;
+
+  /* Easing */
+  --ease-out-quick:      cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-natural: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out-standard:   cubic-bezier(0.0, 0.0, 0.2, 1);
+
+  /* Motion */
+  --duration-fast:   180ms;
+  --duration-base:   280ms;
+  --duration-slow:   480ms;
+  --duration-reveal: 600ms;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Shadows */
+  --shadow-sm:    0 1px 2px var(--shadow-color-subtle), 0 8px 24px -8px var(--shadow-color-soft);
+  --shadow-md:    0 4px 16px -4px var(--shadow-color-mid);
+  --shadow-modal: 0 8px 64px var(--shadow-color-heavy);
+  --shadow-card:  0 1px 2px var(--shadow-color-subtle), 0 8px 24px -8px var(--shadow-color-soft);
+
+  /* ── Light mode defaults ── */
+  --bg:          #FFFFFF;
+  --bg-elevated: #F5F5F5;
+  --bg-muted:    #EBEBEB;
+  --fg:          #0A0A0A;
+  --fg-muted:    #444444;
+  --fg-subtle:   #888888;
+  --border:      #E0E0E0;
+  --accent:      #FFE500;
+  --accent-fg:   #0A0A0A;
+  --accent-text: #7A5F00;  /* amber-dark — WCAG AA on white */
+
+  --shadow-color-subtle: rgba(0, 0, 0, 0.04);
+  --shadow-color-soft:   rgba(0, 0, 0, 0.06);
+  --shadow-color-mid:    rgba(0, 0, 0, 0.10);
+  --shadow-color-heavy:  rgba(0, 0, 0, 0.18);
+}
+
+/* ─── 2. Dark mode ───────────────────────────────────────────── */
+.dark {
+  --bg:          #0A0A0A;
+  --bg-elevated: #161616;
+  --bg-muted:    #1F1F1F;
+  --fg:          #FFFFFF;
+  --fg-muted:    #AAAAAA;
+  --fg-subtle:   #666666;
+  --border:      #2A2A2A;
+  --accent:      #FFE500;
+  --accent-fg:   #0A0A0A;
+  --accent-text: #FFD000;  /* brighter yellow — readable on dark bg */
+
+  --shadow-color-subtle: rgba(0, 0, 0, 0.20);
+  --shadow-color-soft:   rgba(0, 0, 0, 0.30);
+  --shadow-color-mid:    rgba(0, 0, 0, 0.40);
+  --shadow-color-heavy:  rgba(0, 0, 0, 0.60);
+}
+

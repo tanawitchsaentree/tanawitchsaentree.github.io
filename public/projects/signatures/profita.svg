@@ -1,0 +1,9 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" fill="#FAFAF7"/>
+  <!-- Chart fragment: single rising line with endpoint dot -->
+  <polyline points="12,60 28,48 44,38 60,24" stroke="#0A0A0A" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- endpoint dot -->
+  <circle cx="60" cy="24" r="2.5" fill="#0A0A0A"/>
+  <!-- baseline -->
+  <line x1="12" y1="64" x2="68" y2="64" stroke="#0A0A0A" stroke-width="0.5" opacity="0.25"/>
+</svg>
