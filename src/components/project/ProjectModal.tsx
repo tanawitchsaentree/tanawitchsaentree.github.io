@@ -118,7 +118,7 @@ export function ProjectModal({ project, content: _content, onClose }: ProjectMod
               'inset-x-0 bottom-0 top-auto max-h-[92svh] rounded-t-[var(--radius-xl)]',
               'md:top-[5vh] md:bottom-auto md:inset-x-auto',
               'flex flex-col',
-              'shadow-[0_8px_64px_rgba(0,0,0,0.4)]',
+              'shadow-[var(--shadow-modal)]',
               'border border-[var(--border)]'
             )}
           >

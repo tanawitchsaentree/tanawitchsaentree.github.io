@@ -29,13 +29,13 @@ export default function AllianzPage() {
         className={cn(
           'px-6 md:px-12 lg:px-20 xl:px-[7.5rem]',
           'py-16 md:py-24',
-          'border-t border-[var(--universe-border)]'
+          'border-t border-[var(--border)]'
         )}
       >
         <p
           className={cn(
             'font-mono text-[var(--type-xs)] tracking-widest uppercase',
-            'text-[var(--universe-fg-2)] opacity-60'
+            'text-[var(--fg-muted)] opacity-60'
           )}
         >
           Allianz Technology · 2024–2025
@@ -55,8 +55,8 @@ async function SubCaseServer({
     <article
       className={cn(
         'px-6 md:px-12 lg:px-20 xl:px-[7.5rem]',
-        'py-12 md:py-16',
-        'border-b border-[var(--universe-border)] last:border-b-0'
+        'py-20 md:py-28',
+        'border-b border-[var(--border)] last:border-b-0'
       )}
     >
       {/* Case header */}
@@ -64,7 +64,7 @@ async function SubCaseServer({
         <p
           className={cn(
             'font-mono text-[var(--type-xs)] tracking-widest uppercase mb-3',
-            'text-[var(--universe-accent)]'
+            'text-[var(--accent-text)]'
           )}
         >
           {subCase.tags.slice(0, 2).join(' · ')}
@@ -73,7 +73,7 @@ async function SubCaseServer({
           className={cn(
             'font-display font-normal',
             'text-[clamp(1.75rem,4vw,3rem)] leading-[1.05] tracking-[-0.032em]',
-            'text-[var(--universe-fg)] mb-3'
+            'text-[var(--fg)] mb-3'
           )}
         >
           {subCase.title}
@@ -81,7 +81,7 @@ async function SubCaseServer({
         <p
           className={cn(
             'text-[var(--type-base)] leading-[1.6] tracking-[-0.011em]',
-            'text-[var(--universe-fg-2)]',
+            'text-[var(--fg-muted)]',
             'max-w-[56ch]'
           )}
         >
@@ -93,24 +93,7 @@ async function SubCaseServer({
       <ScreenImage slug={subCase.slug} title={subCase.title} />
 
       {/* MDX content */}
-      <div
-        className={cn(
-          'max-w-[var(--max-reading)]',
-          '[&_h2]:font-display [&_h2]:font-normal [&_h2]:text-[var(--type-xl)]',
-          '[&_h2]:leading-[1.2] [&_h2]:tracking-[-0.02em]',
-          '[&_h2]:text-[var(--universe-fg)] [&_h2]:mt-10 [&_h2]:mb-4',
-          '[&_h3]:font-sans [&_h3]:font-medium [&_h3]:text-[var(--type-base)]',
-          '[&_h3]:text-[var(--universe-fg)] [&_h3]:mt-8 [&_h3]:mb-3',
-          '[&_p]:text-[var(--type-base)] [&_p]:leading-[1.75]',
-          '[&_p]:text-[var(--universe-fg-2)] [&_p]:mb-5',
-          '[&_strong]:text-[var(--universe-fg)] [&_strong]:font-medium',
-          '[&_ul]:list-none [&_ul]:p-0 [&_ul]:m-0 [&_ul]:mb-5',
-          '[&_li]:relative [&_li]:pl-4 [&_li]:mb-2',
-          '[&_li]:text-[var(--universe-fg-2)] [&_li]:text-[var(--type-base)] [&_li]:leading-[1.75]',
-          '[&_li]:before:content-["—"] [&_li]:before:absolute [&_li]:before:left-0',
-          '[&_li]:before:text-[var(--universe-accent)] [&_li]:before:font-mono'
-        )}
-      >
+      <div className="max-w-[var(--max-reading)] prose-sub-case">
         <MDXRemote source={subCase.content} />
       </div>
     </article>
@@ -132,8 +115,8 @@ function ScreenImage({ slug, title }: { slug: string; title: string }) {
       className={cn(
         'relative w-full max-w-[80rem] mb-10',
         'rounded-[var(--radius-xl)] overflow-hidden',
-        'border border-[var(--universe-border)]',
-        'bg-[var(--universe-surface)]'
+        'border border-[var(--border)]',
+        'bg-[var(--bg-elevated)]'
       )}
       style={{ aspectRatio: '3/2' }}
     >

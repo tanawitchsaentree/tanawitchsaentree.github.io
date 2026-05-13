@@ -11,11 +11,7 @@ export default function AllianzLayout({ children }: { children: React.ReactNode 
   return (
     <div
       data-universe="allianz"
-      className="min-h-svh"
-      style={{
-        backgroundColor: 'var(--universe-bg)',
-        color: 'var(--universe-fg)',
-      }}
+      className="min-h-svh bg-[var(--bg)] text-[var(--fg)]"
     >
       <AllianzGate>
         {children}

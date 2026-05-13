@@ -6,6 +6,34 @@ import { cn } from '@/lib/cn'
 import { CoverSignature } from './CoverSignature'
 import type { ProjectFrontmatter } from '@/types/project'
 
+// Accent word for the featured (index 0) headline — weareyellow-style color-field
+function FeaturedHeadline({ text }: { text: string }) {
+  const ACCENT_WORD = 'trust'
+  const idx = text.toLowerCase().indexOf(ACCENT_WORD)
+  if (idx === -1) return <>{text}</>
+  const before = text.slice(0, idx)
+  const word   = text.slice(idx, idx + ACCENT_WORD.length)
+  const after  = text.slice(idx + ACCENT_WORD.length)
+  return (
+    <>
+      {before}
+      <span
+        className="relative inline"
+        style={{
+          background: 'var(--accent)',
+          color: 'var(--accent-fg)',
+          paddingInline: '0.12em',
+          marginInline: '0.02em',
+          borderRadius: '2px',
+        }}
+      >
+        {word}
+      </span>
+      {after}
+    </>
+  )
+}
+
 const UNIVERSE_SLUGS: Record<string, string> = {
   'allianz-doc-classification': '/projects/allianz',
 }
@@ -49,12 +77,10 @@ export function ProjectRow({
 
   const handleClick = useCallback(() => {
     if (universePath) {
-      const vt = document.startViewTransition
-      if (vt) {
-        vt.call(document, () => { onNavigate(universePath) })
-      } else {
-        onNavigate(universePath)
-      }
+      // onNavigate = navigateWithTransition which already wraps in startViewTransition.
+      // Do NOT double-wrap here — nested VT calls cancel the outer one and leave
+      // stale ::view-transition pseudo-elements that cover the page on back-navigation.
+      onNavigate(universePath)
     } else {
       onOpen(project.slug)
     }
@@ -81,7 +107,7 @@ export function ProjectRow({
 
   return (
     <motion.li
-      className="list-none m-0 p-0"
+      className="list-none m-0 p-0 border-b border-[var(--border)]"
       initial={motionInitial}
       whileInView={motionVisible}
       viewport={{ once: true, margin: '-10% 0px' }}
@@ -101,16 +127,15 @@ export function ProjectRow({
         aria-label={`${project.company} — ${headline}`}
         className={cn(
           'group w-full text-left cursor-pointer',
-          'flex items-center justify-between',
-          'py-12 md:py-16',
-          'border-b border-[var(--border)]',
+          'flex items-start justify-between',
+          index === 0 ? 'py-12 md:py-16' : 'py-8 md:py-10',
+          'px-4 my-3 rounded-xl',
           'transition-colors duration-[240ms] ease-out',
           hovered && 'bg-[var(--bg-elevated)]',
-          '-mx-6 px-6 md:-mx-12 md:px-12 lg:-mx-20 lg:px-20 xl:-mx-[7.5rem] xl:px-[7.5rem]',
           'focus-visible:outline-2 focus-visible:outline-[var(--fg)] focus-visible:outline-offset-[-2px]'
         )}
       >
-        <div className="flex flex-col gap-5 min-w-0 pr-4">
+        <div className="flex flex-col gap-6 min-w-0 pr-4">
           {/* Index line */}
           <div className="flex items-center gap-4">
             <span
@@ -148,13 +173,13 @@ export function ProjectRow({
           <h2
             className={cn(
               'font-display font-normal',
-              'text-[var(--type-2xl)] md:text-[var(--type-3xl)]',
-              'leading-[1.1] tracking-[-0.024em]',
-              'text-[var(--fg)]',
-              'max-w-[24ch]'
+              'leading-[1.05] text-[var(--fg)]',
+              index === 0
+                ? 'text-[clamp(2.25rem,4.5vw,4rem)] tracking-[-0.036em] max-w-[20ch]'
+                : 'text-[var(--type-2xl)] md:text-[var(--type-3xl)] tracking-[-0.024em] max-w-[24ch]'
             )}
           >
-            {headline}
+            {index === 0 ? <FeaturedHeadline text={headline} /> : headline}
           </h2>
 
           {/* Meta */}

@@ -16,7 +16,7 @@ export function UniverseHero() {
         className={cn(
           'inline-flex items-center gap-2 mb-10',
           'font-mono text-[var(--type-xs)] tracking-widest uppercase',
-          'text-[var(--universe-fg-2)] hover:text-[var(--universe-fg)]',
+          'text-[var(--fg-muted)] hover:text-[var(--fg)]',
           'no-underline transition-colors duration-[var(--duration-fast)]'
         )}
       >
@@ -28,7 +28,7 @@ export function UniverseHero() {
       <p
         className={cn(
           'font-mono text-[var(--type-xs)] tracking-widest uppercase mb-4',
-          'text-[var(--universe-accent)]'
+          'text-[var(--accent-text)]'
         )}
       >
         {allianzMeta.company} · {allianzMeta.year}
@@ -39,20 +39,20 @@ export function UniverseHero() {
         className={cn(
           'font-display font-normal',
           'text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.04em]',
-          'text-[var(--universe-fg)]',
+          'text-[var(--fg)]',
           'max-w-[22ch] mb-6'
         )}
       >
         IDAS — AI Document
         <br />
-        <em className="not-italic text-[var(--universe-fg-2)]">Intelligence Suite</em>
+        <em className="not-italic text-[var(--fg-muted)]">Intelligence Suite</em>
       </h1>
 
       {/* Summary */}
       <p
         className={cn(
           'text-[var(--type-lg)] leading-[1.65] tracking-[-0.014em]',
-          'text-[var(--universe-fg-2)]',
+          'text-[var(--fg-muted)]',
           'max-w-[60ch] mb-10'
         )}
       >
@@ -72,8 +72,8 @@ export function UniverseHero() {
           ['Team', allianzMeta.team],
         ].map(([label, value]) => (
           <div key={label} className="flex flex-col gap-1">
-            <dt className="text-[var(--universe-fg-2)] opacity-60">{label}</dt>
-            <dd className="text-[var(--universe-fg)]">{value}</dd>
+            <dt className="text-[var(--fg-muted)] opacity-60">{label}</dt>
+            <dd className="text-[var(--fg)]">{value}</dd>
           </div>
         ))}
       </dl>

@@ -1,18 +1,15 @@
 import type { Metadata } from 'next'
-import '@fontsource-variable/fraunces'
-import '@fontsource-variable/inter'
-import '@fontsource/jetbrains-mono/400.css'
-import '@fontsource/jetbrains-mono/500.css'
+import '@fontsource-variable/bricolage-grotesque'
 import '../styles/globals.css'
 
 export const metadata: Metadata = {
-  title: 'Tanawitch Saentree — Senior Product Designer',
+  title: 'Tanawitch Saentree — Product Designer, Enterprise AI & Systems',
   description:
-    '8 years designing systems that survive contact with engineering. Senior Product Designer specialising in AI tooling and enterprise design systems.',
+    'Designing AI document tools, internal platforms, and operator-facing systems. 8 years across Allianz Technology, Invitrace, and DoctorAnywhere.',
   openGraph: {
     title: 'Tanawitch Saentree — Senior Product Designer',
     description:
-      '8 years designing systems that survive contact with engineering.',
+      'I design for the person who didn\'t choose the software but has to use it every day. That\'s where the world gets better.',
     url: 'https://tanawitchsaentree.github.io',
     siteName: 'Tanawitch Saentree',
     locale: 'en_US',
@@ -22,7 +19,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Tanawitch Saentree — Senior Product Designer',
     description:
-      '8 years designing systems that survive contact with engineering.',
+      'I design for the person who didn\'t choose the software but has to use it every day. That\'s where the world gets better.',
   },
   robots: { index: true, follow: true },
 }
@@ -48,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body>
+      <body className="bg-[var(--bg)] text-[var(--fg)]">
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>

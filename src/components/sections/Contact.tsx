@@ -8,6 +8,8 @@ const EMAIL = 'tanawitch.saentree@gmail.com'
 // TODO: Verify availability status with Nat before publishing
 const AVAILABILITY = 'Open to Senior / Staff roles · Q3 2026'
 
+const RESUME_PATH = '/tanawitch-saentree-resume.pdf'
+
 const SOCIAL = [
   { label: 'LinkedIn', href: 'https://linkedin.com/in/tanawitchsaentree' },
   { label: 'Behance',  href: 'https://behance.net/tanawitchsaentree' },
@@ -32,7 +34,7 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="py-24 md:py-32 px-6 md:px-12 lg:px-20 xl:px-[7.5rem] border-t border-[var(--border)]"
+      className="py-24 md:py-32 px-8 md:px-12 lg:px-16 border-t border-[var(--border)]"
     >
       <div className="max-w-[80rem]">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
@@ -76,8 +78,23 @@ export function Contact() {
               </span>
             </button>
 
-            {/* Social links */}
+            {/* Resume download + social links */}
             <ul className="flex flex-wrap gap-6 list-none m-0 p-0">
+              <li>
+                <a
+                  href={RESUME_PATH}
+                  download="tanawitch-saentree-resume.pdf"
+                  aria-label="Download resume PDF"
+                  className={cn(
+                    'font-mono text-[var(--type-sm)]',
+                    'no-underline transition-colors duration-[var(--duration-fast)]',
+                    'text-[var(--fg)] border-b border-[var(--accent)]',
+                    'hover:text-[var(--fg-muted)]'
+                  )}
+                >
+                  Resume ↓
+                </a>
+              </li>
               {SOCIAL.map(link => (
                 <li key={link.label}>
                   <a
@@ -127,7 +144,7 @@ export function Contact() {
               'tracking-wide'
             )}
           >
-            Set in Fraunces and Inter. Built with Next.js. Hosted on GitHub Pages.
+            Set in Bricolage Grotesque. Built with Next.js. Hosted on GitHub Pages.
           </p>
           <p
             className={cn(

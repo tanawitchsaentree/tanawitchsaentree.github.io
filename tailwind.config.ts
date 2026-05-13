@@ -6,9 +6,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Fraunces Variable', 'Georgia', 'serif'],
-        sans: ['Inter Variable', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        display: ['Bricolage Grotesque Variable', 'system-ui', 'sans-serif'],
+        sans:    ['Bricolage Grotesque Variable', 'system-ui', 'sans-serif'],
+        mono:    ['Bricolage Grotesque Variable', 'system-ui', 'sans-serif'],
       },
       colors: {
         bg: 'var(--bg)',

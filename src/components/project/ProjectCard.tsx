@@ -35,8 +35,8 @@ export function ProjectCard({ project, isHero = false, onOpen, onNavigate }: Pro
   }, [universePath, onNavigate, onOpen, project.slug])
 
   const hasCover = Boolean(project.coverImage)
-  const fgClass = project.coverFg === 'light' ? 'text-white' : 'text-[#0A0A0A]'
-  const fgMutedClass = project.coverFg === 'light' ? 'text-white/60' : 'text-[#0A0A0A]/60'
+  const fgClass = project.coverFg === 'light' ? 'text-white' : 'text-black'
+  const fgMutedClass = project.coverFg === 'light' ? 'text-white/60' : 'text-black/60'
 
   return (
     <button

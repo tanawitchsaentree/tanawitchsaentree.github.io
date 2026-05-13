@@ -24,16 +24,15 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
       id="work"
       aria-labelledby="work-heading"
       className={cn(
-        'py-24 md:py-32',
-        'px-6 md:px-12 lg:px-20 xl:px-[7.5rem]'
+        'pt-16 pb-8 md:pt-20 md:pb-10',
+        'px-8 md:px-12 lg:px-16'
       )}
     >
       <h2
         id="work-heading"
         className={cn(
-          'font-display font-normal',
-          'text-[var(--type-2xl)] tracking-[-0.024em]',
-          'text-[var(--fg)] mb-12 md:mb-16'
+          'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
+          'text-[var(--fg-subtle)] mb-10 md:mb-12'
         )}
       >
         Selected work
@@ -41,13 +40,9 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
 
       <CyclingIndex projects={projects} pausedSlug={hoveredSlug} />
 
-      {/* Border-top before first row */}
       <div className="border-t border-[var(--border)]" aria-hidden="true" />
 
-      <ul
-        className="list-none m-0 p-0"
-        aria-label="Portfolio projects"
-      >
+      <ul className="list-none m-0 p-0" aria-label="Portfolio projects">
         {projects.map((project, i) => (
           <ProjectRow
             key={project.slug}

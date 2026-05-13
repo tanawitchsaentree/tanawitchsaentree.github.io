@@ -127,7 +127,7 @@ export function Hero() {
             )}
           >
             Senior Designer at{' '}
-            <span style={{ color: 'var(--accent)' }}>Allianz Technology</span>
+            <span style={{ color: 'var(--accent-text)' }}>Allianz Technology</span>
             .
           </p>
           <p

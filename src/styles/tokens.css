@@ -1,40 +1,46 @@
 /* ─── Design Tokens ─────────────────────────────────────────── */
-/* Single source of truth. Import in globals.css only.         */
+/* Cascade order:                                               */
+/*   1. :root — primitives + light mode defaults                */
+/*   2. .dark — dark mode overrides                             */
 
 :root {
-  /* Typography scale — modular, ratio 1.25 */
-  --type-xs:   0.75rem;   /* 12px / lh 1.5  / ls -0.005em */
-  --type-sm:   0.875rem;  /* 14px / lh 1.55 / ls -0.005em */
-  --type-base: 1rem;      /* 16px / lh 1.6  / ls -0.011em */
-  --type-lg:   1.125rem;  /* 18px / lh 1.55 / ls -0.014em */
-  --type-xl:   1.5rem;    /* 24px / lh 1.4  / ls -0.02em  */
-  --type-2xl:  2rem;      /* 32px / lh 1.25 / ls -0.024em */
-  --type-3xl:  3rem;      /* 48px / lh 1.1  / ls -0.028em */
-  --type-4xl:  4.5rem;    /* 72px / lh 1.0  / ls -0.032em */
-  --type-5xl:  7rem;      /* 112px/ lh 0.95 / ls -0.04em  */
+  /* Absolute color primitives */
+  --color-white: #FFFFFF;
+  --color-black: #0A0A0A;
+
+  /* Typography scale — modular ratio 1.25 */
+  --type-xs:   0.75rem;
+  --type-sm:   0.875rem;
+  --type-base: 1rem;
+  --type-lg:   1.125rem;
+  --type-xl:   1.5rem;
+  --type-2xl:  2rem;
+  --type-3xl:  3rem;
+  --type-4xl:  4.5rem;
+  --type-5xl:  7rem;
 
   /* Spacing — 8pt grid */
-  --space-1:  0.25rem;  /*  4px */
-  --space-2:  0.5rem;   /*  8px */
-  --space-3:  0.75rem;  /* 12px */
-  --space-4:  1rem;     /* 16px */
-  --space-5:  1.25rem;  /* 20px */
-  --space-6:  1.5rem;   /* 24px */
-  --space-8:  2rem;     /* 32px */
-  --space-10: 2.5rem;   /* 40px */
-  --space-12: 3rem;     /* 48px */
-  --space-16: 4rem;     /* 64px */
-  --space-20: 5rem;     /* 80px */
-  --space-24: 6rem;     /* 96px */
-  --space-30: 7.5rem;   /* 120px */
-  --space-32: 8rem;     /* 128px */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-30: 7.5rem;
+  --space-32: 8rem;
 
   /* Layout */
-  --gutter-mobile:  1.5rem;   /* 24px */
-  --gutter-tablet:  3rem;     /* 48px */
-  --gutter-desktop: 5rem;     /* 80px */
-  --gutter-wide:    7.5rem;   /* 120px */
-  --max-content:    80rem;    /* 1280px */
+  --gutter-mobile:  1.5rem;
+  --gutter-tablet:  3rem;
+  --gutter-desktop: 5rem;
+  --gutter-wide:    7.5rem;
+  --max-content:    80rem;
   --max-reading:    65ch;
 
   /* Easing */
@@ -42,7 +48,7 @@
   --ease-in-out-natural: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-out-standard:   cubic-bezier(0.0, 0.0, 0.2, 1);
 
-  /* Motion durations */
+  /* Motion */
   --duration-fast:   180ms;
   --duration-base:   280ms;
   --duration-slow:   480ms;
@@ -53,54 +59,47 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
-}
 
-/* ─── Light mode (default) ──────────────────────────────────── */
-:root {
-  --bg:          #FAFAF7;
-  --bg-elevated: #FFFFFF;
-  --bg-muted:    #F0F0EB;
+  /* Shadows */
+  --shadow-sm:    0 1px 2px var(--shadow-color-subtle), 0 8px 24px -8px var(--shadow-color-soft);
+  --shadow-md:    0 4px 16px -4px var(--shadow-color-mid);
+  --shadow-modal: 0 8px 64px var(--shadow-color-heavy);
+  --shadow-card:  0 1px 2px var(--shadow-color-subtle), 0 8px 24px -8px var(--shadow-color-soft);
+
+  /* ── Light mode defaults ── */
+  --bg:          #FFFFFF;
+  --bg-elevated: #F5F5F5;
+  --bg-muted:    #EBEBEB;
   --fg:          #0A0A0A;
-  --fg-muted:    #6B6B66;
-  --fg-subtle:   #A8A8A2;
-  --border:      #E8E8E0;
-  --accent:      #D94F2C;
-  --accent-fg:   #FFFFFF;
-}
-
-/* ─── Allianz Universe ──────────────────────────────────────── */
-[data-universe="allianz"] {
-  --universe-brand:   #003781;
-  --universe-brand-2: #0057B8;
-  --universe-accent:  #00A0E9;
-  --universe-bg:      #FAF7F2;
-  --universe-surface: #FFFFFF;
-  --universe-fg:      #0D1F3C;
-  --universe-fg-2:    #3D5475;
-  --universe-border:  #DDE3EE;
-}
-
-[data-theme="dark"][data-universe="allianz"],
-.dark[data-universe="allianz"] {
-  --universe-brand:   #4D8FD4;
-  --universe-brand-2: #7AADDF;
-  --universe-accent:  #00C4FF;
-  --universe-bg:      #0A0E17;
-  --universe-surface: #111827;
-  --universe-fg:      #E8EEF8;
-  --universe-fg-2:    #8CA5C8;
-  --universe-border:  #1E2D45;
-}
-
-/* ─── Dark mode ─────────────────────────────────────────────── */
-.dark {
-  --bg:          #0E0E0C;
-  --bg-elevated: #1A1A17;
-  --bg-muted:    rgba(22, 22, 20, 0.30);
-  --fg:          #F5F5F0;
-  --fg-muted:    #A0A09B;
-  --fg-subtle:   #6B6B66;
-  --border:      #2A2A26;
-  --accent:      #FF6B47;
+  --fg-muted:    #444444;
+  --fg-subtle:   #888888;
+  --border:      #E0E0E0;
+  --accent:      #FFE500;
   --accent-fg:   #0A0A0A;
+  --accent-text: #7A5F00;  /* amber-dark — WCAG AA on white */
+
+  --shadow-color-subtle: rgba(0, 0, 0, 0.04);
+  --shadow-color-soft:   rgba(0, 0, 0, 0.06);
+  --shadow-color-mid:    rgba(0, 0, 0, 0.10);
+  --shadow-color-heavy:  rgba(0, 0, 0, 0.18);
 }
+
+/* ─── 2. Dark mode ───────────────────────────────────────────── */
+.dark {
+  --bg:          #0A0A0A;
+  --bg-elevated: #161616;
+  --bg-muted:    #1F1F1F;
+  --fg:          #FFFFFF;
+  --fg-muted:    #AAAAAA;
+  --fg-subtle:   #666666;
+  --border:      #2A2A2A;
+  --accent:      #FFE500;
+  --accent-fg:   #0A0A0A;
+  --accent-text: #FFD000;  /* brighter yellow — readable on dark bg */
+
+  --shadow-color-subtle: rgba(0, 0, 0, 0.20);
+  --shadow-color-soft:   rgba(0, 0, 0, 0.30);
+  --shadow-color-mid:    rgba(0, 0, 0, 0.40);
+  --shadow-color-heavy:  rgba(0, 0, 0, 0.60);
+}
+

@@ -29,7 +29,7 @@ export function SubCase({ subCase, contentHtml }: SubCaseProps) {
         <p
           className={cn(
             'font-mono text-[var(--type-xs)] tracking-widest uppercase mb-3',
-            'text-[var(--universe-accent)]'
+            'text-[var(--accent-text)]'
           )}
         >
           {subCase.tags.slice(0, 2).join(' · ')}
@@ -38,7 +38,7 @@ export function SubCase({ subCase, contentHtml }: SubCaseProps) {
           className={cn(
             'font-display font-normal',
             'text-[clamp(1.75rem,4vw,3rem)] leading-[1.05] tracking-[-0.032em]',
-            'text-[var(--universe-fg)] mb-3'
+            'text-[var(--fg)] mb-3'
           )}
         >
           {subCase.title}
@@ -46,7 +46,7 @@ export function SubCase({ subCase, contentHtml }: SubCaseProps) {
         <p
           className={cn(
             'text-[var(--type-base)] leading-[1.6] tracking-[-0.011em]',
-            'text-[var(--universe-fg-2)]',
+            'text-[var(--fg-muted)]',
             'max-w-[56ch]'
           )}
         >
@@ -60,8 +60,8 @@ export function SubCase({ subCase, contentHtml }: SubCaseProps) {
           className={cn(
             'relative w-full max-w-[80rem] mb-10',
             'rounded-[var(--radius-xl)] overflow-hidden',
-            'border border-[var(--universe-border)]',
-            'bg-[var(--universe-surface)]'
+            'border border-[var(--border)]',
+            'bg-[var(--bg-elevated)]'
           )}
           style={{ aspectRatio: '3/2' }}
         >
