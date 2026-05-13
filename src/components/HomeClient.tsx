@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Nav } from '@/components/layout/Nav'
 import { WorkGrid } from '@/components/sections/WorkGrid'
 import { About } from '@/components/sections/About'
@@ -112,21 +112,7 @@ function LeftNav({ rightRef }: { rightRef: React.RefObject<HTMLDivElement> }) {
   )
 }
 
-// ── Left panel identity — parallax drift ──────────────────────
-// Tracks scroll inside .split-right and drifts name/tagline at
-// 0.06× speed — creates subtle depth between panels.
-function LeftIdentity({ rightRef }: { rightRef: React.RefObject<HTMLDivElement> }) {
-  const reduced = useReducedMotion()
-
-  const { scrollYProgress } = useScroll({ container: rightRef })
-
-  // Name drifts up slightly as user scrolls down right panel
-  const nameY = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [0, -28])
-  // Tagline drifts a touch faster for layering effect
-  const taglineY = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [0, -18])
-  // Subtle opacity fade as user goes deep into content
-  const nameOpacity = useTransform(scrollYProgress, [0, 0.35, 0.6], [1, 1, reduced ? 1 : 0.4])
-
+function LeftIdentity() {
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -136,8 +122,7 @@ function LeftIdentity({ rightRef }: { rightRef: React.RefObject<HTMLDivElement> 
         )}>
           Portfolio
         </p>
-        <motion.h1
-          style={{ y: nameY, opacity: nameOpacity }}
+        <h1
           className={cn(
             'font-display font-normal',
             'text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.02] tracking-[-0.036em]',
@@ -147,11 +132,10 @@ function LeftIdentity({ rightRef }: { rightRef: React.RefObject<HTMLDivElement> 
           Tanawitch
           <br />
           Saentree
-        </motion.h1>
+        </h1>
       </div>
 
-      <motion.p
-        style={{ y: taglineY }}
+      <p
         className={cn(
           'font-display italic font-normal',
           'text-[clamp(0.9rem,1.4vw,1.125rem)] leading-[1.45] tracking-[-0.014em]',
@@ -160,7 +144,7 @@ function LeftIdentity({ rightRef }: { rightRef: React.RefObject<HTMLDivElement> 
         )}
       >
         I design for the person who didn&apos;t choose the software but has to use it every day. That&apos;s where the world gets better.
-      </motion.p>
+      </p>
 
       <div className="flex flex-col gap-1">
         <p className={cn(
@@ -244,8 +228,7 @@ export function HomeClient({ projects }: HomeClientProps) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Name + tagline — parallax drift */}
-          <LeftIdentity rightRef={rightRef} />
+          <LeftIdentity />
 
           {/* Section nav */}
           <LeftNav rightRef={rightRef} />
