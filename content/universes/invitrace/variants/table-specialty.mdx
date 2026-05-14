@@ -1,0 +1,15 @@
+---
+primitive: table
+archetype: specialty
+title: "Table — Specialty clinic"
+description: "Specialty clinic tables are narrow — 3-5 columns, single workflow focus. I locked the pattern almost entirely. The team asked for sortable columns; I declined. A table showing 4 items doesn't need sort — adding the interaction adds complexity that benefits no one."
+axisFlexible:
+  - "column count (max 5)"
+  - "density (regular only)"
+axisLocked:
+  - "sort (disabled)"
+  - "keyboard navigation"
+  - "row selection"
+  - "column widths"
+reasoning: "Sortable columns are for tables with enough data to benefit from sorting. At 4-8 rows, sort adds UI complexity and zero value. I enforced this as a constraint rather than a guideline because guidelines get ignored when developers want to be thorough."
+---

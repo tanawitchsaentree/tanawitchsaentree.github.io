@@ -1,7 +1,6 @@
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { UniverseHero } from '@/components/universe/UniverseHero'
 import { UniverseClient } from '@/components/universe/UniverseClient'
-import { SubCase } from '@/components/universe/SubCase'
 import { getUniverseSubCases } from '@/lib/universes'
 import { cn } from '@/lib/cn'
 

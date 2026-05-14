@@ -1,0 +1,15 @@
+---
+primitive: field
+archetype: large
+title: "Field — Large hospital"
+description: "Dense data-entry screens. Fields are used by specialists who complete the same forms many times per shift. I allowed compact density and floating labels here — the repetition means users develop muscle memory that makes the trade-offs acceptable. Error handling is still locked: no auto-dismiss."
+axisFlexible:
+  - "density (compact / regular)"
+  - "label behavior (floating / always-visible)"
+  - "help text visibility (hidden / on-focus / always)"
+axisLocked:
+  - "error state persistence (no auto-dismiss)"
+  - "touch target 36px min (desktop-locked screens only)"
+  - "keyboard focus treatment"
+reasoning: "Large hospitals often have desktop-heavy environments. I allowed the 44px touch target to relax to 36px on desktop-locked screens. That decision requires a runtime environment flag — if the flag is wrong, accessibility fails silently."
+---

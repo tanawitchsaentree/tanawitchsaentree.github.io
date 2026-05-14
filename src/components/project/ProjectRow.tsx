@@ -36,6 +36,7 @@ function FeaturedHeadline({ text }: { text: string }) {
 
 const UNIVERSE_SLUGS: Record<string, string> = {
   'allianz-doc-classification': '/projects/allianz',
+  'invitrace-design-system':    '/projects/invitrace',
 }
 
 interface ProjectRowProps {

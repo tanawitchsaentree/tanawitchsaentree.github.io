@@ -1,0 +1,16 @@
+---
+primitive: button
+archetype: specialty
+title: "Button — Specialty clinic"
+description: "Specialty clinics serve narrow workflows. I locked the button pattern almost completely — one density, one label position, one color. The team asked for more flexibility, but more flexibility meant more places for inconsistency to live. A focused system serving a focused workflow doesn't need optionality."
+axisFlexible:
+  - "label position (top-aligned only)"
+  - "icon usage (none — text only)"
+axisLocked:
+  - "minimum touch target 44×44px"
+  - "focus ring treatment and offset"
+  - "disabled state contrast ratio"
+  - "keyboard activation (Enter + Space)"
+  - "density (regular only — no compact)"
+reasoning: "Specialty teams often have a single clinic manager who configures the system. One pattern is easier to audit than three. Flexibility here was a governance risk, not a product feature."
+---

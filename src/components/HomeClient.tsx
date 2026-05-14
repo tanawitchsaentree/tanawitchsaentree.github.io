@@ -202,12 +202,7 @@ export function HomeClient({ projects }: HomeClientProps) {
   }, [])
 
   const navigateWithTransition = useCallback((href: string) => {
-    const vt = document.startViewTransition
-    if (vt) {
-      vt.call(document, () => { router.push(href) })
-    } else {
-      router.push(href)
-    }
+    router.push(href)
   }, [router])
 
   const activeProject = activeSlug

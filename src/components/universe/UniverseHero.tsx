@@ -1,6 +1,34 @@
-import Link from 'next/link'
+'use client'
+
+import { useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/cn'
 import { allianzMeta } from '@/data/universes/allianz-meta'
+
+function BackLink() {
+  const router = useRouter()
+
+  const handleBack = useCallback(() => {
+    router.push('/')
+  }, [router])
+
+  return (
+    <button
+      type="button"
+      onClick={handleBack}
+      className={cn(
+        'inline-flex items-center gap-2 mb-10',
+        'font-mono text-[var(--type-xs)] tracking-widest uppercase',
+        'text-[var(--fg-muted)] hover:text-[var(--fg)]',
+        'no-underline transition-colors duration-[var(--duration-fast)]',
+        'cursor-pointer border-none bg-transparent p-0'
+      )}
+    >
+      <span aria-hidden="true">←</span>
+      <span>Back to work</span>
+    </button>
+  )
+}
 
 export function UniverseHero() {
   return (
@@ -10,19 +38,7 @@ export function UniverseHero() {
         'pt-24 pb-16 md:pt-32 md:pb-20'
       )}
     >
-      {/* Back link */}
-      <Link
-        href="/"
-        className={cn(
-          'inline-flex items-center gap-2 mb-10',
-          'font-mono text-[var(--type-xs)] tracking-widest uppercase',
-          'text-[var(--fg-muted)] hover:text-[var(--fg)]',
-          'no-underline transition-colors duration-[var(--duration-fast)]'
-        )}
-      >
-        <span aria-hidden="true">←</span>
-        <span>Back to work</span>
-      </Link>
+      <BackLink />
 
       {/* Eyebrow */}
       <p

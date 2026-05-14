@@ -30,25 +30,6 @@
     padding: 0;
   }
 
-  /* Skip-to-content link */
-  .skip-link {
-    position: absolute;
-    top: -100%;
-    left: var(--space-4);
-    z-index: 9999;
-    padding: var(--space-2) var(--space-4);
-    background: var(--fg);
-    color: var(--bg);
-    font-size: var(--type-sm);
-    font-weight: 500;
-    border-radius: var(--radius-md);
-    text-decoration: none;
-    transition: top 0.1s;
-  }
-
-  .skip-link:focus {
-    top: var(--space-4);
-  }
 
   /* Focus ring — consistent, visible */
   :focus-visible {
@@ -359,31 +340,7 @@ html.modal-open {
   text-decoration-color: var(--accent-text);
 }
 
-/* ─── View Transitions ──────────────────────────────────────── */
-@keyframes vt-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes vt-fade-out {
-  from { opacity: 1; }
-  to   { opacity: 0; }
-}
-
-::view-transition-old(root) {
-  animation: 280ms cubic-bezier(0.65, 0, 0.35, 1) both vt-fade-out;
-}
-
-::view-transition-new(root) {
-  animation: 360ms cubic-bezier(0.22, 1, 0.36, 1) both vt-fade-in;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: 0.01ms !important;
-  }
-}
+/* View transitions removed — caused stale overlay on back-navigation with Next.js App Router */
 
 /* ─── Reduced motion overrides ──────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {

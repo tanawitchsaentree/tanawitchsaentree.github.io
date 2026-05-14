@@ -1,0 +1,17 @@
+---
+primitive: button
+archetype: large
+title: "Button — Large hospital"
+description: "Tertiary care hospitals have specialist staff who use the same tools daily. Density matters more than clarity — these users don't need labels explaining what a button does. Compact layout, icon support, and inline labels reduce visual noise on dense clinical dashboards."
+axisFlexible:
+  - "label position (inline only)"
+  - "density (compact / extra-compact)"
+  - "icon usage (leading / icon-only for recognized actions)"
+  - "color fill (primary / ghost)"
+axisLocked:
+  - "accessibility contract"
+  - "keyboard activation (Enter + Space)"
+  - "disabled state treatment"
+  - "focus ring offset"
+reasoning: "Specialists read interfaces like they read charts — fast. Reducing redundancy respects that. The trade-off is that this button fails in a handoff to a new user, which is why it's only permitted on screens behind a role gate."
+---

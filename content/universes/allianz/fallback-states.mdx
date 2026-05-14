@@ -7,20 +7,42 @@ tags: ["Error States", "Trust Design"]
 order: 3
 ---
 
-## The Problem
+## The problem
 
-Every AI system fails. The question is: how gracefully, and who catches it?
+Every AI system fails. IDAS had no principled answer for what happened when it did.
 
-IDAS had no principled fallback logic. When confidence was low, documents either stalled in a queue or were routed to the wrong team with false confidence.
+When confidence was low, documents either stalled in a queue with no explanation, or were routed with false confidence to the wrong team. Operators discovered errors downstream — after someone had already acted on a bad classification, or after a document had sat unresolved long enough that it became an incident.
 
-Operators had no signal that something had gone wrong. They only discovered errors downstream.
+The system communicated one state: *classified*. It had no vocabulary for *uncertain*, *unrecognized*, or *confidence below threshold — human decision required*.
 
-## Key Insight
+Operators weren't failing to catch errors. They had no signal that an error was possible.
 
-Fallback states are a UX problem, not just an engineering one. The system needs to communicate what it doesn't know, not just what it does.
+## What I considered
 
-Uncertainty should surface at the point of decision, not after the fact.
+[TODO: fill your actual alternatives here]
 
-## What Changed
+- **Option A:** Auto-escalate everything below a confidence threshold to a senior reviewer — cut because it turns the senior reviewer into a queue processor. It solves the routing problem by creating a bottleneck person, and it scales with document volume, not with skill.
 
-Operators gained a clear visibility tier — documents flagged for human review were separated from high-confidence automated routes. False-positive rates dropped in the first quarter post-launch.
+- **Option B:** Show a fallback state inline with the normal classification result — same screen, but with a visual indicator that the AI is uncertain — cut because [TODO: why this didn't work for your context — was it ignored? Did handlers treat all results the same regardless?]
+
+- **Option C (chosen):** [TODO: your actual design — how uncertain documents were separated, what the operator saw, what actions were available, how the fallback state differed from a normal result]
+
+## The decision
+
+[TODO: concrete design output — what the fallback state looked like, what information it surfaced, what the operator could do, how it fed back into the classification system]
+
+Fallback isn't a failure message. It's a handoff. The interface had to communicate: *the AI processed this, here's what it found, here's why it's not routing automatically, here's what you need to decide.*
+
+The difference between "error" and "escalation" matters — one asks the operator to fix something, the other asks them to own a decision.
+
+## What changed
+
+- Documents with confidence below threshold now surface in a dedicated review tier, separate from the main classification queue — operators can see at a glance how much of their workload is AI-confident vs. AI-uncertain [CLAIM — verify separation logic and adoption]
+- False-positive routing dropped in the first quarter post-launch [CLAIM — verify with team, get approximate number if available]
+- The operations lead reported that escalations stopped being surprises — the fallback state gave teams a way to anticipate load, not just react to it [CLAIM — verify]
+
+## Trade-off ที่ยังอยู่
+
+**Known failure modes only.** The fallback system catches cases where the AI knows it's uncertain — low confidence score, unrecognized document type. It doesn't catch cases where the AI is confidently wrong. A document classified at 0.92 confidence to the wrong category goes straight through. That's the harder problem, and it's still unsolved.
+
+**Threshold is operator-agnostic.** The confidence threshold that triggers a fallback is set globally. Some operators are comfortable acting on a 0.7 confidence score; others want to review anything below 0.9. There's no per-team or per-operator calibration, which means the fallback boundary is a compromise that's slightly wrong for everyone.

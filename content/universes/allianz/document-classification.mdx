@@ -7,20 +7,38 @@ tags: ["AI Tooling", "Enterprise UX"]
 order: 1
 ---
 
-## The Problem
+## The problem
 
-Allianz processes thousands of incoming documents every day — claims, invoices, legal notices, correspondence. IDAS is the internal AI system that classifies each one and routes it to the right team.
+IDAS processed thousands of incoming documents daily — claims, invoices, legal notices. The AI classified each one and routed it to a team. When it was wrong, no one found out until something downstream broke: a claim misrouted to legal, an invoice sitting in the wrong queue for days.
 
-When the AI was wrong, no one knew until something downstream broke. When it was right, handlers still double-checked everything, because there was no way to know which result to trust.
+When it was right, handlers still double-checked everything. Not because they distrusted the system — because the system gave them no signal about when *not* to.
 
-**The volume was there. The confidence wasn't.**
+The cost wasn't bad AI. It was that good AI and bad AI looked identical at the point of decision.
 
-## Key Insight
+## What I considered
 
-Users don't fear AI being wrong. They fear being wrong without knowing it.
+[TODO: fill your actual alternatives here]
 
-The goal wasn't to make the AI more accurate. It was to make the AI's uncertainty legible — so configurators could act on it, not just be surprised by it.
+- **Option A:** Show a single confidence percentage on each classification — cut because a raw number (e.g. "78%") has no context for what 78% means in practice. One team's acceptable threshold is another team's review-everything zone. A number without calibration teaches nothing.
 
-## What Changed
+- **Option B:** Color-code results (green / yellow / red) based on a fixed threshold — cut because a fixed threshold treats all document types the same. A claim mis-classified at 0.65 confidence is a different risk than an invoice at 0.65. Color became noise fast.
 
-Configurators who had avoided touching prompts for weeks started iterating daily — not because anyone asked them to, but because a safe place to try now existed.
+- **Option C (chosen):** [TODO: describe your actual solution — confidence display design, what it showed, how it was contextualised per document type or team]
+
+## The decision
+
+[TODO: describe the concrete design output — what the interface showed, what changed about how uncertainty was communicated, what the configurator could act on]
+
+The display had to answer one question for the handler: *do I need to check this, or can I trust the route?* Not a number. Not a color. A clear yes/no with the evidence underneath for the cases where it mattered.
+
+## What changed
+
+- Handlers who had been reviewing every result started skipping verification on high-confidence routes — not because we told them to, but because the signal gave them a reason to [CLAIM — verify actual adoption rate or time saved]
+- Exception volume in the manual review queue dropped noticeably in the weeks after launch [CLAIM — verify with team, approximate is fine]
+- Configurators started asking "why did this hit 0.6?" instead of "why was this wrong" — the framing shifted from blame to diagnosis
+
+## Trade-off ที่ยังอยู่
+
+**Confidence thresholds are static.** Right now every document type uses the same review threshold. A legal notice and an invoice carry different downstream costs when misclassified — the threshold should reflect that, but calibrating per-type requires historical data by document category that didn't exist at launch.
+
+**The display optimises for the handler, not the auditor.** Someone reviewing a routing decision six months later has no record of what confidence score triggered which route. There's no confidence audit trail. That's a gap that'll matter if the system is ever challenged.

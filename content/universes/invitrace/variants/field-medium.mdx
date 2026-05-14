@@ -1,0 +1,16 @@
+---
+primitive: field
+archetype: medium
+title: "Field — Medium hospital"
+description: "Form fields in medium hospitals are filled out by multiple people per patient — admissions, nursing, billing. The field pattern must accommodate fast hand-off: visible labels at all times, error messages that don't disappear, and enough padding to avoid mis-taps on shared tablets."
+axisFlexible:
+  - "label visibility (always-visible / placeholder only)"
+  - "density (regular / comfortable)"
+  - "help text position (inline / tooltip)"
+axisLocked:
+  - "label always-visible minimum requirement"
+  - "error state persistence (no auto-dismiss)"
+  - "touch target size 44×44px"
+  - "keyboard focus behavior"
+reasoning: "A field that hides its label when filled becomes ambiguous when someone picks up a half-completed form. I kept label-always-visible as a hard constraint — it cost 8px of vertical space and prevented one class of errors we saw in usability testing."
+---

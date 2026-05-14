@@ -1,0 +1,16 @@
+---
+primitive: table
+archetype: medium
+title: "Table — Medium hospital"
+description: "Patient tables in medium hospitals surface admissions, queues, and task lists. Multiple staff roles read the same table differently — a nurse sees tasks, billing sees charges. I allowed column visibility configuration so each role can strip the table to what they need without IT involvement."
+axisFlexible:
+  - "column visibility (configurable per role)"
+  - "density (regular / comfortable)"
+  - "row action placement (inline / overflow menu)"
+axisLocked:
+  - "sort behavior contract"
+  - "keyboard navigation (arrow keys + Enter)"
+  - "row selection contract"
+  - "clinical risk columns (cannot be hidden)"
+reasoning: "Configurable columns prevented the system from needing three separate table components. The trade-off is that role misconfiguration can hide critical information — clinical risk columns are locked and can't be configured away."
+---

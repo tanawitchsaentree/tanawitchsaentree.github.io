@@ -1,0 +1,16 @@
+---
+primitive: table
+archetype: large
+title: "Table — Large hospital"
+description: "Dense clinical tables with 10+ columns. I allowed compact density and horizontal scroll — large hospital users are desktop-bound and trained. Keyboard navigation throughout; mouse-only interactions were banned after a usability session showed clinical staff navigating with one hand while writing notes."
+axisFlexible:
+  - "density (compact only)"
+  - "horizontal scroll (permitted)"
+axisLocked:
+  - "keyboard navigation thoroughness"
+  - "row selection contract"
+  - "sort behavior"
+  - "clinical risk column lock"
+  - "column visibility (fixed — no role config)"
+reasoning: "Compact density is readable here because large hospital staff are repeat users. The same pattern fails in handoff or on mobile. This table is desktop-locked in the component contract — mobile renders a degraded list view."
+---

@@ -1,0 +1,17 @@
+---
+primitive: button
+archetype: medium
+title: "Button — Medium hospital"
+description: "Community hospitals run on shared devices between shifts. Staff turnover is high, training time is short. The button pattern prioritizes label clarity over icon density — every action must be readable by someone seeing the screen for the first time. I kept icon usage to none by default because abstract icons fail when there's no one to explain them."
+axisFlexible:
+  - "label position (top-aligned / inline)"
+  - "density (compact / regular)"
+  - "icon usage (none / leading label only)"
+  - "border treatment (outlined / filled)"
+axisLocked:
+  - "minimum touch target 44×44px"
+  - "focus ring treatment and offset"
+  - "disabled state contrast ratio"
+  - "keyboard activation (Enter + Space)"
+reasoning: "Community hospitals run on shared tablets. Short training cycles mean iconography fails when staff turnover is high — text labels survive handoffs, icons don't."
+---
