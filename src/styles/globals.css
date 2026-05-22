@@ -31,6 +31,13 @@
   }
 
 
+  /* Hide native cursor on pointer:fine when custom cursor is active */
+  @media (pointer: fine) {
+    *, *::before, *::after {
+      cursor: none !important;
+    }
+  }
+
   /* Focus ring — consistent, visible */
   :focus-visible {
     outline: 2px solid var(--fg);
