@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import '@fontsource-variable/bricolage-grotesque'
 import '../styles/globals.css'
+import { LenisProvider } from '@/components/providers/LenisProvider'
+import { CustomCursor } from '@/components/ui/CustomCursor'
 
 export const metadata: Metadata = {
   title: 'Tanawitch Saentree — Product Designer, Enterprise AI & Systems',
@@ -46,7 +48,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="bg-[var(--bg)] text-[var(--fg)]">
-        {children}
+        <LenisProvider>
+          {children}
+        </LenisProvider>
+        <CustomCursor />
       </body>
     </html>
   )

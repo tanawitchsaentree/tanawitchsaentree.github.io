@@ -36,7 +36,7 @@ const AC  = { medium: '#0D9488', large: '#D97706', specialty: '#E85D75' }
 
 function buildGraph(): { nodes: Node[]; links: Link[] } {
   const nodes: Node[] = [
-    { id:'root',              tier:'root',      color:'#111', r:10, label:'Design Token', drag:'none',   trail:[] },
+    { id:'root',              tier:'root',      color:'#111111', r:10, label:'Design Token', drag:'none',   trail:[] },
     { id:'prim-button',       tier:'primitive', color:PC,     r:7,  label:'Button',       drag:'spring', trail:[] },
     { id:'prim-field',        tier:'primitive', color:PC,     r:7,  label:'Field',        drag:'spring', trail:[] },
     { id:'prim-table',        tier:'primitive', color:PC,     r:7,  label:'Table',        drag:'spring', trail:[] },

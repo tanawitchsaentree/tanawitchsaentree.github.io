@@ -18,7 +18,12 @@ const METRICS = [
 function BackLink() {
   const router = useRouter()
   const handleBack = useCallback(() => {
-    router.push('/')
+    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+      (document as Document & { startViewTransition: (cb: () => void) => void })
+        .startViewTransition(() => { router.push('/') })
+    } else {
+      router.push('/')
+    }
   }, [router])
 
   return (

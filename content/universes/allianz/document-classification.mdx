@@ -9,7 +9,7 @@ order: 1
 
 ## The problem
 
-IDAS processed thousands of incoming documents daily — claims, invoices, legal notices. The AI classified each one and routed it to a team. When it was wrong, no one found out until something downstream broke: a claim misrouted to legal, an invoice sitting in the wrong queue for days.
+The platform processed thousands of incoming documents daily — claims, invoices, legal notices. The AI classified each one and routed it to a team. When it was wrong, no one found out until something downstream broke: a claim misrouted to legal, an invoice sitting in the wrong queue for days.
 
 When it was right, handlers still double-checked everything. Not because they distrusted the system — because the system gave them no signal about when *not* to.
 
@@ -17,28 +17,28 @@ The cost wasn't bad AI. It was that good AI and bad AI looked identical at the p
 
 ## What I considered
 
-[TODO: fill your actual alternatives here]
-
 - **Option A:** Show a single confidence percentage on each classification — cut because a raw number (e.g. "78%") has no context for what 78% means in practice. One team's acceptable threshold is another team's review-everything zone. A number without calibration teaches nothing.
 
 - **Option B:** Color-code results (green / yellow / red) based on a fixed threshold — cut because a fixed threshold treats all document types the same. A claim mis-classified at 0.65 confidence is a different risk than an invoice at 0.65. Color became noise fast.
 
-- **Option C (chosen):** [TODO: describe your actual solution — confidence display design, what it showed, how it was contextualised per document type or team]
+- **Option C (chosen):** A tiered display that de-emphasizes confidence on high-confidence routes — score present but visually recessive, not the lead element. Below threshold, a focused review card takes over: the category the AI chose, the closest alternative it considered, and a one-line explanation of why it was uncertain. The question it answered wasn't "what's the score?" — it was "do I need to check this?"
 
 ## The decision
 
-[TODO: describe the concrete design output — what the interface showed, what changed about how uncertainty was communicated, what the configurator could act on]
+Confidence information is a cost, not a feature. Every time a handler reads a number, interprets it, and decides it's fine — that's wasted attention for a case that didn't need review.
 
-The display had to answer one question for the handler: *do I need to check this, or can I trust the route?* Not a number. Not a color. A clear yes/no with the evidence underneath for the cases where it mattered.
+The interface de-emphasized confidence on high-confidence routes — score present, but visually recessive, not the lead element. Below threshold, a review card replaced the standard result: classification chosen, closest alternative, brief reasoning. Two actions: *confirm route* or *reclassify*. The score moved to the background. The decision moved to the front.
+
+The underlying rule: surface uncertainty only when it requires a decision. Everything else should be invisible.
 
 ## What changed
 
-- Handlers who had been reviewing every result started skipping verification on high-confidence routes — not because we told them to, but because the signal gave them a reason to [CLAIM — verify actual adoption rate or time saved]
-- Exception volume in the manual review queue dropped noticeably in the weeks after launch [CLAIM — verify with team, approximate is fine]
-- Configurators started asking "why did this hit 0.6?" instead of "why was this wrong" — the framing shifted from blame to diagnosis
+The review card became the only place uncertainty existed. Everywhere else, the system either ran or stayed silent.
+
+Configurators started asking "why did this hit uncertain?" instead of "why was this wrong" — the framing shifted from blame to diagnosis, which changed how they used the prompt management tool downstream.
 
 ## Trade-off ที่ยังอยู่
 
-**Confidence thresholds are static.** Right now every document type uses the same review threshold. A legal notice and an invoice carry different downstream costs when misclassified — the threshold should reflect that, but calibrating per-type requires historical data by document category that didn't exist at launch.
+**Confidence thresholds are static.** Every document type uses the same review threshold. A legal notice and an invoice carry different downstream costs when misclassified — the threshold should reflect that, but calibrating per-type requires historical volume by document category that didn't exist at launch.
 
-**The display optimises for the handler, not the auditor.** Someone reviewing a routing decision six months later has no record of what confidence score triggered which route. There's no confidence audit trail. That's a gap that'll matter if the system is ever challenged.
+**No audit trail for the confidence state.** The display optimises for the handler in the moment. Someone reviewing a routing decision six months later has no record of what confidence score triggered which route. That's a gap that will matter if a classification is ever challenged in a compliance context.

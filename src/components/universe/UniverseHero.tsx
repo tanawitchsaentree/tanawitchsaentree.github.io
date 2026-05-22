@@ -9,13 +9,19 @@ function BackLink() {
   const router = useRouter()
 
   const handleBack = useCallback(() => {
-    router.push('/')
+    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+      (document as Document & { startViewTransition: (cb: () => void) => void })
+        .startViewTransition(() => { router.push('/') })
+    } else {
+      router.push('/')
+    }
   }, [router])
 
   return (
     <button
       type="button"
       onClick={handleBack}
+      data-cursor="button"
       className={cn(
         'inline-flex items-center gap-2 mb-10',
         'font-mono text-[var(--type-xs)] tracking-widest uppercase',
@@ -59,7 +65,7 @@ export function UniverseHero() {
           'max-w-[22ch] mb-6'
         )}
       >
-        IDAS — AI Document
+        AI Document
         <br />
         <em className="not-italic text-[var(--fg-muted)]">Intelligence Suite</em>
       </h1>

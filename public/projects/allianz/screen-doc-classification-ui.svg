@@ -1,0 +1,131 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#FFFFFF"/>
+  <text x="60" y="48" font-family="monospace" font-size="11" letter-spacing="2" fill="#888888">DOCUMENT CLASSIFICATION  ·  INTERFACE SKETCH</text>
+  <line x1="60" y1="60" x2="1140" y2="60" stroke="#E0E0E0" stroke-width="1"/>
+
+  <!-- Chrome shell -->
+  <rect x="60" y="88" width="1080" height="56" rx="6" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <rect x="80" y="104" width="180" height="22" rx="4" fill="#E0E0E0"/>
+  <text x="170" y="119" font-family="monospace" font-size="10" fill="#888888" text-anchor="middle">DOCUMENT QUEUE</text>
+  <rect x="900" y="104" width="220" height="22" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="1010" y="119" font-family="monospace" font-size="10" fill="#888888" text-anchor="middle">idas.allianz.internal</text>
+
+  <!-- LEFT: queue panel -->
+  <rect x="60" y="152" width="460" height="592" rx="6" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="80" y="178" font-family="monospace" font-size="10" letter-spacing="1.5" fill="#888888">QUEUE  ·  TODAY</text>
+  <line x1="60" y1="188" x2="520" y2="188" stroke="#E0E0E0" stroke-width="1"/>
+
+  <!-- Queue rows — compact, high confidence, no review needed -->
+  <rect x="60" y="196" width="460" height="52" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="80" y="216" font-family="monospace" font-size="9" letter-spacing="1" fill="#888888">DOC-2241  ·  CLAIM</text>
+  <text x="80" y="232" font-family="monospace" font-size="10" fill="#0A0A0A">Personal injury claim — Q3 filing</text>
+  <rect x="460" y="204" width="44" height="16" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="482" y="215" font-family="monospace" font-size="8" fill="#888888" text-anchor="middle">0.94</text>
+
+  <rect x="60" y="248" width="460" height="52" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="80" y="268" font-family="monospace" font-size="9" letter-spacing="1" fill="#888888">DOC-2242  ·  INVOICE</text>
+  <text x="80" y="284" font-family="monospace" font-size="10" fill="#0A0A0A">Supplier invoice — maintenance services</text>
+  <rect x="460" y="256" width="44" height="16" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="482" y="267" font-family="monospace" font-size="8" fill="#888888" text-anchor="middle">0.91</text>
+
+  <rect x="60" y="300" width="460" height="52" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="80" y="320" font-family="monospace" font-size="9" letter-spacing="1" fill="#888888">DOC-2243  ·  LEGAL</text>
+  <text x="80" y="336" font-family="monospace" font-size="10" fill="#0A0A0A">Notice of claim withdrawal — subrogation</text>
+  <rect x="460" y="308" width="44" height="16" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="482" y="319" font-family="monospace" font-size="8" fill="#888888" text-anchor="middle">0.88</text>
+
+  <!-- Threshold divider -->
+  <rect x="60" y="352" width="460" height="28" fill="#FFE500" fill-opacity="0.10"/>
+  <line x1="60" y1="352" x2="520" y2="352" stroke="#7A5F00" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="60" y1="380" x2="520" y2="380" stroke="#7A5F00" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="290" y="370" font-family="monospace" font-size="9" letter-spacing="2" fill="#7A5F00" text-anchor="middle">REVIEW THRESHOLD</text>
+
+  <!-- Below threshold row — selected, opens review card -->
+  <rect x="60" y="380" width="460" height="52" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="2"/>
+  <text x="80" y="400" font-family="monospace" font-size="9" letter-spacing="1" fill="#888888">DOC-2244  ·  CORRESPONDENCE</text>
+  <text x="80" y="416" font-family="monospace" font-size="10" fill="#0A0A0A">Contract amendment — policy endorsement</text>
+  <rect x="440" y="387" width="64" height="18" rx="3" fill="#FFE500" fill-opacity="0.25" stroke="#7A5F00" stroke-width="1"/>
+  <text x="472" y="399" font-family="monospace" font-size="8" fill="#7A5F00" text-anchor="middle">REVIEW</text>
+
+  <!-- More rows, muted -->
+  <rect x="60" y="432" width="460" height="52" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="80" y="452" font-family="monospace" font-size="9" letter-spacing="1" fill="#888888">DOC-2245  ·  CLAIM</text>
+  <text x="80" y="468" font-family="monospace" font-size="10" fill="#0A0A0A">Liability claim — third party</text>
+  <rect x="460" y="440" width="44" height="16" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="482" y="451" font-family="monospace" font-size="8" fill="#888888" text-anchor="middle">0.96</text>
+
+  <!-- Annotation: score recessive on high-conf rows -->
+  <line x1="506" y1="263" x2="556" y2="263" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="3 3"/>
+  <rect x="558" y="247" width="132" height="32" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="624" y="260" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">score present,</text>
+  <text x="624" y="272" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">visually recessive</text>
+
+  <!-- RIGHT: review card — the design artifact, heavy border -->
+  <rect x="560" y="152" width="580" height="592" rx="8" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="2.5"/>
+  <rect x="560" y="152" width="580" height="48" rx="8" fill="#0A0A0A"/>
+  <rect x="560" y="190" width="580" height="10" fill="#0A0A0A"/>
+  <text x="850" y="182" font-family="monospace" font-size="10" letter-spacing="3" fill="#FFFFFF" text-anchor="middle">REVIEW CARD  ·  DOC-2244</text>
+
+  <!-- Document context -->
+  <text x="586" y="228" font-family="monospace" font-size="9" letter-spacing="1.5" fill="#888888">DOCUMENT</text>
+  <rect x="586" y="235" width="516" height="56" rx="4" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="606" y="253" font-family="monospace" font-size="10" fill="#0A0A0A">Contract amendment — policy endorsement</text>
+  <rect x="606" y="262" width="200" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="606" y="274" width="280" height="8" rx="2" fill="#E0E0E0"/>
+
+  <!-- Chosen category — prominent -->
+  <text x="586" y="316" font-family="monospace" font-size="9" letter-spacing="1.5" fill="#888888">CHOSEN CATEGORY</text>
+  <rect x="586" y="323" width="516" height="44" rx="4" fill="#0A0A0A"/>
+  <text x="606" y="343" font-family="monospace" font-size="13" letter-spacing="0.5" fill="#FFFFFF">Legal Correspondence</text>
+  <text x="606" y="358" font-family="monospace" font-size="9" fill="#888888">AI classification · highest scoring match</text>
+  <!-- Callout A -->
+  <text x="1112" y="338" font-family="monospace" font-size="9" fill="#7A5F00" text-anchor="middle">A</text>
+  <circle cx="1112" cy="333" r="10" fill="none" stroke="#7A5F00" stroke-width="1.5"/>
+  <line x1="1102" y1="338" x2="1106" y2="345" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="3 2"/>
+
+  <!-- Closest alternative -->
+  <text x="586" y="392" font-family="monospace" font-size="9" letter-spacing="1.5" fill="#888888">CLOSEST ALTERNATIVE</text>
+  <rect x="586" y="399" width="516" height="36" rx="4" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="606" y="419" font-family="monospace" font-size="11" fill="#444444">Policy Endorsement</text>
+  <rect x="932" y="405" width="62" height="18" rx="3" fill="#EBEBEB"/>
+  <text x="963" y="417" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">0.61 vs 0.63</text>
+  <!-- Callout B -->
+  <text x="1112" y="416" font-family="monospace" font-size="9" fill="#7A5F00" text-anchor="middle">B</text>
+  <circle cx="1112" cy="411" r="10" fill="none" stroke="#7A5F00" stroke-width="1.5"/>
+
+  <!-- Reason -->
+  <text x="586" y="456" font-family="monospace" font-size="9" letter-spacing="1.5" fill="#888888">REASON</text>
+  <rect x="586" y="463" width="516" height="54" rx="4" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <rect x="602" y="474" width="310" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="602" y="488" width="240" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="602" y="502" width="180" height="8" rx="2" fill="#E0E0E0"/>
+  <!-- Callout C -->
+  <text x="1112" y="490" font-family="monospace" font-size="9" fill="#7A5F00" text-anchor="middle">C</text>
+  <circle cx="1112" cy="485" r="10" fill="none" stroke="#7A5F00" stroke-width="1.5"/>
+
+  <!-- Action buttons -->
+  <rect x="586" y="538" width="248" height="36" rx="4" fill="#0A0A0A"/>
+  <text x="710" y="561" font-family="monospace" font-size="11" letter-spacing="1" fill="#FFFFFF" text-anchor="middle">CONFIRM ROUTE</text>
+  <rect x="846" y="538" width="248" height="36" rx="4" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="1.5"/>
+  <text x="970" y="561" font-family="monospace" font-size="11" letter-spacing="1" fill="#0A0A0A" text-anchor="middle">RECLASSIFY</text>
+  <!-- Callout D -->
+  <text x="1112" y="558" font-family="monospace" font-size="9" fill="#7A5F00" text-anchor="middle">D</text>
+  <circle cx="1112" cy="553" r="10" fill="none" stroke="#7A5F00" stroke-width="1.5"/>
+
+  <!-- Callout legend at bottom of card -->
+  <line x1="586" y1="596" x2="1120" y2="596" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="586" y="614" font-family="monospace" font-size="8.5" fill="#888888">A — classification is the lead; score is hidden</text>
+  <text x="586" y="628" font-family="monospace" font-size="8.5" fill="#888888">B — alternative shown with score gap; margin of 0.02 is meaningful context</text>
+  <text x="586" y="642" font-family="monospace" font-size="8.5" fill="#888888">C — plain language reason, not a probability breakdown</text>
+  <text x="586" y="656" font-family="monospace" font-size="8.5" fill="#888888">D — two actions only; confirm is default weight; reclassify is secondary</text>
+  <text x="586" y="670" font-family="monospace" font-size="8.5" fill="#888888">    no "dismiss" / "skip" — every uncertain document requires an owned decision</text>
+
+  <!-- Legend bar -->
+  <line x1="60" y1="754" x2="1140" y2="754" stroke="#E0E0E0" stroke-width="1"/>
+  <circle cx="70" cy="768" r="7" fill="none" stroke="#7A5F00" stroke-width="1.5"/>
+  <text x="75" y="772" font-family="monospace" font-size="9" fill="#7A5F00" text-anchor="middle">A</text>
+  <text x="88" y="772" font-family="monospace" font-size="9" fill="#444444">design decision callout</text>
+  <rect x="222" y="762" width="12" height="12" rx="2" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="2"/>
+  <text x="240" y="772" font-family="monospace" font-size="9" fill="#444444">review card — triggered only below threshold</text>
+  <text x="1140" y="772" font-family="monospace" font-size="9" fill="#888888" text-anchor="end">Allianz · IDAS · Document Classification</text>
+</svg>

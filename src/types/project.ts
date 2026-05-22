@@ -19,6 +19,8 @@ export interface ProjectFrontmatter {
   order: number
   /** If false, card appears in timeline only, not grid */
   inGrid: boolean
+  /** If false, hidden behind "Show all" toggle. Defaults to true. */
+  highlight?: boolean
 }
 
 export interface Project extends ProjectFrontmatter {

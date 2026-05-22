@@ -82,6 +82,9 @@
   --shadow-color-soft:   rgba(0, 0, 0, 0.06);
   --shadow-color-mid:    rgba(0, 0, 0, 0.10);
   --shadow-color-heavy:  rgba(0, 0, 0, 0.18);
+
+  /* Cursor — updated in Fix 2 when accent color changes */
+  --cursor-ring: #0A0A0A;
 }
 
 /* ─── 2. Dark mode ───────────────────────────────────────────── */
@@ -101,5 +104,7 @@
   --shadow-color-soft:   rgba(0, 0, 0, 0.30);
   --shadow-color-mid:    rgba(0, 0, 0, 0.40);
   --shadow-color-heavy:  rgba(0, 0, 0, 0.60);
+
+  --cursor-ring: #F4F1EA;
 }
 

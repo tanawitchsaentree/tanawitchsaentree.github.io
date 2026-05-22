@@ -9,7 +9,7 @@ order: 3
 
 ## The problem
 
-Every AI system fails. IDAS had no principled answer for what happened when it did.
+Every AI system fails. The platform had no principled answer for what happened when it did.
 
 When confidence was low, documents either stalled in a queue with no explanation, or were routed with false confidence to the wrong team. Operators discovered errors downstream — after someone had already acted on a bad classification, or after a document had sat unresolved long enough that it became an incident.
 
@@ -19,30 +19,30 @@ Operators weren't failing to catch errors. They had no signal that an error was 
 
 ## What I considered
 
-[TODO: fill your actual alternatives here]
+- **Option A:** Auto-escalate everything below a confidence threshold to a senior reviewer — cut because it turns the senior reviewer into a queue processor. The bottleneck person now scales with document volume, not with skill. When the senior reviewer is unavailable, the whole tier backs up.
 
-- **Option A:** Auto-escalate everything below a confidence threshold to a senior reviewer — cut because it turns the senior reviewer into a queue processor. It solves the routing problem by creating a bottleneck person, and it scales with document volume, not with skill.
+- **Option B:** A modal blocker that interrupted the operator workflow when a document needed review — cut because it inverted the priority problem instead of solving it. A modal on every uncertain document would have blocked operators continuously in high-volume periods. Interruption-driven review optimizes for the system's anxiety, not the operator's capacity.
 
-- **Option B:** Show a fallback state inline with the normal classification result — same screen, but with a visual indicator that the AI is uncertain — cut because [TODO: why this didn't work for your context — was it ignored? Did handlers treat all results the same regardless?]
-
-- **Option C (chosen):** [TODO: your actual design — how uncertain documents were separated, what the operator saw, what actions were available, how the fallback state differed from a normal result]
+- **Option C (chosen):** A separate queue — architecturally distinct from the main classification flow, with its own SLA, its own ownership, and its own triage rhythm. Uncertain documents never enter the standard queue at all. The operator assigned to fallback review sees a different interface: AI's leaning, confidence level, the reason it didn't route, and actions scoped to the decision required. Not overflow. A different job.
 
 ## The decision
 
-[TODO: concrete design output — what the fallback state looked like, what information it surfaced, what the operator could do, how it fed back into the classification system]
+Fallback isn't a failure message. It's a handoff.
 
-Fallback isn't a failure message. It's a handoff. The interface had to communicate: *the AI processed this, here's what it found, here's why it's not routing automatically, here's what you need to decide.*
+The interface had to communicate: *the AI processed this, here's what it found, here's why it's not routing automatically, here's what you need to decide.* That's a different cognitive load than normal classification work — it requires judgment, not just confirmation. Mixing it into the standard queue asked operators to context-switch without warning.
 
-The difference between "error" and "escalation" matters — one asks the operator to fix something, the other asks them to own a decision.
+Separating the queue architecturally — different SLA, different assigned ownership, different triage rhythm — made the nature of the work legible in a way a filtered view never could. It wasn't just a different presentation of the same list. It was a different agreement about what the operator was responsible for when they opened it.
+
+The difference between "error" and "escalation" matters. One asks you to fix something that went wrong. The other asks you to own a decision the AI wasn't equipped to make. The interface had to be clear about which it was.
 
 ## What changed
 
-- Documents with confidence below threshold now surface in a dedicated review tier, separate from the main classification queue — operators can see at a glance how much of their workload is AI-confident vs. AI-uncertain [CLAIM — verify separation logic and adoption]
-- False-positive routing dropped in the first quarter post-launch [CLAIM — verify with team, get approximate number if available]
-- The operations lead reported that escalations stopped being surprises — the fallback state gave teams a way to anticipate load, not just react to it [CLAIM — verify]
+The fallback queue became the only place uncertainty existed. Uncertain documents stopped arriving in the standard flow without warning.
+
+The operations lead reported that escalations stopped being surprises. Teams could see fallback volume building before it became an incident — the queue gave them a way to anticipate load, not just absorb it.
 
 ## Trade-off ที่ยังอยู่
 
-**Known failure modes only.** The fallback system catches cases where the AI knows it's uncertain — low confidence score, unrecognized document type. It doesn't catch cases where the AI is confidently wrong. A document classified at 0.92 confidence to the wrong category goes straight through. That's the harder problem, and it's still unsolved.
+**Known failure modes only.** The fallback system catches cases where the AI knows it's uncertain — low confidence score, unrecognized document type. It doesn't catch cases where the AI is confidently wrong. A document classified at 0.92 confidence to the wrong category goes straight through. That's the harder problem, and it's unsolved.
 
-**Threshold is operator-agnostic.** The confidence threshold that triggers a fallback is set globally. Some operators are comfortable acting on a 0.7 confidence score; others want to review anything below 0.9. There's no per-team or per-operator calibration, which means the fallback boundary is a compromise that's slightly wrong for everyone.
+**Threshold is operator-agnostic.** The confidence threshold that triggers a fallback is global. Some operators are comfortable acting on a 0.70 confidence score; others want to review anything below 0.90. There's no per-team calibration — the fallback boundary is a compromise that's slightly wrong for everyone.

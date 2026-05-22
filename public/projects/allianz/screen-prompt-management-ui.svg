@@ -1,0 +1,145 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" fill="#FFFFFF"/>
+  <text x="60" y="48" font-family="monospace" font-size="11" letter-spacing="2" fill="#888888">PROMPT MANAGEMENT  ·  INTERFACE SKETCH</text>
+  <line x1="60" y1="60" x2="1140" y2="60" stroke="#E0E0E0" stroke-width="1"/>
+
+  <!-- Chrome shell -->
+  <rect x="60" y="88" width="1080" height="48" rx="6" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="80" y="117" font-family="monospace" font-size="10" letter-spacing="2" fill="#444444">IDAS PROMPT MANAGEMENT</text>
+  <!-- State tabs -->
+  <rect x="770" y="98" width="80" height="28" rx="4" fill="#EBEBEB"/>
+  <text x="810" y="116" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">DRAFT</text>
+  <rect x="858" y="98" width="80" height="28" rx="4" fill="#0A0A0A"/>
+  <text x="898" y="116" font-family="monospace" font-size="9" fill="#FFFFFF" text-anchor="middle">TEST</text>
+  <rect x="946" y="98" width="80" height="28" rx="4" fill="#EBEBEB"/>
+  <text x="986" y="116" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">PUBLISH</text>
+
+  <!-- LEFT PANE: prompt editor -->
+  <rect x="60" y="144" width="500" height="576" rx="0" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <rect x="60" y="144" width="500" height="40" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="80" y="168" font-family="monospace" font-size="10" letter-spacing="1.5" fill="#888888">PROMPT  ·  DRAFT v4</text>
+  <rect x="490" y="152" width="60" height="24" rx="3" fill="#EBEBEB"/>
+  <text x="520" y="168" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">v3 live</text>
+
+  <!-- Prompt text lines — code-like -->
+  <rect x="80" y="200" width="66" height="8" rx="2" fill="#7A5F00" fill-opacity="0.3"/>
+  <rect x="152" y="200" width="220" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="80" y="218" width="340" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="80" y="236" width="280" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="80" y="260" width="66" height="8" rx="2" fill="#7A5F00" fill-opacity="0.3"/>
+  <rect x="152" y="260" width="180" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="80" y="278" width="320" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="80" y="296" width="240" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="80" y="320" width="66" height="8" rx="2" fill="#7A5F00" fill-opacity="0.3"/>
+  <rect x="152" y="320" width="260" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="80" y="338" width="300" height="8" rx="2" fill="#E0E0E0"/>
+  <!-- Cursor -->
+  <rect x="80" y="358" width="2" height="16" rx="1" fill="#0A0A0A"/>
+  <rect x="80" y="380" width="200" height="8" rx="2" fill="#E0E0E0"/>
+  <!-- Run test CTA -->
+  <rect x="80" y="660" width="460" height="44" rx="4" fill="#0A0A0A"/>
+  <text x="310" y="686" font-family="monospace" font-size="11" letter-spacing="1" fill="#FFFFFF" text-anchor="middle">RUN TEST  →</text>
+
+  <!-- RIGHT PANE: test harness -->
+  <rect x="560" y="144" width="580" height="576" rx="0" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <rect x="560" y="144" width="580" height="40" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="580" y="168" font-family="monospace" font-size="10" letter-spacing="1.5" fill="#888888">RESULTS  ·  32 DOCUMENTS</text>
+
+  <!-- Column headers -->
+  <rect x="560" y="184" width="580" height="28" fill="#F5F5F5"/>
+  <line x1="560" y1="184" x2="1140" y2="184" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="580" y="202" font-family="monospace" font-size="9" letter-spacing="1" fill="#888888">DOCUMENT</text>
+  <text x="770" y="202" font-family="monospace" font-size="9" letter-spacing="1" fill="#888888" text-anchor="middle">v3 LIVE</text>
+  <text x="918" y="202" font-family="monospace" font-size="9" letter-spacing="1" fill="#888888" text-anchor="middle">v4 DRAFT</text>
+  <text x="1090" y="202" font-family="monospace" font-size="9" letter-spacing="1" fill="#888888" text-anchor="end">Δ</text>
+  <line x1="560" y1="212" x2="1140" y2="212" stroke="#E0E0E0" stroke-width="1"/>
+
+  <!-- SYNTHETIC rows -->
+  <rect x="560" y="212" width="580" height="16" fill="#F5F5F5"/>
+  <text x="580" y="224" font-family="monospace" font-size="8" letter-spacing="2" fill="#888888">SYNTHETIC  ·  HAPPY PATH</text>
+
+  <!-- Row 1 — match -->
+  <rect x="560" y="228" width="580" height="40" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <rect x="580" y="236" width="148" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="580" y="250" width="100" height="8" rx="2" fill="#EBEBEB"/>
+  <rect x="720" y="234" width="100" height="18" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="770" y="246" font-family="monospace" font-size="8" fill="#444444" text-anchor="middle">CLAIM</text>
+  <rect x="868" y="234" width="100" height="18" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="918" y="246" font-family="monospace" font-size="8" fill="#444444" text-anchor="middle">CLAIM</text>
+  <text x="1090" y="246" font-family="monospace" font-size="9" fill="#888888" text-anchor="end">—</text>
+
+  <!-- Row 2 — match -->
+  <rect x="560" y="268" width="580" height="40" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <rect x="580" y="276" width="120" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="580" y="290" width="80" height="8" rx="2" fill="#EBEBEB"/>
+  <rect x="720" y="274" width="100" height="18" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="770" y="286" font-family="monospace" font-size="8" fill="#444444" text-anchor="middle">INVOICE</text>
+  <rect x="868" y="274" width="100" height="18" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="918" y="286" font-family="monospace" font-size="8" fill="#444444" text-anchor="middle">INVOICE</text>
+  <text x="1090" y="286" font-family="monospace" font-size="9" fill="#888888" text-anchor="end">—</text>
+
+  <!-- HISTORICAL rows -->
+  <rect x="560" y="308" width="580" height="16" fill="#FFE500" fill-opacity="0.10"/>
+  <text x="580" y="320" font-family="monospace" font-size="8" letter-spacing="2" fill="#7A5F00">HISTORICAL  ·  EDGE CASES</text>
+
+  <!-- Row 3 — changed result — highlight -->
+  <rect x="560" y="324" width="580" height="44" fill="#FFE500" fill-opacity="0.06" stroke="#7A5F00" stroke-width="1"/>
+  <rect x="580" y="332" width="160" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="580" y="346" width="120" height="8" rx="2" fill="#EBEBEB"/>
+  <rect x="720" y="329" width="100" height="18" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="770" y="341" font-family="monospace" font-size="8" fill="#888888" text-anchor="middle">LEGAL</text>
+  <rect x="868" y="329" width="100" height="18" rx="3" fill="#0A0A0A"/>
+  <text x="918" y="341" font-family="monospace" font-size="8" fill="#FFFFFF" text-anchor="middle">CORRESPONDENCE</text>
+  <rect x="1062" y="329" width="54" height="18" rx="3" fill="#FFE500" fill-opacity="0.4" stroke="#7A5F00" stroke-width="1"/>
+  <text x="1089" y="341" font-family="monospace" font-size="8" fill="#7A5F00" text-anchor="middle">CHANGED</text>
+  <!-- Annotation: this is what you're looking for -->
+  <line x1="1116" y1="338" x2="1130" y2="338" stroke="#7A5F00" stroke-width="1" stroke-dasharray="3 2"/>
+
+  <!-- Row 4 — match -->
+  <rect x="560" y="368" width="580" height="44" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="1"/>
+  <rect x="580" y="376" width="140" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="580" y="390" width="100" height="8" rx="2" fill="#EBEBEB"/>
+  <rect x="720" y="373" width="100" height="18" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="770" y="385" font-family="monospace" font-size="8" fill="#444444" text-anchor="middle">CLAIM</text>
+  <rect x="868" y="373" width="100" height="18" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="918" y="385" font-family="monospace" font-size="8" fill="#444444" text-anchor="middle">CLAIM</text>
+  <text x="1090" y="385" font-family="monospace" font-size="9" fill="#888888" text-anchor="end">—</text>
+
+  <!-- Row 5 — changed result -->
+  <rect x="560" y="412" width="580" height="44" fill="#FFE500" fill-opacity="0.06" stroke="#7A5F00" stroke-width="1"/>
+  <rect x="580" y="420" width="170" height="8" rx="2" fill="#E0E0E0"/>
+  <rect x="580" y="434" width="110" height="8" rx="2" fill="#EBEBEB"/>
+  <rect x="720" y="417" width="100" height="18" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="770" y="429" font-family="monospace" font-size="8" fill="#888888" text-anchor="middle">INVOICE</text>
+  <rect x="868" y="417" width="100" height="18" rx="3" fill="#0A0A0A"/>
+  <text x="918" y="429" font-family="monospace" font-size="8" fill="#FFFFFF" text-anchor="middle">CLAIM</text>
+  <rect x="1062" y="417" width="54" height="18" rx="3" fill="#FFE500" fill-opacity="0.4" stroke="#7A5F00" stroke-width="1"/>
+  <text x="1089" y="429" font-family="monospace" font-size="8" fill="#7A5F00" text-anchor="middle">CHANGED</text>
+
+  <!-- Summary bar -->
+  <rect x="560" y="468" width="580" height="40" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="580" y="484" font-family="monospace" font-size="9" letter-spacing="1" fill="#444444">30 / 32 UNCHANGED</text>
+  <rect x="580" y="490" width="226" height="8" rx="2" fill="#0A0A0A"/>
+  <rect x="808" y="490" width="14" height="8" rx="2" fill="#FFE500" fill-opacity="0.6" stroke="#7A5F00" stroke-width="1"/>
+  <text x="836" y="498" font-family="monospace" font-size="9" letter-spacing="1" fill="#7A5F00">2 CHANGED</text>
+  <text x="980" y="498" font-family="monospace" font-size="9" letter-spacing="1" fill="#444444" text-anchor="end">review before submitting</text>
+
+  <!-- Submit button — active after test run -->
+  <rect x="560" y="660" width="580" height="44" rx="4" fill="#FFFFFF" stroke="#0A0A0A" stroke-width="2"/>
+  <text x="850" y="686" font-family="monospace" font-size="11" letter-spacing="1" fill="#0A0A0A" text-anchor="middle">SUBMIT FOR APPROVAL  →</text>
+  <!-- Annotation: submit only active post-test -->
+  <line x1="1140" y1="682" x2="1150" y2="682" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- Callout: test harness is the safety, not the gate -->
+  <line x1="1116" y1="350" x2="1135" y2="350" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- Legend -->
+  <line x1="60" y1="754" x2="1140" y2="754" stroke="#E0E0E0" stroke-width="1"/>
+  <rect x="60" y="762" width="10" height="10" rx="2" fill="#FFE500" fill-opacity="0.3" stroke="#7A5F00" stroke-width="1"/>
+  <text x="76" y="771" font-family="monospace" font-size="9" fill="#444444">historical edge case — changed result</text>
+  <rect x="298" y="762" width="10" height="10" rx="2" fill="#0A0A0A"/>
+  <text x="314" y="771" font-family="monospace" font-size="9" fill="#444444">v4 draft classification</text>
+  <rect x="464" y="762" width="10" height="10" rx="2" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="480" y="771" font-family="monospace" font-size="9" fill="#444444">synthetic / matched result</text>
+  <text x="1140" y="771" font-family="monospace" font-size="9" fill="#888888" text-anchor="end">Allianz · IDAS · Prompt Management</text>
+</svg>

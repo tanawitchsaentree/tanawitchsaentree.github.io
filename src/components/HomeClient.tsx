@@ -49,30 +49,26 @@ const SECTIONS = [
 
 type SectionId = typeof SECTIONS[number]['id']
 
-function LeftNav({ rightRef }: { rightRef: React.RefObject<HTMLDivElement> }) {
+function LeftNav() {
   const [active, setActive] = useState<SectionId>('work')
 
   useEffect(() => {
-    const container = rightRef.current
-    if (!container) return
     const obs = new IntersectionObserver(
       entries => { entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id as SectionId) }) },
-      { root: container, rootMargin: '-40% 0px -55% 0px' }
+      { root: null, rootMargin: '-40% 0px -55% 0px' }
     )
     SECTIONS.forEach(({ id }) => {
-      const el = container.querySelector(`#${id}`)
+      const el = document.getElementById(id)
       if (el) obs.observe(el)
     })
     return () => obs.disconnect()
-  }, [rightRef])
+  }, [])
 
   function scrollTo(id: string) {
-    const container = rightRef.current
-    if (!container) return
-    const el = container.querySelector(`#${id}`) as HTMLElement | null
+    const el = document.getElementById(id)
     if (!el) return
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    container.scrollTo({ top: el.offsetTop, behavior: reduced ? 'instant' : 'smooth' })
+    el.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' })
     setActive(id as SectionId)
   }
 
@@ -115,6 +111,7 @@ function LeftNav({ rightRef }: { rightRef: React.RefObject<HTMLDivElement> }) {
 function LeftIdentity() {
   return (
     <div className="flex flex-col gap-6">
+      {/* Hierarchy 1 — Display: name */}
       <div>
         <p className={cn(
           'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
@@ -135,18 +132,14 @@ function LeftIdentity() {
         </h1>
       </div>
 
-      <p
-        className={cn(
-          'font-display italic font-normal',
-          'text-[clamp(0.9rem,1.4vw,1.125rem)] leading-[1.45] tracking-[-0.014em]',
-          'text-[var(--fg-muted)]',
-          'max-w-[22ch]'
-        )}
-      >
-        I design for the person who didn&apos;t choose the software but has to use it every day. That&apos;s where the world gets better.
-      </p>
-
-      <div className="flex flex-col gap-1">
+      {/* Hierarchy 2 — Body: tagline + role + experience at same weight */}
+      <div className="flex flex-col gap-2">
+        <p className={cn(
+          'text-[var(--type-sm)] leading-[1.5] tracking-[-0.005em]',
+          'text-[var(--fg-muted)]'
+        )}>
+          Designer for regulated systems.
+        </p>
         <p className={cn(
           'text-[var(--type-sm)] leading-[1.5] tracking-[-0.005em]',
           'text-[var(--fg-muted)]'
@@ -155,12 +148,20 @@ function LeftIdentity() {
           <span style={{ color: 'var(--accent-text)' }}>Allianz Technology</span>.
         </p>
         <p className={cn(
-          'font-mono text-[var(--type-xs)] tracking-[0.04em]',
-          'text-[var(--fg-subtle)]'
+          'text-[var(--type-sm)] leading-[1.5] tracking-[-0.005em]',
+          'text-[var(--fg-muted)]'
         )}>
-          8 yrs · Allianz · Invitrace · DoctorAnywhere
+          8 years · Allianz · Invitrace · DoctorAnywhere
         </p>
       </div>
+
+      {/* Hierarchy 3 — Mono small: sector tags */}
+      <p className={cn(
+        'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
+        'text-[var(--fg-subtle)]'
+      )}>
+        Insurance · Healthcare · Fintech
+      </p>
     </div>
   )
 }
@@ -202,7 +203,12 @@ export function HomeClient({ projects }: HomeClientProps) {
   }, [])
 
   const navigateWithTransition = useCallback((href: string) => {
-    router.push(href)
+    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
+      (document as Document & { startViewTransition: (cb: () => void) => void })
+        .startViewTransition(() => { router.push(href) })
+    } else {
+      router.push(href)
+    }
   }, [router])
 
   const activeProject = activeSlug
@@ -226,7 +232,7 @@ export function HomeClient({ projects }: HomeClientProps) {
           <LeftIdentity />
 
           {/* Section nav */}
-          <LeftNav rightRef={rightRef} />
+          <LeftNav />
 
           {/* Bottom: time + theme */}
           <div className="flex flex-col gap-4">

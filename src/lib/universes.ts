@@ -13,8 +13,47 @@ export interface SubCaseFrontmatter {
   order: number
 }
 
+export interface SubCaseSections {
+  problem: string       // ## The problem
+  considered: string    // ## What I considered
+  decision: string      // ## The decision + ## What changed (merged)
+  tradeoff: string      // ## Trade-off ที่ยังอยู่
+}
+
 export interface SubCaseWithContent extends SubCaseFrontmatter {
-  content: string
+  content: string         // full MDX (for fallback if needed)
+  sections: SubCaseSections
+}
+
+// Split raw MDX content (after frontmatter) into named sections by ## heading
+function parseSections(content: string): SubCaseSections {
+  const blocks: Record<string, string> = {}
+  let currentKey = ''
+
+  for (const line of content.split('\n')) {
+    const match = line.match(/^##\s+(.+)$/)
+    if (match) {
+      currentKey = match[1].trim()
+      blocks[currentKey] = ''
+    } else if (currentKey) {
+      blocks[currentKey] = (blocks[currentKey] ?? '') + line + '\n'
+    }
+  }
+
+  const trim = (s: string) => (s ?? '').trim()
+
+  // Merge "The decision" + "What changed" into one panel
+  const decisionMerged = [
+    trim(blocks['The decision'] ?? ''),
+    trim(blocks['What changed'] ?? ''),
+  ].filter(Boolean).join('\n\n')
+
+  return {
+    problem:    trim(blocks['The problem'] ?? ''),
+    considered: trim(blocks['What I considered'] ?? ''),
+    decision:   decisionMerged,
+    tradeoff:   trim(blocks['Trade-off ที่ยังอยู่'] ?? ''),
+  }
 }
 
 export function getUniverseSubCases(universe: string): SubCaseWithContent[] {
@@ -27,7 +66,11 @@ export function getUniverseSubCases(universe: string): SubCaseWithContent[] {
     .map(file => {
       const raw = fs.readFileSync(path.join(dir, file), 'utf8')
       const { data, content } = matter(raw)
-      return { ...data, content } as SubCaseWithContent
+      return {
+        ...data,
+        content,
+        sections: parseSections(content),
+      } as SubCaseWithContent
     })
     .sort((a, b) => a.order - b.order)
 }

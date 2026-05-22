@@ -37,22 +37,26 @@ function FeaturedHeadline({ text }: { text: string }) {
 const UNIVERSE_SLUGS: Record<string, string> = {
   'allianz-doc-classification': '/projects/allianz',
   'invitrace-design-system':    '/projects/invitrace',
+  'profita-mutual-fund':        '/projects/profita',
 }
 
 interface ProjectRowProps {
   project: ProjectFrontmatter
   index: number
   total: number
+  isHighlighted?: boolean
   onOpen: (slug: string) => void
   onNavigate: (href: string) => void
   onHoverChange: (slug: string | null) => void
 }
 
 const HEADLINES: Record<string, string> = {
-  'allianz-doc-classification': 'Designing AI document tools that operators actually trust.',
-  'profita-mutual-fund':        'Behavioral nudges for first-time investors.',
   'invitrace-design-system':    'Federated design system for clinical workflows.',
-  'doctoranywhere-telehealth':  'Telehealth UX research for Southeast Asia.',
+  'allianz-doc-classification': 'Designing AI document tools that operators actually trust.',
+  'stellareat':                 'AI culinary — making recommendations legible.',
+  'robowealth-profita':         'Robo-advisory for first-time investors. Award-winning.',
+  'profita-mutual-fund':        'Mutual fund platform under SEC regulatory constraints.',
+  'doctoranywhere-telehealth':  'Telehealth UX across Southeast Asia.',
 }
 
 // Clip-path reveal direction per card index
@@ -67,6 +71,7 @@ export function ProjectRow({
   project,
   index,
   total,
+  isHighlighted = true,
   onOpen,
   onNavigate,
   onHoverChange,
@@ -174,14 +179,26 @@ export function ProjectRow({
           <h2
             className={cn(
               'font-display font-normal',
-              'leading-[1.05] text-[var(--fg)]',
+              'leading-[1.05]',
+              'text-[var(--fg)]',
               index === 0
-                ? 'text-[clamp(2.25rem,4.5vw,4rem)] tracking-[-0.036em] max-w-[20ch]'
-                : 'text-[var(--type-2xl)] md:text-[var(--type-3xl)] tracking-[-0.024em] max-w-[24ch]'
+                ? 'text-[clamp(1.75rem,3.5vw,3rem)] tracking-[-0.032em] max-w-[22ch]'
+                : 'text-[clamp(1.5rem,3vw,2.75rem)] tracking-[-0.028em] max-w-[24ch]'
             )}
           >
             {index === 0 ? <FeaturedHeadline text={headline} /> : headline}
           </h2>
+
+          {/* Pull-quote — Invitrace only. Maintains visual weight through content, not size. */}
+          {index === 0 && (
+            <p className={cn(
+              'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
+              'text-[var(--fg-subtle)]',
+              'max-w-[36ch]'
+            )}>
+              One language · Seven clinical product lines · Zero rebuild cycles
+            </p>
+          )}
 
           {/* Meta */}
           <p

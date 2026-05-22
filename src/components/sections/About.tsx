@@ -7,15 +7,16 @@ import { cn } from '@/lib/cn'
 const QUOTE_LINES = ['Design is a stance,', 'not a service.']
 
 const ELABORATION =
-  "I've spent eight years in rooms where design decisions get stress-tested by engineers, compliance officers, and ML pipelines. The work that survives that contact looks different from work that doesn't. I'm most useful on teams where “design” isn't separated from “build.” That's where the interesting problems live."
+  "Eight years in regulated systems — insurance, healthcare, fintech — where 'move fast and break things' isn't an option. I build design systems that hold when the org grows, AI tools that don't collapse when the model is wrong, and research processes that give engineers something they can actually act on. I'm most useful on teams where design and build aren't separated."
 
 const SKILLS = ['Systems', 'AI/ML UX', 'Accessibility', 'Research', 'Leadership'] as const
 
 const WORK = [
-  { dates: 'Sep 2025 – Present',  title: 'Senior Designer',       company: 'Allianz Technology' },
-  { dates: 'Nov 2024 – Aug 2025', title: 'Lead Product Designer',  company: 'Invitrace Health' },
-  { dates: 'Jan 2024 – Jun 2024', title: 'Product Designer',       company: 'Stellareat' },
-  { dates: 'May 2020 – Dec 2020', title: 'Senior UX/UI Designer',  company: 'Robowealth' },
+  { dates: 'Sep 2025 – Present',  title: 'Senior Designer',         company: 'Allianz Technology' },
+  { dates: 'Nov 2024 – Aug 2025', title: 'Lead Product Designer',   company: 'Invitrace Health' },
+  { dates: 'Jan 2024 – Jun 2024', title: 'Product Designer',        company: 'Stellareat' },
+  { dates: 'Jun 2022 – Aug 2024', title: 'Senior Product Designer', company: 'LH Bank / Profita' },
+  { dates: 'May 2020 – Dec 2020', title: 'Senior UX/UI Designer',   company: 'Robowealth' },
 ] as const
 
 const EDUCATION = [

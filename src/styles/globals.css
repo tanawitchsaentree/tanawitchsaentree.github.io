@@ -189,25 +189,22 @@
 }
 
 /* ─── Sticky Split Layout ───────────────────────────────────── */
+/* Left panel sticks to viewport; right panel is normal page flow.
+   Window scroll lets Lenis work correctly and keeps cursor compositing clean. */
 .split-layout {
   display: flex;
-  width: 100vw;
-  height: 100svh;
-  max-height: 100svh;
-  overflow: hidden;
-  /* Anchor to top-left of viewport — bypass any parent offset */
-  position: fixed;
-  top: 0;
-  left: 0;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .split-left {
-  /* Static inside a height-locked parent — no sticky needed */
+  position: sticky;
+  top: 0;
   flex-shrink: 0;
   width: 36vw;
   max-width: 420px;
   min-width: 280px;
-  height: 100%;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -219,32 +216,22 @@
 .split-right {
   flex: 1;
   min-width: 0;
-  height: 100%;
-  overflow-y: scroll;
-  scroll-behavior: smooth;
 }
 
 /* Mobile: collapse to normal single-column scroll */
 @media (max-width: 767px) {
   .split-layout {
-    position: static;
     display: block;
     width: 100%;
-    height: auto;
-    max-height: none;
-    overflow: visible;
   }
   .split-left {
+    position: static;
     width: 100%;
     max-width: 100%;
     height: auto;
     padding: 2rem 1.5rem 1.5rem;
     border-right: none;
     border-bottom: 1px solid var(--border);
-  }
-  .split-right {
-    height: auto;
-    overflow-y: visible;
   }
 }
 

@@ -17,28 +17,28 @@ The feedback loop was so long that most configurators had stopped trying to impr
 
 ## What I considered
 
-[TODO: fill your actual alternatives here]
-
 - **Option A:** Give configurators a free-text editor for prompts directly in the admin panel — cut because raw prompt editing with no test environment is exactly how you deploy a mistake to production at scale. The engineers were the gate for a reason; removing the gate without adding a harness just moves the risk.
 
-- **Option B:** A structured form-based configurator (dropdowns, toggles, predefined categories) that abstracts away the prompt entirely — cut because it trades control for safety in a way that breaks at the edges. The cases that most need tuning are the ones that don't fit predefined categories.
+- **Option B:** A structured form-based configurator — dropdowns, toggles, predefined categories — that abstracts away the prompt entirely — cut because it trades control for safety in a way that breaks at the edges. The cases that most need tuning are the ones that don't fit predefined categories. You'd solve the easy 80% and leave the hard 20% unreachable.
 
-- **Option C (chosen):** [TODO: describe your actual design — draft/test/publish workflow, what the test harness looked like, how approval was built in, what a configurator could and couldn't do without engineering]
+- **Option C (chosen):** A draft / test / publish workflow with a live test harness built in. Configurators write or edit a prompt in draft, run it against a test set, see classification results side-by-side with the current live prompt, then submit for approval. Engineering is only in the loop for publish — not for draft or test. The test set was a deliberate split: synthetic documents for the happy path (fast, repeatable), real historical documents for edge cases (the ones that had actually broken before). Synthetic alone would have given false confidence; real alone would have been too slow to iterate against.
 
 ## The decision
 
-[TODO: concrete design output — the workflow states, what "test" meant in practice, what required approval vs. what could be self-served, how version history worked]
+A prompt is a policy document. It should have a draft, a review, and a publish — not a merge request and a deployment pipeline.
 
-A prompt is a policy document. It should have a draft, a review, and a publish — not a merge request and a deployment pipeline. The interface had to make that clear without making the engineering team feel bypassed.
+The test harness was the thing that made self-service safe. A configurator could write a prompt, run it against the last 50 documents of a given type, and see exactly what would have changed — before anyone approved anything. The approval step then became lightweight: not "is this prompt safe?" but "does this match the intent we discussed?" The reviewer was no longer a gatekeeper. They were a sign-off.
+
+Version history tracked every published prompt with who approved it and what the test results looked like at approval time. Not as audit theater — because when the AI behaves unexpectedly three weeks later, the first question is always "what changed?"
 
 ## What changed
 
-- Prompt iteration cycles went from weekly (blocked by the engineering queue) to daily — not because anyone mandated it, but because a safe place to try now existed [CLAIM — verify cadence with team]
-- The engineering team stopped being the bottleneck for routine prompt changes [CLAIM — verify]
-- Configurators started treating prompt management as part of their job, not an escalation path
+Prompt iteration cycles went from being blocked by the engineering queue to being a daily activity — not because anyone mandated it, but because a safe place to try existed.
+
+The engineering team stopped being the bottleneck for routine changes. They stayed in the loop for publish, which is the only moment they actually needed to be. Configurators started treating prompt management as part of their job, not an escalation path.
 
 ## Trade-off ที่ยังอยู่
 
-**No A/B testing between configurators.** Right now prompt changes are sequential — you publish version 3, see what happens, publish version 4. There's no way for two configurators to run competing prompt strategies against the same document type and compare results. That's a real gap when different teams have different opinions about classification behavior.
+**No A/B testing between configurators.** Prompt changes are sequential — publish version 3, observe, publish version 4. There's no way for two configurators to run competing prompt strategies against the same document type simultaneously. That's a real gap when different teams have different opinions about classification behavior and want data to settle it.
 
-**Approval workflow is synchronous.** A configurator drafts a prompt, it goes to a reviewer, reviewer approves or rejects. If the reviewer is unavailable, the change waits. For time-sensitive adjustments — say, a new document type appearing in volume — that lag matters. We discussed async approval paths but didn't build them.
+**Approval is synchronous.** A configurator drafts a prompt, it waits for a reviewer. If the reviewer is unavailable, the change waits. For time-sensitive adjustments — a new document type appearing at volume — that lag matters. Async approval paths were discussed and not built.
