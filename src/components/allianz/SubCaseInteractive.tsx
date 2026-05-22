@@ -1,10 +1,11 @@
 'use client'
 
-import { ConfidenceSlider } from './ConfidenceSlider'
+import { ConfidenceGate } from '@/demos/allianz'
 
-// Routes to the correct gimmick per sub-case slug
+// Routes slug → demo component.
+// Demo logic lives in src/demos/ — keep this file as a thin router only.
 export function SubCaseGimmick({ slug }: { slug: string }) {
-  if (slug === 'document-classification') return <ConfidenceSlider />
-  // Gimmick 2 + 3 coming next
+  if (slug === 'document-classification') return <ConfidenceGate />
+  // LoopRace (prompt-management) and FallbackSort (fallback-states) coming next
   return null
 }
