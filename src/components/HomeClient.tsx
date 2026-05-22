@@ -162,6 +162,29 @@ function LeftIdentity() {
       )}>
         Insurance · Healthcare · Fintech
       </p>
+
+      {/* Social links */}
+      <div className="flex items-center gap-4">
+        {[
+          { label: 'LinkedIn', href: 'https://linkedin.com/in/tanawitchsaentree' },
+          { label: 'Behance',  href: 'https://behance.net/tanawitchsaentree' },
+          { label: 'GitHub',   href: 'https://github.com/tanawitchsaentree' },
+        ].map(({ label, href }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
+              'text-[var(--fg-subtle)] hover:text-[var(--fg)]',
+              'transition-colors duration-[200ms]'
+            )}
+          >
+            {label}
+          </a>
+        ))}
+      </div>
     </div>
   )
 }
