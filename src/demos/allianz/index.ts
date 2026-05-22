@@ -1,2 +1,3 @@
 export { ConfidenceGate } from './ConfidenceGate'
-// LoopRace and FallbackSort coming next
+export { PromptEditor }   from './PromptEditor'
+export { BatchDispatch }  from './BatchDispatch'

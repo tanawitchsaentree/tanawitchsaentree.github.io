@@ -1,11 +1,13 @@
 'use client'
 
 import { ConfidenceGate } from '@/demos/allianz'
+import { PromptEditor }   from '@/demos/allianz'
+import { BatchDispatch }  from '@/demos/allianz'
 
-// Routes slug → demo component.
-// Demo logic lives in src/demos/ — keep this file as a thin router only.
+// Thin router — demo logic lives in src/demos/
 export function SubCaseGimmick({ slug }: { slug: string }) {
   if (slug === 'document-classification') return <ConfidenceGate />
-  // LoopRace (prompt-management) and FallbackSort (fallback-states) coming next
+  if (slug === 'prompt-management')        return <PromptEditor />
+  if (slug === 'fallback-states')          return <BatchDispatch />
   return null
 }
