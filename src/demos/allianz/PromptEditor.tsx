@@ -3,66 +3,56 @@
 import { useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-// The "live" phrase in the prompt that can be swapped
 type RuleVariant = 'narrow' | 'medium' | 'broad'
 
 const RULE_VARIANTS: Record<RuleVariant, { label: string; phrase: string; description: string }> = {
-  narrow:  { label: 'Narrow',  phrase: 'only if all fields match exactly',      description: 'High precision, high fallback rate' },
-  medium:  { label: 'Balanced', phrase: 'if the document type and sender match', description: 'Current production setting' },
-  broad:   { label: 'Broad',   phrase: 'if the document type matches',          description: 'Low fallback, higher misroute risk' },
+  narrow: { label: 'Narrow',   phrase: 'only if all fields match exactly',      description: 'High precision, high fallback rate' },
+  medium: { label: 'Balanced', phrase: 'if the document type and sender match', description: 'Current production setting' },
+  broad:  { label: 'Broad',    phrase: 'if the document type matches',          description: 'Low fallback, higher misroute risk' },
 }
 
 interface Doc {
   id:     number
   label:  string
   type:   string
-  sender: string   // used for medium/narrow matching
-  field:  boolean  // used for narrow matching
-  // which variants route it correctly
   routed: RuleVariant[]
 }
 
 const DOCS: Doc[] = [
-  { id: 1, label: 'INV-4421', type: 'Invoice',      sender: 'matched', field: true,  routed: ['narrow', 'medium', 'broad'] },
-  { id: 2, label: 'CLM-0082', type: 'Claim',        sender: 'matched', field: false, routed: ['medium', 'broad'] },
-  { id: 3, label: 'LGL-1190', type: 'Legal notice', sender: 'unknown', field: false, routed: ['broad'] },
-  { id: 4, label: 'MED-3342', type: 'Medical',      sender: 'matched', field: true,  routed: ['narrow', 'medium', 'broad'] },
+  { id: 1, label: 'INV-4421', type: 'Invoice',      routed: ['narrow', 'medium', 'broad'] },
+  { id: 2, label: 'CLM-0082', type: 'Claim',        routed: ['medium', 'broad'] },
+  { id: 3, label: 'LGL-1190', type: 'Legal notice', routed: ['broad'] },
+  { id: 4, label: 'MED-3342', type: 'Medical',      routed: ['narrow', 'medium', 'broad'] },
 ]
 
-// ── Subcomponents ─────────────────────────────────────────────────────────────
-
 function DocResult({ doc, variant, prevVariant }: { doc: Doc; variant: RuleVariant; prevVariant: RuleVariant }) {
-  const routed     = doc.routed.includes(variant)
-  const wasRouted  = doc.routed.includes(prevVariant)
-  const changed    = routed !== wasRouted
-  const reduced    = useReducedMotion()
+  const routed    = doc.routed.includes(variant)
+  const wasRouted = doc.routed.includes(prevVariant)
+  const changed   = routed !== wasRouted
+  const reduced   = useReducedMotion()
 
   return (
     <motion.div
       layout
-      className="flex items-center justify-between gap-3 py-3 border-b border-[var(--border)] last:border-b-0"
+      className="flex items-center justify-between gap-3 py-4 border-b border-[var(--border)] last:border-b-0"
     >
-      <div className="flex items-center gap-2.5 min-w-0">
-        {/* doc icon */}
+      <div className="flex items-center gap-3 min-w-0">
         <div
-          className="flex-shrink-0 relative w-6 h-8 rounded-[2px] border flex items-end justify-center pb-[2px]"
+          className="flex-shrink-0 relative w-8 h-10 rounded-[2px] border flex items-end justify-center pb-1"
           style={{ background: 'var(--bg-muted)', borderColor: 'var(--border)' }}
         >
-          <div className="absolute top-0 right-0 w-[6px] h-[6px]"
+          <div className="absolute top-0 right-0 w-2 h-2"
             style={{ background: 'var(--bg-elevated)', borderLeft: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}
           />
-          <span className="font-mono leading-none" style={{ fontSize: 6, color: 'var(--fg-subtle)' }}>DOC</span>
+          <span className="font-mono leading-none" style={{ fontSize: 7, color: 'var(--fg-subtle)' }}>DOC</span>
         </div>
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.06em] text-[var(--fg)]">{doc.label}</p>
-          <p className="font-mono text-[var(--fg-subtle)]" style={{ fontSize: 9 }}>{doc.type}</p>
+          <p className="font-mono text-[var(--type-sm)] font-medium uppercase tracking-[0.06em] text-[var(--fg)]">{doc.label}</p>
+          <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] mt-0.5">{doc.type}</p>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 flex-shrink-0">
-        {/* changed indicator */}
+      <div className="flex items-center gap-3 flex-shrink-0">
         <AnimatePresence>
           {changed && (
             <motion.span
@@ -71,7 +61,7 @@ function DocResult({ doc, variant, prevVariant }: { doc: Doc; variant: RuleVaria
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="font-mono text-[9px] uppercase tracking-[0.06em]"
+              className="font-mono text-[var(--type-xs)] uppercase tracking-[0.06em]"
               style={{ color: 'var(--accent-text)' }}
             >
               ← changed
@@ -79,13 +69,12 @@ function DocResult({ doc, variant, prevVariant }: { doc: Doc; variant: RuleVaria
           )}
         </AnimatePresence>
 
-        {/* status */}
         <motion.span
           key={`${doc.id}-${routed}`}
           initial={reduced ? false : { opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          className="font-mono text-[10px] uppercase tracking-[0.08em] px-2 py-0.5 rounded-full border"
+          className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] px-2 py-0.5 rounded-full border"
           style={{
             color: routed ? '#16a34a' : '#6b7280',
             borderColor: routed ? 'rgba(22,163,74,0.3)' : 'var(--border)',
@@ -100,17 +89,12 @@ function DocResult({ doc, variant, prevVariant }: { doc: Doc; variant: RuleVaria
   )
 }
 
-// ── Main export ───────────────────────────────────────────────────────────────
-
 export function PromptEditor() {
-  const [active, setActive]   = useState<RuleVariant>('medium')
-  const [prev,   setPrev]     = useState<RuleVariant>('medium')
-  const reduced               = useReducedMotion()
+  const [active, setActive] = useState<RuleVariant>('medium')
+  const [prev,   setPrev]   = useState<RuleVariant>('medium')
+  const reduced             = useReducedMotion()
 
-  function select(v: RuleVariant) {
-    setPrev(active)
-    setActive(v)
-  }
+  function select(v: RuleVariant) { setPrev(active); setActive(v) }
 
   const changedCount = DOCS.filter(d =>
     d.routed.includes(active) !== d.routed.includes(prev)
@@ -136,7 +120,7 @@ export function PromptEditor() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.18 }}
-              className="font-mono text-[10px] uppercase tracking-[0.08em] px-2 py-0.5 rounded-full"
+              className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] px-2 py-0.5 rounded-full"
               style={{ background: 'var(--accent)', color: 'var(--accent-fg)' }}
             >
               {changedCount} route{changedCount > 1 ? 's' : ''} changed
@@ -146,54 +130,51 @@ export function PromptEditor() {
       </div>
 
       {/* Prompt display */}
-      <div className="px-6 py-5 border-b" style={{ borderColor: 'var(--border)' }}>
-        <p className="font-mono text-[var(--fg-subtle)] leading-[1.9]" style={{ fontSize: 11 }}>
-          <span className="text-[var(--fg-subtle)]">Route this document to the claims team </span>
+      <div className="px-6 py-6 border-b" style={{ borderColor: 'var(--border)' }}>
+        <p className="font-mono text-[var(--type-sm)] text-[var(--fg-muted)] leading-[1.9]">
+          Route this document to the claims team{' '}
 
           {/* Clickable rule token */}
-          <span className="relative inline-block">
-            <button
-              type="button"
-              className="relative font-mono font-medium rounded px-1.5 py-0.5 border cursor-pointer transition-all"
-              style={{
-                fontSize: 11,
-                color: 'var(--accent-text)',
-                borderColor: 'color-mix(in oklab, var(--accent-text) 40%, transparent)',
-                background: 'color-mix(in oklab, var(--accent-text) 8%, transparent)',
-              }}
-              aria-label="Edit classification rule"
-              onClick={() => {
-                const order: RuleVariant[] = ['narrow', 'medium', 'broad']
-                const next = order[(order.indexOf(active) + 1) % order.length]
-                select(next)
-              }}
-            >
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={active}
-                  initial={reduced ? { opacity: 0 } : { opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduced ? { opacity: 0 } : { opacity: 0, y: 6 }}
-                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                  className="inline-block"
-                >
-                  {variant.phrase}
-                </motion.span>
-              </AnimatePresence>
-            </button>
-          </span>
+          <button
+            type="button"
+            className="relative font-mono font-medium rounded px-1.5 py-0.5 border cursor-pointer transition-all"
+            style={{
+              fontSize: 'inherit',
+              color: 'var(--accent-text)',
+              borderColor: 'color-mix(in oklab, var(--accent-text) 40%, transparent)',
+              background: 'color-mix(in oklab, var(--accent-text) 8%, transparent)',
+            }}
+            aria-label="Edit classification rule"
+            onClick={() => {
+              const order: RuleVariant[] = ['narrow', 'medium', 'broad']
+              select(order[(order.indexOf(active) + 1) % order.length])
+            }}
+          >
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={active}
+                initial={reduced ? { opacity: 0 } : { opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduced ? { opacity: 0 } : { opacity: 0, y: 6 }}
+                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                className="inline-block"
+              >
+                {variant.phrase}
+              </motion.span>
+            </AnimatePresence>
+          </button>
 
-          <span className="text-[var(--fg-subtle)]">. Uncertain cases defer to review.</span>
+          {'. Uncertain cases defer to review.'}
         </p>
 
         {/* Variant selector pills */}
-        <div className="flex items-center gap-2 mt-4">
+        <div className="flex flex-wrap items-center gap-2 mt-5">
           {(Object.entries(RULE_VARIANTS) as [RuleVariant, typeof RULE_VARIANTS[RuleVariant]][]).map(([key, v]) => (
             <button
               key={key}
               type="button"
               onClick={() => select(key)}
-              className="font-mono text-[9px] uppercase tracking-[0.1em] px-2 py-1 rounded border transition-all cursor-pointer"
+              className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] px-3 py-1.5 rounded border transition-all cursor-pointer"
               style={{
                 background: active === key ? 'var(--fg)' : 'transparent',
                 color: active === key ? 'var(--bg)' : 'var(--fg-subtle)',
@@ -203,35 +184,35 @@ export function PromptEditor() {
               {v.label}
             </button>
           ))}
-          <span className="font-mono text-[9px] text-[var(--fg-subtle)] ml-1">
+          <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">
             — {variant.description}
           </span>
         </div>
       </div>
 
       {/* Doc results */}
-      <div className="px-6 py-2">
+      <div className="px-6 py-1">
         {DOCS.map(doc => (
           <DocResult key={doc.id} doc={doc} variant={active} prevVariant={prev} />
         ))}
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-3 border-t flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
-        <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-[var(--fg-subtle)]">
+      <div className="px-6 py-4 border-t flex items-center justify-between gap-4" style={{ borderColor: 'var(--border)' }}>
+        <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg-subtle)]">
           Click the highlighted phrase to cycle rules
         </p>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-shrink-0">
           <button
             type="button"
-            className="font-mono text-[9px] uppercase tracking-[0.1em] px-3 py-1.5 rounded border cursor-pointer transition-colors"
+            className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] px-3 py-1.5 rounded border cursor-pointer transition-colors"
             style={{ color: 'var(--fg-muted)', borderColor: 'var(--border)', background: 'transparent' }}
           >
             Save draft
           </button>
           <button
             type="button"
-            className="font-mono text-[9px] uppercase tracking-[0.1em] px-3 py-1.5 rounded border cursor-pointer transition-colors"
+            className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] px-3 py-1.5 rounded border cursor-pointer transition-colors"
             style={{ color: 'var(--bg)', borderColor: 'var(--fg)', background: 'var(--fg)' }}
           >
             Submit for approval →

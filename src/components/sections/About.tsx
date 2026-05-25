@@ -70,14 +70,14 @@ export function About() {
       <h2 id="about-heading" className="sr-only">About</h2>
 
       {/* ── Block 1: Quote — line-by-line clip reveal ─────────── */}
-      <div className={cn('px-8 md:px-12 lg:px-16', 'pt-24 pb-12 md:pt-32 md:pb-16')}>
+      <div className={cn('px-8 md:px-12 lg:px-16', 'pt-12 pb-8 md:pt-16 md:pb-10')}>
         <blockquote className="m-0" aria-label={QUOTE_LINES.join(' ')}>
           {QUOTE_LINES.map((line, i) => (
             <div key={line} className="overflow-hidden leading-none">
               <motion.span
                 className={cn(
                   'block font-display italic font-normal',
-                  'text-[clamp(2.75rem,5.5vw,5rem)] leading-[1.0] tracking-[-0.04em]',
+                  'text-[clamp(1.5rem,3vw,2.5rem)] leading-[1.1] tracking-[-0.03em]',
                   'text-[var(--fg)]'
                 )}
                 initial={reduced ? { opacity: 0 } : { clipPath: 'inset(0 0 100% 0)', opacity: 1 }}
