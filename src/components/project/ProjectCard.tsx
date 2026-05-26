@@ -8,6 +8,9 @@ import type { ProjectFrontmatter } from '@/types/project'
 // Slugs that navigate to a dedicated universe page instead of the modal
 const UNIVERSE_SLUGS: Record<string, string> = {
   'allianz-doc-classification': '/projects/allianz',
+  'invitrace-design-system':    '/projects/invitrace',
+  'profita-mutual-fund':        '/projects/profita',
+  'stellareat':                 '/projects/stellareat',
 }
 
 interface ProjectCardProps {
