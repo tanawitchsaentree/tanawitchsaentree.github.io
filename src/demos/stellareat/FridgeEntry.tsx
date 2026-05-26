@@ -844,7 +844,7 @@ export function FridgeEntry() {
 
         {step === 'fridge' && (
           <div>
-            <h2 style={PANEL_TITLE}>What's in your fridge?</h2>
+            <h2 style={PANEL_TITLE}>What&apos;s in your fridge?</h2>
 
             <div
               style={{
