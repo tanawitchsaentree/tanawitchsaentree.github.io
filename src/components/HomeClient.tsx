@@ -74,7 +74,7 @@ function LeftNav() {
 
   return (
     <nav aria-label="Page sections">
-      <ul className="list-none m-0 p-0 flex flex-col gap-1">
+      <ul className="list-none m-0 p-0 flex flex-col gap-1 items-end">
         {SECTIONS.map(({ id, label }) => {
           const isActive = active === id
           return (
@@ -84,12 +84,13 @@ function LeftNav() {
                 onClick={() => scrollTo(id)}
                 aria-current={isActive ? 'location' : undefined}
                 className={cn(
-                  'flex items-center gap-3 py-1.5 cursor-pointer w-full text-left',
+                  'flex items-center gap-3 py-1.5 cursor-pointer text-right',
                   'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
                   'transition-colors duration-[240ms] ease-out',
                   isActive ? 'text-[var(--fg)]' : 'text-[var(--fg-subtle)] hover:text-[var(--fg-muted)]'
                 )}
               >
+                {label}
                 <span
                   className={cn(
                     'inline-block h-px transition-all duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
@@ -98,7 +99,6 @@ function LeftNav() {
                   )}
                   aria-hidden="true"
                 />
-                {label}
               </button>
             </li>
           )
@@ -247,15 +247,15 @@ export function HomeClient({ projects }: HomeClientProps) {
         {/* ── LEFT PANEL ──────────────────────────────────────── */}
         <motion.aside
           className="split-left"
-          aria-label="Site identity and navigation"
+          aria-label="Site identity"
           initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
+          {/* Spacer pushes identity to vertical center */}
+          <div className="flex-1" />
           <LeftIdentity />
-
-          {/* Section nav */}
-          <LeftNav />
+          <div className="flex-1" />
 
           {/* Bottom: time + theme */}
           <div className="flex flex-col gap-4">
@@ -272,6 +272,16 @@ export function HomeClient({ projects }: HomeClientProps) {
             <ThemeToggle />
           </div>
         </motion.aside>
+
+        {/* Nav — fixed right edge, vertical center */}
+        <motion.div
+          className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-40"
+          initial={{ opacity: 0, x: 16 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <LeftNav />
+        </motion.div>
 
         {/* ── RIGHT PANEL ─────────────────────────────────────── */}
         <motion.div
