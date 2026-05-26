@@ -145,7 +145,13 @@ function LeftIdentity() {
           'text-[var(--fg-muted)]'
         )}>
           Senior Designer at{' '}
-          <span style={{ color: 'var(--accent-text)' }}>Allianz Technology</span>.
+          <span style={{
+            background:    'var(--accent)',
+            color:         'var(--accent-fg)',
+            paddingInline: '0.25em',
+            paddingBlock:  '0.05em',
+            borderRadius:  '2px',
+          }}>Allianz Technology</span>.
         </p>
         <p className={cn(
           'text-[var(--type-sm)] leading-[1.5] tracking-[-0.005em]',
