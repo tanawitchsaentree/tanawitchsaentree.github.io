@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stellareat — Demo 1 Step 1 Mockup</title>
+  <style>
+    /* ── Stellareat palette ── */
+    :root {
+      --bg:        #FFF8E7;
+      --surface:   #FFFFFF;
+      --fg:        #1F1B16;
+      --fg-muted:  #7A7060;
+      --red:       #D64545;
+      --yellow:    #E8B53A;
+      --green:     #87A96B;
+      --blue:      #6FA8DC;
+      --border:    #E8DFC8;
+
+      --glass-bg:     rgba(255,255,255,0.72);
+      --glass-border: rgba(255,255,255,0.55);
+      --glass-blur:   24px;
+      --radius-panel: 20px;
+      --radius-item:  14px;
+
+      --font-display: 'PP Editorial New', 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'PP Neue Montreal', 'JetBrains Mono', monospace;
+      --font-recipe:  'Cormorant Garamond', Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      font-family: var(--font-body);
+      color: var(--fg);
+      min-height: 100vh;
+    }
+
+    /* ── Page shell ── */
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    .page-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      margin-bottom: 48px;
+    }
+
+    /* ── Demo frame ── */
+    .demo-frame {
+      position: relative;
+      border-radius: var(--radius-panel);
+      overflow: hidden;
+      min-height: 640px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    /* ── Illustration scatter background ── */
+    .illustration-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Individual watercolor items scattered in background */
+    .bg-item {
+      position: absolute;
+      opacity: 0.18;
+      filter: blur(0.5px);
+      transform-origin: center;
+    }
+
+    /* ── Glass panel ── */
+    .glass-panel {
+      position: relative;
+      z-index: 2;
+      margin: 40px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-panel);
+      padding: 36px 36px 40px;
+      box-shadow: 0 8px 40px rgba(31,27,22,0.08), 0 1px 0 rgba(255,255,255,0.9) inset;
+    }
+
+    /* ── Header row ── */
+    .panel-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .panel-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(22px, 3.5vw, 32px);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      color: var(--fg);
+    }
+    .panel-cta {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+      transition: color 200ms, border-color 200ms;
+    }
+    .panel-cta:hover { color: var(--fg); border-color: var(--fg); }
+
+    /* ── Step breadcrumb ── */
+    .breadcrumb {
+      display: flex;
+      gap: 0;
+      margin-bottom: 28px;
+      margin-top: 6px;
+    }
+    .breadcrumb-step {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--fg-muted);
+      opacity: 0.5;
+    }
+    .breadcrumb-step.active {
+      color: var(--fg);
+      opacity: 1;
+      border-bottom: 1.5px solid var(--fg);
+      padding-bottom: 1px;
+    }
+    .breadcrumb-sep {
+      font-size: 12px;
+      color: var(--border);
+      padding: 0 8px;
+      opacity: 0.8;
+    }
+
+    /* ── Sub-label ── */
+    .panel-sublabel {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      margin-bottom: 20px;
+    }
+
+    /* ── Fridge grid ── */
+    .fridge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+      gap: 12px;
+    }
+
+    .fridge-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 8px 12px;
+      border-radius: var(--radius-item);
+      border: 1.5px solid transparent;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition:
+        background 200ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 200ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1);
+      user-select: none;
+    }
+    .fridge-item:hover {
+      background: rgba(255,255,255,0.75);
+      border-color: var(--border);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(31,27,22,0.08);
+    }
+    .fridge-item.selected {
+      background: rgba(255,255,255,0.9);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(31,27,22,0.1);
+    }
+    .fridge-item.selected.red    { border-color: var(--red); }
+    .fridge-item.selected.yellow { border-color: var(--yellow); }
+    .fridge-item.selected.green  { border-color: var(--green); }
+    .fridge-item.selected.blue   { border-color: var(--blue); }
+
+    /* Watercolor SVG illustration area */
+    .item-illustration {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .item-label {
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      color: var(--fg-muted);
+      text-align: center;
+      line-height: 1.3;
+      transition: color 200ms;
+    }
+    .fridge-item.selected .item-label { color: var(--fg); }
+
+    /* ── Selection summary ── */
+    .selection-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(232,223,200,0.6);
+    }
+    .selection-count {
+      font-family: var(--font-recipe);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--fg-muted);
+    }
+    .selection-count span {
+      color: var(--fg);
+      font-weight: 400;
+    }
+    .next-btn {
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      background: var(--fg);
+      color: var(--bg);
+      border: none;
+      border-radius: 100px;
+      padding: 11px 24px;
+      cursor: pointer;
+      transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1), transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .next-btn:hover { opacity: 0.82; transform: scale(1.02); }
+    .next-btn:active { transform: scale(0.97); }
+
+    /* ── Annotation callouts (mockup only) ── */
+    .annotations {
+      margin-top: 48px;
+      padding: 28px 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .annotation-title {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      margin-bottom: 16px;
+    }
+    .annotation-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .annotation-list li {
+      font-size: 14px;
+      color: var(--fg-muted);
+      line-height: 1.55;
+      padding-left: 18px;
+      position: relative;
+    }
+    .annotation-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--border);
+    }
+    .annotation-list li strong { color: var(--fg); font-weight: 500; }
+
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <p class="page-label">Stellareat · Demo 1 · Step 1 mockup — visual direction review</p>
+
+  <div class="demo-frame">
+
+    <!-- Scattered watercolor illustrations in background -->
+    <div class="illustration-bg">
+      <!-- Large ghost items scattered around for atmosphere -->
+      <svg class="bg-item" style="top:-20px;left:60%;width:180px;transform:rotate(12deg);" viewBox="0 0 120 120" fill="none">
+        <!-- Chicken thigh — terracotta wash -->
+        <ellipse cx="60" cy="70" rx="42" ry="30" fill="#C97D4A" opacity="0.6"/>
+        <ellipse cx="55" cy="68" rx="38" ry="26" fill="#D8956A" opacity="0.5"/>
+        <ellipse cx="62" cy="45" rx="10" ry="24" fill="#C97D4A" opacity="0.7"/>
+        <ellipse cx="60" cy="42" rx="8" ry="20" fill="#E0B090" opacity="0.4"/>
+      </svg>
+      <svg class="bg-item" style="bottom:30px;left:8%;width:140px;transform:rotate(-8deg);" viewBox="0 0 120 120" fill="none">
+        <!-- Lemon — yellow wash -->
+        <ellipse cx="60" cy="62" rx="36" ry="28" fill="#F5D24A" opacity="0.7"/>
+        <ellipse cx="56" cy="60" rx="32" ry="24" fill="#FAE07A" opacity="0.5"/>
+        <path d="M60 34 Q66 26 72 34" stroke="#E8B53A" stroke-width="2" fill="none" opacity="0.8"/>
+      </svg>
+      <svg class="bg-item" style="top:40px;left:18%;width:110px;transform:rotate(6deg);" viewBox="0 0 120 120" fill="none">
+        <!-- Garlic bulb — cream wash -->
+        <ellipse cx="60" cy="66" rx="28" ry="24" fill="#E8DFC8" opacity="0.9"/>
+        <ellipse cx="48" cy="58" rx="14" ry="18" fill="#EDE6D4" opacity="0.8"/>
+        <ellipse cx="72" cy="58" rx="14" ry="18" fill="#E8DFC8" opacity="0.7"/>
+        <path d="M60 42 Q64 34 60 28 Q56 34 60 42" fill="#C8C4B4" opacity="0.6"/>
+      </svg>
+      <svg class="bg-item" style="bottom:60px;right:10%;width:160px;transform:rotate(-15deg);" viewBox="0 0 120 120" fill="none">
+        <!-- Butter block — pale yellow -->
+        <rect x="20" y="45" width="80" height="40" rx="4" fill="#F5DFA0" opacity="0.7"/>
+        <rect x="24" y="49" width="72" height="32" rx="3" fill="#FAE8B8" opacity="0.5"/>
+        <line x1="20" y1="55" x2="100" y2="55" stroke="#E8C860" stroke-width="1.5" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <!-- Glass panel -->
+    <div class="glass-panel">
+
+      <!-- Header -->
+      <div class="panel-header">
+        <h2 class="panel-title">What's in your fridge?</h2>
+        <a href="#" class="panel-cta">Read case study ↗</a>
+      </div>
+
+      <!-- Step breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-step active">Fridge</span>
+        <span class="breadcrumb-sep">→</span>
+        <span class="breadcrumb-step">Equipment</span>
+        <span class="breadcrumb-sep">→</span>
+        <span class="breadcrumb-step">Preferences</span>
+        <span class="breadcrumb-sep">→</span>
+        <span class="breadcrumb-step">Recipes</span>
+      </div>
+
+      <p class="panel-sublabel">Pick what you have — as many or as few</p>
+
+      <!-- Fridge item grid -->
+      <div class="fridge-grid" id="fridge-grid">
+
+        <!-- Chicken (protein — red accent) -->
+        <div class="fridge-item red" data-accent="red" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <ellipse cx="26" cy="32" rx="18" ry="13" fill="#C97D4A" opacity="0.75"/>
+              <ellipse cx="24" cy="30" rx="16" ry="11" fill="#D8956A" opacity="0.6"/>
+              <ellipse cx="27" cy="18" rx="6" ry="12" fill="#C97D4A" opacity="0.8"/>
+              <ellipse cx="26" cy="16" rx="5" ry="10" fill="#E0B090" opacity="0.5"/>
+              <!-- bone end -->
+              <circle cx="27" cy="8" r="4" fill="#EDE6D4" opacity="0.9"/>
+            </svg>
+          </div>
+          <span class="item-label">Chicken</span>
+        </div>
+
+        <!-- Eggs (protein — yellow accent) -->
+        <div class="fridge-item yellow selected" data-accent="yellow" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <!-- Two eggs slightly overlapping -->
+              <ellipse cx="20" cy="30" rx="11" ry="14" fill="#FFF3C0" opacity="0.8"/>
+              <ellipse cx="20" cy="30" rx="9" ry="12" fill="#FFF9E0" opacity="0.6"/>
+              <ellipse cx="33" cy="28" rx="10" ry="13" fill="#FFF0B0" opacity="0.75"/>
+              <ellipse cx="33" cy="28" rx="8" ry="11" fill="#FFF8D8" opacity="0.5"/>
+            </svg>
+          </div>
+          <span class="item-label">Eggs</span>
+        </div>
+
+        <!-- Lemon (produce — yellow) -->
+        <div class="fridge-item yellow selected" data-accent="yellow" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <ellipse cx="26" cy="30" rx="17" ry="13" fill="#F5D24A" opacity="0.8"/>
+              <ellipse cx="24" cy="28" rx="14" ry="11" fill="#FAE07A" opacity="0.55"/>
+              <!-- small nub ends -->
+              <ellipse cx="9" cy="30" rx="4" ry="3" fill="#E8B53A" opacity="0.7"/>
+              <ellipse cx="43" cy="30" rx="4" ry="3" fill="#E8B53A" opacity="0.7"/>
+            </svg>
+          </div>
+          <span class="item-label">Lemon</span>
+        </div>
+
+        <!-- Garlic -->
+        <div class="fridge-item yellow" data-accent="yellow" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <ellipse cx="26" cy="32" rx="14" ry="12" fill="#E8DFC8" opacity="0.9"/>
+              <ellipse cx="18" cy="27" rx="8" ry="10" fill="#EDE6D4" opacity="0.8"/>
+              <ellipse cx="34" cy="27" rx="8" ry="10" fill="#E4D9C0" opacity="0.75"/>
+              <path d="M26 20 Q29 14 26 10 Q23 14 26 20" fill="#C0B89A" opacity="0.7"/>
+            </svg>
+          </div>
+          <span class="item-label">Garlic</span>
+        </div>
+
+        <!-- Butter -->
+        <div class="fridge-item yellow selected" data-accent="yellow" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <rect x="8" y="20" width="36" height="20" rx="3" fill="#F5DFA0" opacity="0.8"/>
+              <rect x="10" y="22" width="32" height="16" rx="2" fill="#FAE8B8" opacity="0.55"/>
+              <line x1="8" y1="27" x2="44" y2="27" stroke="#E8C860" stroke-width="1.5" opacity="0.6"/>
+              <!-- wrapper fold -->
+              <path d="M8 20 L12 16 L40 16 L44 20" fill="#EDD890" opacity="0.5"/>
+            </svg>
+          </div>
+          <span class="item-label">Butter</span>
+        </div>
+
+        <!-- Spinach (produce — green) -->
+        <div class="fridge-item green" data-accent="green" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <!-- Three overlapping leaves -->
+              <ellipse cx="22" cy="28" rx="9" ry="14" fill="#7ABF60" opacity="0.7" transform="rotate(-20 22 28)"/>
+              <ellipse cx="30" cy="26" rx="9" ry="14" fill="#5FA84A" opacity="0.6" transform="rotate(15 30 26)"/>
+              <ellipse cx="26" cy="32" rx="8" ry="12" fill="#8ACF6A" opacity="0.55" transform="rotate(0 26 32)"/>
+              <!-- stems -->
+              <line x1="22" y1="38" x2="22" y2="44" stroke="#4A8A38" stroke-width="1.5" opacity="0.5"/>
+              <line x1="30" y1="38" x2="30" y2="44" stroke="#4A8A38" stroke-width="1.5" opacity="0.5"/>
+            </svg>
+          </div>
+          <span class="item-label">Spinach</span>
+        </div>
+
+        <!-- Onion -->
+        <div class="fridge-item red" data-accent="red" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <ellipse cx="26" cy="30" rx="16" ry="14" fill="#D4788A" opacity="0.65"/>
+              <ellipse cx="26" cy="29" rx="13" ry="11" fill="#E090A0" opacity="0.5"/>
+              <!-- skin layers -->
+              <path d="M12 28 Q14 18 26 16 Q38 18 40 28" fill="none" stroke="#C06070" stroke-width="1.5" opacity="0.5"/>
+              <!-- roots -->
+              <path d="M22 44 Q26 40 30 44" stroke="#A05060" stroke-width="1.5" fill="none" opacity="0.5"/>
+            </svg>
+          </div>
+          <span class="item-label">Onion</span>
+        </div>
+
+        <!-- Tomato (red) -->
+        <div class="fridge-item red selected" data-accent="red" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <circle cx="26" cy="30" r="15" fill="#D64545" opacity="0.75"/>
+              <circle cx="23" cy="28" r="13" fill="#E06060" opacity="0.45"/>
+              <!-- highlight -->
+              <ellipse cx="20" cy="22" rx="5" ry="3" fill="#FF9090" opacity="0.3"/>
+              <!-- stem and leaf -->
+              <rect x="24" y="13" width="4" height="6" rx="2" fill="#87A96B" opacity="0.8"/>
+              <ellipse cx="18" cy="16" rx="7" ry="3" fill="#87A96B" opacity="0.6" transform="rotate(-20 18 16)"/>
+              <ellipse cx="34" cy="16" rx="7" ry="3" fill="#6A9050" opacity="0.6" transform="rotate(20 34 16)"/>
+            </svg>
+          </div>
+          <span class="item-label">Tomato</span>
+        </div>
+
+        <!-- Bell pepper (green) -->
+        <div class="fridge-item green" data-accent="green" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <!-- Three lobes -->
+              <ellipse cx="18" cy="30" rx="9" ry="13" fill="#6FA840" opacity="0.7"/>
+              <ellipse cx="26" cy="28" rx="10" ry="15" fill="#87A96B" opacity="0.65"/>
+              <ellipse cx="34" cy="30" rx="9" ry="13" fill="#78B850" opacity="0.6"/>
+              <!-- stem -->
+              <rect x="24" y="12" width="4" height="7" rx="2" fill="#4A8A38" opacity="0.8"/>
+            </svg>
+          </div>
+          <span class="item-label">Bell pepper</span>
+        </div>
+
+        <!-- Milk (blue — dairy) -->
+        <div class="fridge-item blue" data-accent="blue" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <!-- Carton shape -->
+              <rect x="14" y="22" width="24" height="22" rx="2" fill="#A8C8E8" opacity="0.7"/>
+              <rect x="15" y="23" width="22" height="20" rx="1" fill="#C0D8F0" opacity="0.5"/>
+              <!-- Gabled top -->
+              <path d="M14 22 L26 14 L38 22" fill="#88B8E0" opacity="0.65"/>
+              <!-- "MILK" text suggestion -->
+              <rect x="18" y="28" width="16" height="2" rx="1" fill="#6FA8DC" opacity="0.5"/>
+              <rect x="20" y="32" width="12" height="1.5" rx="0.75" fill="#6FA8DC" opacity="0.35"/>
+            </svg>
+          </div>
+          <span class="item-label">Milk</span>
+        </div>
+
+        <!-- Cheese -->
+        <div class="fridge-item yellow" data-accent="yellow" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <!-- Wedge shape -->
+              <path d="M8 38 L44 38 L44 26 L26 14 Z" fill="#F0C060" opacity="0.75"/>
+              <path d="M10 38 L42 38 L42 27 L26 16 Z" fill="#FAD878" opacity="0.5"/>
+              <!-- holes -->
+              <circle cx="32" cy="30" r="3" fill="#E8B530" opacity="0.5"/>
+              <circle cx="20" cy="32" r="2.5" fill="#E8B530" opacity="0.45"/>
+            </svg>
+          </div>
+          <span class="item-label">Cheese</span>
+        </div>
+
+        <!-- Rice -->
+        <div class="fridge-item blue" data-accent="blue" onclick="toggle(this)">
+          <div class="item-illustration">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <!-- Bowl -->
+              <path d="M10 28 Q10 44 26 44 Q42 44 42 28 Z" fill="#E8E0D0" opacity="0.7"/>
+              <ellipse cx="26" cy="28" rx="16" ry="5" fill="#F0E8D8" opacity="0.65"/>
+              <!-- Rice grains suggestion -->
+              <ellipse cx="22" cy="30" rx="2.5" ry="1.5" fill="#FFF8E7" opacity="0.7"/>
+              <ellipse cx="28" cy="29" rx="2.5" ry="1.5" fill="#FFF8E7" opacity="0.65"/>
+              <ellipse cx="25" cy="33" rx="2.5" ry="1.5" fill="#FFF8E7" opacity="0.6"/>
+              <ellipse cx="20" cy="35" rx="2" ry="1.2" fill="#FFF8E7" opacity="0.55"/>
+              <ellipse cx="32" cy="33" rx="2" ry="1.2" fill="#FFF8E7" opacity="0.55"/>
+            </svg>
+          </div>
+          <span class="item-label">Leftover rice</span>
+        </div>
+
+      </div><!-- /fridge-grid -->
+
+      <!-- Selection bar -->
+      <div class="selection-bar">
+        <p class="selection-count" id="count-label">
+          <span id="count-num">3</span> items selected
+        </p>
+        <button class="next-btn" onclick="alert('Step 2 — Equipment (not built yet)')">
+          Equipment →
+        </button>
+      </div>
+
+    </div><!-- /glass-panel -->
+  </div><!-- /demo-frame -->
+
+  <!-- Mockup annotations -->
+  <div class="annotations">
+    <p class="annotation-title">Mockup notes — direction check only</p>
+    <ul class="annotation-list">
+      <li><strong>Illustrations:</strong> SVG watercolor approximation — flat washes via layered ellipses. In final build, replace with actual commissioned or AI-generated Niemann-style illustrations.</li>
+      <li><strong>Glass panel:</strong> backdrop-filter blur(24px) + rgba(255,255,255,0.72). Requires the scattered illustration background to read correctly — tested here.</li>
+      <li><strong>Breadcrumb nav:</strong> "Fridge → Equipment → Preferences → Recipes" — underline on active, not circles.</li>
+      <li><strong>Selection state:</strong> Each item category maps to an accent color. Protein = tomato red, produce = sage green, dairy = sky blue, pantry/fat = mustard. Consistent across grid.</li>
+      <li><strong>No generate button:</strong> "Equipment →" advances the flow. The AI hasn't been invoked yet — this is information gathering.</li>
+      <li><strong>Font:</strong> PP Editorial New Italic for the panel title. Feels like a handwritten cookbook question, not a UI label.</li>
+      <li><strong>Not built yet:</strong> Steps 2–4 (equipment, preferences, AI reasoning + recipes). Awaiting direction approval on Step 1 before continuing.</li>
+    </ul>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+  // Toggle selection + update count
+  function toggle(el) {
+    el.classList.toggle('selected')
+    updateCount()
+  }
+
+  function updateCount() {
+    const selected = document.querySelectorAll('.fridge-item.selected').length
+    document.getElementById('count-num').textContent = selected
+    const label = document.getElementById('count-label')
+    const num = label.querySelector('#count-num')
+    label.innerHTML = ''
+    const numEl = document.createElement('span')
+    numEl.id = 'count-num'
+    numEl.textContent = selected
+    label.appendChild(numEl)
+    label.appendChild(document.createTextNode(
+      selected === 0 ? ' items selected — pick at least one' :
+      selected === 1 ? ' item selected' :
+      ' items selected'
+    ))
+  }
+</script>
+</body>
+</html>

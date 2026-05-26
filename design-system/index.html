@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design System — Tanawitch Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- PP Editorial New — load from Pangram Pangram CDN if available, else fallback -->
+  <style>
+    /* Pangram Pangram — replace with actual CDN or @font-face if licensed */
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=JetBrains+Mono:wght@400&display=swap');
+  </style>
+</head>
+<body>
+
+<button class="mode-toggle" onclick="toggleMode()">Toggle dark mode</button>
+
+<div class="page">
+
+  <h1 class="page-title">Design<br/><em>System</em></h1>
+  <p class="page-subtitle">The visual contract for Tanawitch's portfolio. Every token, pattern, and motion curve is testable here before it goes into code.</p>
+
+  <!-- ── 1. Color tokens ── -->
+  <section class="section">
+    <p class="section-label">01 — Color tokens</p>
+
+    <p style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Light mode</p>
+    <div class="color-grid" style="margin-bottom:40px;">
+      <div class="swatch"><div class="swatch-block" style="background:#F4F1EA;"></div><div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">#F4F1EA</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#EBE6DB;"></div><div class="swatch-info"><div class="swatch-name">Surface</div><div class="swatch-hex">#EBE6DB</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#1A1714;"></div><div class="swatch-info"><div class="swatch-name">Text primary</div><div class="swatch-hex">#1A1714</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#6B6358;"></div><div class="swatch-info"><div class="swatch-name">Text muted</div><div class="swatch-hex">#6B6358</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#C4421C;"></div><div class="swatch-info"><div class="swatch-name">Accent</div><div class="swatch-hex">#C4421C</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#D4CFC2;"></div><div class="swatch-info"><div class="swatch-name">Border</div><div class="swatch-hex">#D4CFC2</div></div></div>
+    </div>
+
+    <p style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:16px;">Dark mode</p>
+    <div class="color-grid">
+      <div class="swatch"><div class="swatch-block" style="background:#1A1714;border:1px solid #3A3530;"></div><div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">#1A1714</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#252119;border:1px solid #3A3530;"></div><div class="swatch-info"><div class="swatch-name">Surface</div><div class="swatch-hex">#252119</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#F4F1EA;"></div><div class="swatch-info"><div class="swatch-name">Text primary</div><div class="swatch-hex">#F4F1EA</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#8A8275;"></div><div class="swatch-info"><div class="swatch-name">Text muted</div><div class="swatch-hex">#8A8275</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#E6804A;"></div><div class="swatch-info"><div class="swatch-name">Accent</div><div class="swatch-hex">#E6804A</div></div></div>
+      <div class="swatch"><div class="swatch-block" style="background:#3A3530;border:1px solid #3A3530;"></div><div class="swatch-info"><div class="swatch-name">Border</div><div class="swatch-hex">#3A3530</div></div></div>
+    </div>
+  </section>
+
+  <!-- ── 2. Typography ── -->
+  <section class="section">
+    <p class="section-label">02 — Typography specimens</p>
+
+    <div class="type-specimen">
+      <p class="type-meta">Hero display — PP Editorial New 200 · clamp(64px, 10vw, 140px) · tracking -0.02em</p>
+      <div style="font-family:var(--font-display);font-weight:200;font-size:clamp(64px,10vw,140px);letter-spacing:-0.02em;line-height:1.05;">
+        Design is a<br/><em>stance.</em>
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <p class="type-meta">Sub-case thesis — PP Editorial New 200 italic · clamp(48px, 7vw, 96px)</p>
+      <div style="font-family:var(--font-display);font-weight:200;font-size:clamp(48px,7vw,96px);letter-spacing:-0.02em;line-height:1.1;font-style:italic;color:var(--fg-muted);">
+        Good AI and bad AI looked identical at the point of decision.
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <p class="type-meta">Principle name — PP Editorial New 200 · clamp(32px, 4vw, 56px)</p>
+      <div style="font-family:var(--font-display);font-weight:200;font-size:clamp(32px,4vw,56px);letter-spacing:-0.02em;line-height:1.1;">
+        Lock the contract, not the look
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <p class="type-meta">Body — PP Neue Montreal 400 · 19px desktop / 17px mobile · line-height 1.55</p>
+      <p style="font-family:var(--font-body);font-size:19px;line-height:1.55;max-width:56ch;color:var(--fg-muted);">
+        Eight years in regulated systems — insurance, healthcare, fintech — where 'move fast and break things' isn't an option. I build design systems that hold when the org grows, AI tools that don't collapse when the model is wrong.
+      </p>
+    </div>
+
+    <div class="type-specimen">
+      <p class="type-meta">Button label — 14px uppercase · letter-spacing 0.05em</p>
+      <p style="font-family:var(--font-body);font-size:14px;letter-spacing:0.05em;text-transform:uppercase;">
+        Submit for approval →
+      </p>
+    </div>
+
+    <div class="type-specimen">
+      <p class="type-meta">Eyebrow — 12px uppercase · letter-spacing 0.15em</p>
+      <p style="font-family:var(--font-body);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--fg-muted);">
+        01 · AI Tooling · Enterprise UX
+      </p>
+    </div>
+
+    <div class="type-specimen">
+      <p class="type-meta">Meta / footer — 11px</p>
+      <p style="font-family:var(--font-body);font-size:11px;color:var(--fg-muted);">
+        Allianz Technology · 2024–2025
+      </p>
+    </div>
+  </section>
+
+  <!-- ── 3. Spacing ── -->
+  <section class="section">
+    <p class="section-label">03 — Spacing scale</p>
+    <div class="spacing-stack">
+      <div class="spacing-row"><div class="spacing-block" style="width:4px;"></div><span class="spacing-label">4px</span></div>
+      <div class="spacing-row"><div class="spacing-block" style="width:8px;"></div><span class="spacing-label">8px</span></div>
+      <div class="spacing-row"><div class="spacing-block" style="width:16px;"></div><span class="spacing-label">16px</span></div>
+      <div class="spacing-row"><div class="spacing-block" style="width:24px;"></div><span class="spacing-label">24px</span></div>
+      <div class="spacing-row"><div class="spacing-block" style="width:40px;"></div><span class="spacing-label">40px</span></div>
+      <div class="spacing-row"><div class="spacing-block" style="width:64px;"></div><span class="spacing-label">64px — sub-section gap (mobile)</span></div>
+      <div class="spacing-row"><div class="spacing-block" style="width:96px;"></div><span class="spacing-label">96px — sub-section gap (desktop)</span></div>
+      <div class="spacing-row"><div class="spacing-block" style="width:128px;"></div><span class="spacing-label">128px — major section gap (mobile)</span></div>
+      <div class="spacing-row"><div class="spacing-block" style="width:192px;"></div><span class="spacing-label">192px — major section gap (desktop)</span></div>
+      <div class="spacing-row"><div class="spacing-block" style="width:256px;"></div><span class="spacing-label">256px</span></div>
+    </div>
+  </section>
+
+  <!-- ── 4. Buttons ── -->
+  <section class="section">
+    <p class="section-label">04 — Button states</p>
+    <div class="button-row">
+      <button class="btn btn-primary">Primary</button>
+      <button class="btn">Ghost</button>
+      <button class="btn btn-accent">Accent</button>
+      <button class="btn" disabled>Disabled</button>
+      <button class="btn btn-primary" disabled>Primary disabled</button>
+    </div>
+    <p style="font-size:13px;color:var(--fg-muted);margin-top:8px;">Hover each button. Border-radius is 0. Easing is <code>cubic-bezier(0.22, 1, 0.36, 1)</code>.</p>
+  </section>
+
+  <!-- ── 5. Form elements ── -->
+  <section class="section">
+    <p class="section-label">05 — Form elements</p>
+    <div class="form-stack">
+      <div>
+        <p class="field-label">Text input</p>
+        <input class="input" type="text" placeholder="Classification rule label…" />
+      </div>
+      <div>
+        <p class="field-label">Textarea</p>
+        <textarea class="textarea" placeholder="Route this document to the claims team if the document type matches…"></textarea>
+      </div>
+      <div>
+        <p class="field-label">Select</p>
+        <select class="select">
+          <option>Claims — Standard</option>
+          <option>Claims — Complex</option>
+          <option>Legal</option>
+          <option>Accounts Payable</option>
+        </select>
+      </div>
+      <div>
+        <p class="field-label">Slider — confidence threshold</p>
+        <input class="slider" type="range" min="0" max="100" value="60" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6. Card patterns ── -->
+  <section class="section">
+    <p class="section-label">06 — Card patterns</p>
+    <div class="card-grid">
+      <div class="card" onclick="this.classList.toggle('selected')">
+        <p class="card-eyebrow">01 · AI Tooling</p>
+        <p class="card-title">Document Classification</p>
+        <p class="card-body">Click to toggle selected state. Hover for lift.</p>
+      </div>
+      <div class="card" onclick="this.classList.toggle('selected')">
+        <p class="card-eyebrow">02 · Config UX</p>
+        <p class="card-title">Prompt Management</p>
+        <p class="card-body">Accent border on selected. No border-radius.</p>
+      </div>
+      <div class="card selected" onclick="this.classList.toggle('selected')">
+        <p class="card-eyebrow">03 · Error Design</p>
+        <p class="card-title">Fallback States</p>
+        <p class="card-body">This one starts selected.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7. Animation curve playground ── -->
+  <section class="section">
+    <p class="section-label">07 — Animation easing playground</p>
+    <div class="easing-grid" id="easing-grid">
+      <!-- populated by JS -->
+    </div>
+  </section>
+
+  <!-- ── 8. Layout patterns ── -->
+  <section class="section">
+    <p class="section-label">08 — Asymmetric layout patterns</p>
+    <div class="layout-examples">
+
+      <div class="layout-demo">
+        <p class="layout-label">Default — title left, body offset right 30%</p>
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:40px;align-items:end;">
+          <div class="layout-mock-title">Three layers.</div>
+          <p class="layout-mock-body" style="margin-left:0;">The document classification surface, the prompt management layer, and the fallback queue weren't three separate problems.</p>
+        </div>
+      </div>
+
+      <div class="layout-demo">
+        <p class="layout-label">Offset — title pushed 30% from left</p>
+        <div class="layout-offset">
+          <div class="layout-mock-title">The gate was the fix.</div>
+          <p class="layout-mock-body" style="margin-top:16px;">Operators weren't failing to catch errors. They had no signal that an error was possible.</p>
+        </div>
+      </div>
+
+      <div class="layout-demo">
+        <p class="layout-label">Asymmetric split — 1:2 column ratio, content anchored to bottom</p>
+        <div class="layout-split">
+          <div>
+            <p style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-muted);margin-bottom:8px;">Confidence</p>
+            <div style="font-family:var(--font-display);font-weight:200;font-size:clamp(48px,6vw,80px);letter-spacing:-0.03em;line-height:0.9;color:var(--accent);">61%</div>
+          </div>
+          <p class="layout-mock-body">Claim references a third-party liability disputed in a prior case. Standard or Complex routing carries different SLA consequences.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- /page -->
+
+<script>
+  function toggleMode() {
+    const html = document.documentElement;
+    html.dataset.mode = html.dataset.mode === 'dark' ? 'light' : 'dark';
+  }
+
+  // ── Easing playground ──
+  const EASINGS = [
+    { name: 'Smooth in-out',  label: 'Default',   curve: 'cubic-bezier(0.65, 0, 0.35, 1)' },
+    { name: 'Decisive',       label: 'Entrance',  curve: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+    { name: 'Gentle',         label: 'Text reveal', curve: 'cubic-bezier(0.22, 1, 0.36, 1)' },
+    { name: 'Snap',           label: 'Overshoot', curve: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
+  ];
+
+  const grid = document.getElementById('easing-grid');
+  EASINGS.forEach(e => {
+    const card = document.createElement('div');
+    card.className = 'easing-card';
+    card.innerHTML = `
+      <p class="easing-name">${e.name}</p>
+      <p class="easing-curve">${e.curve}</p>
+      <div class="easing-demo-track">
+        <div class="easing-ball" id="ball-${e.label}"></div>
+      </div>
+      <button class="easing-trigger" onclick="animateBall('${e.label}', '${e.curve}')">Play →</button>
+    `;
+    grid.appendChild(card);
+  });
+
+  function animateBall(id, curve) {
+    const ball = document.getElementById('ball-' + id);
+    const track = ball.parentElement;
+    const maxLeft = track.clientWidth - ball.clientWidth - 8;
+    ball.style.transition = 'none';
+    ball.style.left = '8px';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        ball.style.transition = `left 600ms ${curve}`;
+        ball.style.left = maxLeft + 'px';
+        setTimeout(() => {
+          ball.style.transition = `left 400ms ${curve}`;
+          ball.style.left = '8px';
+        }, 800);
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
