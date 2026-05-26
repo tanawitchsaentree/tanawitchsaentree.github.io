@@ -135,14 +135,14 @@ export function ProjectRow({
         className={cn(
           'group w-full text-left cursor-pointer',
           'flex items-start justify-between',
-          index === 0 ? 'py-12 md:py-16' : 'py-8 md:py-10',
-          'px-4 my-3 rounded-xl',
+          index === 0 ? 'py-7 md:py-12 lg:py-16' : 'py-4 md:py-8 lg:py-10',
+          'px-4 my-1 md:my-3 rounded-xl',
           'transition-colors duration-[240ms] ease-out',
           hovered && 'bg-[var(--bg-elevated)]',
           'focus-visible:outline-2 focus-visible:outline-[var(--fg)] focus-visible:outline-offset-[-2px]'
         )}
       >
-        <div className="flex flex-col gap-6 min-w-0 pr-4">
+        <div className="flex flex-col gap-3 md:gap-6 min-w-0 pr-4">
           {/* Index line */}
           <div className="flex items-center gap-4">
             <span
@@ -183,8 +183,8 @@ export function ProjectRow({
               'leading-[1.05]',
               'text-[var(--fg)]',
               index === 0
-                ? 'text-[clamp(1.75rem,3.5vw,3rem)] tracking-[-0.032em] max-w-[22ch]'
-                : 'text-[clamp(1.5rem,3vw,2.75rem)] tracking-[-0.028em] max-w-[24ch]'
+                ? 'text-[clamp(1.4rem,3.5vw,3rem)] tracking-[-0.032em] max-w-[22ch]'
+                : 'text-[clamp(1.2rem,3vw,2.75rem)] tracking-[-0.028em] max-w-[24ch]'
             )}
           >
             {index === 0 ? <FeaturedHeadline text={headline} /> : headline}
