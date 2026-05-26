@@ -114,7 +114,7 @@ export function ProjectRow({
 
   return (
     <motion.li
-      className="list-none m-0 p-0 border-b border-[var(--border)]"
+      className="list-none m-0 p-0"
       initial={motionInitial}
       whileInView={motionVisible}
       viewport={{ once: true, margin: '-10% 0px' }}

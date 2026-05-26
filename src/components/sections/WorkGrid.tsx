@@ -45,7 +45,7 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
 
       <CyclingIndex projects={visible} pausedSlug={hoveredSlug} />
 
-      <div className="border-t border-[var(--border)]" aria-hidden="true" />
+      <div aria-hidden="true" />
 
       <ul className="list-none m-0 p-0" aria-label="Portfolio projects">
         {visible.map((project, i) => (
@@ -63,7 +63,7 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
       </ul>
 
       {secondary.length > 0 && (
-        <div className="mt-2 border-t border-[var(--border)] pt-6">
+        <div className="mt-6">
           <button
             type="button"
             onClick={() => setShowAll(v => !v)}

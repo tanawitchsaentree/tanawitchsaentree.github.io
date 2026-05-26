@@ -34,7 +34,7 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="py-24 md:py-32 px-8 md:px-12 lg:px-16 border-t border-[var(--border)]"
+      className="py-24 md:py-32 px-8 md:px-12 lg:px-16"
     >
       <div className="max-w-[80rem]">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
@@ -134,7 +134,7 @@ export function Contact() {
         {/* Colophon */}
         <div
           className={cn(
-            'mt-16 pt-8 border-t border-[var(--border)]',
+            'mt-16 pt-8',
             'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'
           )}
         >

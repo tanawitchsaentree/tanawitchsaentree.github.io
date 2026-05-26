@@ -65,7 +65,7 @@ export function About() {
     <section
       id="about"
       aria-labelledby="about-heading"
-      className="border-t border-[var(--border)]"
+      className=""
     >
       <h2 id="about-heading" className="sr-only">About</h2>
 
@@ -128,8 +128,7 @@ export function About() {
       {/* ── Block 3: Horizontal skills strip ─────────────────── */}
       <div className={cn(
         'px-8 md:px-12 lg:px-16', 'py-8',
-        'border-t border-[var(--border)]',
-        'flex flex-wrap items-center gap-x-8 gap-y-3'
+                'flex flex-wrap items-center gap-x-8 gap-y-3'
       )}>
         {SKILLS.map((skill, i) => (
           <motion.span key={skill} className="flex items-center gap-8" {...fadeUp(i * 0.06)}>
@@ -152,8 +151,7 @@ export function About() {
             className={cn(
               'px-8 md:px-12 lg:px-16',
               'py-7 md:py-8',
-              'border-t border-[var(--border)]',
-              'flex items-baseline justify-between gap-8'
+                            'flex items-baseline justify-between gap-8'
             )}
           >
             <span className={cn(
@@ -180,8 +178,7 @@ export function About() {
         {...fadeUp(0.1)}
         className={cn(
           'px-8 md:px-12 lg:px-16', 'py-6',
-          'border-t border-[var(--border)]',
-          'flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-10'
+                    'flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-10'
         )}
       >
         {EDUCATION.map(entry => (
