@@ -110,7 +110,7 @@ function HeroSection() {
           transition={{ delay: 0.26, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-wrap gap-x-8 gap-y-3 font-mono text-[var(--type-xs)] tracking-widest uppercase"
         >
-          {([['Role', 'Lead Product Designer'], ['Timeline', '8 months'], ['Team', 'Solo designer']] as const).map(([label, value]) => (
+          {([['Role', 'Lead Product Designer'], ['Timeline', '8 months'], ['Team', '4 Designers · Engineers']] as const).map(([label, value]) => (
             <div key={label} className="flex flex-col gap-1">
               <dt className="text-[var(--fg-muted)] opacity-60">{label}</dt>
               <dd className="text-[var(--fg)]">{value}</dd>
