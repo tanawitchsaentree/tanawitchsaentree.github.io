@@ -40,7 +40,7 @@ export function Process() {
     <section
       id="process"
       aria-labelledby="process-heading"
-      className={cn('py-24 md:py-32', 'px-8 md:px-12 lg:px-16', 'border-t border-[var(--border)]')}
+      className={cn('py-14 md:py-20', 'px-8 md:px-12 lg:px-16', 'border-t border-[var(--border)]')}
     >
       <motion.h2
         id="process-heading"
@@ -48,7 +48,7 @@ export function Process() {
         className={cn(
           'font-display font-normal',
           'text-[var(--type-3xl)] tracking-[-0.028em]',
-          'text-[var(--fg)] mb-24 md:mb-32'
+          'text-[var(--fg)] mb-12'
         )}
       >
         How I work
@@ -56,7 +56,7 @@ export function Process() {
 
       <ol className="list-none m-0 p-0 max-w-[80rem]" aria-label="Design principles">
         {PRINCIPLES.map((p, i) => (
-          <li key={p.number} className={cn(i < PRINCIPLES.length - 1 && 'mb-24 md:mb-32')}>
+          <li key={p.number} className={cn(i < PRINCIPLES.length - 1 && 'mb-12 md:mb-14')}>
 
             <motion.p
               {...fadeUp(0.05)}
@@ -109,7 +109,7 @@ export function Process() {
         className={cn(
           'font-display italic',
           'text-[var(--type-lg)]',
-          'text-[var(--fg-muted)] max-w-[50ch] mt-24'
+          'text-[var(--fg-muted)] max-w-[50ch] mt-12'
         )}
       >
         Make this small thing work better — that, I can sign up for.

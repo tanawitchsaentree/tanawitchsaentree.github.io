@@ -70,7 +70,7 @@ export function About() {
       <h2 id="about-heading" className="sr-only">About</h2>
 
       {/* ── Block 1+2: Quote + body grouped ──────────────────── */}
-      <div className={cn('px-8 md:px-12 lg:px-16', 'pt-10 pb-8 md:pt-14 md:pb-10')}>
+      <div className={cn('px-8 md:px-12 lg:px-16', 'pt-14 md:pt-20 pb-8')}>
         <blockquote className="m-0 mb-6" aria-label={QUOTE_LINES.join(' ')}>
           {QUOTE_LINES.map((line, i) => (
             <div key={line} className="overflow-hidden leading-none">
@@ -125,7 +125,7 @@ export function About() {
 
       {/* ── Block 3: Horizontal skills strip ─────────────────── */}
       <div className={cn(
-        'px-8 md:px-12 lg:px-16', 'py-4',
+        'px-8 md:px-12 lg:px-16', 'py-6',
         'flex flex-wrap items-center gap-x-6 gap-y-2'
       )}>
         {SKILLS.map((skill, i) => (
@@ -148,7 +148,7 @@ export function About() {
             {...fadeUp(i * 0.07)}
             className={cn(
               'px-8 md:px-12 lg:px-16',
-              'py-3 md:py-4',
+              'py-4 md:py-5',
                             'flex items-baseline justify-between gap-8'
             )}
           >
@@ -175,8 +175,8 @@ export function About() {
       <motion.div
         {...fadeUp(0.1)}
         className={cn(
-          'px-8 md:px-12 lg:px-16', 'py-6',
-                    'flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-10'
+          'px-8 md:px-12 lg:px-16', 'pt-6 pb-14 md:pb-20',
+          'flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-10'
         )}
       >
         {EDUCATION.map(entry => (

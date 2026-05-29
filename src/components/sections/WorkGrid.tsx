@@ -141,10 +141,10 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
     <section
       id="work"
       aria-labelledby="work-heading"
-      className={cn('pt-14 pb-8 md:pt-16 md:pb-10', 'px-8 md:px-12 lg:px-16')}
+      className={cn('py-14 md:py-20', 'px-8 md:px-12 lg:px-16')}
     >
       {/* Tab switch */}
-      <div className="mb-10 md:mb-12">
+      <div className="mb-8">
         <TabSwitch active={tab} onChange={t => { setTab(t); setShowAll(false) }} />
       </div>
 
