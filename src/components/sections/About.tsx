@@ -69,9 +69,9 @@ export function About() {
     >
       <h2 id="about-heading" className="sr-only">About</h2>
 
-      {/* ── Block 1: Quote — line-by-line clip reveal ─────────── */}
-      <div className={cn('px-8 md:px-12 lg:px-16', 'pt-12 pb-8 md:pt-16 md:pb-10')}>
-        <blockquote className="m-0" aria-label={QUOTE_LINES.join(' ')}>
+      {/* ── Block 1+2: Quote + body grouped ──────────────────── */}
+      <div className={cn('px-8 md:px-12 lg:px-16', 'pt-10 pb-8 md:pt-14 md:pb-10')}>
+        <blockquote className="m-0 mb-6" aria-label={QUOTE_LINES.join(' ')}>
           {QUOTE_LINES.map((line, i) => (
             <div key={line} className="overflow-hidden leading-none">
               <motion.span
@@ -90,13 +90,10 @@ export function About() {
             </div>
           ))}
         </blockquote>
-      </div>
 
-      {/* ── Block 2: Body + stat ──────────────────────────────── */}
-      <div className={cn(
-        'px-8 md:px-12 lg:px-16', 'py-16 md:py-20',
-        'flex flex-col md:flex-row md:items-start md:justify-between gap-12 md:gap-24'
-      )}>
+        <div className={cn(
+          'flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-16'
+        )}>
         <motion.p
           {...fadeUp(0.1)}
           className={cn(
@@ -123,12 +120,13 @@ export function About() {
             years
           </span>
         </motion.div>
+        </div>
       </div>
 
       {/* ── Block 3: Horizontal skills strip ─────────────────── */}
       <div className={cn(
-        'px-8 md:px-12 lg:px-16', 'py-8',
-                'flex flex-wrap items-center gap-x-8 gap-y-3'
+        'px-8 md:px-12 lg:px-16', 'py-4',
+        'flex flex-wrap items-center gap-x-6 gap-y-2'
       )}>
         {SKILLS.map((skill, i) => (
           <motion.span key={skill} className="flex items-center gap-8" {...fadeUp(i * 0.06)}>
@@ -150,7 +148,7 @@ export function About() {
             {...fadeUp(i * 0.07)}
             className={cn(
               'px-8 md:px-12 lg:px-16',
-              'py-7 md:py-8',
+              'py-3 md:py-4',
                             'flex items-baseline justify-between gap-8'
             )}
           >
