@@ -40,7 +40,7 @@ export function Process() {
     <section
       id="process"
       aria-labelledby="process-heading"
-      className={cn('py-24 md:py-32', 'px-8 md:px-12 lg:px-16')}
+      className={cn('py-24 md:py-32', 'px-8 md:px-12 lg:px-16', 'border-t border-[var(--border)]')}
     >
       <motion.h2
         id="process-heading"

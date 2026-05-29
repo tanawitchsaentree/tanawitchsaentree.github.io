@@ -34,7 +34,7 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="py-24 md:py-32 px-8 md:px-12 lg:px-16"
+      className="py-24 md:py-32 px-8 md:px-12 lg:px-16 border-t border-[var(--border)]"
     >
       <div className="max-w-[80rem]">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">

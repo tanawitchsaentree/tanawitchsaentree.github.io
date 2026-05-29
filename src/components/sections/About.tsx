@@ -65,7 +65,7 @@ export function About() {
     <section
       id="about"
       aria-labelledby="about-heading"
-      className=""
+      className="border-t border-[var(--border)]"
     >
       <h2 id="about-heading" className="sr-only">About</h2>
 
@@ -141,7 +141,7 @@ export function About() {
       </div>
 
       {/* ── Block 4: Work history rows ────────────────────────── */}
-      <ul className="list-none m-0 p-0" aria-label="Work history">
+      <ul className="list-none m-0 p-0 border-t border-[var(--border)]" aria-label="Work history">
         {WORK.map((entry, i) => (
           <motion.li
             key={entry.company}
