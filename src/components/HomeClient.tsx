@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Nav } from '@/components/layout/Nav'
 import { WorkGrid } from '@/components/sections/WorkGrid'
+import { SideProjects } from '@/components/sections/SideProjects'
 import { About } from '@/components/sections/About'
 import { Process } from '@/components/sections/Process'
 import { Contact } from '@/components/sections/Contact'
@@ -41,10 +42,11 @@ function LiveTime() {
 
 // ── Section nav ────────────────────────────────────────────────
 const SECTIONS = [
-  { id: 'work',    label: 'Work'    },
-  { id: 'about',   label: 'About'   },
-  { id: 'process', label: 'Process' },
-  { id: 'contact', label: 'Contact' },
+  { id: 'work',          label: 'Work'    },
+  { id: 'side-projects', label: 'Side'    },
+  { id: 'about',         label: 'About'   },
+  { id: 'process',       label: 'Process' },
+  { id: 'contact',       label: 'Contact' },
 ] as const
 
 type SectionId = typeof SECTIONS[number]['id']
@@ -304,6 +306,7 @@ export function HomeClient({ projects }: HomeClientProps) {
             onOpenProject={openProject}
             onNavigate={navigateWithTransition}
           />
+          <SideProjects />
           <About />
           <Process />
           <Contact />
