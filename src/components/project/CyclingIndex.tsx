@@ -26,7 +26,7 @@ export function CyclingIndex({ projects, pausedSlug }: CyclingIndexProps) {
     <p
       className={cn(
         'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
-        'flex items-center gap-3 mb-16 md:mb-20'
+        'flex items-center justify-center gap-3 mb-16 md:mb-20'
       )}
     >
       <span className="text-[var(--fg-subtle)]">[ Selected work ]</span>

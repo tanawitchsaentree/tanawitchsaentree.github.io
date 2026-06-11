@@ -67,11 +67,11 @@ function Identity() {
       </div>
 
       {/* Body — all one quiet size */}
-      <div className="flex flex-col items-center gap-1.5 max-w-[34ch]">
+      <div className="flex flex-col items-center gap-1.5">
         <p className="text-[var(--type-sm)] leading-[1.6] text-[var(--fg-muted)]">
           Designer for regulated systems.
         </p>
-        <p className="text-[var(--type-sm)] leading-[1.6] text-[var(--fg-muted)]">
+        <p className="text-[var(--type-sm)] leading-[1.6] text-[var(--fg-muted)] whitespace-nowrap">
           Senior Designer at{' '}
           <span style={{
             background:    'var(--accent)',
@@ -79,6 +79,7 @@ function Identity() {
             paddingInline: '0.25em',
             paddingBlock:  '0.05em',
             borderRadius:  '2px',
+            whiteSpace:    'nowrap',
           }}>Allianz Technology</span>.
         </p>
       </div>
