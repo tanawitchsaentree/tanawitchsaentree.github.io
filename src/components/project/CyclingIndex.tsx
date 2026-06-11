@@ -25,22 +25,14 @@ export function CyclingIndex({ projects, pausedSlug }: CyclingIndexProps) {
   return (
     <p
       className={cn(
-        'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
-        'flex items-center justify-center gap-3 mb-16 md:mb-20'
+        'font-mono text-[var(--type-xs)] uppercase tracking-[0.14em]',
+        'text-center text-[var(--fg-subtle)] mb-14 md:mb-16',
+        'transition-opacity duration-[320ms] ease-[var(--ease-out-quick)]'
       )}
     >
-      <span className="text-[var(--fg-subtle)]">[ Selected work ]</span>
-      <span
-        className={cn(
-          'text-[var(--fg-muted)]',
-          'transition-opacity duration-[320ms] ease-[var(--ease-out-quick)]',
-          hovered ? 'opacity-100' : 'opacity-50'
-        )}
-      >
-        {hovered
-          ? `${String(hoveredIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')} — ${hovered.company.toUpperCase()}`
-          : `${String(total).padStart(2, '0')} projects`}
-      </span>
+      {hovered
+        ? `${String(hoveredIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')} — ${hovered.company.toUpperCase()}`
+        : `${String(total).padStart(2, '0')} Projects`}
     </p>
   )
 }
