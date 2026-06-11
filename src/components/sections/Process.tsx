@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion'
 import { cn } from '@/lib/cn'
+import { DecodeText } from '@/components/ui/DecodeText'
 
 const PRINCIPLES = [
   {
@@ -40,55 +41,49 @@ export function Process() {
     <section
       id="process"
       aria-labelledby="process-heading"
-      className={cn('py-14 md:py-20', 'px-8 md:px-12 lg:px-16', 'border-t border-[var(--border)]')}
+      className={cn('py-16 md:py-24', 'text-center', 'border-t border-[var(--border)]')}
     >
       <motion.h2
         id="process-heading"
         {...fadeUp()}
         className={cn(
-          'font-display font-normal',
-          'text-[var(--type-3xl)] tracking-[-0.028em]',
-          'text-[var(--fg)] mb-12'
+          'font-mono uppercase',
+          'text-[var(--type-xs)] tracking-[0.18em]',
+          'text-[var(--fg-subtle)] mb-14'
         )}
       >
-        How I work
+        <DecodeText text="How I work" />
       </motion.h2>
 
-      <ol className="list-none m-0 p-0 max-w-[80rem]" aria-label="Design principles">
+      <ol className="list-none m-0 p-0 flex flex-col items-center gap-12 md:gap-16" aria-label="Design principles">
         {PRINCIPLES.map((p, i) => (
-          <li key={p.number} className={cn(i < PRINCIPLES.length - 1 && 'mb-12 md:mb-14')}>
+          <li key={p.number} className="flex flex-col items-center gap-3 max-w-[40ch]">
 
             <motion.p
               {...fadeUp(0.05)}
-              className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] text-[var(--fg-subtle)] mb-5"
+              className="font-mono text-[var(--type-xs)] uppercase tracking-[0.14em] text-[var(--fg-subtle)]"
               aria-hidden="true"
             >
               {p.number}
             </motion.p>
 
-            {/* Title — clip reveal */}
-            <div className="overflow-hidden mb-6">
-              <motion.h3
-                className={cn(
-                  'font-display font-normal',
-                  'text-[var(--type-xl)] md:text-[var(--type-2xl)]',
-                  'leading-[1.1] tracking-[-0.028em]',
-                  'text-[var(--fg)] max-w-[32ch]'
-                )}
-                initial={reduced ? { opacity: 0 } : { clipPath: 'inset(0 0 100% 0)', opacity: 1 }}
-                whileInView={reduced ? { opacity: 1 } : { clipPath: 'inset(0 0 0% 0)', opacity: 1 }}
-                viewport={VP}
-                transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-              >
-                {p.title}
-              </motion.h3>
-            </div>
+            <motion.h3
+              {...fadeUp(0.08)}
+              className={cn(
+                'font-display font-medium',
+                'text-[var(--type-base)]',
+                'leading-[1.35] tracking-[0.005em]',
+                'text-[var(--fg)]'
+              )}
+            >
+              {p.title}
+            </motion.h3>
 
             <motion.p
               {...fadeUp(0.18)}
               className={cn(
-                'text-[var(--type-lg)] leading-[1.7] tracking-[-0.014em]',
-                'text-[var(--fg-muted)] max-w-[60ch] mb-5'
+                'text-[var(--type-sm)] leading-[1.65]',
+                'text-[var(--fg-muted)]'
               )}
             >
               {p.body}
@@ -96,7 +91,7 @@ export function Process() {
 
             <motion.p
               {...fadeUp(0.24)}
-              className="font-mono text-[var(--type-xs)] tracking-[-0.005em] text-[var(--fg-subtle)] italic"
+              className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] italic"
             >
               {p.example}
             </motion.p>
@@ -108,8 +103,8 @@ export function Process() {
         {...fadeUp(0.1)}
         className={cn(
           'font-display italic',
-          'text-[var(--type-lg)]',
-          'text-[var(--fg-muted)] max-w-[50ch] mt-12'
+          'text-[var(--type-sm)]',
+          'text-[var(--fg-muted)] max-w-[40ch] mx-auto mt-14'
         )}
       >
         Make this small thing work better — that, I can sign up for.

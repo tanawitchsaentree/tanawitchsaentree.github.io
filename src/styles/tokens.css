@@ -8,16 +8,17 @@
   --color-white: #FFFFFF;
   --color-black: #0A0A0A;
 
-  /* Typography scale — modular ratio 1.25 */
+  /* Typography scale — recalibrated for monospace (≈0.6em advance per glyph,
+     so display steps run physically wider than a proportional face). */
   --type-xs:   0.75rem;
   --type-sm:   0.875rem;
   --type-base: 1rem;
-  --type-lg:   1.125rem;
-  --type-xl:   1.5rem;
-  --type-2xl:  2rem;
-  --type-3xl:  3rem;
-  --type-4xl:  4.5rem;
-  --type-5xl:  7rem;
+  --type-lg:   1.0625rem;
+  --type-xl:   1.375rem;
+  --type-2xl:  1.75rem;
+  --type-3xl:  2.5rem;
+  --type-4xl:  3.5rem;
+  --type-5xl:  5rem;
 
   /* Spacing — 8pt grid */
   --space-1:  0.25rem;
@@ -43,10 +44,12 @@
   --max-content:    80rem;
   --max-reading:    65ch;
 
-  /* Easing */
-  --ease-out-quick:      cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in-out-natural: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-out-standard:   cubic-bezier(0.0, 0.0, 0.2, 1);
+  /* Easing — all four are design-system approved curves.
+     (No raw ease/linear/ease-out keywords; --ease-out-standard previously
+     held the banned material ease-out curve and was repointed to "Decisive".) */
+  --ease-out-quick:      cubic-bezier(0.22, 1, 0.36, 1);  /* Gentle — text reveals */
+  --ease-in-out-natural: cubic-bezier(0.65, 0, 0.35, 1);  /* Smooth-in-out — default */
+  --ease-out-standard:   cubic-bezier(0.16, 1, 0.3, 1);   /* Decisive — entrance/UI */
 
   /* Motion */
   --duration-fast:   180ms;

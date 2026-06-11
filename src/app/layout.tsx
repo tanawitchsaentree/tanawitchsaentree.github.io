@@ -1,5 +1,10 @@
 import type { Metadata } from 'next'
-import '@fontsource-variable/bricolage-grotesque'
+// Typewriter direction — JetBrains Mono is the single typeface (display + body + meta).
+import '@fontsource/jetbrains-mono/300.css'
+import '@fontsource/jetbrains-mono/400.css'
+import '@fontsource/jetbrains-mono/400-italic.css'
+import '@fontsource/jetbrains-mono/500.css'
+import '@fontsource/jetbrains-mono/700.css'
 import '../styles/globals.css'
 import { LenisProvider } from '@/components/providers/LenisProvider'
 import { CustomCursor } from '@/components/ui/CustomCursor'

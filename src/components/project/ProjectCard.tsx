@@ -88,9 +88,9 @@ export function ProjectCard({ project, isHero = false, onOpen, onNavigate }: Pro
               className={cn(
                 'font-display font-normal',
                 isHero
-                  ? 'text-[clamp(2rem,5vw,3.5rem)]'
-                  : 'text-[clamp(1.5rem,3vw,2.5rem)]',
-                'leading-[1.05] tracking-[-0.028em]',
+                  ? 'text-[clamp(1.75rem,4vw,3rem)]'
+                  : 'text-[clamp(1.375rem,2.6vw,2.25rem)]',
+                'leading-[1.1] tracking-[-0.02em]',
                 fgClass,
                 'max-w-[8ch]',
                 // Single geometric accent: index number top-right

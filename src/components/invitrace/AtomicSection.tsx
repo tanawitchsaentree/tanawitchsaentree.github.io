@@ -84,7 +84,7 @@ function TiltCard({ children, accent, isTarget, shaking }: {
         rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d', transformPerspective: 900,
         borderColor: isTarget ? accent : 'var(--border)',
         boxShadow: isTarget ? `0 0 0 2px ${accent}, 0 20px 48px ${accent}30` : '0 1px 0 var(--border)',
-        transition: 'border-color 0.15s, box-shadow 0.15s',
+        transition: 'border-color 0.15s var(--ease-out-quick), box-shadow 0.15s var(--ease-out-quick)',
       } as React.CSSProperties}
       animate={shaking ? { x: [0,-9,9,-7,7,-4,4,0] } : { x: 0 }}
       transition={shaking ? { duration: 0.45 } : { duration: 0.18 }}
@@ -127,7 +127,7 @@ function CardMedium({ t }: { t: Preset['tokens'] }) {
           <button
             key={a}
             type="button"
-            className="font-mono cursor-default leading-none transition-all duration-300"
+            className="font-mono cursor-default leading-none transition-[font-size,color,background-color,border-color,border-radius,padding] duration-300 ease-[var(--ease-out-quick)]"
             style={{
               padding: `${Math.round(sp*0.35)}px ${Math.round(sp*0.7)}px`,
               borderRadius: r,
@@ -213,7 +213,7 @@ function CardLarge({ t }: { t: Preset['tokens'] }) {
             className={cn('flex flex-col items-center justify-center', i < 3 && 'border-r border-[var(--border)]')}
             style={{ padding: `${sp*0.75}px ${sp*0.5}px` }}
           >
-            <span className="font-display font-medium leading-none transition-all duration-300" style={{ fontSize: fs + 8, color: s.color }}>{s.val}</span>
+            <span className="font-display font-medium leading-none transition-[font-size,color] duration-300 ease-[var(--ease-out-quick)]" style={{ fontSize: fs + 8, color: s.color }}>{s.val}</span>
             <span className="font-mono text-[var(--fg-subtle)] text-center leading-tight mt-1" style={{ fontSize: fs - 3 }}>{s.label}</span>
           </div>
         ))}
@@ -233,7 +233,7 @@ function CardLarge({ t }: { t: Preset['tokens'] }) {
             style={{ padding: `${sp*0.7}px ${sp}px` }}
           >
             <div>
-              <p className="font-sans text-[var(--fg)] leading-tight transition-all duration-300" style={{ fontSize: fs, fontWeight: fw }}>{p.name}</p>
+              <p className="font-sans text-[var(--fg)] leading-tight transition-[font-size] duration-300 ease-[var(--ease-out-quick)]" style={{ fontSize: fs, fontWeight: fw }}>{p.name}</p>
               <p className="font-mono text-[var(--fg-muted)] mt-0.5" style={{ fontSize: fs - 2 }}>{p.dept} · {p.ward} · Day {p.days}</p>
               <p className="font-mono text-[var(--fg-subtle)] mt-0.5" style={{ fontSize: fs - 2 }}>{p.dr}</p>
             </div>
@@ -269,7 +269,7 @@ function CardSpecialty({ t }: { t: Preset['tokens'] }) {
       {/* Current patient — large focus */}
       <div style={{ padding: `${sp*1.2}px ${sp}px`, background: `${color}08`, borderBottom: '1px solid var(--border)' }}>
         <p className="font-mono text-[var(--fg-subtle)] uppercase tracking-widest mb-1" style={{ fontSize: fs - 2 }}>Current patient</p>
-        <p className="font-display text-[var(--fg)] leading-tight transition-all duration-300" style={{ fontSize: bigFs, fontWeight: fw }}>Malee Pimchan</p>
+        <p className="font-display text-[var(--fg)] leading-tight transition-[font-size] duration-300 ease-[var(--ease-out-quick)]" style={{ fontSize: bigFs, fontWeight: fw }}>Malee Pimchan</p>
         <p className="font-mono text-[var(--fg-muted)] mt-0.5" style={{ fontSize: fs - 1 }}>F · 47 · Breast oncology</p>
 
         {/* Treatment progress */}
@@ -282,7 +282,7 @@ function CardSpecialty({ t }: { t: Preset['tokens'] }) {
             {[1,2,3,4,5].map(i => (
               <div
                 key={i}
-                className="flex-1 transition-all duration-300"
+                className="flex-1 transition-[height,border-radius,background-color] duration-300 ease-[var(--ease-out-quick)]"
                 style={{
                   height: density === 'spacious' ? 8 : 5,
                   borderRadius: r,
@@ -300,7 +300,7 @@ function CardSpecialty({ t }: { t: Preset['tokens'] }) {
         style={{ padding: `${sp*0.8}px ${sp}px` }}
       >
         <div
-          className="flex-shrink-0 flex items-center justify-center font-mono transition-all duration-300"
+          className="flex-shrink-0 flex items-center justify-center font-mono transition-[width,height,border-radius,font-size,background-color,color] duration-300 ease-[var(--ease-out-quick)]"
           style={{
             width: density === 'spacious' ? 44 : 36,
             height: density === 'spacious' ? 44 : 36,
@@ -420,7 +420,7 @@ export function AtomicSection() {
         <p className="font-mono text-[var(--type-xs)] uppercase tracking-widest text-[var(--accent-text)] mb-4">
           03 — Atomic structure
         </p>
-        <h2 id="atomic-heading" className="font-display font-normal leading-[1.05] tracking-[-0.032em] text-[clamp(1.75rem,4vw,3rem)] text-[var(--fg)] mb-4">
+        <h2 id="atomic-heading" className="font-display font-normal leading-[1.1] tracking-[-0.02em] text-[clamp(1.625rem,4vw,2.5rem)] text-[var(--fg)] mb-4">
           Three hospitals. Three structures. One system.
         </h2>
         <p className="text-[var(--type-base)] text-[var(--fg-muted)] leading-[1.7]">

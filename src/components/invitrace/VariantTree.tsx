@@ -380,7 +380,7 @@ export function VariantTree({ variants }: VariantTreeProps) {
                 {String(phase + 1).padStart(2, '0')} / 04
               </p>
               <h3 className={cn(
-                'font-display font-normal leading-[1.1] tracking-[-0.028em]',
+                'font-display font-normal leading-[1.1] tracking-[-0.02em]',
                 'text-[clamp(1.25rem,2.2vw,1.75rem)]',
                 'text-[var(--fg)]'
               )}>

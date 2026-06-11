@@ -60,7 +60,7 @@ export function UniverseHero() {
       <h1
         className={cn(
           'font-display font-normal',
-          'text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.04em]',
+          'text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] tracking-[-0.02em]',
           'text-[var(--fg)]',
           'max-w-[22ch] mb-6'
         )}

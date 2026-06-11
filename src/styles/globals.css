@@ -18,14 +18,19 @@
     visibility: visible;
   }
 
+  /* Typewriter highlight — selecting any text reads like a marked-up page. */
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+
   body {
-    font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
     font-size: var(--type-base);
     line-height: 1.6;
-    letter-spacing: -0.011em;
+    letter-spacing: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "cv01", "cv02", "cv11";
     margin: 0;
     padding: 0;
   }
@@ -52,10 +57,9 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
-    font-feature-settings: normal;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
     line-height: 1.1;
-    letter-spacing: -0.028em;
+    letter-spacing: -0.01em;
     color: var(--fg);
     margin: 0;
   }
@@ -166,12 +170,14 @@
 .universe-switcher__item {
   padding: 8px 16px;
   border-radius: 9999px;
-  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   font-size: var(--type-xs);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   cursor: pointer;
-  transition: all 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              background 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1);
   border: none;
   background: transparent;
 }
@@ -245,6 +251,42 @@ html.modal-open {
   overflow: hidden;
 }
 
+/* ─── Typewriter caret ──────────────────────────────────────── */
+/* Block caret in the accent color. Solid while typing (leading edge),
+   blinks once typing completes. Sized to the current font via `em`. */
+.tw-caret {
+  display: inline-block;
+  width: 0.56em;          /* ≈ one monospace advance */
+  height: 0.92em;
+  margin-right: 0.04em;
+  transform: translateY(0.08em);
+  background: var(--accent);
+  vertical-align: baseline;
+}
+
+.tw-caret--rest {
+  animation: tw-blink 1.06s steps(1, end) infinite;
+}
+
+/* Inline variant — caret as a hover affordance before a headline. */
+.tw-caret--inline {
+  margin-right: 0.18em;
+  transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tw-caret--off {
+  opacity: 0;
+}
+
+@keyframes tw-blink {
+  0%, 50%   { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tw-caret--rest { animation: none; opacity: 1; }
+}
+
 /* ─── Scroll hint animation ─────────────────────────────────── */
 @keyframes scroll-hint {
   0%, 100% { transform: translateY(0); }
@@ -252,7 +294,7 @@ html.modal-open {
 }
 
 .animate-scroll-hint {
-  animation: scroll-hint 2s ease-in-out infinite;
+  animation: scroll-hint 2s var(--ease-in-out-natural) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -268,14 +310,14 @@ html.modal-open {
 
 /* ─── Universe prose (SubCase content HTML) ─────────────────── */
 .prose-sub-case {
-  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   font-size: var(--type-base);
   line-height: 1.75;
   color: var(--fg-muted);
 }
 
 .prose-sub-case h2 {
-  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   font-weight: normal;
   font-size: var(--type-xl);
   line-height: 1.2;
@@ -286,7 +328,7 @@ html.modal-open {
 }
 
 .prose-sub-case h3 {
-  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   font-weight: 500;
   font-size: var(--type-base);
   color: var(--fg);
@@ -319,7 +361,7 @@ html.modal-open {
   content: "—";
   position: absolute;
   left: 0;
-  font-family: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   color: var(--accent-text);
 }
 

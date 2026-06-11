@@ -83,7 +83,7 @@ function ButtonPreview({ t }: { t: ResolvedTokens }) {
       <div className="flex items-center gap-3 flex-wrap">
         <button
           type="button"
-          className="font-mono transition-all duration-300 ease-out cursor-default select-none"
+          className="font-mono transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)] cursor-default select-none"
           style={{
             padding: `${Math.round(t.spacing * 0.55)}px ${Math.round(t.spacing * 1.4)}px`,
             borderRadius: t.radius,
@@ -98,7 +98,7 @@ function ButtonPreview({ t }: { t: ResolvedTokens }) {
         </button>
         <button
           type="button"
-          className="font-mono transition-all duration-300 ease-out cursor-default select-none"
+          className="font-mono transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)] cursor-default select-none"
           style={{
             padding: `${Math.round(t.spacing * 0.55)}px ${Math.round(t.spacing * 1.4)}px`,
             borderRadius: t.radius,
@@ -113,7 +113,7 @@ function ButtonPreview({ t }: { t: ResolvedTokens }) {
         </button>
         <button
           type="button"
-          className="font-mono transition-all duration-300 ease-out cursor-default select-none opacity-40"
+          className="font-mono transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)] cursor-default select-none opacity-40"
           style={{
             padding: `${Math.round(t.spacing * 0.55)}px ${Math.round(t.spacing * 1.4)}px`,
             borderRadius: t.radius,
@@ -139,23 +139,23 @@ function FieldPreview({ t }: { t: ResolvedTokens }) {
       <Label>Field</Label>
       <div className="flex flex-wrap gap-4 items-start">
         <div className="flex flex-col gap-1.5 min-w-[160px]">
-          <label htmlFor="inv-patient-id" className="font-mono text-[var(--fg-muted)] transition-all duration-300" style={{ fontSize: t.fontSize }}>
+          <label htmlFor="inv-patient-id" className="font-mono text-[var(--fg-muted)] transition-[font-size] duration-300 ease-[var(--ease-out-quick)]" style={{ fontSize: t.fontSize }}>
             Patient ID
           </label>
           <input
             id="inv-patient-id"
             readOnly
             value="TH-2024-0847"
-            className="font-mono bg-transparent border border-[var(--border)] text-[var(--fg)] focus:outline-none transition-all duration-300 ease-out"
+            className="font-mono bg-transparent border border-[var(--border)] text-[var(--fg)] focus:outline-none transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)]"
             style={{ padding: `${Math.round(sp * 0.55)}px ${Math.round(sp * 0.8)}px`, borderRadius: r, fontSize: t.fontSize }}
           />
         </div>
         <div className="flex flex-col gap-1.5 min-w-[160px]">
-          <span className="font-mono text-[var(--fg-muted)] transition-all duration-300" style={{ fontSize: t.fontSize }}>
+          <span className="font-mono text-[var(--fg-muted)] transition-[font-size] duration-300 ease-[var(--ease-out-quick)]" style={{ fontSize: t.fontSize }}>
             Ward
           </span>
           <div
-            className="font-mono transition-all duration-300 ease-out"
+            className="font-mono transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)]"
             style={{
               padding: `${Math.round(sp * 0.55)}px ${Math.round(sp * 0.8)}px`,
               borderRadius: r,
@@ -190,7 +190,7 @@ function TablePreview({ t }: { t: ResolvedTokens }) {
             {['ID', 'Patient', 'Status'].map(h => (
               <th
                 key={h}
-                className="text-left font-mono font-normal text-[var(--fg-subtle)] transition-all duration-300 ease-out"
+                className="text-left font-mono font-normal text-[var(--fg-subtle)] transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)]"
                 style={{ fontSize: t.fontSize, paddingBottom: `${rd}px`, paddingRight: '16px' }}
               >
                 {h}
@@ -202,20 +202,20 @@ function TablePreview({ t }: { t: ResolvedTokens }) {
           {ROWS.map(row => (
             <tr key={row.id} className="border-b border-[var(--border)] last:border-0">
               <td
-                className="font-mono text-[var(--fg-muted)] transition-all duration-300 ease-out"
+                className="font-mono text-[var(--fg-muted)] transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)]"
                 style={{ fontSize: t.fontSize, padding: `${rd}px 16px ${rd}px 0` }}
               >
                 {row.id}
               </td>
               <td
-                className="font-mono text-[var(--fg)] transition-all duration-300 ease-out"
+                className="font-mono text-[var(--fg)] transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)]"
                 style={{ fontSize: t.fontSize, padding: `${rd}px 16px ${rd}px 0` }}
               >
                 {row.name}
               </td>
-              <td className="transition-all duration-300 ease-out" style={{ padding: `${rd}px 0` }}>
+              <td className="transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)]" style={{ padding: `${rd}px 0` }}>
                 <span
-                  className="font-mono transition-all duration-300 ease-out"
+                  className="font-mono transition-[font-size,padding,border-radius,background-color,color,border-color] duration-300 ease-[var(--ease-out-quick)]"
                   style={{
                     padding: `2px 8px`,
                     borderRadius: Math.round(t.radius * 0.5),
@@ -308,10 +308,10 @@ function TokenPanel({
                   type="button"
                   onClick={() => shake(key)}
                   animate={isShaking ? { x: [0, -5, 5, -5, 5, -2, 2, 0] } : { x: 0 }}
-                  transition={{ duration: 0.45, ease: 'easeOut' }}
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                   className={cn(
                     'w-full flex items-center justify-between gap-3',
-                    'px-3 py-2.5 border text-left transition-all duration-150',
+                    'px-3 py-2.5 border text-left transition-colors duration-150',
                     isShaking
                       ? 'border-[var(--fg-muted)] bg-[var(--bg-elevated)]'
                       : 'border-[var(--border)] hover:border-[var(--fg-subtle)] cursor-not-allowed'
@@ -379,7 +379,7 @@ export function EngineSection() {
       {/* Range slider reset */}
       <style dangerouslySetInnerHTML={{ __html: `
         .inv-range { -webkit-appearance: none; appearance: none; height: 1px; background: var(--border); outline: none; display: block; }
-        .inv-range::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--fg); cursor: pointer; transition: transform 0.12s; }
+        .inv-range::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--fg); cursor: pointer; transition: transform 0.12s var(--ease-out-quick); }
         .inv-range::-webkit-slider-thumb:hover { transform: scale(1.35); }
         .inv-range::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--fg); cursor: pointer; border: none; }
       `}} />
@@ -393,8 +393,8 @@ export function EngineSection() {
           <h2
             id="engine-heading"
             className={cn(
-              'font-display font-normal leading-[1.05] tracking-[-0.032em]',
-              'text-[clamp(1.75rem,4vw,3rem)] text-[var(--fg)] max-w-[28ch]'
+              'font-display font-normal leading-[1.1] tracking-[-0.02em]',
+              'text-[clamp(1.625rem,4vw,2.5rem)] text-[var(--fg)] max-w-[28ch]'
             )}
           >
             Same system. Three hospitals.

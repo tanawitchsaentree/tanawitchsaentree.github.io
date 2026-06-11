@@ -102,7 +102,7 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.4, ease: [0.65, 0, 0.35, 1] } }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--bg)]"
             aria-modal="true"
             role="dialog"
@@ -151,8 +151,8 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
                 <h1
                   id="gate-title"
                   className={cn(
-                    'font-display font-normal leading-[1.1] tracking-[-0.03em]',
-                    'text-[clamp(1.5rem,3vw,2rem)]',
+                    'font-display font-normal leading-[1.1] tracking-[-0.02em]',
+                    'text-[clamp(1.375rem,2.6vw,1.75rem)]',
                     'text-[var(--fg)] mb-2'
                   )}
                 >
@@ -209,7 +209,7 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
                     className={cn(
                       'px-5 py-3',
                       'font-sans text-[var(--type-sm)] font-medium',
-                      'border transition-all duration-[200ms]',
+                      'border transition-[background-color,border-color,opacity] duration-[200ms]',
                       'disabled:opacity-40 disabled:cursor-not-allowed',
                       state === 'success'
                         ? 'bg-[var(--accent)] border-[var(--accent)] text-[var(--fg)]'
@@ -349,7 +349,7 @@ function SpinnerIcon() {
       strokeWidth="2.5"
       strokeLinecap="round"
       animate={{ rotate: 360 }}
-      transition={{ duration: 0.7, repeat: Infinity, ease: 'linear' }}
+      transition={{ duration: 0.7, repeat: Infinity, ease: [0.65, 0, 0.35, 1] }}
     >
       <path d="M12 2a10 10 0 0 1 10 10" />
     </motion.svg>

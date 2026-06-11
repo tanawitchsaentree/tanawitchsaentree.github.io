@@ -187,7 +187,7 @@ export function SubCaseShell({
       <h2
         className={cn(
           'font-display font-normal',
-          'text-[clamp(1.75rem,4vw,3rem)] leading-[1.05] tracking-[-0.032em]',
+          'text-[clamp(1.5rem,3.4vw,2.5rem)] leading-[1.1] tracking-[-0.02em]',
           'text-[var(--fg)] mb-4 max-w-[80rem]'
         )}
       >

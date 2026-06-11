@@ -6,6 +6,7 @@ import { cn } from '@/lib/cn'
 import type { ProjectFrontmatter } from '@/types/project'
 import { ProjectRow } from '@/components/project/ProjectRow'
 import { CyclingIndex } from '@/components/project/CyclingIndex'
+import { MorphText } from '@/components/ui/MorphText'
 
 // ── Side project data ─────────────────────────────────────────────────────────
 const SIDE_PROJECTS = [
@@ -34,7 +35,7 @@ function TabSwitch({ active, onChange }: { active: Tab; onChange: (t: Tab) => vo
           className={cn(
             'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
             'bg-transparent border-none p-0 cursor-pointer',
-            'transition-colors duration-[220ms] ease-out',
+            'transition-colors duration-[220ms] ease-[var(--ease-out-quick)]',
             active === tab
               ? 'text-[var(--fg)]'
               : 'text-[var(--fg-subtle)] hover:text-[var(--fg-muted)]'
@@ -54,59 +55,28 @@ function SideProjectRow({ project, index }: { project: typeof SIDE_PROJECTS[numb
   const inner = (
     <div
       className={cn(
-        'flex items-baseline justify-between gap-6',
-        'py-4 md:py-5 px-4 rounded-xl -mx-4',
-        'transition-colors duration-[220ms] ease-out',
-        hovered ? 'bg-[var(--bg-elevated)]' : 'bg-transparent',
+        'flex flex-col items-center gap-1.5 py-6 px-4',
         project.href ? 'cursor-pointer' : 'cursor-default'
       )}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="flex flex-col gap-2 min-w-0">
-        <div className="flex items-center gap-4">
-          <span className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] text-[var(--fg-subtle)]">
-            {String(index + 1).padStart(2, '0')} / {String(SIDE_PROJECTS.length).padStart(2, '0')}
-          </span>
-          <span className="flex-1 h-px bg-[var(--border)] opacity-40" aria-hidden="true" />
-          <span className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] text-[var(--fg-subtle)]">
-            {project.year}
-          </span>
-        </div>
+      <span className={cn(
+        'font-mono text-[var(--type-xs)] uppercase tracking-[0.14em]',
+        'transition-colors duration-[220ms]',
+        hovered ? 'text-[var(--fg-muted)]' : 'text-[var(--fg-subtle)]'
+      )}>
+        {project.name} · {project.year}
+      </span>
 
-        <span className={cn(
-          'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
-          'transition-colors duration-[220ms]',
-          hovered ? 'text-[var(--fg)]' : 'text-[var(--fg-muted)]'
-        )}>
-          {project.name}
-        </span>
+      <h3 className="font-display font-medium text-[var(--type-base)] leading-[1.35] tracking-[0.005em] text-[var(--fg)] max-w-[34ch]">
+        <MorphText text={project.tagline} active={hovered} />
+      </h3>
 
-        <h3 className={cn(
-          'font-display font-normal leading-[1.05] tracking-[-0.028em]',
-          'text-[clamp(1.2rem,3vw,2.75rem)]',
-          'text-[var(--fg)]'
-        )}>
-          {project.tagline}
-        </h3>
-
-        <p className="text-[var(--type-sm)] text-[var(--fg-muted)] leading-[1.5]">
-          {project.tags.join(' · ')}
-          <span className={cn(
-            'ml-4 font-mono text-[var(--type-xs)] uppercase tracking-[0.08em]',
-            'text-[var(--fg-subtle)]'
-          )}>
-            {project.status}
-          </span>
-        </p>
-      </div>
-
-      {project.href && (
-        <span className={cn(
-          'font-mono text-[var(--type-xs)] transition-opacity duration-[220ms]',
-          hovered ? 'opacity-60' : 'opacity-0'
-        )} aria-hidden="true">↗</span>
-      )}
+      <p className="text-[var(--type-xs)] text-[var(--fg-subtle)] leading-[1.5]">
+        {project.tags.join(' · ')} · {project.status}
+        {project.href && <span aria-hidden="true"> ↗</span>}
+      </p>
     </div>
   )
 
@@ -141,10 +111,10 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
     <section
       id="work"
       aria-labelledby="work-heading"
-      className={cn('py-14 md:py-20', 'px-8 md:px-12 lg:px-16')}
+      className={cn('py-16 md:py-24', 'text-center')}
     >
       {/* Tab switch */}
-      <div className="mb-8">
+      <div className="mb-10 flex justify-center">
         <TabSwitch active={tab} onChange={t => { setTab(t); setShowAll(false) }} />
       </div>
 
@@ -175,26 +145,19 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
             </ul>
 
             {secondary.length > 0 && (
-              <div className="mt-6">
+              <div className="mt-10 flex justify-center">
                 <button
                   type="button"
                   onClick={() => setShowAll(v => !v)}
                   className={cn(
-                    'flex items-center gap-3 cursor-pointer',
-                    'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
+                    'cursor-pointer',
+                    'font-mono text-[var(--type-xs)] uppercase tracking-[0.14em]',
                     'text-[var(--fg-subtle)] hover:text-[var(--fg-muted)]',
-                    'transition-colors duration-[240ms] ease-out',
+                    'transition-colors duration-[240ms] ease-[var(--ease-out-quick)]',
                     'bg-transparent border-none p-0'
                   )}
                 >
-                  <span
-                    className={cn(
-                      'inline-block h-px bg-current transition-all duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
-                      showAll ? 'w-6' : 'w-2'
-                    )}
-                    aria-hidden="true"
-                  />
-                  {showAll ? 'Show less' : `+ ${secondary.length} more`}
+                  {showAll ? '— Show less' : `+ ${secondary.length} more`}
                 </button>
               </div>
             )}

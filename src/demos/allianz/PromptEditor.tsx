@@ -137,7 +137,7 @@ export function PromptEditor() {
           {/* Clickable rule token */}
           <button
             type="button"
-            className="relative font-mono font-medium rounded px-1.5 py-0.5 border cursor-pointer transition-all"
+            className="relative font-mono font-medium rounded px-1.5 py-0.5 border cursor-pointer transition-[color,background,border-color]"
             style={{
               fontSize: 'inherit',
               color: 'var(--accent-text)',
@@ -174,7 +174,7 @@ export function PromptEditor() {
               key={key}
               type="button"
               onClick={() => select(key)}
-              className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] px-3 py-1.5 rounded border transition-all cursor-pointer"
+              className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] px-3 py-1.5 rounded border transition-[color,background,border-color] cursor-pointer"
               style={{
                 background: active === key ? 'var(--fg)' : 'transparent',
                 color: active === key ? 'var(--bg)' : 'var(--fg-subtle)',

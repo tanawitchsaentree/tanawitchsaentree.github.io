@@ -6,10 +6,11 @@ import { cn } from '@/lib/cn'
 import { CookModeShift } from '@/demos/stellareat'
 import { FridgeEntry } from '@/demos/stellareat/FridgeEntry'
 import { CommunityOwnership } from '@/demos/stellareat/CommunityOwnership'
+import { DecodeText } from '@/components/ui/DecodeText'
 
-// ── Font constants (PP Editorial New + PP Neue Montreal per design system) ──
-const FONT_DISPLAY = "'PP Editorial New', 'Cormorant Garamond', Georgia, serif"
-const FONT_BODY    = "'PP Neue Montreal', 'JetBrains Mono', monospace"
+// ── Typewriter direction: one face = JetBrains Mono (per design system) ──
+const FONT_DISPLAY = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
+const FONT_BODY    = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
 
 // ── Back navigation (exact same pattern as UniverseHero / InvitraceClient) ──
 function BackLink() {
@@ -111,15 +112,15 @@ function HeroSection() {
           className="mb-4"
           style={{
             fontFamily:    FONT_DISPLAY,
-            fontWeight:    200,
-            fontSize:      'clamp(48px, 7vw, 96px)',
+            fontWeight:    400,
+            fontSize:      'clamp(36px, 5.2vw, 68px)',
             letterSpacing: '-0.02em',
-            lineHeight:    1.05,
+            lineHeight:    1.08,
             color:         'var(--fg)',
-            maxWidth:      '20ch',
+            maxWidth:      '24ch',
           }}
         >
-          The AI doesn&apos;t need you to know what you want.
+          <DecodeText text="The AI doesn't need you to know what you want." />
         </h1>
 
         {/* Sub-headline */}
@@ -127,11 +128,10 @@ function HeroSection() {
           className="mb-10"
           style={{
             fontFamily:    FONT_DISPLAY,
-            fontWeight:    200,
-            fontStyle:     'italic',
-            fontSize:      'clamp(24px, 3vw, 40px)',
-            letterSpacing: '-0.01em',
-            lineHeight:    1.2,
+            fontWeight:    400,
+            fontSize:      'clamp(20px, 2.6vw, 30px)',
+            letterSpacing: '-0.02em',
+            lineHeight:    1.25,
             color:         'var(--fg-muted)',
           }}
         >
@@ -204,11 +204,10 @@ function EntrySection() {
             className="mb-8"
             style={{
               fontFamily:    FONT_DISPLAY,
-              fontWeight:    200,
-              fontStyle:     'italic',
-              fontSize:      'clamp(28px, 4vw, 52px)',
+              fontWeight:    400,
+              fontSize:      'clamp(22px, 3vw, 40px)',
               letterSpacing: '-0.02em',
-              lineHeight:    1.1,
+              lineHeight:    1.2,
               color:         'var(--fg)',
             }}
           >
@@ -255,11 +254,10 @@ function CookModeSection() {
             className="mb-8"
             style={{
               fontFamily:    FONT_DISPLAY,
-              fontWeight:    200,
-              fontStyle:     'italic',
-              fontSize:      'clamp(28px, 4vw, 52px)',
+              fontWeight:    400,
+              fontSize:      'clamp(22px, 3vw, 40px)',
               letterSpacing: '-0.02em',
-              lineHeight:    1.1,
+              lineHeight:    1.2,
               color:         'var(--fg)',
             }}
           >
@@ -306,11 +304,10 @@ function CommunitySection() {
             className="mb-8"
             style={{
               fontFamily:    FONT_DISPLAY,
-              fontWeight:    200,
-              fontStyle:     'italic',
-              fontSize:      'clamp(28px, 4vw, 52px)',
+              fontWeight:    400,
+              fontSize:      'clamp(22px, 3vw, 40px)',
               letterSpacing: '-0.02em',
-              lineHeight:    1.1,
+              lineHeight:    1.2,
               color:         'var(--fg)',
             }}
           >
@@ -371,10 +368,10 @@ function ClosingSection() {
           className="mb-3"
           style={{
             fontFamily:    FONT_DISPLAY,
-            fontWeight:    200,
-            fontSize:      'clamp(32px, 4vw, 56px)',
+            fontWeight:    400,
+            fontSize:      'clamp(26px, 3.2vw, 42px)',
             letterSpacing: '-0.02em',
-            lineHeight:    1.1,
+            lineHeight:    1.2,
             color:         'var(--fg)',
           }}
         >
@@ -385,11 +382,10 @@ function ClosingSection() {
           className="mb-16"
           style={{
             fontFamily:    FONT_DISPLAY,
-            fontWeight:    200,
-            fontStyle:     'italic',
-            fontSize:      'clamp(18px, 2.5vw, 28px)',
-            letterSpacing: '-0.01em',
-            lineHeight:    1.3,
+            fontWeight:    400,
+            fontSize:      'clamp(16px, 2vw, 22px)',
+            letterSpacing: '-0.02em',
+            lineHeight:    1.35,
             color:         'var(--fg-muted)',
           }}
         >
@@ -476,10 +472,10 @@ function UnresolvedSection() {
                 className="mb-3"
                 style={{
                   fontFamily:    FONT_DISPLAY,
-                  fontWeight:    200,
-                  fontSize:      'clamp(20px, 2.5vw, 28px)',
-                  letterSpacing: '-0.01em',
-                  lineHeight:    1.15,
+                  fontWeight:    500,
+                  fontSize:      'clamp(18px, 2.2vw, 24px)',
+                  letterSpacing: '-0.02em',
+                  lineHeight:    1.2,
                   color:         'var(--fg)',
                 }}
               >

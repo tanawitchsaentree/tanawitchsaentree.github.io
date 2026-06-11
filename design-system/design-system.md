@@ -4,55 +4,81 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
 
 ## Color tokens
 
-### Light mode
-- Background: #F4F1EA (warm cream)
-- Surface (cards/panels): #EBE6DB
-- Text primary: #1A1714
-- Text muted: #6B6358
-- Accent: #C4421C (deep ochre red)
-- Hairline border: #D4CFC2
+> **Direction: paper + highlighter.** The typewriter concept reads as a clean
+> typewritten page (paper white / near-black ink) marked up with a single
+> highlighter (electric yellow). The yellow is reserved for marks that "ink" the
+> page: text selection, the typing caret, and deliberately highlighted words —
+> never for large fills. Source of truth is `src/styles/tokens.css`.
+
+### Light mode (paper)
+- Background: #FFFFFF (paper white)
+- Surface (cards/panels): #F5F5F5 — `--bg-elevated`
+- Surface muted: #EBEBEB — `--bg-muted`
+- Text primary (ink): #0A0A0A
+- Text muted: #444444
+- Text subtle: #888888
+- Accent (highlighter): #FFE500
+- Accent on-fill text: #0A0A0A — `--accent-fg`
+- Accent text (AA on white): #7A5F00 — `--accent-text`, use when yellow text needs contrast
+- Hairline border: #E0E0E0
 
 ### Dark mode
-- Background: #1A1714
-- Surface: #252119
-- Text primary: #F4F1EA
-- Text muted: #8A8275
-- Accent: #E6804A (warm coral)
-- Hairline border: #3A3530
+- Background: #0A0A0A
+- Surface: #161616 — `--bg-elevated`
+- Surface muted: #1F1F1F — `--bg-muted`
+- Text primary: #FFFFFF
+- Text muted: #AAAAAA
+- Text subtle: #666666
+- Accent (highlighter): #FFE500
+- Accent text (readable on dark): #FFD000 — `--accent-text`
+- Hairline border: #2A2A2A
 
 ### Hard rules
-- ❌ Pure white (#FFF) or pure black (#000) — never
-- ❌ Cool grays (#808080-ish) — never
-- ❌ Bright yellow (#FFE500 or similar) — replaced by ochre accent
-- ❌ More than one accent color per page
+- ❌ More than one accent color per page — yellow is the only mark
+- ❌ Yellow as a large background fill — it's a highlighter, used on marks only
+  (selection, caret, highlighted words, single inline tags)
+- ❌ Cool grays (#808080-ish) — the neutral ramp is the warm-neutral ladder above
+- ❌ Yellow text on white without using `--accent-text` (#7A5F00) — fails contrast
+- ❌ Hardcoding hex in components — always reference the token variable
 
 ## Typography
 
+> **Direction: Typewriter / monospace (เครื่องพิมพ์ดีด).** The entire site is set in
+> one monospace face. Hierarchy comes from **size, weight, and case** — never from a
+> second typeface. Monospace glyphs carry ~0.6em advance width, so display sizes run
+> physically wider than a proportional face: keep the scale restrained and tracking
+> near-neutral. This direction deliberately supersedes the earlier serif spec.
+
+### The one typeface
+- Font: **JetBrains Mono** (weights 300 / 400 / 500 / 700)
+- Fallback: `ui-monospace`, `SFMono-Regular`, `monospace`
+- Used for display, body, eyebrows, meta — everything
+
 ### Display (headings, hero, thesis)
-- Font: PP Editorial New Ultralight (200)
-- Fallback: Cormorant Garamond 300, Fraunces 200
-- Letter-spacing: -0.02em
-- Line-height: 1.05 for hero, 1.1 for sub-headings
-- Sizes:
-  - Hero display: clamp(64px, 10vw, 140px)
-  - Sub-case thesis: clamp(48px, 7vw, 96px)
-  - Principle name: clamp(32px, 4vw, 56px)
+- Weight: 400 (regular) — let scale, not weight, carry the hero
+- Letter-spacing: -0.02em hero, -0.015em sub-headings (mono is already wide; never crush it)
+- Line-height: 1.05 hero, 1.15 sub-headings
+- Sizes (token-driven — see `tokens.css`):
+  - Hero display: clamp(2rem, 5.5vw, 4.5rem)
+  - Sub-case thesis: clamp(1.5rem, 4vw, 3rem)
+  - Principle name: clamp(1.375rem, 3vw, 2.5rem)
 
 ### Body (paragraphs, button labels, eyebrows)
-- Font: PP Neue Montreal (regular 400)
-- Fallback: JetBrains Mono, Söhne Mono
-- Line-height: 1.55 body, 1.2 eyebrow
+- Weight: 400 body, 500 for emphasis
+- Letter-spacing: 0 body, 0.1em eyebrow/meta (uppercase)
+- Line-height: 1.6 body, 1.2 eyebrow
 - Sizes:
-  - Body: 19px desktop / 17px mobile
-  - Button label: 14px uppercase, letter-spacing 0.05em
-  - Eyebrow: 12px uppercase, letter-spacing 0.15em
-  - Footer/meta: 11px
+  - Body: 17px desktop / 16px mobile
+  - Button label: 14px uppercase, letter-spacing 0.1em
+  - Eyebrow: 12px uppercase, letter-spacing 0.1–0.15em
+  - Footer/meta: 11–12px
 
 ### Hard rules
 - ❌ Inter, Geist, Geist Mono, system-ui — never (default AI feel)
+- ❌ Any second typeface — the site is mono-only; hierarchy = size/weight/case
 - ❌ Text smaller than 16px outside of meta/eyebrow
 - ❌ More than 3 typographic hierarchies in a single column
-- ❌ Sans-serif for display headings (must be serif)
+- ❌ Tracking tighter than -0.02em on mono (cramps the glyphs)
 
 ## Spacing
 

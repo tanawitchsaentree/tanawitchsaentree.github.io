@@ -175,7 +175,7 @@ export function ProjectModal({ project, content: _content, onClose }: ProjectMod
                   id="modal-title"
                   className={cn(
                     'font-display font-normal',
-                    'text-[var(--type-3xl)] leading-[1.1] tracking-[-0.028em]',
+                    'text-[var(--type-3xl)] leading-[1.1] tracking-[-0.02em]',
                     'text-[var(--fg)] mb-8'
                   )}
                 >

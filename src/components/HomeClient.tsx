@@ -10,6 +10,7 @@ import { Process } from '@/components/sections/Process'
 import { Contact } from '@/components/sections/Contact'
 import { ProjectModal } from '@/components/project/ProjectModal'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { Typewriter } from '@/components/ui/Typewriter'
 import { cn } from '@/lib/cn'
 import type { ProjectFrontmatter } from '@/types/project'
 
@@ -39,111 +40,38 @@ function LiveTime() {
   return <span>{time}</span>
 }
 
-// ── Section nav ────────────────────────────────────────────────
-const SECTIONS = [
-  { id: 'work',    label: 'Work'    },
-  { id: 'about',   label: 'About'   },
-  { id: 'process', label: 'Process' },
-  { id: 'contact', label: 'Contact' },
-] as const
-
-type SectionId = typeof SECTIONS[number]['id']
-
-function LeftNav() {
-  const [active, setActive] = useState<SectionId>('work')
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      entries => { entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id as SectionId) }) },
-      { root: null, rootMargin: '-40% 0px -55% 0px' }
-    )
-    SECTIONS.forEach(({ id }) => {
-      const el = document.getElementById(id)
-      if (el) obs.observe(el)
-    })
-    return () => obs.disconnect()
-  }, [])
-
-  function scrollTo(id: string) {
-    const el = document.getElementById(id)
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    el.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' })
-    setActive(id as SectionId)
-  }
-
+function Identity() {
   return (
-    <nav aria-label="Page sections">
-      <ul className="list-none m-0 p-0 flex flex-col gap-1 items-end">
-        {SECTIONS.map(({ id, label }) => {
-          const isActive = active === id
-          return (
-            <li key={id}>
-              <button
-                type="button"
-                onClick={() => scrollTo(id)}
-                aria-current={isActive ? 'location' : undefined}
-                className={cn(
-                  'flex items-center gap-3 py-1.5 cursor-pointer text-right',
-                  'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
-                  'transition-colors duration-[240ms] ease-out',
-                  isActive ? 'text-[var(--fg)]' : 'text-[var(--fg-subtle)] hover:text-[var(--fg-muted)]'
-                )}
-              >
-                {label}
-                <span
-                  className={cn(
-                    'inline-block h-px transition-all duration-[320ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
-                    'bg-current',
-                    isActive ? 'w-6' : 'w-2'
-                  )}
-                  aria-hidden="true"
-                />
-              </button>
-            </li>
-          )
-        })}
-      </ul>
-    </nav>
-  )
-}
-
-function LeftIdentity() {
-  return (
-    <div className="flex flex-col gap-6">
-      {/* Hierarchy 1 — Display: name */}
-      <div>
+    <div className="flex flex-col items-center gap-5 text-center">
+      {/* Name — distinguished by weight, not size. Nothing on the page is "big". */}
+      <div className="flex flex-col items-center gap-2">
         <p className={cn(
-          'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
-          'text-[var(--fg-subtle)] mb-3'
+          'font-mono text-[var(--type-xs)] uppercase tracking-[0.18em]',
+          'text-[var(--fg-subtle)]'
         )}>
           Portfolio
         </p>
         <h1
           className={cn(
-            'font-display font-normal',
-            'text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.02] tracking-[-0.036em]',
+            'font-display font-medium',
+            'text-[var(--type-base)] leading-[1.3] tracking-[0.01em]',
             'text-[var(--fg)]'
           )}
         >
-          Tanawitch
-          <br />
-          Saentree
+          <Typewriter
+            lines={[[{ text: 'Tanawitch Saentree' }]]}
+            startDelay={500}
+            speed={64}
+          />
         </h1>
       </div>
 
-      {/* Hierarchy 2 — Body: tagline + role + experience at same weight */}
-      <div className="flex flex-col gap-2">
-        <p className={cn(
-          'text-[var(--type-sm)] leading-[1.5] tracking-[-0.005em]',
-          'text-[var(--fg-muted)]'
-        )}>
+      {/* Body — all one quiet size */}
+      <div className="flex flex-col items-center gap-1.5 max-w-[34ch]">
+        <p className="text-[var(--type-sm)] leading-[1.6] text-[var(--fg-muted)]">
           Designer for regulated systems.
         </p>
-        <p className={cn(
-          'text-[var(--type-sm)] leading-[1.5] tracking-[-0.005em]',
-          'text-[var(--fg-muted)]'
-        )}>
+        <p className="text-[var(--type-sm)] leading-[1.6] text-[var(--fg-muted)]">
           Senior Designer at{' '}
           <span style={{
             background:    'var(--accent)',
@@ -153,24 +81,18 @@ function LeftIdentity() {
             borderRadius:  '2px',
           }}>Allianz Technology</span>.
         </p>
-        <p className={cn(
-          'text-[var(--type-sm)] leading-[1.5] tracking-[-0.005em]',
-          'text-[var(--fg-muted)]'
-        )}>
-          8 years · Allianz · Invitrace · DoctorAnywhere
-        </p>
       </div>
 
-      {/* Hierarchy 3 — Mono small: sector tags */}
+      {/* Sector tags */}
       <p className={cn(
-        'font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]',
+        'font-mono text-[var(--type-xs)] uppercase tracking-[0.14em]',
         'text-[var(--fg-subtle)]'
       )}>
         Insurance · Healthcare · Fintech
       </p>
 
       {/* Social links */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-center gap-5">
         {[
           { label: 'LinkedIn', href: 'https://linkedin.com/in/tanawitchsaentree' },
           { label: 'Behance',  href: 'https://behance.net/tanawitchsaentree' },
@@ -248,26 +170,23 @@ export function HomeClient({ projects }: HomeClientProps) {
     <>
       <Nav rightRef={rightRef} />
 
-      <div className="split-layout">
+      {/* Single centered column — generous empty margins both sides. */}
+      <div className="mx-auto w-full max-w-[34rem] px-6">
 
-        {/* ── LEFT PANEL ──────────────────────────────────────── */}
-        <motion.aside
-          className="split-left"
+        {/* Identity — full-height, vertically + horizontally centered hero */}
+        <motion.header
           aria-label="Site identity"
-          initial={{ opacity: 0, x: -16 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="min-h-svh flex flex-col items-center justify-center gap-10 py-20"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Spacer pushes identity to vertical center */}
-          <div className="flex-1" />
-          <LeftIdentity />
-          <div className="flex-1" />
+          <Identity />
 
-          {/* Bottom: time + theme */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col items-center gap-4">
             <div className={cn(
               'font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]',
-              'tracking-widest uppercase flex items-center gap-3'
+              'tracking-[0.14em] uppercase flex items-center gap-3'
             )}>
               <span>Bangkok</span>
               <span aria-hidden="true">·</span>
@@ -277,22 +196,11 @@ export function HomeClient({ projects }: HomeClientProps) {
             </div>
             <ThemeToggle />
           </div>
-        </motion.aside>
+        </motion.header>
 
-        {/* Nav — fixed right edge, vertical center */}
-        <motion.div
-          className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-40"
-          initial={{ opacity: 0, x: 16 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <LeftNav />
-        </motion.div>
-
-        {/* ── RIGHT PANEL ─────────────────────────────────────── */}
-        <motion.div
+        {/* Content — same centered column */}
+        <motion.main
           ref={rightRef}
-          className="split-right"
           id="main-content"
           tabIndex={-1}
           initial={{ opacity: 0 }}
@@ -307,7 +215,7 @@ export function HomeClient({ projects }: HomeClientProps) {
           <About />
           <Process />
           <Contact />
-        </motion.div>
+        </motion.main>
 
       </div>
 

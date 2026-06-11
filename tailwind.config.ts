@@ -6,9 +6,10 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Bricolage Grotesque Variable', 'system-ui', 'sans-serif'],
-        sans:    ['Bricolage Grotesque Variable', 'system-ui', 'sans-serif'],
-        mono:    ['Bricolage Grotesque Variable', 'system-ui', 'sans-serif'],
+        // Typewriter direction — one monospace face across the entire site.
+        display: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        sans:    ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        mono:    ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       colors: {
         bg: 'var(--bg)',

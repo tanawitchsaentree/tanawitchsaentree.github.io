@@ -4,6 +4,7 @@ import { SubCaseGimmick } from '@/components/allianz/SubCaseInteractive'
 import { SubCaseShell } from '@/components/allianz/SubCaseShell'
 import { DiagramVault } from '@/components/allianz/DiagramVault'
 import { getUniverseSubCases } from '@/lib/universes'
+import { DecodeText } from '@/components/ui/DecodeText'
 import { cn } from '@/lib/cn'
 
 export const dynamic = 'force-static'
@@ -120,11 +121,11 @@ function ClosingSection() {
         id="closing-heading"
         className={cn(
           'font-display font-normal',
-          'text-[clamp(1.75rem,4vw,3rem)] leading-[1.05] tracking-[-0.032em]',
+          'text-[clamp(1.5rem,3.4vw,2.5rem)] leading-[1.1] tracking-[-0.02em]',
           'text-[var(--fg)] mb-4 max-w-[32ch]'
         )}
       >
-        Three layers. One system.
+        <DecodeText text="Three layers. One system." />
         <br />
         <em className="not-italic text-[var(--fg-muted)]">Fix one, the other two still break.</em>
       </h2>
@@ -182,7 +183,7 @@ function ClosingSection() {
                 </span>
                 <span className={cn(
                   'font-display font-normal italic',
-                  'text-[var(--type-xl)] leading-[1.1] tracking-[-0.024em]',
+                  'text-[var(--type-xl)] leading-[1.1] tracking-[-0.02em]',
                   'text-[var(--fg)]'
                 )}>
                   {p.name}

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { UniverseClient } from '@/components/universe/UniverseClient'
+import { DecodeText } from '@/components/ui/DecodeText'
 import { getUniverseSubCases } from '@/lib/universes'
 import { cn } from '@/lib/cn'
 
@@ -39,7 +40,7 @@ function UniverseNav() {
             className={cn(
               'px-4 py-2 rounded-full no-underline',
               'font-mono text-[var(--type-xs)] uppercase tracking-widest',
-              'transition-all duration-[240ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]',
+              'transition-colors duration-[240ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]',
               isActive
                 ? 'bg-[var(--bg-elevated)] text-[var(--fg)] shadow-[var(--shadow-sm)]'
                 : 'text-[var(--fg-muted)] hover:text-[var(--fg)]'
@@ -170,16 +171,16 @@ export default function ProfitaPage() {
           FINTECH · CONSUMER UX
         </p>
 
-        {/* Headline */}
+        {/* Headline — signature DecodeText lock-on */}
         <h1
           className={cn(
             'font-display font-normal',
-            'text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-[-0.04em]',
+            'text-[clamp(2rem,4.5vw,3.75rem)] leading-[1.05] tracking-[-0.02em]',
             'text-[var(--fg)]',
             'max-w-[22ch] mb-6'
           )}
         >
-          Profita
+          <DecodeText text="Profita" />
         </h1>
 
         {/* Pull line */}
@@ -362,7 +363,7 @@ async function SubCaseSection({
         <h2
           className={cn(
             'font-display font-normal',
-            'text-[clamp(1.75rem,4vw,3rem)] leading-[1.05] tracking-[-0.032em]',
+            'text-[clamp(1.5rem,3.5vw,2.5rem)] leading-[1.15] tracking-[-0.02em]',
             'text-[var(--fg)] mb-[var(--space-16)]'
           )}
         >

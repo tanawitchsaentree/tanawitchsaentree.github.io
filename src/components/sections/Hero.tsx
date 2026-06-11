@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/cn'
+import { Typewriter } from '@/components/ui/Typewriter'
 
 function LiveTime() {
   const [time, setTime] = useState('')
@@ -103,20 +104,21 @@ export function Hero() {
           ref={headlineRef}
           className={cn(
             'font-display font-normal',
-            'text-[clamp(2.75rem,8vw,7rem)]',
-            'leading-[0.95] tracking-[-0.04em]',
+            'text-[clamp(2rem,5.5vw,4.5rem)]',
+            'leading-[1.05] tracking-[-0.02em]',
             'text-[var(--fg)]',
-            'max-w-[18ch]',
+            'max-w-[16ch]',
             'transition-transform duration-75 ease-out will-change-transform'
           )}
         >
-          8 years designing
-          <br />
-          <em className="not-italic text-[var(--fg-muted)]">systems that</em>
-          <br />
-          survive contact
-          <br />
-          with engineering.
+          <Typewriter
+            lines={[
+              [{ text: '8 years designing' }],
+              [{ text: 'systems that', muted: true }],
+              [{ text: 'survive contact' }],
+              [{ text: 'with engineering.' }],
+            ]}
+          />
         </h1>
 
         <div className="mt-12 md:mt-16 flex flex-col gap-1">

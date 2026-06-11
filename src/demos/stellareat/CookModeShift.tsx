@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
+const MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
+
 // ── Silt palette ──────────────────────────────────────────────────────────────
 const SILT = {
   bg:       '#EDEAE3',
@@ -206,7 +208,7 @@ export function CookModeShift() {
       style={{
         background:   SILT.bg,
         color:        SILT.fg,
-        fontFamily:   "'PP Neue Montreal', 'JetBrains Mono', monospace",
+        fontFamily:   MONO,
         minHeight:    '80vh',
         position:     'relative',
         overflow:     'hidden',
@@ -226,7 +228,7 @@ export function CookModeShift() {
             ? `opacity 300ms ${easeDefault}`
             : mode === 'browse'
               ? `opacity 200ms ${easeDefault} 600ms`
-              : `opacity 50ms`,
+              : `opacity 160ms ${easeDefault}`,
         }}
       >
         <div style={{ padding: '48px 40px 80px', maxWidth: 720, margin: '0 auto' }}>
@@ -247,16 +249,16 @@ export function CookModeShift() {
               Recipe
             </p>
             <h2 style={{
-              fontFamily:    "'PP Editorial New', 'Cormorant Garamond', Georgia, serif",
-              fontWeight:    200,
-              fontSize:      'clamp(28px, 4vw, 48px)',
+              fontFamily:    MONO,
+              fontWeight:    400,
+              fontSize:      'clamp(22px, 3vw, 36px)',
               letterSpacing: '-0.02em',
-              lineHeight:    1.1,
+              lineHeight:    1.2,
               marginBottom:  4,
             }}>
               Brown Butter Roast Chicken Thighs
               <br />
-              <em style={{ color: SILT.fgMuted }}>with Preserved Lemon</em>
+              <span style={{ color: SILT.fgMuted }}>with Preserved Lemon</span>
             </h2>
             <p style={{ fontSize: 13, color: SILT.fgMuted, marginTop: 8 }}>
               45 min · Serves 4 · Intermediate
@@ -320,7 +322,7 @@ export function CookModeShift() {
                       background: i === activeBrowseStepIdx ? SILT.surface : 'transparent',
                       padding:    i === activeBrowseStepIdx ? '10px 12px' : '0',
                       margin:     i === activeBrowseStepIdx ? '-10px -12px' : '0',
-                      transition: 'background 300ms',
+                      transition: `background 300ms ${easeDefault}`,
                     }}
                   >
                     <span style={{
@@ -329,7 +331,7 @@ export function CookModeShift() {
                       letterSpacing: '0.05em',
                       paddingTop:    3,
                       fontWeight:    i === activeBrowseStepIdx ? 600 : 400,
-                      transition:    'color 300ms',
+                      transition:    `color 300ms ${easeDefault}`,
                     }}>
                       {step.n}
                     </span>
@@ -337,7 +339,7 @@ export function CookModeShift() {
                       fontSize:   15,
                       lineHeight: 1.65,
                       color:      i === activeBrowseStepIdx ? SILT.fg : SILT.fgMuted,
-                      transition: 'color 300ms',
+                      transition: `color 300ms ${easeDefault}`,
                     }}>
                       {step.text}
                     </p>
@@ -355,7 +357,7 @@ export function CookModeShift() {
             position:      'absolute',
             bottom:        32,
             right:         40,
-            fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+            fontFamily:    MONO,
             fontSize:      13,
             letterSpacing: '0.05em',
             textTransform: 'uppercase',
@@ -402,7 +404,7 @@ export function CookModeShift() {
       >
         {/* Step counter — Stage 1: appears first */}
         <div style={{
-          fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+          fontFamily:    MONO,
           fontSize:      12,
           letterSpacing: '0.15em',
           textTransform: 'uppercase',
@@ -423,13 +425,13 @@ export function CookModeShift() {
         <div
           ref={cookTextRef}
           style={{
-            fontFamily:    "'PP Editorial New', 'Cormorant Garamond', Georgia, serif",
-            fontWeight:    200,
-            fontSize:      'clamp(36px, 6vw, 72px)',
+            fontFamily:    MONO,
+            fontWeight:    400,
+            fontSize:      'clamp(28px, 4.4vw, 52px)',
             letterSpacing: '-0.02em',
-            lineHeight:    1.15,
+            lineHeight:    1.2,
             textAlign:     'center',
-            maxWidth:      '14ch',
+            maxWidth:      '16ch',
             color:         SILT.fg,
             opacity:       stage >= 5 ? 1 : 0,
             transform:     stage >= 5 && !prefersReduced
@@ -457,7 +459,7 @@ export function CookModeShift() {
             onClick={handlePrev}
             disabled={prevCookPos(cookPos) === null}
             style={{
-              fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+              fontFamily:    MONO,
               fontSize:      13,
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
@@ -467,7 +469,7 @@ export function CookModeShift() {
               padding:       '10px 24px',
               cursor:        prevCookPos(cookPos) === null ? 'default' : 'pointer',
               borderRadius:  0,
-              transition:    `color 200ms, border-color 200ms`,
+              transition:    `color 200ms ${easeDefault}, border-color 200ms ${easeDefault}`,
             }}
             onMouseEnter={e => {
               if (prevCookPos(cookPos) !== null) {
@@ -487,7 +489,7 @@ export function CookModeShift() {
             onClick={handleNext}
             disabled={nextCookPos(cookPos) === null}
             style={{
-              fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+              fontFamily:    MONO,
               fontSize:      13,
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
@@ -497,7 +499,7 @@ export function CookModeShift() {
               padding:       '10px 24px',
               cursor:        nextCookPos(cookPos) === null ? 'default' : 'pointer',
               borderRadius:  0,
-              transition:    `opacity 200ms`,
+              transition:    `opacity 200ms ${easeDefault}`,
             }}
             onMouseEnter={e => {
               if (nextCookPos(cookPos) !== null) e.currentTarget.style.opacity = '0.8'
@@ -515,7 +517,7 @@ export function CookModeShift() {
             position:      'absolute',
             top:           32,
             left:          40,
-            fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+            fontFamily:    MONO,
             fontSize:      12,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
@@ -525,7 +527,7 @@ export function CookModeShift() {
             cursor:        'pointer',
             padding:       0,
             opacity:       stage >= 6 ? 1 : 0,
-            transition:    `opacity ${dur(200)} ${easeDefault}, color 150ms`,
+            transition:    `opacity ${dur(200)} ${easeDefault}, color 150ms ${easeDefault}`,
           }}
           onMouseEnter={e => { e.currentTarget.style.color = SILT.fg }}
           onMouseLeave={e => { e.currentTarget.style.color = SILT.fgMuted }}
@@ -542,7 +544,7 @@ export function CookModeShift() {
           background:    SILT.bg,
           opacity:       transitioning ? 1 : 0,
           pointerEvents: 'none',
-          transition:    'opacity 150ms',
+          transition:    `opacity 150ms ${easeDefault}`,
         }} />
       )}
     </div>

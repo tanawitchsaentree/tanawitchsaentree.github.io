@@ -16,7 +16,7 @@ const C = {
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const EASE_GENTLE  = 'cubic-bezier(0.22, 1, 0.36, 1)'
 const EASE_DEFAULT = 'cubic-bezier(0.65, 0, 0.35, 1)'
-const MONO_FAMILY  = "'PP Neue Montreal', 'JetBrains Mono', monospace"
+const MONO_FAMILY  = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -638,13 +638,12 @@ export function CommunityOwnership() {
               Their note
             </p>
             <p style={{
-              fontFamily:  "'PP Editorial New', 'Cormorant Garamond', Georgia, serif",
-              fontWeight:  200,
-              fontStyle:   'italic',
+              fontFamily:  MONO_FAMILY,
+              fontWeight:  400,
               fontSize:    16,
-              lineHeight:  1.55,
+              lineHeight:  1.6,
               color:       C.fg,
-              maxWidth:    '26ch',
+              maxWidth:    '30ch',
             }}>
               &ldquo;{cook.note}&rdquo;
             </p>
@@ -712,17 +711,17 @@ export function CommunityOwnership() {
               Base recipe — diff view
             </p>
             <h2 style={{
-              fontFamily:    "'PP Editorial New', 'Cormorant Garamond', Georgia, serif",
-              fontWeight:    200,
-              fontSize:      'clamp(22px, 3vw, 36px)',
+              fontFamily:    MONO_FAMILY,
+              fontWeight:    400,
+              fontSize:      'clamp(19px, 2.4vw, 28px)',
               letterSpacing: '-0.02em',
-              lineHeight:    1.1,
+              lineHeight:    1.2,
               color:         C.fg,
               margin:        0,
             }}>
               Brown Butter Roast Chicken Thighs
               <br />
-              <em style={{ color: C.fgMuted, fontSize: '0.85em' }}>with Preserved Lemon</em>
+              <span style={{ color: C.fgMuted, fontSize: '0.85em' }}>with Preserved Lemon</span>
             </h2>
           </div>
 
@@ -744,13 +743,12 @@ export function CommunityOwnership() {
             }}
           >
             <p style={{
-              fontFamily:    "'PP Editorial New', 'Cormorant Garamond', Georgia, serif",
-              fontWeight:    200,
-              fontStyle:     'italic',
-              fontSize:      'clamp(18px, 2.2vw, 22px)',
-              lineHeight:    1.45,
+              fontFamily:    MONO_FAMILY,
+              fontWeight:    400,
+              fontSize:      'clamp(16px, 2vw, 20px)',
+              lineHeight:    1.5,
               color:         C.fgMuted,
-              letterSpacing: '-0.01em',
+              letterSpacing: '-0.02em',
               margin:        0,
             }}>
               Is this still the AI&rsquo;s recipe?

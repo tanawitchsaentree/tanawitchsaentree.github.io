@@ -329,19 +329,20 @@ const RECIPES = [
 ]
 
 // ── Shared style constants (module-level — not recreated per render) ──────────
+const MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
+
 const PANEL_TITLE: React.CSSProperties = {
-  fontFamily:    "'PP Editorial New', 'Cormorant Garamond', Georgia, serif",
-  fontWeight:    200,
-  fontStyle:     'italic',
-  fontSize:      'clamp(26px, 4vw, 40px)',
+  fontFamily:    MONO,
+  fontWeight:    400,
+  fontSize:      'clamp(21px, 3vw, 30px)',
   letterSpacing: '-0.02em',
-  lineHeight:    1.1,
+  lineHeight:    1.2,
   color:         P.fg,
   marginBottom:  28,
 }
 
 const EYEBROW: React.CSSProperties = {
-  fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+  fontFamily:    MONO,
   fontSize:      11,
   letterSpacing: '0.15em',
   textTransform: 'uppercase',
@@ -491,7 +492,7 @@ function Breadcrumb({ current }: { current: StepId }) {
         alignItems:   'center',
         gap:          8,
         marginBottom: 32,
-        fontFamily:   "'PP Neue Montreal', 'JetBrains Mono', monospace",
+        fontFamily:   MONO,
         fontSize:     12,
         letterSpacing:'0.05em',
         userSelect:   'none',
@@ -599,7 +600,7 @@ function ItemCard({
       <div style={{ lineHeight: 0 }}>{svg}</div>
       <span
         style={{
-          fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+          fontFamily:    MONO,
           fontSize:      12,
           letterSpacing: '0.07em',
           textTransform: 'uppercase',
@@ -620,7 +621,7 @@ function AdvanceButton({ label, onClick }: { label: string; onClick: () => void 
     <button
       onClick={onClick}
       style={{
-        fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+        fontFamily:    MONO,
         fontSize:      13,
         letterSpacing: '0.07em',
         textTransform: 'uppercase',
@@ -647,7 +648,7 @@ function BackButton({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       style={{
-        fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+        fontFamily:    MONO,
         fontSize:      12,
         letterSpacing: '0.05em',
         textTransform: 'uppercase',
@@ -709,12 +710,11 @@ function RecipeCard({
         <div style={{ flex: 1 }}>
           <h3
             style={{
-              fontFamily:    "'PP Editorial New', 'Cormorant Garamond', Georgia, serif",
-              fontWeight:    200,
-              fontStyle:     'italic',
-              fontSize:      22,
-              letterSpacing: '-0.01em',
-              lineHeight:    1.2,
+              fontFamily:    MONO,
+              fontWeight:    500,
+              fontSize:      18,
+              letterSpacing: '-0.02em',
+              lineHeight:    1.25,
               color:         P.fg,
               marginBottom:  6,
             }}
@@ -723,7 +723,7 @@ function RecipeCard({
           </h3>
           <p
             style={{
-              fontFamily: "'PP Neue Montreal', 'JetBrains Mono', monospace",
+              fontFamily: MONO,
               fontSize:   13,
               lineHeight: 1.6,
               color:      P.fgMuted,
@@ -737,7 +737,7 @@ function RecipeCard({
               <span
                 key={tag}
                 style={{
-                  fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+                  fontFamily:    MONO,
                   fontSize:      11,
                   letterSpacing: '0.07em',
                   textTransform: 'uppercase',
@@ -756,7 +756,7 @@ function RecipeCard({
         <span
           data-recipe-link
           style={{
-            fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+            fontFamily:    MONO,
             fontSize:      12,
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
@@ -869,7 +869,7 @@ export function FridgeEntry() {
             <div style={ROW_SPREAD}>
               <span
                 style={{
-                  fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+                  fontFamily:    MONO,
                   fontSize:      12,
                   color:         P.fgMuted,
                   letterSpacing: '0.04em',
@@ -956,7 +956,7 @@ export function FridgeEntry() {
               <p style={EYEBROW}>Based on what you have</p>
               <p
                 style={{
-                  fontFamily: "'PP Neue Montreal', 'JetBrains Mono', monospace",
+                  fontFamily: MONO,
                   fontSize:   17,
                   lineHeight: 1.65,
                   color:      P.fgMuted,
@@ -981,7 +981,7 @@ export function FridgeEntry() {
               <button
                 onClick={reset}
                 style={{
-                  fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+                  fontFamily:    MONO,
                   fontSize:      12,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -1032,7 +1032,7 @@ function PrefCard({
         }
       }}
       style={{
-        fontFamily:    "'PP Neue Montreal', 'JetBrains Mono', monospace",
+        fontFamily:    MONO,
         fontSize:      13,
         padding:       '10px 16px',
         background:    selected ? P.surface : 'rgba(240,235,224,0.5)',

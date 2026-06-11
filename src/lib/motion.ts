@@ -4,7 +4,7 @@ import type { Variants, Transition } from 'framer-motion'
 export const ease = {
   outQuick:     [0.22, 1, 0.36, 1]     as const,
   inOutNatural: [0.65, 0, 0.35, 1]     as const,
-  outStandard:  [0.0, 0.0, 0.2, 1]     as const,
+  outStandard:  [0.16, 1, 0.3, 1]      as const,  // Decisive — was banned material ease-out
 } satisfies Record<string, readonly [number, number, number, number]>
 
 // ─── Shared transitions ───────────────────────────────────────

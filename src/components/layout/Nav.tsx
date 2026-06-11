@@ -116,7 +116,7 @@ export function Nav({ rightRef }: NavProps) {
                     <span
                       className={cn(
                         'px-1.5 py-0.5 rounded-full inline-block',
-                        'transition-all duration-[240ms] ease-out',
+                        'transition-[border-color] duration-[240ms] ease-[var(--ease-out-quick)]',
                         isActive
                           ? 'border border-[var(--fg)]'
                           : 'border border-transparent'

@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/cn'
+import { DecodeText } from '@/components/ui/DecodeText'
 import { HeroBackground } from '@/components/invitrace/HeroBackground'
 import { EngineSection } from '@/components/invitrace/EngineSection'
 import { AtomicSection } from '@/components/invitrace/AtomicSection'
@@ -83,11 +84,11 @@ function HeroSection() {
           transition={{ delay: 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className={cn(
             'font-display font-medium',
-            'text-[clamp(2.75rem,6vw,5rem)] leading-[0.92] tracking-[-0.04em]',
+            'text-[clamp(2rem,5.5vw,4.5rem)] leading-[0.98] tracking-[-0.02em]',
             'text-[var(--fg)] mb-8'
           )}
         >
-          One system.
+          <DecodeText text="One system." />
           <br />
           <span className="text-[var(--fg-muted)]">Every hospital</span>
           <br />
@@ -145,7 +146,7 @@ function HeroSection() {
       >
         {METRICS.map((m) => (
           <div key={m.label} className="flex items-baseline gap-2">
-            <span className="font-display font-medium tracking-[-0.04em] text-[1.5rem] leading-none text-[var(--fg)]">
+            <span className="font-display font-medium tracking-[-0.02em] text-[1.5rem] leading-none text-[var(--fg)]">
               {m.value}
             </span>
             <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] uppercase tracking-[0.06em]">
@@ -188,8 +189,8 @@ function ReflectionSection() {
       <h2
         id="reflection-heading"
         className={cn(
-          'font-display font-normal leading-[1.05] tracking-[-0.032em]',
-          'text-[clamp(1.75rem,4vw,3rem)] text-[var(--fg)] mb-14 max-w-[28ch]'
+          'font-display font-normal leading-[1.1] tracking-[-0.02em]',
+          'text-[clamp(1.625rem,4vw,2.5rem)] text-[var(--fg)] mb-14 max-w-[28ch]'
         )}
       >
         What it taught me
