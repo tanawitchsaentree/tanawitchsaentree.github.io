@@ -11,6 +11,7 @@ import { Contact } from '@/components/sections/Contact'
 import { ProjectModal } from '@/components/project/ProjectModal'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { ParticleName } from '@/components/ui/ParticleName'
+import { SDFMark } from '@/components/ui/SDFMark'
 import { cn } from '@/lib/cn'
 import type { ProjectFrontmatter } from '@/types/project'
 
@@ -43,6 +44,9 @@ function LiveTime() {
 function Identity() {
   return (
     <div className="flex flex-col items-center gap-5 text-center">
+      {/* 3D raymarched mark — the masthead sculpture */}
+      <SDFMark size={180} className="mb-1" />
+
       {/* Name — the one deliberate "big" moment: rendered as ink particles
           that assemble on load and ripple under the cursor. */}
       <div className="flex flex-col items-center gap-3">
