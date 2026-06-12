@@ -65,7 +65,7 @@ export function About() {
     <section
       id="about"
       aria-labelledby="about-heading"
-      className="border-t border-[var(--border)]"
+      className="w-full"
     >
       <h2 id="about-heading" className="sr-only">About</h2>
 

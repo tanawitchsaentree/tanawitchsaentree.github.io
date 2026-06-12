@@ -35,7 +35,7 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-heading"
-      className="py-16 md:py-24 text-center border-t border-[var(--border)]"
+      className="w-full text-center"
     >
       <div className="flex flex-col items-center gap-8">
         <h2

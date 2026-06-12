@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { Nav } from '@/components/layout/Nav'
 import { WorkGrid } from '@/components/sections/WorkGrid'
 import { About } from '@/components/sections/About'
 import { Process } from '@/components/sections/Process'
@@ -12,6 +10,7 @@ import { ProjectModal } from '@/components/project/ProjectModal'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { ParticleName } from '@/components/ui/ParticleName'
 import { SDFMark } from '@/components/ui/SDFMark'
+import { FrameDeck } from '@/components/ui/FrameDeck'
 import { cn } from '@/lib/cn'
 import type { ProjectFrontmatter } from '@/types/project'
 
@@ -162,23 +161,16 @@ export function HomeClient({ projects }: HomeClientProps) {
     ? (projects.find(p => p.slug === activeSlug) ?? null)
     : null
 
+  // Each frame centers a column; tall frames (Work/About/Process) scroll inside.
+  const frameClass = 'min-h-svh w-full mx-auto max-w-[34rem] px-6 flex flex-col items-center justify-center py-20'
+
   return (
     <>
-      <Nav rightRef={rightRef} />
+      <FrameDeck labels={['Intro', 'Work', 'About', 'Process', 'Contact']}>
 
-      {/* Single centered column — generous empty margins both sides. */}
-      <div className="mx-auto w-full max-w-[34rem] px-6">
-
-        {/* Identity — full-height, vertically + horizontally centered hero */}
-        <motion.header
-          aria-label="Site identity"
-          className="min-h-svh flex flex-col items-center justify-center gap-10 py-20"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        >
+        {/* Frame 0 — Identity */}
+        <header aria-label="Site identity" className={cn(frameClass, 'gap-10')}>
           <Identity />
-
           <div className="flex flex-col items-center gap-4">
             <div className={cn(
               'font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]',
@@ -192,28 +184,30 @@ export function HomeClient({ projects }: HomeClientProps) {
             </div>
             <ThemeToggle />
           </div>
-        </motion.header>
+          <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.14em] text-[var(--fg-subtle)] animate-scroll-hint">
+            scroll ↓
+          </p>
+        </header>
 
-        {/* Content — same centered column */}
-        <motion.main
-          ref={rightRef}
-          id="main-content"
-          tabIndex={-1}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        >
+        {/* Frame 1 — Work */}
+        <div ref={rightRef} id="main-content" tabIndex={-1} className={frameClass}>
           <WorkGrid
             projects={projects}
             onOpenProject={openProject}
             onNavigate={navigateWithTransition}
           />
-          <About />
-          <Process />
-          <Contact />
-        </motion.main>
+        </div>
 
-      </div>
+        {/* Frame 2 — About */}
+        <div className={frameClass}><About /></div>
+
+        {/* Frame 3 — Process */}
+        <div className={frameClass}><Process /></div>
+
+        {/* Frame 4 — Contact */}
+        <div className={frameClass}><Contact /></div>
+
+      </FrameDeck>
 
       <ProjectModal
         project={activeProject}
