@@ -10,7 +10,7 @@ import { Process } from '@/components/sections/Process'
 import { Contact } from '@/components/sections/Contact'
 import { ProjectModal } from '@/components/project/ProjectModal'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
-import { Typewriter } from '@/components/ui/Typewriter'
+import { ParticleName } from '@/components/ui/ParticleName'
 import { cn } from '@/lib/cn'
 import type { ProjectFrontmatter } from '@/types/project'
 
@@ -43,26 +43,17 @@ function LiveTime() {
 function Identity() {
   return (
     <div className="flex flex-col items-center gap-5 text-center">
-      {/* Name — distinguished by weight, not size. Nothing on the page is "big". */}
-      <div className="flex flex-col items-center gap-2">
+      {/* Name — the one deliberate "big" moment: rendered as ink particles
+          that assemble on load and ripple under the cursor. */}
+      <div className="flex flex-col items-center gap-3">
         <p className={cn(
           'font-mono text-[var(--type-xs)] uppercase tracking-[0.18em]',
           'text-[var(--fg-subtle)]'
         )}>
           Portfolio
         </p>
-        <h1
-          className={cn(
-            'font-display font-medium',
-            'text-[var(--type-base)] leading-[1.3] tracking-[0.01em]',
-            'text-[var(--fg)]'
-          )}
-        >
-          <Typewriter
-            lines={[[{ text: 'Tanawitch Saentree' }]]}
-            startDelay={500}
-            speed={64}
-          />
+        <h1 className="font-display font-medium text-[var(--fg)] leading-none">
+          <ParticleName text="Tanawitch Saentree" height={96} />
         </h1>
       </div>
 
