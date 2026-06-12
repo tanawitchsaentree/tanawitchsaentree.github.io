@@ -30,6 +30,11 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
       return
     }
 
+    // FrameDeck pages drive their own wheel navigation — Lenis must not
+    // intercept the wheel there. FrameDeck sets data-deck on <html> in its
+    // own effect, which runs before this parent effect (child-first order).
+    if (document.documentElement.hasAttribute('data-deck')) return
+
     const lenis = new Lenis({
       duration:   reducedMotion ? 0 : 1.1,
       easing:     (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

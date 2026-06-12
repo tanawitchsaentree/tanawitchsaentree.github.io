@@ -4,6 +4,7 @@ import {
   Children,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
@@ -50,6 +51,14 @@ export function FrameDeck({ children, labels }: FrameDeckProps) {
 
   useEffect(() => {
     setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }, [])
+
+  // Flag the document so LenisProvider stands down — the deck owns the wheel.
+  // useLayoutEffect runs before LenisProvider's passive effect (child-first),
+  // so the flag is set before Lenis would initialize.
+  useLayoutEffect(() => {
+    document.documentElement.setAttribute('data-deck', '')
+    return () => { document.documentElement.removeAttribute('data-deck') }
   }, [])
 
   const go = useCallback((dir: 1 | -1) => {
