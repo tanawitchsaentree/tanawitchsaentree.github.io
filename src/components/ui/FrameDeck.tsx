@@ -16,7 +16,7 @@ import { cn } from '@/lib/cn'
  * that advance one at a time, like pages fed through a typewriter.
  *
  * Navigation: wheel / arrow keys / PageUp-Down / Home-End / touch swipe.
- * Between frames a brief glyph "decode wipe" sweeps the screen (DecodeWipe).
+ * Frames slide horizontally with an eased lag; input is locked mid-slide.
  *
  * Usability guards (the hard part of scroll-snapping):
  *  - If a frame's content is taller than the viewport, native scroll inside it
@@ -26,7 +26,7 @@ import { cn } from '@/lib/cn'
  *  - Full keyboard support + an aria-live position announcement + side dots.
  */
 
-const WIPE_MS = 620
+const SLIDE_MS = 900 // matches the horizontal track transition; locks input during it
 // A frame only counts as "internally scrollable" if it overflows by more than
 // this. Small overflows (centered heroes with padding) advance immediately.
 const SCROLLABLE_MIN = 48
@@ -35,15 +35,18 @@ const EDGE_EPS = 4 // px tolerance at scroll edges
 interface FrameDeckProps {
   children: ReactNode
   labels: string[]
+  /** Called whenever the active frame index changes. */
+  onFrameChange?: (index: number) => void
 }
 
-export function FrameDeck({ children, labels }: FrameDeckProps) {
+export function FrameDeck({ children, labels, onFrameChange }: FrameDeckProps) {
   const frames = Children.toArray(children)
   const n = frames.length
 
   const [active, setActive] = useState(0)
-  const [wiping, setWiping] = useState(false)
   const [reduced, setReduced] = useState(false)
+
+  useEffect(() => { onFrameChange?.(active) }, [active, onFrameChange])
 
   const lockRef = useRef(false)
   const scrollerRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -67,13 +70,8 @@ export function FrameDeck({ children, labels }: FrameDeckProps) {
       if (next < 0 || next >= n) return prev
       if (lockRef.current) return prev
       lockRef.current = true
-      if (!reduced) setWiping(true)
-      // release lock after the wipe; content swap happens at the wipe midpoint
-      const release = reduced ? 0 : WIPE_MS
-      window.setTimeout(() => {
-        lockRef.current = false
-        setWiping(false)
-      }, release)
+      // hold input until the slide settles
+      window.setTimeout(() => { lockRef.current = false }, reduced ? 0 : SLIDE_MS)
       return next
     })
   }, [n, reduced])
@@ -82,9 +80,8 @@ export function FrameDeck({ children, labels }: FrameDeckProps) {
     if (i === active || lockRef.current) return
     if (i < 0 || i >= n) return
     lockRef.current = true
-    if (!reduced) setWiping(true)
     setActive(i)
-    window.setTimeout(() => { lockRef.current = false; setWiping(false) }, reduced ? 0 : WIPE_MS)
+    window.setTimeout(() => { lockRef.current = false }, reduced ? 0 : SLIDE_MS)
   }, [active, n, reduced])
 
   // Is the active frame's internal scroller at an edge in `dir`?
@@ -160,31 +157,39 @@ export function FrameDeck({ children, labels }: FrameDeckProps) {
 
   return (
     <div className="fixed inset-0 overflow-hidden">
-      {/* Frames — stacked, only the active one interactive/visible */}
-      {frames.map((frame, i) => {
-        const isActive = i === active
-        return (
-          <div
-            key={i}
-            aria-hidden={!isActive}
-            className={cn(
-              'absolute inset-0',
-              'transition-opacity duration-[420ms] ease-[var(--ease-out-quick)]',
-              isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-            )}
-          >
+      {/* Horizontal track — slides left/right with an eased lag. */}
+      <div
+        className={cn(
+          'flex h-full',
+          reduced ? '' : 'transition-transform duration-[900ms] ease-[cubic-bezier(0.76,0,0.24,1)]'
+        )}
+        style={{ width: `${n * 100}vw`, transform: `translateX(-${active * 100}vw)` }}
+      >
+        {frames.map((frame, i) => {
+          const isActive = i === active
+          return (
             <div
-              ref={el => { scrollerRefs.current[i] = el }}
-              className="h-full w-full overflow-y-auto overflow-x-hidden overscroll-contain"
+              key={i}
+              aria-hidden={!isActive}
+              className={cn(
+                'w-screen h-full shrink-0',
+                'transition-opacity duration-[700ms] ease-[var(--ease-out-quick)]',
+                isActive ? 'opacity-100' : 'opacity-30'
+              )}
             >
-              {frame}
+              <div
+                ref={el => { scrollerRefs.current[i] = el }}
+                className={cn(
+                  'h-full w-full overflow-y-auto overflow-x-hidden overscroll-contain',
+                  !isActive && 'pointer-events-none'
+                )}
+              >
+                {frame}
+              </div>
             </div>
-          </div>
-        )
-      })}
-
-      {/* Decode wipe overlay */}
-      <DecodeWipe active={wiping} />
+          )
+        })}
+      </div>
 
       {/* Side progress dots */}
       <nav
@@ -222,27 +227,6 @@ export function FrameDeck({ children, labels }: FrameDeckProps) {
       <p className="sr-only" aria-live="polite">
         {labels[active]} — frame {active + 1} of {n}
       </p>
-    </div>
-  )
-}
-
-/**
- * DecodeWipe — a band of monospace glyphs that sweeps top→bottom during a
- * frame change, like a teleprinter advancing the page. Pure DOM/CSS, cheap.
- */
-function DecodeWipe({ active }: { active: boolean }) {
-  return (
-    <div
-      aria-hidden="true"
-      className={cn(
-        'pointer-events-none fixed inset-0 z-20 overflow-hidden',
-        active ? 'opacity-100' : 'opacity-0',
-        'transition-opacity duration-[160ms] ease-[var(--ease-out-quick)]'
-      )}
-    >
-      <div className={cn('absolute inset-x-0', active ? 'animate-wipe-sweep' : '')}>
-        <div className="wipe-band" />
-      </div>
     </div>
   )
 }
