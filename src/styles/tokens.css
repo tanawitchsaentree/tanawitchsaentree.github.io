@@ -50,6 +50,7 @@
   --ease-out-quick:      cubic-bezier(0.22, 1, 0.36, 1);  /* Gentle — text reveals */
   --ease-in-out-natural: cubic-bezier(0.65, 0, 0.35, 1);  /* Smooth-in-out — default */
   --ease-out-standard:   cubic-bezier(0.16, 1, 0.3, 1);   /* Decisive — entrance/UI */
+  --ease-snap:           cubic-bezier(0.34, 1.56, 0.64, 1); /* Snap — overshoot moments */
 
   /* Motion */
   --duration-fast:   180ms;
@@ -85,6 +86,13 @@
   --shadow-color-soft:   rgba(0, 0, 0, 0.06);
   --shadow-color-mid:    rgba(0, 0, 0, 0.10);
   --shadow-color-heavy:  rgba(0, 0, 0, 0.18);
+
+  /* Cover-card surface — intentionally NOT overridden in .dark.
+     Card vignette is always a dark gradient regardless of color scheme. */
+  --fg-on-cover:         #FFFFFF;
+  --fg-on-cover-muted:   rgba(255, 255, 255, 0.55);
+  --fg-on-cover-subtle:  rgba(255, 255, 255, 0.50);
+  --cover-vignette:      rgba(0, 0, 0, 0.60);
 
   /* Cursor — updated in Fix 2 when accent color changes */
   --cursor-ring: #0A0A0A;

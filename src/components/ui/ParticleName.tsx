@@ -1,7 +1,21 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
+
+function useThemeObserver(): [boolean, React.Dispatch<React.SetStateAction<boolean>>] {
+  const [isDark, setIsDark] = useState(() =>
+    typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
+  )
+  useEffect(() => {
+    const obs = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'))
+    })
+    obs.observe(document.documentElement, { attributeFilter: ['class'] })
+    return () => obs.disconnect()
+  }, [])
+  return [isDark, setIsDark]
+}
 
 /**
  * ParticleName — the name rendered as thousands of ink particles.
@@ -28,6 +42,7 @@ interface ParticleNameProps {
 export function ParticleName({ text, className, height = 120 }: ParticleNameProps) {
   const mountRef = useRef<HTMLDivElement>(null)
   const fallbackRef = useRef<HTMLSpanElement>(null)
+  const [isDark, setIsDark] = useThemeObserver()
 
   useEffect(() => {
     const mount = mountRef.current
@@ -39,7 +54,6 @@ export function ParticleName({ text, className, height = 120 }: ParticleNameProp
       return
     }
 
-    const isDark = document.documentElement.classList.contains('dark')
     const ink = new THREE.Color(isDark ? '#F4F1EA' : '#0A0A0A')
     const accent = new THREE.Color('#FFE500')
 
@@ -215,7 +229,7 @@ export function ParticleName({ text, className, height = 120 }: ParticleNameProp
       renderer.dispose()
       if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement)
     }
-  }, [text, height])
+  }, [text, height, isDark])
 
   return (
     <span className={className} aria-label={text}>

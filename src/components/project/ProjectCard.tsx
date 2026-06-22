@@ -1,11 +1,11 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import Image from 'next/image'
 import { cn } from '@/lib/cn'
 import type { ProjectFrontmatter } from '@/types/project'
+import { GenerativeCover } from './GenerativeCover'
 
-// Slugs that navigate to a dedicated universe page instead of the modal
 const UNIVERSE_SLUGS: Record<string, string> = {
   'allianz-doc-classification': '/projects/allianz',
   'invitrace-design-system':    '/projects/invitrace',
@@ -15,22 +15,18 @@ const UNIVERSE_SLUGS: Record<string, string> = {
 
 interface ProjectCardProps {
   project: ProjectFrontmatter
-  isHero?: boolean
   onOpen: (slug: string) => void
   onNavigate?: (href: string) => void
 }
 
-export function ProjectCard({ project, isHero = false, onOpen, onNavigate }: ProjectCardProps) {
+export function ProjectCard({ project, onOpen, onNavigate }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false)
-  const cardRef = useRef<HTMLButtonElement>(null)
-
   const universePath = UNIVERSE_SLUGS[project.slug]
 
   const handleClick = useCallback(() => {
     if (universePath && onNavigate) {
       onNavigate(universePath)
     } else if (universePath) {
-      // Fallback: plain navigation if no View Transition handler provided
       window.location.href = universePath
     } else {
       onOpen(project.slug)
@@ -38,105 +34,88 @@ export function ProjectCard({ project, isHero = false, onOpen, onNavigate }: Pro
   }, [universePath, onNavigate, onOpen, project.slug])
 
   const hasCover = Boolean(project.coverImage)
-  const fgClass = project.coverFg === 'light' ? 'text-white' : 'text-black'
-  const fgMutedClass = project.coverFg === 'light' ? 'text-white/60' : 'text-black/60'
+  const fgClass      = project.coverFg === 'light' ? 'text-[var(--fg-on-cover)]'        : 'text-[var(--fg)]'
+  const fgMutedClass = project.coverFg === 'light' ? 'text-[var(--fg-on-cover-subtle)]' : 'text-[var(--fg-subtle)]'
 
   return (
     <button
-      ref={cardRef}
       type="button"
       onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      aria-label={`${project.title}${universePath ? ' — opens project page' : `, ${project.tags.join(', ')}. Press Enter to view case study`}.`}
+      aria-label={`${project.title} — ${project.tags.slice(0, 2).join(', ')}`}
       className={cn(
-        'group relative w-full text-left overflow-hidden rounded-[var(--radius-xl)]',
+        'group relative w-full text-left overflow-hidden',
+        'rounded-[var(--radius-lg)]',
         'border border-[var(--border)]',
-        'transition-transform duration-[380ms] ease-[var(--ease-out-quick)]',
-        isHero ? 'min-h-[420px] md:min-h-[520px]' : 'min-h-[280px] md:min-h-[320px]',
-        // Scale on hover — 1.015, not 1.05 (per brief)
-        'hover:scale-[1.015]',
+        // Consistent aspect ratio across all cards
+        'aspect-[3/4]',
+        'transition-transform duration-[360ms] ease-[var(--ease-out-quick)]',
+        hovered && 'scale-[1.015]',
         'focus-visible:outline-2 focus-visible:outline-[var(--fg)] focus-visible:outline-offset-2',
         'cursor-pointer'
       )}
       style={{ background: project.coverColor }}
     >
-      {/* Cover — real image or typographic placeholder */}
-      <div
-        className={cn(
-          'absolute inset-0 overflow-hidden',
-          'transition-transform duration-[380ms] ease-[var(--ease-out-quick)]',
-          hovered && 'scale-[1.04]' // Image scales inside overflow-hidden container
-        )}
-      >
-        {hasCover ? (
+      {/* Reaction-diffusion cover — always visible, hover injects reactant via canvas listener */}
+      {project.coverVariant && (
+        <div className="absolute inset-0">
+          <GenerativeCover variant={project.coverVariant} className="w-full h-full" />
+        </div>
+      )}
+
+      {/* Cover image — scales subtly on hover */}
+      {hasCover && (
+        <div
+          className={cn(
+            'absolute inset-0 overflow-hidden',
+            'transition-transform duration-[360ms] ease-[var(--ease-out-quick)]',
+            hovered && 'scale-[1.04]'
+          )}
+        >
           <Image
             src={project.coverImage!}
             alt=""
             fill
-            sizes={isHero
-              ? '(max-width: 768px) 100vw, 1280px'
-              : '(max-width: 768px) 100vw, (max-width: 1024px) 58vw, 700px'
-            }
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover"
-            priority={isHero}
           />
-        ) : (
-          // Typographic cover — project name large, no gradients, no mesh
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-10">
-            <span
-              className={cn(
-                'font-display font-normal',
-                isHero
-                  ? 'text-[clamp(1.75rem,4vw,3rem)]'
-                  : 'text-[clamp(1.375rem,2.6vw,2.25rem)]',
-                'leading-[1.1] tracking-[-0.02em]',
-                fgClass,
-                'max-w-[8ch]',
-                // Single geometric accent: index number top-right
-                'relative'
-              )}
-            >
-              {project.title}
-            </span>
-          </div>
+        </div>
+      )}
+
+      {/* Index — top-right corner, always */}
+      <span
+        className={cn(
+          'absolute top-5 right-5 z-10',
+          'font-mono text-[var(--type-xs)] tracking-[0.14em]',
+          fgMutedClass,
+          'select-none'
         )}
+        aria-hidden="true"
+      >
+        {String(project.order).padStart(2, '0')}
+      </span>
 
-        {/* Geometric index accent — top-right corner */}
-        <span
-          className={cn(
-            'absolute top-6 right-6',
-            'font-mono text-[var(--type-xs)] tracking-widest',
-            fgMutedClass,
-            'select-none'
-          )}
-          aria-hidden="true"
-        >
-          {String(project.order).padStart(2, '0')}
-        </span>
-      </div>
-
-      {/* Footer — always visible at bottom */}
+      {/* Footer — pinned bottom, gradient mask */}
       <div
         className={cn(
-          'absolute bottom-0 left-0 right-0',
-          'flex items-end justify-between',
-          'px-6 pb-5 pt-12 md:px-8 md:pb-6',
-          // Gradient mask so footer reads on any cover
-          'bg-gradient-to-t from-black/40 to-transparent',
+          'absolute bottom-0 left-0 right-0 z-10',
+          'px-5 pb-5 pt-16',
+          // Gradient so footer reads on any cover color — token, not hardcoded black
+          'bg-gradient-to-t from-[var(--cover-vignette)] to-transparent',
         )}
       >
-        <div>
-          <p className={cn('font-sans font-medium text-[var(--type-sm)] text-white/90 mb-1')}>
-            {project.title}
-          </p>
-          <p className="font-mono text-[var(--type-xs)] text-white/55 tracking-wide">
+        <p className="font-display font-normal text-[var(--type-base)] leading-[1.25] mb-1 text-[var(--fg-on-cover)]">
+          {project.title}
+        </p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="font-mono text-[var(--type-xs)] text-[var(--fg-on-cover-muted)] tracking-[0.08em] truncate">
             {project.tags.slice(0, 2).join(' · ')}
           </p>
+          <p className="font-mono text-[var(--type-xs)] text-[var(--fg-on-cover-muted)] tracking-[0.08em] shrink-0">
+            {project.year}
+          </p>
         </div>
-        <p className="font-mono text-[var(--type-xs)] text-white/55 tracking-wide self-end">
-          {project.year}
-        </p>
       </div>
     </button>
   )

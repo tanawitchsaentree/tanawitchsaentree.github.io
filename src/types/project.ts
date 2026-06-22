@@ -15,6 +15,8 @@ export interface ProjectFrontmatter {
   coverFg: 'light' | 'dark'
   /** Optional: path to real cover image in /public/images/ */
   coverImage?: string
+  /** Generative canvas variant rendered as card background art */
+  coverVariant?: 'voronoi' | 'gaussian' | 'scatter' | 'simplex' | 'hull' | 'wave'
   /** Display order in grid (lower = earlier) */
   order: number
   /** If false, card appears in timeline only, not grid */
