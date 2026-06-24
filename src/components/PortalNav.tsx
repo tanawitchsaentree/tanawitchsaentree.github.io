@@ -87,6 +87,39 @@ const CARDS: CardDef[] = [
 const EASE_DECISIVE = [0.16, 1, 0.3, 1] as const   // fast-out, settle (hover)
 const EASE_SMOOTH   = [0.65, 0, 0.35, 1] as const  // ease-in-out, unhurried (split)
 
+// One greeting is picked at random on every fresh visit (client-side, after
+// mount — keeps SSR markup stable, then swaps in once hydrated).
+const GREETINGS = [
+  'Hey, how are you?',
+  'Hi there — glad you stopped by.',
+  'Hello! Good to see you here.',
+  'Hey, welcome in.',
+  'Hi — thanks for dropping by.',
+  'Hey there, make yourself at home.',
+  'Hello, hello.',
+  'Hey! You found me.',
+  'Hi — happy you’re here.',
+  'Welcome — pull up a chair.',
+  'Hey, coffee’s on me if you’re ever in Bangkok.',
+  'Hi from Bangkok — what time is it where you are?',
+  'Hey there, hope your day’s treating you kindly.',
+  'Hello! Hope you’re caffeinated.',
+  'Hey — long road brought me here, glad you came too.',
+  'Hi! Still building, still curious.',
+  'Hey, no map, but I made it this far. Welcome.',
+  'Hello — I design things, I build things, come look.',
+  'Hi there — let’s make something that actually ships.',
+  'Hey! Tell me you’re here to talk shop.',
+  'Hi — I promise this’ll be a good read.',
+  'Hey there, thanks for giving me a minute.',
+  'Hello! You’re exactly the kind of person I hoped would visit.',
+  'Hey — if you’re hiring, even better. Welcome.',
+  'Hi! Let’s see if we’re a fit.',
+  'Hey, glad the algorithm sent you my way.',
+  'Hello — seven years in, still excited about this stuff.',
+  'Hi there — I’ll keep it honest and human, promise.',
+] as const
+
 // Per-card transform for each phase.
 function place(id: Door, phase: Phase) {
   if (phase === 'open') {
@@ -94,9 +127,11 @@ function place(id: Door, phase: Phase) {
     return { x, y: 0, rotate: 0 }
   }
   if (phase === 'hover') {
-    if (id === 'work')    return { x: -24, y: 4,  rotate: -4 }
-    if (id === 'contact') return { x: 24,  y: 8,  rotate: 4 }
-    return { x: 0, y: -8, rotate: 0 } // about lifts — gentle
+    // fan out like a hand of cards — enough to clearly peek the two behind,
+    // foreshadowing the split into three doors.
+    if (id === 'work')    return { x: -88, y: 10, rotate: -7 }
+    if (id === 'contact') return { x: 88,  y: 16, rotate: 7 }
+    return { x: 0, y: -12, rotate: 0 } // about lifts in front
   }
   return { x: 0, y: 0, rotate: 0 } // idle — perfectly stacked
 }
@@ -108,7 +143,13 @@ interface PortalNavProps {
 export function PortalNav({ onEnter }: PortalNavProps) {
   const reduced = useReducedMotion()
   const [phase, setPhase] = useState<Phase>('idle')
+  const [greeting, setGreeting] = useState<string>(GREETINGS[0])  // stable for SSR
   const [moving, setMoving] = useState(false)   // true during the split/back glide
+
+  // pick a fresh greeting once on the client (avoids hydration mismatch)
+  useEffect(() => {
+    setGreeting(GREETINGS[Math.floor(Math.random() * GREETINGS.length)])
+  }, [])
   const [everOpened, setEverOpened] = useState(false)  // gate loading the back clips
   const open = phase === 'open'
 
@@ -125,11 +166,9 @@ export function PortalNav({ onEnter }: PortalNavProps) {
   const split      = useCallback(() => { setEverOpened(true); setPhase('open'); settle(740) }, [settle])
   const collapse   = useCallback(() => { setPhase('idle'); settle(740) }, [settle])
 
-  // Card keeps a FIXED pixel size; the open state only scales it down.
-  // Animating transform (scale) instead of width/height keeps it on the GPU
-  // compositor — no per-frame layout reflow, so the split stays smooth.
-  const cardScale = open ? 0.84 : 1
-
+  // Cards keep a FIXED size and never scale — they only slide apart. Constant
+  // box = the label glues to top-full perfectly (no scale skew, no math) and
+  // there's no transform competing with the glide.
   // split/back = slow & smooth. hover = a soft, gentle lift (not snappy).
   const moveTransition = reduced
     ? { duration: 0 }
@@ -150,12 +189,13 @@ export function PortalNav({ onEnter }: PortalNavProps) {
         // front card loads at once; the other two only after the first open
         const mediaLoad = card.id === 'about' || everOpened
         return (
-          /* whole column (card + label) carries the x/y/rotate so the label
-             travels with its card — no overlap when split */
+          // Wrapper is exactly the card box (208×224) and carries the glide
+          // transforms. The label sits at top-full, glued to the real bottom
+          // edge and auto-centred — no scale skew, no math.
           <motion.div
             key={card.id}
-            className="absolute inset-0 m-auto flex flex-col items-center gap-4 w-max h-max pointer-events-none"
-            style={{ zIndex: open ? 1 : card.z, willChange: 'transform' }}
+            className="absolute inset-0 m-auto pointer-events-none"
+            style={{ zIndex: card.z, width: 208, height: 224, willChange: 'transform' }}
             initial={false}
             animate={{ x: pos.x, y: pos.y, rotate: pos.rotate }}
             transition={moveTransition}
@@ -168,38 +208,49 @@ export function PortalNav({ onEnter }: PortalNavProps) {
               onFocus={open ? undefined : enterHover}
               onBlur={open ? undefined : leaveHover}
               aria-label={open ? card.label : 'Open — Tanawitch Saentree portfolio'}
-              className="group relative grid place-items-center overflow-hidden bg-[var(--bg-elevated)] p-0 cursor-pointer pointer-events-auto focus-visible:outline-2 focus-visible:outline-[var(--fg)] focus-visible:outline-offset-2"
-              style={{
-                width: 208, height: 224,
-                borderRadius: 40,
-                border: '2.5px solid var(--fg-on-cover)',
-                willChange: 'transform',
-              }}
+              className="group relative grid place-items-center overflow-hidden bg-[var(--bg-elevated)] p-0 cursor-pointer pointer-events-auto w-full h-full focus-visible:outline-2 focus-visible:outline-[var(--fg)] focus-visible:outline-offset-2"
+              style={{ borderRadius: 40, border: '2.5px solid var(--fg-on-cover)', willChange: 'transform' }}
               initial={false}
               animate={{
-                scale: cardScale,
                 boxShadow: phase === 'hover' && card.id === 'about'
                   ? '0 18px 40px -12px var(--shadow-color-mid)'
                   : '0 0px 0px 0px rgba(0,0,0,0)',
               }}
               transition={moveTransition}
+              /* once a door, each card lifts + grows slightly on hover */
+              whileHover={open && !reduced ? { y: -10, scale: 1.04 } : undefined}
+              whileTap={open && !reduced ? { scale: 0.98 } : undefined}
             >
               <CardMedia video={card.video} poster={card.poster} shape={card.shape} active={mediaActive} load={mediaLoad} />
+              {/* hover scrim + arrow cue — only as a door */}
+              {isDoor && (
+                <span
+                  className="absolute inset-0 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-base)] ease-[var(--ease-out-quick)]"
+                  style={{ background: 'color-mix(in srgb, var(--fg) 28%, transparent)' }}
+                  aria-hidden="true"
+                >
+                  <span className="font-sans text-[var(--fg-on-cover)]" style={{ fontSize: 22 }}>↗</span>
+                </span>
+              )}
             </motion.button>
 
-            {/* door label — absolutely positioned BELOW the card so it never
-                changes the column height (no layout bounce on enter/exit) */}
+            {/* door label — full-width flex row pinned under the card centres
+                it; the motion.span only animates opacity/y so Framer's transform
+                never fights a translate-x (the bug that pushed it off-centre). */}
             <AnimatePresence>
               {isDoor && (
-                <motion.span
-                  className="absolute left-1/2 -translate-x-1/2 top-full mt-4 whitespace-nowrap font-sans font-medium text-[var(--type-sm)] tracking-[0.01em] text-[var(--fg)]"
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3, delay: reduced ? 0 : 0.22, ease: EASE_DECISIVE }}
-                >
-                  {card.label}
-                </motion.span>
+                <div className="absolute inset-x-0 top-full mt-3.5 flex justify-center pointer-events-none">
+                  <motion.span
+                    className="whitespace-nowrap font-sans text-[var(--fg)]"
+                    style={{ fontSize: 14, fontWeight: 400 }}
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3, delay: reduced ? 0 : 0.22, ease: EASE_DECISIVE }}
+                  >
+                    {card.label}
+                  </motion.span>
+                </div>
               )}
             </AnimatePresence>
           </motion.div>
@@ -245,7 +296,7 @@ export function PortalNav({ onEnter }: PortalNavProps) {
           >
             <Typewriter
               key={phase === 'hover' ? 'hover' : 'idle'}
-              lines={[[{ text: phase === 'hover' ? 'Learn more about me?' : 'Hey, how are you?' }]]}
+              lines={[[{ text: phase === 'hover' ? 'Learn more about me?' : greeting }]]}
               speed={26}
               className="font-mono text-[var(--type-sm)] text-[var(--fg-muted)] tracking-[0.02em]"
             />

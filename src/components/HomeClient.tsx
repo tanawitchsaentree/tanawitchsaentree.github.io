@@ -108,7 +108,7 @@ export function HomeClient({ projects }: HomeClientProps) {
             )}
 
             {view === 'about' && (
-              <div className={PANEL}>
+              <div className="w-full mx-auto max-w-[60rem] px-6">
                 <About />
                 <Process />
                 <BackHome onBack={goHome} />
