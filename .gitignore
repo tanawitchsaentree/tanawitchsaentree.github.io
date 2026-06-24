@@ -25,3 +25,9 @@ out
 *.njsproj
 *.sln
 *.sw?
+
+# editor/agent + stray caches
+.claude/
+${local_app_data}*
+*.DS_Store
+.DS_Store

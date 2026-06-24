@@ -58,7 +58,7 @@ function drawVoronoi(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
 
   // Label
   const fs = Math.round(w * 0.032)
-  ctx.font = `400 ${fs}px "JetBrains Mono", monospace`
+  ctx.font = `400 ${fs}px 'Inter Variable', 'Inter', sans-serif`
   ctx.fillStyle = 'rgba(255,255,255,0.22)'; ctx.textAlign = 'center'
   ctx.fillText('FEDERATED', w/2, h*0.93)
 }
@@ -78,7 +78,7 @@ function drawGaussian(ctx: CanvasRenderingContext2D, w: number, h: number, t: nu
   const labelX = w * 0.08
   const fs     = Math.round(w * 0.030)
 
-  ctx.font = `400 ${fs}px "JetBrains Mono", monospace`
+  ctx.font = `400 ${fs}px 'Inter Variable', 'Inter', sans-serif`
 
   for (let i = 0; i < rows.length; i++) {
     const { label, target, phase } = rows[i]
@@ -115,7 +115,7 @@ function drawGaussian(ctx: CanvasRenderingContext2D, w: number, h: number, t: nu
   }
 
   const fs2 = Math.round(w * 0.028)
-  ctx.font = `400 ${fs2}px "JetBrains Mono", monospace`
+  ctx.font = `400 ${fs2}px 'Inter Variable', 'Inter', sans-serif`
   ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.textAlign = 'center'
   ctx.fillText('UNCERTAINTY → CERTAINTY', w/2, h*0.92)
 }
@@ -147,7 +147,7 @@ function drawScatter(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
     ctx.beginPath(); ctx.arc(clusters[i][0], clusters[i][1], pulse, 0, Math.PI*2)
     ctx.fillStyle = i===1 ? 'rgba(255,229,0,0.80)' : 'rgba(255,255,255,0.55)'; ctx.fill()
     const fs = Math.round(w*0.028)
-    ctx.font = `400 ${fs}px "JetBrains Mono", monospace`
+    ctx.font = `400 ${fs}px 'Inter Variable', 'Inter', sans-serif`
     ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.textAlign = 'center'
     ctx.fillText(names[i], clusters[i][0], clusters[i][1] - 14)
   }
@@ -163,7 +163,7 @@ function drawScatter(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
   ctx.fillStyle = 'rgba(255,229,0,0.95)'; ctx.fill()
 
   const fs2 = Math.round(w*0.030)
-  ctx.font = `400 ${fs2}px "JetBrains Mono", monospace`
+  ctx.font = `400 ${fs2}px 'Inter Variable', 'Inter', sans-serif`
   ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.textAlign = 'center'
   ctx.fillText('PREFERENCE SPACE', w/2, h*0.92)
 }
@@ -194,12 +194,12 @@ function drawSimplex(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
     ctx.strokeStyle = cols[i]; ctx.lineWidth = 1.2; ctx.stroke()
 
     // Inner label
-    ctx.font = `500 ${Math.round(w*0.032)}px "JetBrains Mono", monospace`
+    ctx.font = `500 ${Math.round(w*0.032)}px 'Inter Variable', 'Inter', sans-serif`
     ctx.fillStyle = cols[i]; ctx.textAlign = 'center'
     ctx.fillText(labels[i], cx+R*0.63*Math.cos(mid), cy+R*0.63*Math.sin(mid)+4)
 
     // Outer %
-    ctx.font = `400 ${Math.round(w*0.030)}px "JetBrains Mono", monospace`
+    ctx.font = `400 ${Math.round(w*0.030)}px 'Inter Variable', 'Inter', sans-serif`
     ctx.fillStyle = 'rgba(255,255,255,0.45)'
     ctx.fillText(`${Math.round(nw[i]*100)}%`, cx+R*1.24*Math.cos(mid), cy+R*1.24*Math.sin(mid)+4)
 
@@ -211,7 +211,7 @@ function drawSimplex(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
   ctx.fillStyle = 'rgba(10,22,40,0.98)'; ctx.fill()
 
   const fh = Math.round(w*0.030)
-  ctx.font = `400 ${fh}px "JetBrains Mono", monospace`
+  ctx.font = `400 ${fh}px 'Inter Variable', 'Inter', sans-serif`
   ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.textAlign = 'center'
   ctx.fillText('REBAL', cx, cy+3)
 
@@ -229,7 +229,7 @@ function drawHull(ctx: CanvasRenderingContext2D, w: number, h: number, t: number
 
   // Corner SEC labels
   const fl = Math.round(w*0.026)
-  ctx.font = `400 ${fl}px "JetBrains Mono", monospace`
+  ctx.font = `400 ${fl}px 'Inter Variable', 'Inter', sans-serif`
   ctx.fillStyle = 'rgba(255,255,255,0.22)'
   ctx.textAlign = 'left';  ctx.fillText('SEC', bx+5, by+fl+2)
   ctx.textAlign = 'right'; ctx.fillText('SEC', bx+bw-5, by+bh-4)
@@ -251,7 +251,7 @@ function drawHull(ctx: CanvasRenderingContext2D, w: number, h: number, t: number
   }
 
   const fb = Math.round(w*0.030)
-  ctx.font = `400 ${fb}px "JetBrains Mono", monospace`
+  ctx.font = `400 ${fb}px 'Inter Variable', 'Inter', sans-serif`
   ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.textAlign = 'center'
   ctx.fillText('WITHIN BOUNDS', w/2, h*0.92)
 }
@@ -292,7 +292,7 @@ function drawWave(ctx: CanvasRenderingContext2D, w: number, h: number, t: number
   ctx.fillStyle = `rgba(255,255,255,${0.12+0.10*Math.max(0,Math.sin(t*2.9-1.5))})`; ctx.fill()
 
   const fs = Math.round(w*0.028)
-  ctx.font = `400 ${fs}px "JetBrains Mono", monospace`
+  ctx.font = `400 ${fs}px 'Inter Variable', 'Inter', sans-serif`
   ctx.fillStyle = 'rgba(255,255,255,0.24)'
   ctx.textAlign = 'left';  ctx.fillText('PATIENT', w*0.04, h*0.30)
   ctx.textAlign = 'right'; ctx.fillText('DOCTOR',  w*0.96, h*0.76)

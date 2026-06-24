@@ -40,6 +40,27 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
 - ❌ Cool grays (#808080-ish) — the neutral ramp is the warm-neutral ladder above
 - ❌ Yellow text on white without using `--accent-text` (#7A5F00) — fails contrast
 - ❌ Hardcoding hex in components — always reference the token variable
+- ❌ Tailwind palette utilities (`text-red-500`, `from-black/60`, `bg-emerald-600`)
+  count as hardcoded hex — they produce CSS color declarations. Status green/red is
+  the most common way the one-mark rule gets broken in generated demos.
+
+### Demo surfaces — the deliberate exception
+
+> The site's one mark is yellow. Interactive **demos** are the one place a second
+> palette may "jump out" of the mono+yellow theme — but only through tokens, never
+> raw hex, and only on surfaces marked `data-demo`.
+
+- **`--signal-ok` / `--signal-warn` / `--signal-danger`** (+ `-bg` tints) — the ONLY
+  non-yellow functional signal colors. Use for pass/fail/warn state that yellow can't
+  carry legibly. Pair color with a non-color cue (icon/shape) for color-blind users.
+- **`--arch-medium/large/specialty/root`** — archetype palette. This is demo *data*
+  (which hospital a token belongs to), not decoration. Invitrace-scoped.
+- **`--preset-*`** — named config bundles in the Invitrace Atomic demo.
+- Canvas 2D / WebGL paint calls (`fillStyle`, `strokeStyle`, gradient stops) are
+  exempt — they are pixel ops, not CSS. Keep their hex values aligned to the tokens
+  above for visual consistency.
+- Alpha tints: use `color-mix(in srgb, var(--token) N%, transparent)`, never `${hex}NN`
+  string concatenation (breaks the moment the color is a CSS var).
 
 ## Typography
 

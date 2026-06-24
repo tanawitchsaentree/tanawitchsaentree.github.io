@@ -21,6 +21,10 @@ const SHAKE_STYLE = `
   90%      { transform: translateX(2px); }
 }
 .gate-shake { animation: gate-shake 420ms cubic-bezier(0.36,0.07,0.19,0.97) both; }
+@keyframes gate-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .gate-shake { animation: none; }
+}
 `
 
 export function InvitraceGate({ children }: { children: React.ReactNode }) {
@@ -149,7 +153,7 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                 >
                   Protected work
                 </h1>
-                <p className="text-[var(--type-sm)] text-[var(--fg-muted)] leading-[1.65] mb-8">
+                <p className="text-[var(--type-base)] text-[var(--fg-muted)] leading-[1.65] mb-8">
                   This case study contains real clinical system architecture
                   from a live healthcare product.
                   Enter the password to continue.
@@ -176,13 +180,13 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                       placeholder="Enter password"
                       className={cn(
                         'w-full px-4 py-3',
-                        'font-sans text-[var(--type-sm)]',
+                        'font-mono text-[var(--type-sm)]',
                         'bg-[var(--bg)] text-[var(--fg)]',
-                        'border transition-colors duration-[180ms]',
+                        'border transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)]',
                         'placeholder:text-[var(--fg-subtle)]',
                         'focus:outline-none',
                         state === 'error'
-                          ? 'border-red-500 focus:border-red-500'
+                          ? 'border-[var(--signal-danger)] focus:border-[var(--signal-danger)]'
                           : state === 'success'
                           ? 'border-[var(--accent)]'
                           : 'border-[var(--border)] focus:border-[var(--fg)]'
@@ -198,7 +202,7 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                     disabled={!value.trim() || state === 'checking' || state === 'success'}
                     className={cn(
                       'px-5 py-3',
-                      'font-sans text-[var(--type-sm)] font-medium',
+                      'font-mono text-[var(--type-sm)] font-medium',
                       'border transition-[background-color,border-color,opacity] duration-[200ms] ease-[var(--ease-out-quick)]',
                       'disabled:opacity-40 disabled:cursor-not-allowed',
                       state === 'success'
@@ -221,7 +225,7 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.18 }}
                       role="alert"
-                      className="text-[var(--type-xs)] text-red-500 leading-[1.5]"
+                      className="text-[var(--type-xs)] text-[var(--signal-danger)] leading-[1.5]"
                     >
                       {attempts >= 3
                         ? 'Still no luck — make sure you have the right password.'
@@ -312,15 +316,17 @@ function LockIcon({ unlocked }: { unlocked: boolean }) {
 }
 
 function SpinnerIcon() {
+  // Stepped rotation — mechanical "typewriter tick" feel. Uses CSS steps()
+  // (a timing function, not the banned `linear` keyword) so it's on-brand and
+  // compliant. 8 discrete ticks per revolution.
   return (
-    <motion.svg
+    <svg
       width="16" height="16" viewBox="0 0 24 24"
       fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-      animate={{ rotate: 360 }}
-      transition={{ duration: 0.7, repeat: Infinity, ease: 'linear' }}
+      style={{ animation: 'gate-spin 0.8s steps(8, end) infinite', transformOrigin: 'center' }}
     >
       <path d="M12 2a10 10 0 0 1 10 10" />
-    </motion.svg>
+    </svg>
   )
 }
 

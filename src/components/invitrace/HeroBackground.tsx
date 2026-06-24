@@ -31,8 +31,11 @@ interface Link extends SimulationLinkDatum<Node> {
 
 // ─── Graph ────────────────────────────────────────────────────────────────────
 
-const PC  = '#7B61FF'
-const AC  = { medium: '#0D9488', large: '#D97706', specialty: '#E85D75' }
+// Canvas-painted colors (fillStyle/strokeStyle) — exempt from the CSS token
+// rule, but kept aligned to the --arch-* / --preset-* token palette so the
+// hero graph reads as the same dataset the demos below visualise.
+const PC  = '#6B5BD6'  // = --arch-root (violet, the shared primitive layer)
+const AC  = { medium: '#0D9488', large: '#C97A0A', specialty: '#C0394B' }  // = --arch-*
 
 function buildGraph(): { nodes: Node[]; links: Link[] } {
   const nodes: Node[] = [

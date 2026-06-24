@@ -8,9 +8,9 @@ import { FridgeEntry } from '@/demos/stellareat/FridgeEntry'
 import { CommunityOwnership } from '@/demos/stellareat/CommunityOwnership'
 import { DecodeText } from '@/components/ui/DecodeText'
 
-// ── Typewriter direction: one face = JetBrains Mono (per design system) ──
-const FONT_DISPLAY = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
-const FONT_BODY    = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
+// ── One face across the site = Inter ──
+const FONT_DISPLAY = "'Inter Variable', 'Inter', sans-serif"
+const FONT_BODY    = "'Inter Variable', 'Inter', sans-serif"
 
 // ── Back navigation (exact same pattern as UniverseHero / InvitraceClient) ──
 function BackLink() {

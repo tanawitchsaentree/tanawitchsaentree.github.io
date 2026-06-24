@@ -329,7 +329,7 @@ const RECIPES = [
 ]
 
 // ── Shared style constants (module-level — not recreated per render) ──────────
-const MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
+const MONO = "'Inter Variable', 'Inter', sans-serif"
 
 const PANEL_TITLE: React.CSSProperties = {
   fontFamily:    MONO,

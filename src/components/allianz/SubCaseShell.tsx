@@ -14,9 +14,9 @@ const THESIS: Record<string, string> = {
 }
 
 const HINT: Record<string, string> = {
-  'document-classification': 'Drag the threshold. Watch routing change.',
-  'prompt-management':       'Press start. Compare what one week feels like.',
-  'fallback-states':         'Drag a document into each bucket.',
+  'document-classification': 'Flip the gate. The marked rows are the ones to decide.',
+  'prompt-management':       'Cycle the rule, watch routing shift, then publish it.',
+  'fallback-states':         'Process the batch, then open a marked document.',
 }
 
 // ── Disclosure panel ───────────────────────────────────────────

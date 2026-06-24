@@ -62,7 +62,7 @@ export function ParticleName({ text, className, height = 120 }: ParticleNameProp
     const fontPx = Math.round(height * 0.5)
     const measureCanvas = document.createElement('canvas')
     const mctx = measureCanvas.getContext('2d')!
-    mctx.font = `500 ${fontPx}px "JetBrains Mono", monospace`
+    mctx.font = `500 ${fontPx}px 'Inter Variable', 'Inter', sans-serif`
     const textW = Math.ceil(mctx.measureText(text).width)
 
     const cw = textW + fontPx          // padding
@@ -72,7 +72,7 @@ export function ParticleName({ text, className, height = 120 }: ParticleNameProp
     sample.height = Math.ceil(ch * DPR)
     const sctx = sample.getContext('2d')!
     sctx.scale(DPR, DPR)
-    sctx.font = `500 ${fontPx}px "JetBrains Mono", monospace`
+    sctx.font = `500 ${fontPx}px 'Inter Variable', 'Inter', sans-serif`
     sctx.textAlign = 'center'
     sctx.textBaseline = 'middle'
     sctx.fillStyle = '#fff'

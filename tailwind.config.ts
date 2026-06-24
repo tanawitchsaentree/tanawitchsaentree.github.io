@@ -6,10 +6,10 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        // Typewriter direction — one monospace face across the entire site.
-        display: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-        sans:    ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-        mono:    ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        // Inter across the entire site (display/body/meta all one face).
+        display: ['Inter Variable', 'Inter', '-apple-system', 'system-ui', 'sans-serif'],
+        sans:    ['Inter Variable', 'Inter', '-apple-system', 'system-ui', 'sans-serif'],
+        mono:    ['Inter Variable', 'Inter', '-apple-system', 'system-ui', 'sans-serif'],
       },
       colors: {
         bg: 'var(--bg)',

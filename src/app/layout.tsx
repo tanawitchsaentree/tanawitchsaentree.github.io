@@ -5,10 +5,10 @@ import '@fontsource/jetbrains-mono/400.css'
 import '@fontsource/jetbrains-mono/400-italic.css'
 import '@fontsource/jetbrains-mono/500.css'
 import '@fontsource/jetbrains-mono/700.css'
+import '@fontsource-variable/inter'
 import '../styles/globals.css'
 import { LenisProvider } from '@/components/providers/LenisProvider'
 import { CustomCursor } from '@/components/ui/CustomCursor'
-import { GlyphField } from '@/components/ui/GlyphField'
 
 export const metadata: Metadata = {
   title: 'Tanawitch Saentree — Product Designer, Enterprise AI & Systems',
@@ -54,7 +54,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="bg-[var(--bg)] text-[var(--fg)]">
-        <GlyphField />
         <LenisProvider>
           {children}
         </LenisProvider>

@@ -6,8 +6,7 @@ import { motion } from 'framer-motion'
 import { cn } from '@/lib/cn'
 import { DecodeText } from '@/components/ui/DecodeText'
 import { HeroBackground } from '@/components/invitrace/HeroBackground'
-import { EngineSection } from '@/components/invitrace/EngineSection'
-import { AtomicSection } from '@/components/invitrace/AtomicSection'
+import { BlastRadiusSection } from '@/components/invitrace/BlastRadiusSection'
 
 const METRICS = [
   { value: '3+',      label: 'hospitals onboarded'         },
@@ -83,7 +82,7 @@ function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className={cn(
-            'font-display font-medium',
+            'font-display font-normal',
             'text-[clamp(2rem,5.5vw,4.5rem)] leading-[0.98] tracking-[-0.02em]',
             'text-[var(--fg)] mb-8'
           )}
@@ -146,7 +145,7 @@ function HeroSection() {
       >
         {METRICS.map((m) => (
           <div key={m.label} className="flex items-baseline gap-2">
-            <span className="font-display font-medium tracking-[-0.02em] text-[1.5rem] leading-none text-[var(--fg)]">
+            <span className="font-display font-normal tracking-[-0.02em] text-[1.5rem] leading-none text-[var(--fg)]">
               {m.value}
             </span>
             <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] uppercase tracking-[0.06em]">
@@ -201,7 +200,7 @@ function ReflectionSection() {
             <dt className="font-mono text-[var(--type-xs)] uppercase tracking-widest text-[var(--fg-subtle)] mb-3">
               {item.label}
             </dt>
-            <dd className="text-[var(--type-sm)] text-[var(--fg-muted)] leading-[1.75]">
+            <dd className="text-[var(--type-base)] text-[var(--fg-muted)] leading-[1.75]">
               {item.body}
             </dd>
           </div>
@@ -215,8 +214,7 @@ export function InvitraceClient() {
   return (
     <>
       <HeroSection />
-      <EngineSection />
-      <AtomicSection />
+      <BlastRadiusSection />
       <ReflectionSection />
 
       <footer className={cn(

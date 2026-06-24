@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
-const MONO = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
+const MONO = "'Inter Variable', 'Inter', sans-serif"
 
 // ── Silt palette ──────────────────────────────────────────────────────────────
 const SILT = {

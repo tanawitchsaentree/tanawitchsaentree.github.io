@@ -94,6 +94,34 @@
   --fg-on-cover-subtle:  rgba(255, 255, 255, 0.50);
   --cover-vignette:      rgba(0, 0, 0, 0.60);
 
+  /* ── Semantic status — functional signal, NOT brand accent ──────────────
+     The site's one mark is yellow. But interactive DEMOS need pass/fail/warn
+     signal that yellow can't carry (a yellow "error" is illegible). These are
+     the ONLY non-yellow signal colors allowed, and ONLY inside demo surfaces.
+     Tuned for AA on both paper and dark. */
+  --signal-ok:      #2E7D52;  /* approved / on-system */
+  --signal-warn:    #B0700A;  /* needs review */
+  --signal-danger:  #C0392B;  /* rejected / breaks contract */
+  --signal-ok-bg:     rgba(46, 125, 82, 0.10);
+  --signal-warn-bg:   rgba(176, 112, 10, 0.10);
+  --signal-danger-bg: rgba(192, 57, 43, 0.10);
+
+  /* ── Archetype palette — demo DATA, not decoration ──────────────────────
+     Each hospital archetype owns one hue. This is the dataset the Invitrace
+     demos visualise (which hospital a token belongs to), so it deliberately
+     "jumps out" of the mono+yellow theme. Scoped to [data-demo] surfaces. */
+  --arch-medium:    #0D9488;  /* teal   — district hospital   */
+  --arch-large:     #C97A0A;  /* amber  — teaching hospital   */
+  --arch-specialty: #C0394B;  /* rose   — specialty clinic    */
+  --arch-root:      #6B5BD6;  /* violet — the shared token root */
+
+  /* Preset config bundles (Invitrace Atomic demo) — named token sets a
+     hospital can apply. Each is a distinct identity in the demo dataset. */
+  --preset-compact:    #4B5563;  /* slate  — high-volume ICU/ER */
+  --preset-accessible: #1D4ED8;  /* blue   — low-vision ward    */
+  --preset-warm:       #9333EA;  /* purple — private clinic     */
+  --preset-clinical:   #0E9F6E;  /* green  — night shift        */
+
   /* Cursor — updated in Fix 2 when accent color changes */
   --cursor-ring: #0A0A0A;
 }
@@ -115,6 +143,26 @@
   --shadow-color-soft:   rgba(0, 0, 0, 0.30);
   --shadow-color-mid:    rgba(0, 0, 0, 0.40);
   --shadow-color-heavy:  rgba(0, 0, 0, 0.60);
+
+  /* Status — brighter on dark for legibility */
+  --signal-ok:      #4ADE80;
+  --signal-warn:    #FBBF24;
+  --signal-danger:  #F87171;
+  --signal-ok-bg:     rgba(74, 222, 128, 0.12);
+  --signal-warn-bg:   rgba(251, 191, 36, 0.12);
+  --signal-danger-bg: rgba(248, 113, 113, 0.12);
+
+  /* Archetype — lifted for dark surfaces */
+  --arch-medium:    #2DD4BF;
+  --arch-large:     #F59E0B;
+  --arch-specialty: #FB7185;
+  --arch-root:      #A78BFA;
+
+  /* Preset bundles — lifted for dark */
+  --preset-compact:    #94A3B8;
+  --preset-accessible: #60A5FA;
+  --preset-warm:       #C084FC;
+  --preset-clinical:   #34D399;
 
   --cursor-ring: #F4F1EA;
 }

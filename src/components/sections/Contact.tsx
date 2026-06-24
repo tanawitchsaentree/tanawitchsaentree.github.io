@@ -96,7 +96,7 @@ export function Contact() {
         {/* Colophon */}
         <div className="flex flex-col items-center gap-1">
           <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">
-            Set in JetBrains Mono · Built with Next.js · GitHub Pages
+            Set in Inter · Built with Next.js · GitHub Pages
           </p>
           <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">
             © {new Date().getFullYear()} Tanawitch Saentree

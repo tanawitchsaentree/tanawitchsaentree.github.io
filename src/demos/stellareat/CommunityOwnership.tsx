@@ -16,7 +16,7 @@ const C = {
 // ── Design tokens ─────────────────────────────────────────────────────────────
 const EASE_GENTLE  = 'cubic-bezier(0.22, 1, 0.36, 1)'
 const EASE_DEFAULT = 'cubic-bezier(0.65, 0, 0.35, 1)'
-const MONO_FAMILY  = "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace"
+const MONO_FAMILY  = "'Inter Variable', 'Inter', sans-serif"
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
