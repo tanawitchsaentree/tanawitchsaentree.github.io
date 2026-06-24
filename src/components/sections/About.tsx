@@ -130,16 +130,27 @@ export function About() {
             ))}
           </ul>
 
-          <motion.div {...fadeUp(0.08)} className="flex flex-col gap-1 pt-2">
-            {EDUCATION.map(entry => (
-              <p key={entry.dates} className="text-[var(--type-xs)] leading-[1.6] text-[var(--fg-subtle)]">
-                <span className="font-mono uppercase tracking-[0.1em] mr-3">{entry.dates}</span>
-                {entry.label}
-              </p>
-            ))}
-          </motion.div>
         </div>
       </div>
+
+      {/* ── Education ── */}
+      <div className="grid md:grid-cols-[300px_1fr] gap-12 lg:gap-20 items-start mt-14">
+        <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.18em] text-[var(--fg-subtle)]">
+          Education
+        </p>
+
+        <motion.div {...fadeUp()} className="flex flex-col gap-3 max-w-[52ch]">
+          {EDUCATION.map(entry => (
+            <p key={entry.dates} className="text-[var(--type-sm)] leading-[1.6] text-[var(--fg-muted)]">
+              <span className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] text-[var(--fg-subtle)] mr-3">{entry.dates}</span>
+              {entry.label}
+            </p>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* ── Divider before "How I work" ── */}
+      <div className="h-px bg-[var(--border)] mt-16" aria-hidden="true" />
     </section>
   )
 }

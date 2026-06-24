@@ -147,6 +147,15 @@ export function PortalNav({ onEnter }: PortalNavProps) {
   useEffect(() => {
     setGreeting(GREETINGS[Math.floor(Math.random() * GREETINGS.length)])
   }, [])
+
+  // Intro choreography: nothing is visible at first, then pill → card → greeting
+  // rise in sequence (the page "greets" you rather than just finishing loading).
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setEntered(true), 60)
+    return () => clearTimeout(t)
+  }, [])
+
   const [everOpened, setEverOpened] = useState(false)  // gate loading the back clips
   const open = phase === 'open'
 
@@ -192,10 +201,21 @@ export function PortalNav({ onEnter }: PortalNavProps) {
           <motion.div
             key={card.id}
             className="absolute inset-0 m-auto pointer-events-none"
-            style={{ zIndex: card.z, width: 208, height: 224, willChange: 'transform' }}
+            style={{ zIndex: card.z, width: 208, height: 224, willChange: 'transform, opacity' }}
             initial={false}
-            animate={{ x: pos.x, y: pos.y, rotate: pos.rotate }}
-            transition={moveTransition}
+            animate={{
+              x: pos.x,
+              // front card rises 24px on intro; back cards stay put behind it
+              y: !entered && card.id === 'about' ? pos.y + 24 : pos.y,
+              rotate: pos.rotate,
+              // only the visible front card fades in; back cards are occluded anyway
+              opacity: card.id === 'about' && !entered ? 0 : 1,
+            }}
+            transition={
+              entered
+                ? moveTransition
+                : { duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.18, ease: EASE_DECISIVE }
+            }
           >
             <motion.button
               type="button"
@@ -260,11 +280,11 @@ export function PortalNav({ onEnter }: PortalNavProps) {
           <motion.div
             key="pill"
             className="absolute inset-x-0 m-auto flex items-center justify-center pointer-events-none px-6"
-            style={{ top: 'calc(50% - 188px)' }}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
+            style={{ top: 'calc(50% - 196px)' }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
             exit={{ opacity: 0, transition: { duration: 0.2 } }}
-            transition={{ duration: 0.4, ease: EASE_DECISIVE }}
+            transition={{ duration: 0.55, delay: reduced ? 0 : 0.05, ease: EASE_DECISIVE }}
           >
             <span
               className="inline-flex items-center gap-2 border border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--fg)] whitespace-nowrap"
@@ -280,22 +300,26 @@ export function PortalNav({ onEnter }: PortalNavProps) {
         )}
       </AnimatePresence>
 
-      {/* greeting line — lives below the stack, gone once split */}
+      {/* greeting — the hero line. Sits well below the card in its own pool of
+          space (≈2× the gap above the card) so the eye lands on it, and it only
+          starts typing after the pill + card have risen. */}
       <AnimatePresence>
         {!open && (
           <motion.div
             key="greeting"
-            className="absolute inset-x-0 m-auto flex items-center justify-center pointer-events-none"
-            style={{ top: 'calc(50% + 148px)' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            className="absolute inset-x-0 m-auto flex items-center justify-center pointer-events-none px-6"
+            style={{ top: 'calc(50% + 200px)' }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            transition={{ duration: 0.5, delay: reduced ? 0 : 0.5, ease: EASE_DECISIVE }}
           >
             <Typewriter
               key={phase === 'hover' ? 'hover' : 'idle'}
               lines={[[{ text: phase === 'hover' ? 'Learn more about me?' : greeting }]]}
               speed={26}
-              className="font-mono text-[var(--type-sm)] text-[var(--fg-muted)] tracking-[0.02em]"
+              startDelay={phase === 'hover' ? 120 : 850}
+              className="font-mono text-[var(--type-base)] text-[var(--fg)] tracking-[0.01em] text-center"
             />
           </motion.div>
         )}

@@ -27,26 +27,9 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
-// Inlined theme-init script — runs before first paint to prevent FOUC.
-// Reads localStorage 'theme', falls back to prefers-color-scheme.
-const themeInitScript = `
-(function(){
-  try {
-    // Default to LIGHT (paper) — only honour an explicit user choice for dark.
-    var stored = localStorage.getItem('theme');
-    if (stored === 'dark') document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-  } catch(e) {}
-})();
-`
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
+    <html lang="en">
       <body className="bg-[var(--bg)] text-[var(--fg)]">
         <LenisProvider>
           {children}
