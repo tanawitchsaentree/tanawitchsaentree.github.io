@@ -45,8 +45,12 @@ function CardMedia({ video, poster, shape, active, load }: {
   if (video) {
     return (
       <div className="absolute inset-0">
-        {/* lazy: only attach the source once this card is needed, so idle
-            doesn't fetch all three clips up front */}
+        {/* poster (tiny jpg) shows instantly; the clip lazy-attaches on top
+            once this card is needed, so idle never fetches all three videos */}
+        {poster && (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={poster} alt="" draggable={false} className="absolute inset-0 w-full h-full object-cover object-center select-none" />
+        )}
         {load && (
           <video
             ref={ref}
@@ -56,8 +60,6 @@ function CardMedia({ video, poster, shape, active, load }: {
             className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
           />
         )}
-        {/* base fill behind the video (and shown until it loads) */}
-        {!load && <div className="absolute inset-0 bg-[var(--bg-muted)]" aria-hidden="true" />}
       </div>
     )
   }
@@ -76,9 +78,9 @@ interface CardDef {
 // About is the front/live card (highest z); Work fans left, Contact fans right.
 // Each card plays a silent looping clip (dribbble vibe), with its still as poster.
 const CARDS: CardDef[] = [
-  { id: 'work',    label: 'Work',    shape: 1, z: 1, video: '/images/work.mp4' },
-  { id: 'about',   label: 'About',   shape: 0, z: 3, video: '/images/home-hero.mp4' },
-  { id: 'contact', label: 'Contact', shape: 3, z: 2, video: '/images/contact.mp4' },
+  { id: 'work',    label: 'Work',    shape: 1, z: 1, video: '/images/work.mp4',      poster: '/images/work.jpg' },
+  { id: 'about',   label: 'About',   shape: 0, z: 3, video: '/images/home-hero.mp4', poster: '/images/home-hero.jpg' },
+  { id: 'contact', label: 'Contact', shape: 3, z: 2, video: '/images/contact.mp4',   poster: '/images/contact.jpg' },
 ]
 
 
