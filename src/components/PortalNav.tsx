@@ -30,8 +30,8 @@ type Phase = 'idle' | 'hover' | 'open'
  * Three simultaneous video decodes during a transform is what makes the split
  * stutter; pausing the occluded/idle clips keeps the GPU free for the animation.
  */
-function CardMedia({ video, poster, shape, active }: {
-  video?: string; poster?: string; shape: number; active: boolean
+function CardMedia({ video, poster, shape, active, load }: {
+  video?: string; poster?: string; shape: number; active: boolean; load: boolean
 }) {
   const ref = useRef<HTMLVideoElement>(null)
 
@@ -40,17 +40,25 @@ function CardMedia({ video, poster, shape, active }: {
     if (!v) return
     if (active) { const p = v.play(); if (p?.catch) p.catch(() => {}) }
     else v.pause()
-  }, [active])
+  }, [active, load])
 
   if (video) {
     return (
-      <video
-        ref={ref}
-        src={video}
-        poster={poster}
-        loop muted playsInline preload="metadata"
-        className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
-      />
+      <div className="absolute inset-0">
+        {/* lazy: only attach the source once this card is needed, so idle
+            doesn't fetch all three clips up front */}
+        {load && (
+          <video
+            ref={ref}
+            src={video}
+            poster={poster}
+            loop muted playsInline preload="auto"
+            className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
+          />
+        )}
+        {/* base fill behind the video (and shown until it loads) */}
+        {!load && <div className="absolute inset-0 bg-[var(--bg-muted)]" aria-hidden="true" />}
+      </div>
     )
   }
   if (poster) {
@@ -99,6 +107,7 @@ export function PortalNav({ onEnter }: PortalNavProps) {
   const reduced = useReducedMotion()
   const [phase, setPhase] = useState<Phase>('idle')
   const [moving, setMoving] = useState(false)   // true during the split/back glide
+  const [everOpened, setEverOpened] = useState(false)  // gate loading the back clips
   const open = phase === 'open'
 
   // Pause every clip while the cards are gliding, resume once settled — so no
@@ -111,7 +120,7 @@ export function PortalNav({ onEnter }: PortalNavProps) {
 
   const enterHover = useCallback(() => setPhase(p => (p === 'open' ? p : 'hover')), [])
   const leaveHover = useCallback(() => setPhase(p => (p === 'open' ? p : 'idle')), [])
-  const split      = useCallback(() => { setPhase('open'); settle(740) }, [settle])
+  const split      = useCallback(() => { setEverOpened(true); setPhase('open'); settle(740) }, [settle])
   const collapse   = useCallback(() => { setPhase('idle'); settle(740) }, [settle])
 
   // Card keeps a FIXED pixel size; the open state only scales it down.
@@ -136,6 +145,8 @@ export function PortalNav({ onEnter }: PortalNavProps) {
         const isDoor = open
         // play: front card when stacked; all three once split — but never while gliding
         const mediaActive = !moving && (open || card.id === 'about')
+        // front card loads at once; the other two only after the first open
+        const mediaLoad = card.id === 'about' || everOpened
         return (
           /* whole column (card + label) carries the x/y/rotate so the label
              travels with its card — no overlap when split */
@@ -171,7 +182,7 @@ export function PortalNav({ onEnter }: PortalNavProps) {
               }}
               transition={moveTransition}
             >
-              <CardMedia video={card.video} poster={card.poster} shape={card.shape} active={mediaActive} />
+              <CardMedia video={card.video} poster={card.poster} shape={card.shape} active={mediaActive} load={mediaLoad} />
             </motion.button>
 
             {/* door label — absolutely positioned BELOW the card so it never
