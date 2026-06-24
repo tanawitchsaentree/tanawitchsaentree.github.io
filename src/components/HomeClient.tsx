@@ -94,6 +94,10 @@ export function HomeClient({ projects }: HomeClientProps) {
   return (
     <>
       <main id="main-content" tabIndex={-1}>
+        {/* Stable page heading for SEO + screen readers — the visible greeting
+            rotates every load, so it must NOT be the h1. */}
+        <h1 className="sr-only">Tanawitch Saentree — Senior Product Designer</h1>
+
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={view}

@@ -8,7 +8,7 @@
  * scatter  → Stellareat: taste-cluster manifold, recommendation cursor moves
  * simplex  → Robowealth: donut chart rebalancing in real time
  * hull     → Profita:    regulatory boundary, dots bounce inside SEC walls
- * wave     → DoctorAnywhere: ECG heartbeat, latency decay left→right
+ * wave     → telehealth motif: ECG heartbeat, latency decay left→right (unused)
  */
 
 import { useEffect, useRef } from 'react'

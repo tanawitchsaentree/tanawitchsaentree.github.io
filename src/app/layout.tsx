@@ -5,14 +5,16 @@ import '../styles/globals.css'
 import { LenisProvider } from '@/components/providers/LenisProvider'
 import { CustomCursor } from '@/components/ui/CustomCursor'
 
+const SITE_TITLE = 'Tanawitch Saentree — Senior Product Designer'
+const SITE_DESC =
+  'Designing AI document tools, internal platforms, and operator-facing systems. 7 years across Allianz Technology, Invitrace Health, Stellareat, and Robowealth.'
+
 export const metadata: Metadata = {
-  title: 'Tanawitch Saentree — Product Designer, Enterprise AI & Systems',
-  description:
-    'Designing AI document tools, internal platforms, and operator-facing systems. 8 years across Allianz Technology, Invitrace, and DoctorAnywhere.',
+  title: SITE_TITLE,
+  description: SITE_DESC,
   openGraph: {
-    title: 'Tanawitch Saentree — Senior Product Designer',
-    description:
-      'I design for the person who didn\'t choose the software but has to use it every day. That\'s where the world gets better.',
+    title: SITE_TITLE,
+    description: SITE_DESC,
     url: 'https://tanawitchsaentree.github.io',
     siteName: 'Tanawitch Saentree',
     locale: 'en_US',
@@ -20,9 +22,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tanawitch Saentree — Senior Product Designer',
-    description:
-      'I design for the person who didn\'t choose the software but has to use it every day. That\'s where the world gets better.',
+    title: SITE_TITLE,
+    description: SITE_DESC,
   },
   robots: { index: true, follow: true },
 }

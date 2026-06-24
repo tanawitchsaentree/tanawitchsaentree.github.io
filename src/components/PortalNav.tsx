@@ -117,17 +117,24 @@ const GREETINGS = [
   'Hi there — I’ll keep it honest and human, promise.',
 ] as const
 
-// Per-card transform for each phase.
-function place(id: Door, phase: Phase) {
+// Card + motion sizing. Compact values keep the fanned/split cards inside a
+// 375px viewport (3 × cardW + 2 × spread must stay < ~360 with margins).
+interface Sizing { cardW: number; cardH: number; spread: number; fan: number }
+const DESKTOP: Sizing = { cardW: 208, cardH: 224, spread: 232, fan: 88 }
+// At 375px the stage is ~327px wide (after px-6). 2×spread + cardW must stay
+// under that: 2×100 + 104 = 304 ✓ — three doors fit with margin to spare.
+const MOBILE:  Sizing = { cardW: 104, cardH: 136, spread: 100, fan: 44 }
+
+// Per-card transform for each phase, scaled by the active sizing.
+function place(id: Door, phase: Phase, s: Sizing) {
   if (phase === 'open') {
-    const x = id === 'work' ? -232 : id === 'contact' ? 232 : 0
+    const x = id === 'work' ? -s.spread : id === 'contact' ? s.spread : 0
     return { x, y: 0, rotate: 0 }
   }
   if (phase === 'hover') {
-    // fan out like a hand of cards — enough to clearly peek the two behind,
-    // foreshadowing the split into three doors.
-    if (id === 'work')    return { x: -88, y: 10, rotate: -7 }
-    if (id === 'contact') return { x: 88,  y: 16, rotate: 7 }
+    // fan out like a hand of cards — peek the two behind, foreshadow the split.
+    if (id === 'work')    return { x: -s.fan, y: 10, rotate: -7 }
+    if (id === 'contact') return { x: s.fan,  y: 16, rotate: 7 }
     return { x: 0, y: -12, rotate: 0 } // about lifts in front
   }
   return { x: 0, y: 0, rotate: 0 } // idle — perfectly stacked
@@ -155,6 +162,20 @@ export function PortalNav({ onEnter }: PortalNavProps) {
     const t = setTimeout(() => setEntered(true), 60)
     return () => clearTimeout(t)
   }, [])
+
+  // Compact sizing on narrow screens so the fanned/split cards never clip.
+  // Lazy-init from innerWidth so the very first client render is already correct
+  // (no desktop→mobile flash), then keep it in sync on resize/rotate.
+  const [compact, setCompact] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth <= 520
+  )
+  useEffect(() => {
+    const sync = () => setCompact(window.innerWidth <= 520)
+    sync()
+    window.addEventListener('resize', sync)
+    return () => window.removeEventListener('resize', sync)
+  }, [])
+  const sizing = compact ? MOBILE : DESKTOP
 
   const [everOpened, setEverOpened] = useState(false)  // gate loading the back clips
   const open = phase === 'open'
@@ -184,165 +205,162 @@ export function PortalNav({ onEnter }: PortalNavProps) {
         ? { duration: 0.5, ease: EASE_SMOOTH }     // gentle lift up
         : { duration: 0.55, ease: EASE_SMOOTH }    // gentle settle back
 
+  const { cardW, cardH } = sizing
+
   return (
-    <div className="relative w-full min-h-[calc(100svh-2.75rem)]">
-      {/* the three cards — always mounted, centred, transformed per phase */}
-      {CARDS.map(card => {
-        const pos = reduced ? { x: 0, y: 0, rotate: 0 } : place(card.id, phase)
-        const isDoor = open
-        // play: front card when stacked; all three once split — but never while gliding
-        const mediaActive = !moving && (open || card.id === 'about')
-        // front card loads at once; the other two only after the first open
-        const mediaLoad = card.id === 'about' || everOpened
-        return (
-          // Wrapper is exactly the card box (208×224) and carries the glide
-          // transforms. The label sits at top-full, glued to the real bottom
-          // edge and auto-centred — no scale skew, no math.
-          <motion.div
-            key={card.id}
-            className="absolute inset-0 m-auto pointer-events-none"
-            style={{ zIndex: card.z, width: 208, height: 224, willChange: 'transform, opacity' }}
-            initial={false}
-            animate={{
-              x: pos.x,
-              // front card rises 24px on intro; back cards stay put behind it
-              y: !entered && card.id === 'about' ? pos.y + 24 : pos.y,
-              rotate: pos.rotate,
-              // only the visible front card fades in; back cards are occluded anyway
-              opacity: card.id === 'about' && !entered ? 0 : 1,
-            }}
-            transition={
-              entered
-                ? moveTransition
-                : { duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.18, ease: EASE_DECISIVE }
-            }
-          >
-            <motion.button
-              type="button"
-              onClick={() => (open ? onEnter(card.id) : split())}
-              onMouseEnter={open ? undefined : enterHover}
-              onMouseLeave={open ? undefined : leaveHover}
-              onFocus={open ? undefined : enterHover}
-              onBlur={open ? undefined : leaveHover}
-              aria-label={open ? card.label : 'Open — Tanawitch Saentree portfolio'}
-              className="group relative grid place-items-center overflow-hidden bg-[var(--bg-elevated)] p-0 cursor-pointer pointer-events-auto w-full h-full focus-visible:outline-2 focus-visible:outline-[var(--fg)] focus-visible:outline-offset-2"
-              style={{ borderRadius: 40, border: '2.5px solid var(--fg-on-cover)', willChange: 'transform' }}
+    // Real flex column, vertically centred in the viewport. py provides a safe
+    // gutter so the stack never touches the top edge on short screens; gap gives
+    // the greeting its own pool of space (the hierarchy beat).
+    <div className="w-full min-h-[calc(100svh-2.75rem)] flex flex-col items-center justify-center gap-y-6 py-12 px-6">
+
+      {/* status pill — flows above the stage, gone once split */}
+      <div className="min-h-12 flex items-end justify-center">
+        <AnimatePresence>
+          {!open && (
+            <motion.div
+              key="pill"
+              initial={{ opacity: 0, y: 14 }}
+              animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+              exit={{ opacity: 0, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.55, delay: reduced ? 0 : 0.05, ease: EASE_DECISIVE }}
+            >
+              <span
+                className="inline-flex items-center gap-2 border border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--fg)] max-w-[88vw] text-center"
+                style={{ borderRadius: 14, fontSize: compact ? 12.5 : 14, padding: compact ? '8px 14px' : '10px 18px', lineHeight: 1.3 }}
+              >
+                <span aria-hidden="true" className="shrink-0">🪴</span>
+                <span>
+                  I design experience and build at{' '}
+                  <strong className="font-semibold">Allianz Technology</strong>
+                </span>
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* stage — fixed-height box that holds the absolutely-stacked cards.
+          Centring/transforms happen inside; the box itself sits in the flex flow. */}
+      <div className="relative" style={{ width: '100%', height: cardH + 56 }}>
+        {CARDS.map(card => {
+          const pos = reduced ? { x: 0, y: 0, rotate: 0 } : place(card.id, phase, sizing)
+          const isDoor = open
+          const mediaActive = !moving && (open || card.id === 'about')
+          const mediaLoad = card.id === 'about' || everOpened
+          return (
+            <motion.div
+              key={card.id}
+              className="absolute left-1/2 top-0 pointer-events-none"
+              style={{ zIndex: card.z, width: cardW, height: cardH, marginLeft: -cardW / 2, willChange: 'transform, opacity' }}
               initial={false}
               animate={{
-                boxShadow: phase === 'hover' && card.id === 'about'
-                  ? '0 18px 40px -12px var(--shadow-color-mid)'
-                  : '0 0px 0px 0px rgba(0,0,0,0)',
+                x: pos.x,
+                y: !entered && card.id === 'about' ? pos.y + 24 : pos.y,
+                rotate: pos.rotate,
+                opacity: card.id === 'about' && !entered ? 0 : 1,
               }}
-              transition={moveTransition}
-              /* once a door, each card lifts + grows slightly on hover */
-              whileHover={open && !reduced ? { y: -10, scale: 1.04 } : undefined}
-              whileTap={open && !reduced ? { scale: 0.98 } : undefined}
+              transition={
+                entered
+                  ? moveTransition
+                  : { duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 0.18, ease: EASE_DECISIVE }
+              }
             >
-              <CardMedia video={card.video} poster={card.poster} active={mediaActive} load={mediaLoad} />
-              {/* hover scrim + arrow cue — only as a door */}
-              {isDoor && (
-                <span
-                  className="absolute inset-0 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-base)] ease-[var(--ease-out-quick)]"
-                  style={{ background: 'color-mix(in srgb, var(--fg) 28%, transparent)' }}
-                  aria-hidden="true"
-                >
-                  <span className="font-sans text-[var(--fg-on-cover)]" style={{ fontSize: 22 }}>↗</span>
-                </span>
-              )}
-            </motion.button>
-
-            {/* door label — full-width flex row pinned under the card centres
-                it; the motion.span only animates opacity/y so Framer's transform
-                never fights a translate-x (the bug that pushed it off-centre). */}
-            <AnimatePresence>
-              {isDoor && (
-                <div className="absolute inset-x-0 top-full mt-3.5 flex justify-center pointer-events-none">
-                  <motion.span
-                    className="whitespace-nowrap font-sans text-[var(--fg)]"
-                    style={{ fontSize: 14, fontWeight: 400 }}
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3, delay: reduced ? 0 : 0.22, ease: EASE_DECISIVE }}
+              <motion.button
+                type="button"
+                onClick={() => (open ? onEnter(card.id) : split())}
+                onMouseEnter={open ? undefined : enterHover}
+                onMouseLeave={open ? undefined : leaveHover}
+                onFocus={open ? undefined : enterHover}
+                onBlur={open ? undefined : leaveHover}
+                aria-label={open ? card.label : 'Open — Tanawitch Saentree portfolio'}
+                className="group relative grid place-items-center overflow-hidden bg-[var(--bg-elevated)] p-0 cursor-pointer pointer-events-auto w-full h-full focus-visible:outline-2 focus-visible:outline-[var(--fg)] focus-visible:outline-offset-2"
+                style={{ borderRadius: compact ? 24 : 40, border: '2.5px solid var(--fg-on-cover)', willChange: 'transform' }}
+                initial={false}
+                animate={{
+                  boxShadow: phase === 'hover' && card.id === 'about'
+                    ? '0 18px 40px -12px var(--shadow-color-mid)'
+                    : '0 0px 0px 0px rgba(0,0,0,0)',
+                }}
+                transition={moveTransition}
+                whileHover={open && !reduced ? { y: -10, scale: 1.04 } : undefined}
+                whileTap={open && !reduced ? { scale: 0.98 } : undefined}
+              >
+                <CardMedia video={card.video} poster={card.poster} active={mediaActive} load={mediaLoad} />
+                {isDoor && (
+                  <span
+                    className="absolute inset-0 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-base)] ease-[var(--ease-out-quick)]"
+                    style={{ background: 'color-mix(in srgb, var(--fg) 28%, transparent)' }}
+                    aria-hidden="true"
                   >
-                    {card.label}
-                  </motion.span>
-                </div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        )
-      })}
+                    <span className="font-sans text-[var(--fg-on-cover)]" style={{ fontSize: 22 }}>↗</span>
+                  </span>
+                )}
+              </motion.button>
 
-      {/* status pill — above the stack, gone once split */}
-      <AnimatePresence>
-        {!open && (
-          <motion.div
-            key="pill"
-            className="absolute inset-x-0 m-auto flex items-center justify-center pointer-events-none px-6"
-            style={{ top: 'calc(50% - 196px)' }}
-            initial={{ opacity: 0, y: 14 }}
-            animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-            exit={{ opacity: 0, transition: { duration: 0.2 } }}
-            transition={{ duration: 0.55, delay: reduced ? 0 : 0.05, ease: EASE_DECISIVE }}
-          >
-            <span
-              className="inline-flex items-center gap-2 border border-[var(--border)] bg-[var(--bg-elevated)] text-[var(--fg)] whitespace-nowrap"
-              style={{ borderRadius: 14, fontSize: 14, padding: '10px 18px', lineHeight: 1.2 }}
+              {/* door label — pinned under the card, auto-centred */}
+              <AnimatePresence>
+                {isDoor && (
+                  <div className="absolute inset-x-0 top-full mt-3.5 flex justify-center pointer-events-none">
+                    <motion.span
+                      className="whitespace-nowrap font-sans text-[var(--fg)]"
+                      style={{ fontSize: 14, fontWeight: 400 }}
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3, delay: reduced ? 0 : 0.22, ease: EASE_DECISIVE }}
+                    >
+                      {card.label}
+                    </motion.span>
+                  </div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )
+        })}
+      </div>
+
+      {/* greeting — the hero line, in its own pool of space below the stage */}
+      <div className="h-10 flex items-start justify-center">
+        <AnimatePresence>
+          {!open && (
+            <motion.div
+              key="greeting"
+              initial={{ opacity: 0, y: 10 }}
+              animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              exit={{ opacity: 0, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.5, delay: reduced ? 0 : 0.5, ease: EASE_DECISIVE }}
             >
-              <span aria-hidden="true">🪴</span>
-              <span>
-                I design experience and build at{' '}
-                <strong className="font-semibold">Allianz Technology</strong>
-              </span>
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* greeting — the hero line. Sits well below the card in its own pool of
-          space (≈2× the gap above the card) so the eye lands on it, and it only
-          starts typing after the pill + card have risen. */}
-      <AnimatePresence>
-        {!open && (
-          <motion.div
-            key="greeting"
-            className="absolute inset-x-0 m-auto flex items-center justify-center pointer-events-none px-6"
-            style={{ top: 'calc(50% + 200px)' }}
-            initial={{ opacity: 0, y: 10 }}
-            animate={entered ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            exit={{ opacity: 0, transition: { duration: 0.2 } }}
-            transition={{ duration: 0.5, delay: reduced ? 0 : 0.5, ease: EASE_DECISIVE }}
-          >
-            <Typewriter
-              key={phase === 'hover' ? 'hover' : 'idle'}
-              lines={[[{ text: phase === 'hover' ? 'Learn more about me?' : greeting }]]}
-              speed={26}
-              startDelay={phase === 'hover' ? 120 : 850}
-              className="font-mono text-[var(--type-base)] text-[var(--fg)] tracking-[0.01em] text-center"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <Typewriter
+                key={phase === 'hover' ? 'hover' : 'idle'}
+                lines={[[{ text: phase === 'hover' ? 'Learn more about me?' : greeting }]]}
+                speed={26}
+                startDelay={phase === 'hover' ? 120 : 850}
+                className="font-mono text-[var(--type-base)] text-[var(--fg)] tracking-[0.01em] text-center"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* back — arrow only, appears when open */}
-      <AnimatePresence>
-        {open && (
-          <motion.button
-            key="back"
-            type="button"
-            onClick={collapse}
-            aria-label="Back to start"
-            className="absolute inset-x-0 m-auto w-max text-[var(--type-lg)] text-[var(--fg-subtle)] hover:text-[var(--fg)] bg-transparent border-none cursor-pointer transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)]"
-            style={{ top: 'calc(50% + 220px)' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { delay: 0.3 } }}
-            exit={{ opacity: 0, transition: { duration: 0.15 } }}
-          >
-            ←
-          </motion.button>
-        )}
-      </AnimatePresence>
+      <div className="h-8 flex items-center justify-center">
+        <AnimatePresence>
+          {open && (
+            <motion.button
+              key="back"
+              type="button"
+              onClick={collapse}
+              aria-label="Back to start"
+              className="w-max text-[var(--type-lg)] text-[var(--fg-subtle)] hover:text-[var(--fg)] bg-transparent border-none cursor-pointer rounded-[var(--radius-sm)] px-3 py-1 transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)] focus-visible:outline-2 focus-visible:outline-[var(--fg)] focus-visible:outline-offset-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { delay: 0.3 } }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            >
+              ←
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   )
 }

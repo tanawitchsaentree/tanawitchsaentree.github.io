@@ -9,7 +9,6 @@ const SIGNATURES: Record<string, string> = {
   'allianz-doc-classification': '/projects/signatures/allianz.svg',
   'profita-mutual-fund':        '/projects/signatures/profita.svg',
   'invitrace-design-system':    '/projects/signatures/invitrace.svg',
-  'doctoranywhere-telehealth':  '/projects/signatures/doctoranywhere.svg',
   // Stubs — no signature yet, CoverSignature handles missing gracefully
 }
 

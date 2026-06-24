@@ -11,8 +11,10 @@ import { cn } from '@/lib/cn'
  * render at opacity 0 so there is zero layout shift — text never reflows as it
  * types. A block caret sits at the leading edge while typing, then blinks at rest.
  *
- * Accessibility: full text is exposed to screen readers via an sr-only span;
- * the animated glyphs are aria-hidden. Honors prefers-reduced-motion (instant).
+ * Accessibility: the full text is exposed to screen readers via aria-label on
+ * the wrapper (an attribute, so the text appears only ONCE in the DOM — no
+ * duplicate sr-only node); the animated glyphs inside are aria-hidden.
+ * Honors prefers-reduced-motion (instant).
  */
 
 export interface TypeSegment {
@@ -118,9 +120,8 @@ export function Typewriter({
   )
 
   return (
-    <>
-      <span className="sr-only">{plain}</span>
-      <span aria-hidden="true" className={className}>
+    <span role="img" aria-label={plain} className={className}>
+      <span aria-hidden="true">
         {grouped.map(({ line, chars: lineChars }) => (
           <span key={line} className="block">
             {lineChars.map(({ gi, fc }) => (
@@ -142,6 +143,6 @@ export function Typewriter({
           </span>
         ))}
       </span>
-    </>
+    </span>
   )
 }
