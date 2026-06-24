@@ -2,15 +2,23 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
-import { WorkGrid } from '@/components/sections/WorkGrid'
-import { About } from '@/components/sections/About'
-import { Process } from '@/components/sections/Process'
-import { Contact } from '@/components/sections/Contact'
-import { ProjectModal } from '@/components/project/ProjectModal'
 import { PortalNav, type Door } from '@/components/PortalNav'
 import { cn } from '@/lib/cn'
 import type { ProjectFrontmatter } from '@/types/project'
+
+// Sections live behind the portal doors — only loaded once a door is opened,
+// so their JS (incl. GenerativeCover's canvas + lucide icons) stays off the
+// homepage's first paint.
+const WorkGrid = dynamic(() => import('@/components/sections/WorkGrid').then(m => m.WorkGrid))
+const About    = dynamic(() => import('@/components/sections/About').then(m => m.About))
+const Process  = dynamic(() => import('@/components/sections/Process').then(m => m.Process))
+const Contact  = dynamic(() => import('@/components/sections/Contact').then(m => m.Contact))
+const ProjectModal = dynamic(
+  () => import('@/components/project/ProjectModal').then(m => m.ProjectModal),
+  { ssr: false },
+)
 
 // ── Spacing contract ───────────────────────────────────────────
 // PANEL owns ONLY width + horizontal padding.
@@ -125,7 +133,9 @@ export function HomeClient({ projects }: HomeClientProps) {
         </AnimatePresence>
       </main>
 
-      <ProjectModal project={activeProject} content={modalContent} onClose={closeProject} />
+      {activeProject && (
+        <ProjectModal project={activeProject} content={modalContent} onClose={closeProject} />
+      )}
     </>
   )
 }

@@ -13,12 +13,11 @@
  *   open  — the very same three cards glide apart into Work · About · Contact
  *           doors. One motion, fully continuous from the hover pose.
  *
- * Reuses MorphParticles (a loop per card) — nothing new invented.
+ * Each card is a silent looping clip with a tiny poster — no WebGL.
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { MorphParticles } from '@/components/ui/MorphParticles'
 import { Typewriter } from '@/components/ui/Typewriter'
 
 export type Door = 'work' | 'about' | 'contact'
@@ -30,8 +29,8 @@ type Phase = 'idle' | 'hover' | 'open'
  * Three simultaneous video decodes during a transform is what makes the split
  * stutter; pausing the occluded/idle clips keeps the GPU free for the animation.
  */
-function CardMedia({ video, poster, shape, active, load }: {
-  video?: string; poster?: string; shape: number; active: boolean; load: boolean
+function CardMedia({ video, poster, active, load }: {
+  video?: string; poster?: string; active: boolean; load: boolean
 }) {
   const ref = useRef<HTMLVideoElement>(null)
 
@@ -56,31 +55,29 @@ function CardMedia({ video, poster, shape, active, load }: {
             ref={ref}
             src={video}
             poster={poster}
-            loop muted playsInline preload="auto"
+            loop muted playsInline preload="metadata"
             className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
           />
         )}
       </div>
     )
   }
-  if (poster) {
-    /* eslint-disable-next-line @next/next/no-img-element */
-    return <img src={poster} alt="" draggable={false} className="absolute inset-0 w-full h-full object-cover object-center select-none" />
-  }
-  return <MorphParticles shapeIndex={shape} className="absolute inset-0 w-full h-full" />
+  /* eslint-disable-next-line @next/next/no-img-element */
+  if (poster) return <img src={poster} alt="" draggable={false} className="absolute inset-0 w-full h-full object-cover object-center select-none" />
+  return <div className="absolute inset-0 bg-[var(--bg-muted)]" aria-hidden="true" />
 }
 
 interface CardDef {
-  id: Door; label: string; shape: number; z: number
+  id: Door; label: string; z: number
   video?: string; poster?: string   // poster shows while the loop loads
 }
 
 // About is the front/live card (highest z); Work fans left, Contact fans right.
 // Each card plays a silent looping clip (dribbble vibe), with its still as poster.
 const CARDS: CardDef[] = [
-  { id: 'work',    label: 'Work',    shape: 1, z: 1, video: '/images/work.mp4',      poster: '/images/work.jpg' },
-  { id: 'about',   label: 'About',   shape: 0, z: 3, video: '/images/home-hero.mp4', poster: '/images/home-hero.jpg' },
-  { id: 'contact', label: 'Contact', shape: 3, z: 2, video: '/images/contact.mp4',   poster: '/images/contact.jpg' },
+  { id: 'work',    label: 'Work',    z: 1, video: '/images/work.mp4',      poster: '/images/work.jpg' },
+  { id: 'about',   label: 'About',   z: 3, video: '/images/home-hero.mp4', poster: '/images/home-hero.jpg' },
+  { id: 'contact', label: 'Contact', z: 2, video: '/images/contact.mp4',   poster: '/images/contact.jpg' },
 ]
 
 
@@ -221,7 +218,7 @@ export function PortalNav({ onEnter }: PortalNavProps) {
               whileHover={open && !reduced ? { y: -10, scale: 1.04 } : undefined}
               whileTap={open && !reduced ? { scale: 0.98 } : undefined}
             >
-              <CardMedia video={card.video} poster={card.poster} shape={card.shape} active={mediaActive} load={mediaLoad} />
+              <CardMedia video={card.video} poster={card.poster} active={mediaActive} load={mediaLoad} />
               {/* hover scrim + arrow cue — only as a door */}
               {isDoor && (
                 <span
