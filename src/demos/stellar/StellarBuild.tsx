@@ -2,6 +2,7 @@
 
 import { S } from './tokens'
 import { StellarScreen1 } from './ui/StellarScreen1'
+import { StellarScreen2 } from './ui/StellarScreen2'
 
 const KICKER_LINE: React.CSSProperties = {
   content: '""', display: 'inline-block', width: 24, height: 1.5,
@@ -68,6 +69,45 @@ function Screen1Row() {
   )
 }
 
+/* ── Screen 2 row ─────────────────────────────────────────── */
+function Screen2Row() {
+  return (
+    <div
+      className="stellar-feature-row stellar-animate"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: 'clamp(2rem,6vw,5rem)',
+        alignItems: 'center',
+        marginTop: 'clamp(3rem,6vw,5rem)',
+      }}
+    >
+      {/* device — left (flip) */}
+      <div style={{ justifySelf: 'center' }}>
+        <StellarScreen2 />
+      </div>
+
+      {/* copy — right */}
+      <div>
+        <Kicker>Chef Chat</Kicker>
+        <h3 style={{ fontFamily: S.font.display, fontWeight: 700, fontSize: 'clamp(2.2rem,5vw,3.6rem)', letterSpacing: '-.025em', lineHeight: 1.05, margin: '0 0 1.1rem', color: S.color.ink }}>
+          Show me{' '}
+          <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>what you&apos;ve got.</em>
+        </h3>
+        <p style={{ color: S.color.inkSoft, fontSize: 'clamp(1rem,1.4vw,1.15rem)', maxWidth: '46ch', lineHeight: 1.65, fontFamily: S.font.body }}>
+          Point your camera at a half-empty fridge, a mystery sauce, last night&apos;s leftovers — Stellar&apos;s chef reads the photo and tells you exactly what to make.{' '}
+          <strong style={{ color: S.color.ink, fontWeight: 600 }}>The fastest path from &ldquo;I have stuff&rdquo; to &ldquo;I have dinner.&rdquo;</strong>
+        </p>
+        <FeaturePoints points={[
+          'Reads photos of ingredients — even product labels',
+          'Suggests real dishes from what it actually sees',
+          'Ask follow-ups, like texting a chef friend',
+        ]} />
+      </div>
+    </div>
+  )
+}
+
 /* ── Main section ─────────────────────────────────────────── */
 export function StellarBuild() {
   return (
@@ -100,8 +140,15 @@ export function StellarBuild() {
         </p>
       </div>
 
-      {/* screen rows — more will be added here */}
+      {/* screen rows */}
       <Screen1Row />
+
+      {/* divider */}
+      <div style={{ maxWidth: 'var(--stellar-feature-max,1180px)', margin: 'clamp(3rem,6vw,5rem) auto 0', padding: '0 clamp(1.2rem,5vw,3rem)' }}>
+        <div style={{ height: 1, background: S.alpha.line }} />
+      </div>
+
+      <Screen2Row />
 
       {/* closing note */}
       <div className="stellar-wrap" style={{ marginTop: 'clamp(3rem,8vw,6rem)' }}>
