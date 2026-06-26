@@ -63,6 +63,16 @@ export function HomeClient({ projects }: HomeClientProps) {
     function readUrl() {
       const params = new URLSearchParams(window.location.search)
       setActiveSlug(params.get('project'))
+      // ?view=work lands straight into the work grid (e.g. back from a project page)
+      if (params.get('view') === 'work') {
+        setView('work')
+        setPortalPhase('open')
+        setPortalEverOpened(true)
+        // Clean the param without re-navigating
+        const clean = new URL(window.location.href)
+        clean.searchParams.delete('view')
+        window.history.replaceState(null, '', clean.toString())
+      }
     }
     readUrl()
     window.addEventListener('popstate', readUrl)

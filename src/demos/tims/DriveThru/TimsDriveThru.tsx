@@ -17,8 +17,13 @@ interface Props {
 }
 
 export function TimsDriveThru({ className, style, bgColor = '#1c1410' }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasRef   = useRef<HTMLCanvasElement>(null)
+  const bgColorRef  = useRef(bgColor)
   const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    bgColorRef.current = bgColor
+  }, [bgColor])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -38,7 +43,7 @@ export function TimsDriveThru({ className, style, bgColor = '#1c1410' }: Props) 
         ctx.imageSmoothingEnabled = false
         const ps = CFG.scale
         const ss = CFG.spriteScale
-        ctx.fillStyle = bgColor
+        ctx.fillStyle = bgColorRef.current
         ctx.fillRect(0, 0, canvas.width, canvas.height)
         const sLogW = assets.store.width / ss
         const sLogH = assets.store.height / ss
@@ -56,7 +61,7 @@ export function TimsDriveThru({ className, style, bgColor = '#1c1410' }: Props) 
     loadAssets(manifest).then(assets => {
       if (!canvasRef.current) return
       setReady(true)
-      handle = startScene(canvas, assets, bgColor) ?? null
+      handle = startScene(canvas, assets, bgColorRef.current) ?? null
     })
 
     const io = new IntersectionObserver(entries => {

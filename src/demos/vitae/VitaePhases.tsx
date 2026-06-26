@@ -219,7 +219,7 @@ export function VitaePhases() {
             encouraged. So the goal got sharp and measurable.
           </p>
           <Quote>
-            "Make today's health legible in under five seconds — and make it feel like momentum, not a report card."
+            &ldquo;Make today&apos;s health legible in under five seconds — and make it feel like momentum, not a report card.&rdquo;
           </Quote>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', marginBottom: '1.3rem' }}>
             {['5 interviews', '6-app teardown', 'Goal: time-to-insight <5s', 'Tone: encouraging'].map(c => (
@@ -263,7 +263,7 @@ export function VitaePhases() {
         <Phase n="04" kicker="Execute · ship the pixels" title="The two screens, built">
           <p style={{ color: V.color.inkSoft, maxWidth: '56ch', marginBottom: '1rem', lineHeight: 1.65 }}>
             Below is the actual output of this stage — both screens, rebuilt in live HTML/CSS. The home view
-            answers "how am I doing today?"; the statistics view answers "how was my week?".
+            answers &ldquo;how am I doing today?&rdquo;; the statistics view answers &ldquo;how was my week?&rdquo;.
           </p>
         </Phase>
       </div>
@@ -290,7 +290,7 @@ export function VitaePhases() {
           </p>
           <div style={{ display: 'grid', gap: '.8rem' }}>
             {[
-              { pass: 'PASS 1', text: <><b style={{ color: V.color.ink }}>Anchored "today."</b> The current day (Wed) became the deep-green peak bar with a bold label, so the week reads from one fixed point.</> },
+              { pass: 'PASS 1', text: <><b style={{ color: V.color.ink }}>Anchored &ldquo;today.&rdquo;</b> The current day (Wed) became the deep-green peak bar with a bold label, so the week reads from one fixed point.</> },
               { pass: 'PASS 2', text: <><b style={{ color: V.color.ink }}>Restored hierarchy.</b> Added the target reference (1920 Kcal) beside the big number and tightened tile weights so home stays calm.</> },
               { pass: 'PASS 3', text: <><b style={{ color: V.color.ink }}>Polished &amp; locked.</b> Chart easing, ring fill timing, and the lime accent locked into tokens. Budget spent — committed to ship.</> },
             ].map(({ pass, text }) => (

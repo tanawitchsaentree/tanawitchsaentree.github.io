@@ -54,7 +54,7 @@ export function VitaeOutcome() {
 
         <p style={{ color: V.alpha.paper72, maxWidth: '50ch', lineHeight: 1.65 }}>
           Three loops is what it took. Three loops is also where we stopped. The cap turned
-          "make it perfect" into "make it ship" — and the shipped version hit 4.1 seconds.
+          &ldquo;make it perfect&rdquo; into &ldquo;make it ship&rdquo; — and the shipped version hit 4.1 seconds.
         </p>
 
         {/* results strip */}

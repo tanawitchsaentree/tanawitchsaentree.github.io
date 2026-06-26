@@ -8,7 +8,13 @@ export function BackButton({ className }: { className?: string }) {
   const router = useRouter()
 
   const handleBack = useCallback(() => {
-    router.push('/')
+    // router.back() restores the SPA state (view=work) from bfcache.
+    // Fallback: navigate to /?view=work so HomeClient opens WorkGrid directly.
+    if (window.history.length > 1) {
+      router.back()
+    } else {
+      router.push('/?view=work')
+    }
   }, [router])
 
   return (
