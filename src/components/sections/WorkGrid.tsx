@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useCallback, useState } from 'react'
-import Image from 'next/image'
 import { motion, useReducedMotion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/cn'
 import type { ProjectFrontmatter } from '@/types/project'
@@ -86,13 +85,19 @@ function WorkCard({ project, index, onOpen, onNavigate }: {
         style={{ background: project.coverColor }}
       >
         {project.coverImage ? (
-          <Image
-            src={project.coverImage}
-            alt=""
-            fill
-            className="object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
-            sizes="180px"
-          />
+          <picture className="absolute inset-0 w-full h-full">
+            <source
+              srcSet={project.coverImage.replace(/\.[^.]+$/, '.avif')}
+              type="image/avif"
+            />
+            <img
+              src={project.coverImage}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+            />
+          </picture>
         ) : project.coverVariant ? (
           <GenerativeCover variant={project.coverVariant as CoverVariant} className="absolute inset-0 w-full h-full" />
         ) : null}
@@ -179,7 +184,10 @@ function BuildPanel({ onNavigate }: { onNavigate: (href: string) => void }) {
               style={{ background: p.coverColor }}
             >
               {p.coverImage && (
-                <Image src={p.coverImage} alt="" fill className="object-cover" sizes="180px" />
+                <picture className="absolute inset-0 w-full h-full">
+                  <source srcSet={p.coverImage.replace(/\.[^.]+$/, '.avif')} type="image/avif" />
+                  <img src={p.coverImage} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                </picture>
               )}
             </div>
             <div className="flex flex-col justify-center gap-2 min-w-0 pt-1">
