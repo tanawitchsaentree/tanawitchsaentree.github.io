@@ -11,7 +11,8 @@ import { StellarEmpathy }  from '@/demos/stellar/StellarEmpathy'
 import { StellarJTBD }     from '@/demos/stellar/StellarJTBD'
 import { StellarHMW }      from '@/demos/stellar/StellarHMW'
 import { StellarFeatures } from '@/demos/stellar/StellarFeatures'
-import { StellarBuild }    from '@/demos/stellar/StellarBuild'
+import { StellarBuild }        from '@/demos/stellar/StellarBuild'
+import { StellarRecipeCards }  from '@/demos/stellar/StellarRecipeCards'
 import { StellarLearned }  from '@/demos/stellar/StellarLearned'
 import { StellarFooter }   from '@/demos/stellar/StellarFooter'
 
@@ -125,6 +126,7 @@ export function StellareatClient() {
         <StellarHMW />
         <StellarFeatures />
         <StellarBuild />
+        <StellarRecipeCards />
         <StellarLearned />
         <StellarFooter />
       </div>
