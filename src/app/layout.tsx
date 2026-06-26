@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-// Inter is the single typeface across the site (display + body + meta).
-import '@fontsource-variable/inter'
+import '@fontsource-variable/jetbrains-mono'
 import '../styles/globals.css'
 import { LenisProvider } from '@/components/providers/LenisProvider'
 import { CustomCursor } from '@/components/ui/CustomCursor'

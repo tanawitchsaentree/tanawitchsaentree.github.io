@@ -11,8 +11,8 @@ const WORK = [
 ] as const
 
 const EDUCATION = [
-  { dates: '2022–23', label: 'Web Development & Mobile Application — Fanshawe College, Canada' },
-  { dates: '2009–13', label: 'Photography & Cinematography — RMUTT, Thailand' },
+  { dates: '2022–23', title: 'Web Development & Mobile Application', institution: 'Fanshawe College, Canada' },
+  { dates: '2009–13', title: 'Photography & Cinematography',          institution: 'RMUTT, Thailand' },
 ] as const
 
 const TAGS = ['Based in Bangkok', 'Valid Canadian work permit'] as const
@@ -132,20 +132,41 @@ export function About() {
         </div>
       </div>
 
+      {/* ── Divider between Experience and Education ── */}
+      <div className="h-px bg-[var(--border)] mt-14" aria-hidden="true" />
+
       {/* ── Education ── */}
       <div className="grid md:grid-cols-[300px_1fr] gap-12 lg:gap-20 items-start mt-14">
         <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.18em] text-[var(--fg-subtle)]">
           Education
         </p>
 
-        <motion.div {...fadeUp()} className="flex flex-col gap-3 max-w-[52ch]">
-          {EDUCATION.map(entry => (
-            <p key={entry.dates} className="text-[var(--type-sm)] leading-[1.6] text-[var(--fg-muted)]">
-              <span className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] text-[var(--fg-subtle)] mr-3">{entry.dates}</span>
-              {entry.label}
-            </p>
-          ))}
-        </motion.div>
+        <div className="flex flex-col gap-6 max-w-[52ch]">
+          <ul className="list-none m-0 p-0 flex flex-col" aria-label="Education history">
+            {EDUCATION.map((entry, i) => (
+              <motion.li
+                key={entry.dates}
+                {...fadeUp(i * 0.05)}
+                className={cn(
+                  'grid grid-cols-[1fr_auto] items-baseline gap-6 py-3',
+                  i < EDUCATION.length - 1 && 'border-b border-[var(--border)]'
+                )}
+              >
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-display font-medium text-[var(--type-base)] leading-[1.3] text-[var(--fg)]">
+                    {entry.institution}
+                  </span>
+                  <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] tracking-[0.04em]">
+                    {entry.title}
+                  </span>
+                </div>
+                <span className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] text-[var(--fg-subtle)] shrink-0 tabular-nums">
+                  {entry.dates}
+                </span>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       {/* ── Divider before "How I work" ── */}
