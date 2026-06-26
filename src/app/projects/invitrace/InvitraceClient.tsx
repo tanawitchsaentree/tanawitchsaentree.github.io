@@ -1,12 +1,12 @@
 'use client'
 
-import { useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/cn'
 import { DecodeText } from '@/components/ui/DecodeText'
 import { HeroBackground } from '@/components/invitrace/HeroBackground'
 import { BlastRadiusSection } from '@/components/invitrace/BlastRadiusSection'
+import { BackButton } from '@/components/universe/BackButton'
 
 const METRICS = [
   { value: '3+',      label: 'hospitals onboarded'         },
@@ -15,32 +15,28 @@ const METRICS = [
   { value: '~60%',    label: 'rework reduction'             },
 ] as const
 
-function BackLink() {
-  const router = useRouter()
-  const handleBack = useCallback(() => {
-    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
-      (document as Document & { startViewTransition: (cb: () => void) => void })
-        .startViewTransition(() => { router.push('/') })
-    } else {
-      router.push('/')
-    }
-  }, [router])
+function ProjectNav() {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', h, { passive: true })
+    return () => window.removeEventListener('scroll', h)
+  }, [])
 
   return (
-    <button
-      type="button"
-      onClick={handleBack}
-      className={cn(
-        'inline-flex items-center gap-2',
-        'font-mono text-[var(--type-xs)] tracking-widest uppercase',
-        'text-[var(--fg-muted)] hover:text-[var(--fg)]',
-        'transition-colors duration-[var(--duration-fast)]',
-        'cursor-pointer border-none bg-transparent p-0'
-      )}
+    <nav
+      className={cn('fixed top-0 left-0 right-0 z-50 flex items-center justify-between')}
+      style={{
+        padding:        '1.1rem clamp(1.2rem,5vw,7.5rem)',
+        backdropFilter: 'blur(14px) saturate(150%)',
+        background:     scrolled ? 'rgba(10,10,10,.82)' : 'rgba(10,10,10,.6)',
+        borderBottom:   scrolled ? '1px solid rgba(255,255,255,.08)' : '1px solid transparent',
+        transition:     'border-color 400ms cubic-bezier(.16,1,.3,1), background 400ms cubic-bezier(.16,1,.3,1)',
+      }}
     >
-      <span aria-hidden="true">←</span>
-      <span>Back to work</span>
-    </button>
+      <BackButton />
+    </nav>
   )
 }
 
@@ -53,20 +49,11 @@ function HeroSection() {
       {/* Full-bleed canvas — mouse events pass through to window */}
       <HeroBackground />
 
-      {/* Top bar */}
-      <div className={cn(
-        'relative z-10',
-        'px-6 md:px-12 lg:px-20 xl:px-[7.5rem]',
-        'pt-10 pb-0 flex-shrink-0'
-      )}>
-        <BackLink />
-      </div>
-
       {/* Main content — left half only so graph is visible right */}
       <div className={cn(
         'relative z-10 flex-1 flex flex-col justify-center',
         'px-6 md:px-12 lg:px-20 xl:px-[7.5rem]',
-        'py-16 max-w-[52ch] md:max-w-[46%]'
+        'py-16 pt-28 max-w-[52ch] md:max-w-[46%]'
       )}>
         <motion.p
           initial={{ opacity: 0, y: 12 }}
@@ -119,7 +106,7 @@ function HeroSection() {
         </motion.dl>
 
         {/* Hint */}
-        <motion.p
+        <motion.span
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.6 }}
@@ -127,7 +114,7 @@ function HeroSection() {
           aria-hidden="true"
         >
           Move cursor over the graph →
-        </motion.p>
+        </motion.span>
       </div>
 
       {/* Metrics bar */}
@@ -213,6 +200,7 @@ function ReflectionSection() {
 export function InvitraceClient() {
   return (
     <>
+      <ProjectNav />
       <HeroSection />
       <BlastRadiusSection />
       <ReflectionSection />

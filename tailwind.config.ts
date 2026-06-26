@@ -5,10 +5,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        // Inter across the entire site (display/body/meta all one face).
-        display: ['Inter Variable', 'Inter', '-apple-system', 'system-ui', 'sans-serif'],
-        sans:    ['Inter Variable', 'Inter', '-apple-system', 'system-ui', 'sans-serif'],
-        mono:    ['Inter Variable', 'Inter', '-apple-system', 'system-ui', 'sans-serif'],
+        display: ['JetBrains Mono Variable', 'JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        sans:    ['JetBrains Mono Variable', 'JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        mono:    ['JetBrains Mono Variable', 'JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       colors: {
         bg: 'var(--bg)',

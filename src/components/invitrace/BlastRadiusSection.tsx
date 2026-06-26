@@ -242,7 +242,7 @@ export function BlastRadiusSection() {
       `}} />
 
       {/* Header */}
-      <div className="mb-12 max-w-[60ch]">
+      <div className="mb-12 max-w-[56ch]">
         <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.18em] text-[var(--accent-text)] mb-4">
           02 — One root, the whole system
         </p>

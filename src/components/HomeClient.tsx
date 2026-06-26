@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { motion, AnimatePresence } from 'framer-motion'
-import { PortalNav, type Door } from '@/components/PortalNav'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { PortalNav, type Door, type Phase } from '@/components/PortalNav'
 import { cn } from '@/lib/cn'
 import type { ProjectFrontmatter } from '@/types/project'
 
@@ -37,9 +37,10 @@ function BackHome({ onBack }: { onBack: () => void }) {
       <button
         type="button"
         onClick={onBack}
-        className="font-sans text-[var(--type-xs)] uppercase tracking-[0.14em] text-[var(--fg-subtle)] hover:text-[var(--fg)] bg-transparent border-none cursor-pointer transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)] inline-flex items-center gap-2"
+        aria-label="Back"
+        className="text-[var(--fg-subtle)] hover:text-[var(--fg)] bg-transparent border-none cursor-pointer transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)] p-4 -m-4"
       >
-        <span aria-hidden="true">←</span> Back
+        <span aria-hidden="true" className="font-mono text-base">←</span>
       </button>
     </div>
   )
@@ -50,9 +51,13 @@ interface HomeClientProps { projects: ProjectFrontmatter[] }
 
 export function HomeClient({ projects }: HomeClientProps) {
   const router = useRouter()
+  const shouldReduce = useReducedMotion()
   const [activeSlug, setActiveSlug]     = useState<string | null>(null)
   const [modalContent, setModalContent] = useState<string | null>(null)
   const [view, setView]                 = useState<View>('home')
+  // Lifted from PortalNav so phase survives navigating into a section and back.
+  const [portalPhase, setPortalPhase]       = useState<Phase>('open')
+  const [portalEverOpened, setPortalEverOpened] = useState(true)
 
   useEffect(() => {
     function readUrl() {
@@ -89,7 +94,12 @@ export function HomeClient({ projects }: HomeClientProps) {
   }, [router])
 
   const activeProject = activeSlug ? (projects.find(p => p.slug === activeSlug) ?? null) : null
-  const goHome = useCallback(() => setView('home'), [])
+  const goHome = useCallback(() => {
+    setView('home')
+    // Restore the open/split state so the three doors are visible immediately
+    setPortalPhase('open')
+    setPortalEverOpened(true)
+  }, [])
 
   return (
     <>
@@ -101,15 +111,24 @@ export function HomeClient({ projects }: HomeClientProps) {
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={view}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
+            initial={shouldReduce ? {} : { opacity: 0, y: 8 }}
+            animate={shouldReduce ? {} : { opacity: 1, y: 0 }}
+            exit={shouldReduce ? {} : { opacity: 0, y: -6 }}
             transition={{ duration: 0.32, ease: EASE_DECISIVE }}
+            style={{ position: 'relative', zIndex: 1 }}
           >
-            {view === 'home' && <PortalNav onEnter={setView} />}
+            {view === 'home' && (
+              <PortalNav
+                onEnter={door => { setPortalPhase('open'); setView(door) }}
+                phase={portalPhase}
+                setPhase={setPortalPhase}
+                everOpened={portalEverOpened}
+                setEverOpened={setPortalEverOpened}
+              />
+            )}
 
             {view === 'work' && (
-              <div className="w-full min-h-[100svh] flex flex-col justify-center">
+              <div className="w-full min-h-[100svh] flex flex-col isolate">
                 <WorkGrid
                   projects={projects}
                   onOpenProject={openProject}

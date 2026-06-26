@@ -25,7 +25,7 @@
   }
 
   body {
-    font-family: 'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif;
+    font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
     font-size: var(--type-base);
     line-height: 1.6;
     letter-spacing: 0;
@@ -57,7 +57,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif;
+    font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
     line-height: 1.1;
     letter-spacing: -0.01em;
     color: var(--fg);
@@ -170,7 +170,7 @@
 .universe-switcher__item {
   padding: 8px 16px;
   border-radius: 9999px;
-  font-family: 'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif;
+  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   font-size: var(--type-xs);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -310,14 +310,14 @@ html.modal-open {
 
 /* ─── Universe prose (SubCase content HTML) ─────────────────── */
 .prose-sub-case {
-  font-family: 'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif;
+  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   font-size: var(--type-base);
   line-height: 1.75;
   color: var(--fg-muted);
 }
 
 .prose-sub-case h2 {
-  font-family: 'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif;
+  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   font-weight: normal;
   font-size: var(--type-xl);
   line-height: 1.2;
@@ -328,7 +328,7 @@ html.modal-open {
 }
 
 .prose-sub-case h3 {
-  font-family: 'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif;
+  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   font-weight: 500;
   font-size: var(--type-base);
   color: var(--fg);
@@ -361,7 +361,7 @@ html.modal-open {
   content: "—";
   position: absolute;
   left: 0;
-  font-family: 'Inter Variable', 'Inter', -apple-system, system-ui, sans-serif;
+  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   color: var(--accent-text);
 }
 
@@ -374,7 +374,12 @@ html.modal-open {
   text-decoration-color: var(--accent-text);
 }
 
-/* View transitions removed — caused stale overlay on back-navigation with Next.js App Router */
+/* Suppress default cross-fade so startViewTransition doesn't flash white */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
 
 /* ─── Reduced motion overrides ──────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {

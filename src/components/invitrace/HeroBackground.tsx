@@ -39,7 +39,7 @@ const AC  = { medium: '#0D9488', large: '#C97A0A', specialty: '#C0394B' }  // = 
 
 function buildGraph(): { nodes: Node[]; links: Link[] } {
   const nodes: Node[] = [
-    { id:'root',              tier:'root',      color:'#111111', r:10, label:'Design Token', drag:'none',   trail:[] },
+    { id:'root',              tier:'root',      color:'#0A0A0A', r:10, label:'Design Token', drag:'none',   trail:[] },
     { id:'prim-button',       tier:'primitive', color:PC,     r:7,  label:'Button',       drag:'spring', trail:[] },
     { id:'prim-field',        tier:'primitive', color:PC,     r:7,  label:'Field',        drag:'spring', trail:[] },
     { id:'prim-table',        tier:'primitive', color:PC,     r:7,  label:'Table',        drag:'spring', trail:[] },
@@ -235,13 +235,13 @@ export function HeroBackground() {
           const a = Math.sin(age * Math.PI) * 0.5
           ctx.beginPath()
           ctx.arc(rn.x, rn.y, rn.r + 12 * (1 - age), 0, Math.PI * 2)
-          ctx.strokeStyle = `rgba(200,57,75,${a})`
+          ctx.strokeStyle = `rgba(192,57,43,${a})`
           ctx.lineWidth = 1.5
           ctx.stroke()
           // "locked" label flash
           ctx.font = '500 9px ui-monospace,monospace'
           ctx.textAlign = 'center'
-          ctx.fillStyle = `rgba(200,57,75,${a * 1.4})`
+          ctx.fillStyle = `rgba(192,57,43,${a * 1.4})`
           ctx.fillText('⊘ LOCKED', rn.x, rn.y - rn.r - 14)
         } else {
           rejectNode.current = null
@@ -340,7 +340,7 @@ export function HeroBackground() {
 
           // drag affordance tag below
           const tag = n.drag === 'none' ? '⊘ locked' : n.drag === 'spring' ? '↻ constrained' : '↻ flex'
-          const tagC = n.drag === 'none' ? '#C0394B' : n.drag === 'spring' ? '#D97706' : '#0D9488'
+          const tagC = n.drag === 'none' ? '#C0394B' : n.drag === 'spring' ? '#C97A0A' : '#0D9488'
           ctx.font = '400 9px ui-monospace,monospace'
           ctx.fillStyle = ha(tagC, 0.85)
           ctx.fillText(tag, lx, ly + 9)

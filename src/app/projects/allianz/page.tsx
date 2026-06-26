@@ -132,7 +132,7 @@ function ClosingSection() {
 
       <p className={cn(
         'text-[var(--type-base)] leading-[1.7] tracking-[-0.011em]',
-        'text-[var(--fg-muted)] max-w-[60ch] mb-16'
+        'text-[var(--fg-muted)] max-w-[56ch] mb-16'
       )}>
         The document classification surface, the prompt management layer, and the fallback queue weren&apos;t three separate problems. A better confidence gate still needs correct prompts behind it. Correct prompts still need a fallback when the AI is wrong. Designing any one layer in isolation produces something that holds until the adjacent layer fails — which it does.
       </p>
@@ -220,7 +220,7 @@ function ClosingSection() {
                 {item.heading}
               </p>
               <p className={cn(
-                'text-[var(--type-sm)] leading-[1.75] tracking-[-0.008em]',
+                'text-[var(--type-base)] leading-[1.75] tracking-[-0.008em]',
                 'text-[var(--fg-muted)]'
               )}>
                 {item.body}

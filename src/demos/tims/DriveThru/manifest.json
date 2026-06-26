@@ -1,0 +1,45 @@
+{
+  "wheel": {
+    "id": "wheel-md",
+    "src": "/images/timhortons/pixel-store-section/wheels/wheel-md.png",
+    "w": 56,
+    "h": 58
+  },
+  "store": {
+    "src": "/images/timhortons/pixel-store-section/store/tims-store.png",
+    "w": 348,
+    "h": 193
+  },
+  "vehicles": [
+    {
+      "id": "canada-post",
+      "src": "/images/timhortons/pixel-store-section/cars/canada-post.png",
+      "w": 456,
+      "h": 173,
+      "wheels": [
+        { "x": 90,  "y": 148 },
+        { "x": 370, "y": 148 }
+      ]
+    },
+    {
+      "id": "truck",
+      "src": "/images/timhortons/pixel-store-section/cars/truck.png",
+      "w": 443,
+      "h": 146,
+      "wheels": [
+        { "x": 88,  "y": 120 },
+        { "x": 358, "y": 120 }
+      ]
+    },
+    {
+      "id": "vans-with-surf",
+      "src": "/images/timhortons/pixel-store-section/cars/vans-with-surf.png",
+      "w": 447,
+      "h": 180,
+      "wheels": [
+        { "x": 88,  "y": 155 },
+        { "x": 360, "y": 155 }
+      ]
+    }
+  ]
+}

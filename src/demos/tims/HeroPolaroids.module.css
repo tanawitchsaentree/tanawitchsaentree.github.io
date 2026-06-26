@@ -1,0 +1,139 @@
+/* ─── Deck wrapper ─────────────────────────────────────── */
+
+.deckWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 2rem 1rem 2rem;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ─── Stack container ──────────────────────────────────── */
+
+.deck {
+  position: relative;
+  width: 220px;
+  height: 286px;
+  margin: 20px 36px 32px;
+}
+
+/* ─── Individual card ──────────────────────────────────── */
+
+/* Backing cards glide to new slot via transition */
+.card {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--rot, 0deg)) translate(var(--tx, 0px), var(--ty, 0px));
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Top card: gentle float when idle */
+.card.isTop {
+  animation: cardFloat 3.8s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+@keyframes cardFloat {
+  from { transform: rotate(var(--rot, 0deg)) translate(var(--tx, 0px), var(--ty, 0px)); }
+  to   { transform: rotate(var(--rot, 0deg)) translate(var(--tx, 0px), calc(var(--ty, 0px) - 10px)); }
+}
+
+/* ─── Arc card: sent to the back ───────────────────────── */
+
+/*
+ * KEY FIX: z-index lives INSIDE the keyframe, not in inline style.
+ * This lets the animation control its own stacking context.
+ *
+ * Path:
+ *   0%  → slot-0 position (current top)         z: 20 (above everything)
+ *  28%  → peak: lifted up, still visible on top z: 20
+ *  30%  → z drops to 0 → card goes BEHIND stack
+ *  65%  → sweeping through centre of the deck   z: 0
+ * 100%  → slot-5 position (settled at back)      z: 0
+ *
+ * The 100% transform matches OFFSETS[5] exactly so removing the class
+ * causes zero snap (CSS vars take over from the same position).
+ */
+.card.arcCard {
+  transition: none !important;
+  animation: arcToBack 0.82s cubic-bezier(0.42, 0, 0.58, 1) both;
+}
+
+@keyframes arcToBack {
+  0%  { z-index: 20; transform: rotate( 1.8deg) translate(  0px,   0px) scale(1.00); }
+  28% { z-index: 20; transform: rotate( 5.5deg) translate( 22px, -40px) scale(1.06); }
+  30% { z-index:  0; transform: rotate( 5.5deg) translate( 22px, -40px) scale(1.06); }
+  65% { z-index:  0; transform: rotate(-3.0deg) translate(  4px,  -2px) scale(0.97); }
+ 100% { z-index:  0; transform: rotate(-4.8deg) translate(-10px,  25px) scale(1.00); }
+}
+
+/* ─── Polaroid frame ───────────────────────────────────── */
+
+.frame {
+  width: 100%;
+  height: 100%;
+  background: #fffdf9;
+  padding: 9px 9px 26px;
+  border-radius: 2px;
+  box-shadow:
+    0 2px 6px  rgba(28, 20, 16, 0.09),
+    0 10px 28px rgba(28, 20, 16, 0.14),
+    0 28px 60px rgba(28, 20, 16, 0.10);
+}
+
+/* ─── Photo area ───────────────────────────────────────── */
+
+.photoWrap {
+  width: 100%;
+  height: calc(100% - 26px);
+  overflow: hidden;
+  background: #cfc8be;
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.84) contrast(1.05);
+  pointer-events: none;
+  transition: filter 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.deckWrap:hover .card.isTop .photo {
+  filter: saturate(1) contrast(1.02);
+}
+
+/* ─── Caption ──────────────────────────────────────────── */
+
+.caption {
+  margin: 0;
+  padding-top: 7px;
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #7a6e63;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* ─── Reduced motion ───────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card.isTop,
+  .card.arcCard {
+    animation: none !important;
+    transition: none !important;
+  }
+  .photo {
+    filter: none;
+    transition: none;
+  }
+}

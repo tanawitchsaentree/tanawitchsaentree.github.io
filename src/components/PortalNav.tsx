@@ -20,9 +20,8 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { Typewriter } from '@/components/ui/Typewriter'
 
-export type Door = 'work' | 'about' | 'contact'
-
-type Phase = 'idle' | 'hover' | 'open'
+export type Door  = 'work' | 'about' | 'contact'
+export type Phase = 'idle' | 'hover' | 'open'
 
 /**
  * CardMedia — the looping clip, but only DECODING when it should be on screen.
@@ -141,12 +140,15 @@ function place(id: Door, phase: Phase, s: Sizing) {
 }
 
 interface PortalNavProps {
-  onEnter: (door: Door) => void
+  onEnter:      (door: Door) => void
+  phase:        Phase
+  setPhase:     React.Dispatch<React.SetStateAction<Phase>>
+  everOpened:   boolean
+  setEverOpened: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function PortalNav({ onEnter }: PortalNavProps) {
+export function PortalNav({ onEnter, phase, setPhase, everOpened, setEverOpened }: PortalNavProps) {
   const reduced = useReducedMotion()
-  const [phase, setPhase] = useState<Phase>('idle')
   const [greeting, setGreeting] = useState<string>(GREETINGS[0])  // stable for SSR
   const [moving, setMoving] = useState(false)   // true during the split/back glide
 
@@ -177,7 +179,6 @@ export function PortalNav({ onEnter }: PortalNavProps) {
   }, [])
   const sizing = compact ? MOBILE : DESKTOP
 
-  const [everOpened, setEverOpened] = useState(false)  // gate loading the back clips
   const open = phase === 'open'
 
   // Pause every clip while the cards are gliding, resume once settled — so no
@@ -211,7 +212,7 @@ export function PortalNav({ onEnter }: PortalNavProps) {
     // Real flex column, vertically centred in the viewport. py provides a safe
     // gutter so the stack never touches the top edge on short screens; gap gives
     // the greeting its own pool of space (the hierarchy beat).
-    <div className="w-full min-h-[calc(100svh-2.75rem)] flex flex-col items-center justify-center gap-y-6 py-12 px-6">
+    <div className="w-full min-h-[calc(100svh-2.75rem)] flex flex-col items-center justify-center gap-y-6 py-12 px-6 overflow-hidden isolate">
 
       {/* status pill — flows above the stage, gone once split */}
       <div className="min-h-12 flex items-end justify-center">
@@ -255,9 +256,9 @@ export function PortalNav({ onEnter }: PortalNavProps) {
               initial={false}
               animate={{
                 x: pos.x,
-                y: !entered && card.id === 'about' ? pos.y + 24 : pos.y,
+                y: !entered ? pos.y + (card.id === 'about' ? 24 : 0) : pos.y,
                 rotate: pos.rotate,
-                opacity: card.id === 'about' && !entered ? 0 : 1,
+                opacity: !entered ? 0 : 1,
               }}
               transition={
                 entered

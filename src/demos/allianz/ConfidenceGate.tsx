@@ -227,7 +227,7 @@ export function ConfidenceGate() {
             className="px-5 py-3.5 border-t"
             style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--accent) 8%, transparent)' }}
           >
-            <p className="font-mono text-[var(--type-xs)] leading-[1.6] text-[var(--fg)]">
+            <p className="font-mono leading-[1.6] text-[var(--fg)]" style={{ fontSize: '1rem' }}>
               <span style={{ color: 'var(--accent-text)', fontWeight: 500 }}>{reviewCount} of {DOCS.length}</span> were guesses, not answers
               <span className="text-[var(--fg-muted)]"> — and looked identical to the rest until the gate marked them.</span>
             </p>

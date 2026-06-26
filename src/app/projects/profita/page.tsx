@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { UniverseClient } from '@/components/universe/UniverseClient'
 import { DecodeText } from '@/components/ui/DecodeText'
+import { BackButton } from '@/components/universe/BackButton'
 import { getUniverseSubCases } from '@/lib/universes'
 import { cn } from '@/lib/cn'
 
@@ -105,7 +106,7 @@ function BodyCopy({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        'max-w-[65ch]',
+        'max-w-[56ch]',
         '[&_p]:text-[var(--type-base)] [&_p]:leading-[1.75] [&_p]:tracking-[-0.011em]',
         '[&_p]:text-[var(--fg-muted)]',
         '[&_p+p]:mt-[var(--space-8)]'
@@ -147,19 +148,8 @@ export default function ProfitaPage() {
           'pt-24 pb-16 md:pt-32 md:pb-20'
         )}
       >
-        {/* Back link */}
-        <Link
-          href="/"
-          className={cn(
-            'inline-flex items-center gap-2 mb-10',
-            'font-mono text-[var(--type-xs)] tracking-widest uppercase',
-            'text-[var(--fg-muted)] hover:text-[var(--fg)]',
-            'no-underline transition-colors duration-[var(--duration-fast)]'
-          )}
-        >
-          <span aria-hidden="true">←</span>
-          <span>Back to work</span>
-        </Link>
+        {/* Back button */}
+        <BackButton className="mb-10" />
 
         {/* Brand label eyebrow */}
         <p
@@ -390,11 +380,11 @@ async function SubCaseSection({
       {/* MDX body */}
       <div
         className={cn(
-          'max-w-[65ch]',
+          'max-w-[56ch]',
           '[&_h2]:font-display [&_h2]:font-normal [&_h2]:text-[var(--type-xl)]',
           '[&_h2]:leading-[1.2] [&_h2]:tracking-[-0.02em]',
           '[&_h2]:text-[var(--fg)] [&_h2]:mt-[var(--space-12)] [&_h2]:mb-[var(--space-8)]',
-          '[&_h3]:font-sans [&_h3]:font-medium [&_h3]:text-[var(--type-base)]',
+          '[&_h3]:font-mono [&_h3]:font-medium [&_h3]:text-[var(--type-base)]',
           '[&_h3]:text-[var(--fg)] [&_h3]:mt-[var(--space-8)] [&_h3]:mb-3',
           '[&_p]:text-[var(--type-base)] [&_p]:leading-[1.75] [&_p]:tracking-[-0.011em]',
           '[&_p]:text-[var(--fg-muted)] [&_p]:mb-[var(--space-8)]',

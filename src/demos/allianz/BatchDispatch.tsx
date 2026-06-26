@@ -159,8 +159,11 @@ export function BatchDispatch() {
             className="overflow-hidden"
           >
             <div className="px-5 py-3.5 border-t" style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--accent) 8%, transparent)' }}>
-              <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg)]">
-                Tap a marked document — <span className="text-[var(--fg-muted)] normal-case tracking-normal">it&apos;s not an error, it&apos;s a decision waiting for you.</span>
+              <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg)] mb-1">
+                Tap a marked document
+              </p>
+              <p className="font-mono leading-[1.5] text-[var(--fg-muted)]" style={{ fontSize: '1rem' }}>
+                it&apos;s not an error, it&apos;s a decision waiting for you.
               </p>
             </div>
           </motion.div>
