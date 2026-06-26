@@ -110,7 +110,7 @@ export function VitaeHero() {
                 </b>
                 <span
                   style={{
-                    fontFamily: V.font.serif,
+                    fontFamily: V.font.sans,
                     fontSize:   '1.05rem',
                     color:      V.color.ink,
                   }}
