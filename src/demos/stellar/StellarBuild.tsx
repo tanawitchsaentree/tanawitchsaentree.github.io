@@ -3,6 +3,7 @@
 import { S } from './tokens'
 import { StellarScreen1 } from './ui/StellarScreen1'
 import { StellarScreen2 } from './ui/StellarScreen2'
+import { StellarScreen3 } from './ui/StellarScreen3'
 
 const KICKER_LINE: React.CSSProperties = {
   content: '""', display: 'inline-block', width: 24, height: 1.5,
@@ -108,6 +109,45 @@ function Screen2Row() {
   )
 }
 
+/* ── Screen 3 row ─────────────────────────────────────────── */
+function Screen3Row() {
+  return (
+    <div
+      className="stellar-feature-row stellar-animate"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: 'clamp(2rem,6vw,5rem)',
+        alignItems: 'center',
+        marginTop: 'clamp(3rem,6vw,5rem)',
+      }}
+    >
+      {/* copy — left */}
+      <div>
+        <Kicker>Kitchen Pantry</Kicker>
+        <h3 style={{ fontFamily: S.font.display, fontWeight: 700, fontSize: 'clamp(2.2rem,5vw,3.6rem)', letterSpacing: '-.025em', lineHeight: 1.05, margin: '0 0 1.1rem', color: S.color.ink }}>
+          Cook from{' '}
+          <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>what you have.</em>
+        </h3>
+        <p style={{ color: S.color.inkSoft, fontSize: 'clamp(1rem,1.4vw,1.15rem)', maxWidth: '46ch', lineHeight: 1.65, fontFamily: S.font.body }}>
+          Tap what&apos;s actually in your fridge and pantry, hit one button, and Stellar builds a recipe around it.{' '}
+          <strong style={{ color: S.color.ink, fontWeight: 600 }}>No grocery run, no waste — dinner from the shelf you already own.</strong>
+        </p>
+        <FeaturePoints points={[
+          'Pick ingredients by category — produce, protein, pantry',
+          'One tap: Feed me! turns your shelf into a recipe',
+          'Shows what you have vs the few things to grab',
+        ]} />
+      </div>
+
+      {/* device — right */}
+      <div style={{ justifySelf: 'center' }}>
+        <StellarScreen3 />
+      </div>
+    </div>
+  )
+}
+
 /* ── Main section ─────────────────────────────────────────── */
 export function StellarBuild() {
   return (
@@ -149,6 +189,13 @@ export function StellarBuild() {
       </div>
 
       <Screen2Row />
+
+      {/* divider */}
+      <div style={{ maxWidth: 'var(--stellar-feature-max,1180px)', margin: 'clamp(3rem,6vw,5rem) auto 0', padding: '0 clamp(1.2rem,5vw,3rem)' }}>
+        <div style={{ height: 1, background: S.alpha.line }} />
+      </div>
+
+      <Screen3Row />
 
       {/* closing note */}
       <div className="stellar-wrap" style={{ marginTop: 'clamp(3rem,8vw,6rem)' }}>
