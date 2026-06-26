@@ -75,13 +75,14 @@ function WorkCard({ project, index, onOpen, onNavigate }: {
       onClick={handleClick}
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
+      whileTap={reduced ? {} : { scale: 0.97 }}
       viewport={{ once: true, margin: '0px 0px -10% 0px' }}
       transition={{ duration: 0.5, delay: (index % 2) * 0.06, ease: EASE }}
       className="group flex items-stretch gap-6 text-left bg-transparent border-none cursor-pointer p-0 w-[clamp(380px,42vw,520px)] shrink-0"
       aria-label={`${project.title}${locked ? ' (password-protected)' : ''} — ${project.tags.slice(0, 2).join(', ')}`}
     >
       <div
-        className="relative shrink-0 w-[clamp(140px,15vw,180px)] aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] transition-[border-color] duration-[var(--duration-base)] ease-[var(--ease-out-quick)] group-hover:border-[var(--fg-subtle)]"
+        className="relative shrink-0 w-[clamp(140px,15vw,180px)] aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] transition-[border-color,box-shadow] duration-[var(--duration-base)] ease-[var(--ease-out-quick)] group-hover:border-[var(--fg-subtle)] group-hover:shadow-[0_8px_32px_-8px_color-mix(in_srgb,var(--fg)_18%,transparent)]"
         style={{ background: project.coverColor }}
       >
         {project.coverImage ? (
@@ -89,7 +90,7 @@ function WorkCard({ project, index, onOpen, onNavigate }: {
             src={project.coverImage}
             alt=""
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
             sizes="180px"
           />
         ) : project.coverVariant ? (
