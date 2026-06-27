@@ -11,11 +11,11 @@ const BOOK  = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" strok
 const ARROW = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`
 
 const RECIPES = [
-  { nm: 'Warming Chicken Noodle Soup', match: 96, rate: '4.4', ing: 10, min: 12, p: 'p2', tags: [['Perfect Match', false], ['Feel Better', true]]  },
-  { nm: 'Grilled Coconut-Curry Tofu',  match: 91, rate: '4.6', ing: 10, min: 20, p: 'p3', tags: [['Asian-inspired', true]]                          },
-  { nm: 'One-Pot Tomato Pasta',         match: 88, rate: '4.5', ing:  9, min: 25, p: 'p5', tags: [['Comfort', true]]                                 },
-  { nm: 'Black Bean & Rice Bowl',       match: 84, rate: '4.3', ing:  8, min: 18, p: 'p4', tags: [['High Protein', false], ['Budget', true]]         },
-  { nm: 'Lemon Garlic Salmon',          match: 80, rate: '4.7', ing:  7, min: 22, p: 'p1', tags: [['Omega-3', true]]                                 },
+  { nm: 'Warming Chicken Noodle Soup', match: 96, rate: '4.4', ing: 10, min: 12, img: '/images/stellareating/recipe card/Warming Chicken Noodle Soup.png' },
+  { nm: 'Grilled Coconut-Curry Tofu',  match: 91, rate: '4.6', ing: 10, min: 20, img: '/images/stellareating/recipe card/Grilled Coconut-Curry Tofu.png'  },
+  { nm: 'One-Pot Tomato Pasta',        match: 88, rate: '4.5', ing:  9, min: 25, img: '/images/stellareating/recipe card/One-Pot Tomato Pasta.png'         },
+  { nm: 'Black Bean & Rice Bowl',      match: 84, rate: '4.3', ing:  8, min: 18, img: '/images/stellareating/recipe card/Black bean.png'                   },
+  { nm: 'Lemon Garlic Salmon',         match: 80, rate: '4.7', ing:  7, min: 22, img: '/images/stellareating/recipe card/lemon garlic salmon.png'          },
 ] as const
 
 const C = 2 * Math.PI * 24
@@ -44,14 +44,10 @@ const CSS = `
   box-shadow:0 2px 4px rgba(22,33,15,.05),0 18px 40px -12px rgba(22,33,15,.28);
   transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s cubic-bezier(.16,1,.3,1)}
 .rc-card:hover{transform:translateY(-10px);box-shadow:0 30px 60px -16px rgba(20,168,0,.4)}
-.rc-card .photo{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
+.rc-card .photo{position:absolute;inset:0;z-index:0;overflow:hidden}
+.rc-card .photo img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;
   transition:transform .9s cubic-bezier(.16,1,.3,1);transform:scale(1.02)}
-.rc-card:hover .photo{transform:scale(1.1)}
-.rc-p1{background:radial-gradient(120% 110% at 35% 25%,#d7df84,#9aa83f 55%,#5c6a22)}
-.rc-p2{background:radial-gradient(120% 110% at 35% 25%,#9fd86a,#46962f 55%,#235c1c)}
-.rc-p3{background:radial-gradient(120% 110% at 35% 25%,#f0bf6a,#bd6f24 55%,#7a3f12)}
-.rc-p4{background:radial-gradient(120% 110% at 35% 25%,#86c6bd,#3c8079 55%,#1f4a45)}
-.rc-p5{background:radial-gradient(120% 110% at 35% 25%,#e89a8a,#c0533c 55%,#7a2c1d)}
+.rc-card:hover .photo img{transform:scale(1.1)}
 .rc-card .veil{position:absolute;inset:0;z-index:1;
   background:linear-gradient(180deg,rgba(10,16,6,.42) 0%,rgba(10,16,6,0) 30%,rgba(10,16,6,.10) 52%,rgba(10,16,6,.85) 100%)}
 .rc-top{position:absolute;top:14px;left:14px;right:14px;z-index:3;display:flex;align-items:flex-start;justify-content:space-between}
@@ -67,14 +63,15 @@ const CSS = `
 .rc-save.saved{background:#fff;color:#14A800}
 .rc-chips{position:absolute;top:78px;left:14px;z-index:3;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 .rc-chip{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;
-  padding:5px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;
-  background:rgba(255,255,255,.9);color:#0d7400;backdrop-filter:blur(6px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
-.rc-chip.alt{background:rgba(10,16,6,.42);color:#fff;border:1px solid rgba(255,255,255,.25)}
+  height:24px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;
+  background:rgba(10,16,6,.52);color:#fff;border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(6px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.rc-chip.alt{background:rgba(10,16,6,.42)}
+.rc-chip svg{display:block;flex-shrink:0;position:relative;top:-0.5px}
 .rc-info{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:18px 18px 20px;color:#fff}
 .rc-rate{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#fff;margin-bottom:8px;
   background:rgba(255,255,255,.14);backdrop-filter:blur(6px);padding:4px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.2)}
 .rc-rate svg{color:#ffd34d}
-.rc-info h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;letter-spacing:-.02em;font-size:1.45rem;line-height:1.08;margin:0;text-shadow:0 2px 14px rgba(0,0,0,.4)}
+.rc-info h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;letter-spacing:-.02em;font-size:1.45rem;line-height:1.08;margin:0;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.4)}
 .rc-meta{display:flex;gap:16px;margin-top:10px;font-size:12px;color:rgba(255,255,255,.92)}
 .rc-meta span{display:inline-flex;align-items:center;gap:6px}
 .rc-cta{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s cubic-bezier(.16,1,.3,1),opacity .4s cubic-bezier(.16,1,.3,1),margin-top .45s cubic-bezier(.16,1,.3,1)}
@@ -111,11 +108,9 @@ export function StellarRecipeCards() {
     // inject cards
     rl.innerHTML = RECIPES.map((r, i) => {
       const off = (C * (1 - r.match / 100)).toFixed(1)
-      const chips = r.tags.map(([t, alt]) =>
-        `<span class="rc-chip${alt ? ' alt' : ''}">${alt ? '' : CHECK}${t}</span>`
-      ).join('')
+      const chips = ''
       return `<article class="rc-card" data-i="${i}">
-        <div class="photo rc-${r.p}"></div><div class="veil"></div>
+        <div class="photo"><img src="${r.img}" alt="${r.nm}" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${i === 0 ? 'high' : 'auto'}"/></div><div class="veil"></div>
         <div class="rc-top">
           <div class="rc-match">
             <svg width="54" height="54" viewBox="0 0 54 54">

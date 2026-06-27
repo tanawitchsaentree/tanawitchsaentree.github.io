@@ -115,12 +115,7 @@ export function StellarScreen2() {
       const d = document.createElement('div')
       d.className = 's2-photo'
       d.innerHTML = `
-        <div class="s2-photo-img">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10 2v3.5L7.6 8.2A2 2 0 0 0 7 9.6V20a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9.6a2 2 0 0 0-.6-1.4L14 5.5V2"/>
-            <path d="M9 2h6M8.5 13h7"/>
-          </svg>
-        </div>
+        <img src="/images/stellareating/phone%20mockup%20content/ponsu%20query.png" alt="ponzu query" style="width:100%;height:118px;object-fit:cover;display:block"/>
         <span class="s2-photo-cap">IMG_0421.jpg</span>`
       msgsRef.current.appendChild(d)
       scrollDown()
@@ -161,7 +156,7 @@ export function StellarScreen2() {
       const d = document.createElement('div')
       d.className = 's2-sugg'
       d.innerHTML = `
-        <div class="s2-sugg-pic"><span class="s2-sugg-badge">from your photo</span></div>
+        <div class="s2-sugg-pic" style="position:relative"><img src="/images/stellareating/phone%20mockup%20content/ponsu%20glazed%20salmon.png" alt="Ponzu Glazed Salmon Bowl" style="width:100%;height:84px;object-fit:cover;display:block"/><span class="s2-sugg-badge">from your photo</span></div>
         <div class="s2-sugg-body">
           <div class="s2-sugg-name">Ponzu Glazed Salmon Bowl</div>
           <div class="s2-sugg-meta"><span>8 Ingredients</span><span>25 mins</span></div>

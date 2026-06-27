@@ -196,15 +196,6 @@ export function StellarBuild() {
       </div>
 
       <Screen3Row />
-
-      {/* closing note */}
-      <div className="stellar-wrap" style={{ marginTop: 'clamp(3rem,8vw,6rem)' }}>
-        <p style={{ color: S.color.inkSoft, maxWidth: '56ch', fontSize: '1.1rem', lineHeight: 1.65, fontFamily: S.font.body }}>
-          The interface stayed dark and photo-forward on purpose —{' '}
-          <strong style={{ color: S.color.ink, fontWeight: 600 }}>65% said visuals drive whether they&apos;ll cook a dish</strong>,
-          {' '}so food imagery leads and chrome gets out of the way.
-        </p>
-      </div>
     </section>
   )
 }

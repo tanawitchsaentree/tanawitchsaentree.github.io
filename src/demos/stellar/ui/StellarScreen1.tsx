@@ -19,13 +19,11 @@ const CSS = `
 .s1-scroll::-webkit-scrollbar{display:none}
 
 /* hero */
-.s1-hero{position:relative;height:330px;overflow:hidden;
-  background:linear-gradient(180deg,rgba(20,30,12,.10) 0%,rgba(20,30,12,.02) 30%,rgba(12,20,6,.80) 100%),
-    radial-gradient(120% 90% at 50% 30%,#7faa3f,#3f6e1e 55%,#244310);
-  display:flex;flex-direction:column;justify-content:flex-end;padding:14px 18px 18px}
+.s1-hero{position:relative;height:330px;overflow:hidden;background:#1e2e10}
+.s1-hero-video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;display:block}
 .s1-veil{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(10,16,6,.32) 0%,rgba(10,16,6,0) 32%,rgba(10,16,6,.78) 100%)}
-.s1-hero>*{position:relative;z-index:2}
+  background:linear-gradient(180deg,rgba(10,16,6,.32) 0%,rgba(10,16,6,0) 28%,rgba(10,16,6,.82) 100%)}
+.s1-hero-text{position:absolute;bottom:18px;left:18px;right:18px;z-index:2}
 .s1-statusbar{position:absolute;top:0;left:0;right:0;z-index:4;display:flex;justify-content:space-between;align-items:center;padding:13px 22px 0;font-size:11.5px;font-weight:700;color:#fff;font-family:'DM Sans',sans-serif}
 .s1-statusbar .sig{display:flex;gap:4px;align-items:center}
 .s1-greet{position:absolute;top:42px;left:18px;right:18px;display:flex;align-items:center;gap:10px;z-index:3}
@@ -35,7 +33,7 @@ const CSS = `
 .s1-hero h3{color:#fff;font-size:21px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;text-shadow:0 1px 10px rgba(0,0,0,.5);margin:0}
 .s1-hero-meta{display:flex;gap:16px;margin-top:6px;font-size:11.5px;color:rgba(255,255,255,.92);align-items:center}
 .s1-hero-meta span{display:inline-flex;align-items:center;gap:5px}
-.s1-dots{position:absolute;right:18px;bottom:80px;z-index:2;display:flex;gap:4px;align-items:center}
+.s1-dots{position:absolute;right:18px;bottom:76px;z-index:2;display:flex;gap:4px;align-items:center}
 .s1-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);list-style:none}
 .s1-dots i.on{width:16px;border-radius:3px;background:#fff}
 
@@ -95,29 +93,74 @@ const CSS = `
 .s1-new-recipes-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,#5fd14a,#14A800);color:#fff;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;padding:15px;border-radius:999px;border:0;cursor:pointer;box-shadow:0 8px 22px rgba(20,168,0,.4);transition:transform .15s}
 
 /* chat sheet */
-.s1-chatsheet{position:absolute;left:0;right:0;bottom:0;height:74%;z-index:40;background:#fff;border-radius:26px 26px 0 0;box-shadow:0 -16px 40px rgba(22,33,15,.18);transform:translateY(102%);transition:transform .5s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;overflow:hidden}
+.s1-chatsheet{position:absolute;left:0;right:0;bottom:0;height:86%;z-index:40;background:#f8fbf6;border-radius:26px 26px 0 0;box-shadow:0 -20px 50px rgba(22,33,15,.20);transform:translateY(102%);transition:transform .5s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;overflow:hidden}
 .s1-chatsheet.open{transform:translateY(0)}
-.s1-sheet-grab{width:38px;height:4px;border-radius:99px;background:rgba(22,33,15,.10);margin:10px auto 4px;flex-shrink:0}
-.s1-sheet-head{display:flex;align-items:center;gap:9px;padding:6px 18px 12px;border-bottom:1px solid rgba(22,33,15,.06);flex-shrink:0}
-.s1-sheet-chef{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#5fd14a,#14A800);display:grid;place-content:center;color:#fff;flex-shrink:0}
-.s1-sheet-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:14px;color:#16210f}
-.s1-sheet-body{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}
+.s1-sheet-grab{width:38px;height:4px;border-radius:99px;background:rgba(22,33,15,.12);margin:10px auto 0;flex-shrink:0}
+
+/* sheet header */
+.s1-sheet-head{padding:10px 16px 0;flex-shrink:0}
+.s1-sheet-top{display:flex;align-items:center;gap:9px;padding-bottom:10px}
+.s1-sheet-chef{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#5fd14a,#14A800);display:grid;place-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 10px rgba(20,168,0,.3)}
+.s1-sheet-info{flex:1}
+.s1-sheet-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13.5px;color:#16210f;display:block;line-height:1.2}
+.s1-sheet-sub{font-size:10px;color:#8a9882;font-family:'DM Sans',sans-serif}
+
+/* fridge context bar */
+.s1-fridge-bar{background:#fff;border:1px solid rgba(22,33,15,.08);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+.s1-fridge-label{font-size:9.5px;color:#8a9882;font-family:'Space Mono',monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
+.s1-fridge-chips{display:flex;gap:5px;flex-wrap:wrap}
+.s1-fridge-chip{display:inline-flex;align-items:center;gap:4px;background:#f0f9ec;border:1px solid rgba(20,168,0,.2);color:#2b6e34;font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:99px;font-family:'DM Sans',sans-serif}
+.s1-fridge-chip .ci{font-size:12px}
+
+/* messages */
+.s1-sheet-body{flex:1;overflow-y:auto;padding:0 14px 10px;display:flex;flex-direction:column;gap:9px;scrollbar-width:none}
 .s1-sheet-body::-webkit-scrollbar{display:none}
-.s1-msg{max-width:80%;padding:9px 13px;border-radius:16px;font-size:12.5px;line-height:1.45;opacity:0;transform:translateY(8px);animation:s1msgin .3s cubic-bezier(.16,1,.3,1) forwards;font-family:'DM Sans',sans-serif}
+.s1-msg{max-width:82%;padding:10px 13px;border-radius:18px;font-size:12.5px;line-height:1.5;opacity:0;transform:translateY(6px);animation:s1msgin .28s cubic-bezier(.16,1,.3,1) forwards;font-family:'DM Sans',sans-serif}
 @keyframes s1msgin{to{opacity:1;transform:none}}
-.s1-msg.user{align-self:flex-end;background:#14A800;color:#fff;border-bottom-right-radius:5px}
-.s1-msg.ai{align-self:flex-start;background:#f7faf5;color:#16210f;border:1px solid rgba(22,33,15,.06);border-bottom-left-radius:5px}
-.s1-typing{align-self:flex-start;background:#f7faf5;border:1px solid rgba(22,33,15,.06);border-radius:16px;border-bottom-left-radius:5px;padding:11px 14px;display:flex;gap:4px}
-.s1-typing i{width:6px;height:6px;border-radius:50%;background:#8a9882;animation:s1dot 1.1s infinite;list-style:none}
+.s1-msg.user{align-self:flex-end;background:#14A800;color:#fff;border-bottom-right-radius:5px;box-shadow:0 4px 12px rgba(20,168,0,.25)}
+.s1-msg.ai{align-self:flex-start;background:#fff;color:#16210f;border:1px solid rgba(22,33,15,.07);border-bottom-left-radius:5px;box-shadow:0 2px 8px rgba(22,33,15,.06)}
+.s1-typing{align-self:flex-start;background:#fff;border:1px solid rgba(22,33,15,.07);border-radius:18px;border-bottom-left-radius:5px;padding:12px 15px;display:flex;gap:5px;box-shadow:0 2px 8px rgba(22,33,15,.06)}
+.s1-typing i{width:6px;height:6px;border-radius:50%;background:#14A800;animation:s1dot 1.1s infinite;list-style:none;opacity:.4}
 .s1-typing i:nth-child(2){animation-delay:.18s}
 .s1-typing i:nth-child(3){animation-delay:.36s}
-@keyframes s1dot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
-.s1-sugg{align-self:flex-start;width:88%;background:#fff;border:1px solid rgba(22,33,15,.10);border-radius:14px;overflow:hidden;box-shadow:0 6px 16px rgba(22,33,15,.08);opacity:0;transform:translateY(8px);animation:s1msgin .35s cubic-bezier(.16,1,.3,1) forwards}
-.s1-sugg-pic{height:74px;background:radial-gradient(120% 120% at 40% 30%,#8fc24a,#3f8e2a)}
+@keyframes s1dot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+
+/* suggestion card */
+.s1-sugg{align-self:flex-start;width:90%;background:#fff;border:1px solid rgba(22,33,15,.09);border-radius:16px;overflow:hidden;box-shadow:0 6px 20px rgba(22,33,15,.1);opacity:0;transform:translateY(8px);animation:s1msgin .35s cubic-bezier(.16,1,.3,1) forwards}
+.s1-sugg-pic{height:78px;background:linear-gradient(135deg,#5ba64a 0%,#2d6e1a 100%);position:relative;overflow:hidden}
+.s1-sugg-pic::after{content:'🍝';position:absolute;right:12px;bottom:-4px;font-size:36px;opacity:.7;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
 .s1-sugg-body{padding:10px 12px}
 .s1-sugg-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13px;color:#16210f}
 .s1-sugg-meta{display:flex;gap:12px;font-size:10.5px;color:#8a9882;margin:3px 0 9px;font-family:'DM Sans',sans-serif}
-.s1-sugg-go{display:block;width:100%;text-align:center;background:#14A800;color:#fff;border:0;border-radius:9px;padding:9px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:pointer}
+.s1-sugg-go{display:block;width:100%;text-align:center;background:linear-gradient(135deg,#5fd14a,#14A800);color:#fff;border:0;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:pointer;box-shadow:0 4px 12px rgba(20,168,0,.3)}
+
+/* skeleton */
+.s1-sugg-skel{align-self:flex-start;width:90%;background:#fff;border:1px solid rgba(22,33,15,.07);border-radius:16px;overflow:hidden}
+.s1-skel-img{height:78px;background:linear-gradient(90deg,#e8f5e3 25%,#d4eece 50%,#e8f5e3 75%);background-size:200% 100%;animation:s1shimmer 1.3s cubic-bezier(.65,0,.35,1) infinite}
+.s1-skel-body{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.s1-skel-line{height:10px;border-radius:5px;background:linear-gradient(90deg,#e8f5e3 25%,#d4eece 50%,#e8f5e3 75%);background-size:200% 100%;animation:s1shimmer 1.3s cubic-bezier(.65,0,.35,1) infinite}
+.s1-skel-short{width:55%;animation-delay:.15s}
+.s1-skel-btn{height:32px;border-radius:10px;background:linear-gradient(90deg,#e8f5e3 25%,#d4eece 50%,#e8f5e3 75%);background-size:200% 100%;animation:s1shimmer 1.3s cubic-bezier(.65,0,.35,1) infinite;animation-delay:.3s}
+@keyframes s1shimmer{to{background-position:-200% 0}}
+
+/* input bar */
+.s1-input-bar{flex-shrink:0;padding:8px 12px 6px;background:#fff;border-top:1px solid rgba(22,33,15,.07)}
+.s1-input-row{display:flex;align-items:center;gap:8px;background:#f3f8f1;border:1.5px solid rgba(22,33,15,.10);border-radius:22px;padding:9px 10px 9px 14px}
+.s1-input-text{flex:1;font-family:'DM Sans',sans-serif;font-size:13px;color:#16210f;min-height:18px;line-height:1.4}
+.s1-input-text.placeholder{color:#a8bda0}
+.s1-input-send{width:32px;height:32px;border-radius:50%;background:#14A800;display:grid;place-content:center;color:#fff;flex-shrink:0;opacity:0;transform:scale(.7);transition:opacity .2s cubic-bezier(.34,1.56,.64,1),transform .2s cubic-bezier(.34,1.56,.64,1)}
+.s1-input-send.show{opacity:1;transform:scale(1)}
+
+/* iOS keyboard */
+.s1-keyboard{flex-shrink:0;background:#d1d5db;padding:8px 3px 4px;display:none}
+.s1-keyboard.show{display:block}
+.s1-kb-row{display:flex;gap:5px;margin-bottom:10px;justify-content:center}
+.s1-kb-row:last-child{margin-bottom:0}
+.s1-kb-key{height:42px;border-radius:5px;background:#fff;box-shadow:0 1px 0 #8a8a8a;display:flex;align-items:center;justify-content:center;font-family:-apple-system,'DM Sans',sans-serif;font-size:16px;color:#000;font-weight:400;flex:1;max-width:30px;cursor:pointer;user-select:none;transition:background .08s}
+.s1-kb-key.wide{max-width:44px;font-size:13px;font-weight:500;background:#adb5bd;color:#000}
+.s1-kb-key.space{max-width:none;flex:4}
+.s1-kb-key.send-key{max-width:44px;background:#14A800;color:#fff;font-size:12px;font-weight:700}
+.s1-kb-key.lit{background:#e2f5dc}
 
 /* toast */
 .s1-toast{position:absolute;left:50%;bottom:84px;transform:translate(-50%,16px);z-index:60;display:flex;align-items:center;gap:7px;background:#16210f;color:#fff;padding:10px 15px;border-radius:999px;font-size:12px;font-weight:600;box-shadow:0 10px 26px rgba(22,33,15,.3);opacity:0;pointer-events:none;transition:opacity .3s cubic-bezier(.16,1,.3,1),transform .3s cubic-bezier(.34,1.56,.64,1);font-family:'DM Sans',sans-serif}
@@ -145,7 +188,11 @@ export function StellarScreen1() {
   const countRef   = useRef<HTMLSpanElement>(null)
   const toastRef   = useRef<HTMLDivElement>(null)
   const toastTxtRef= useRef<HTMLSpanElement>(null)
+  const inputTextRef = useRef<HTMLDivElement>(null)
+  const inputSendRef = useRef<HTMLDivElement>(null)
+  const keyboardRef  = useRef<HTMLDivElement>(null)
 
+  const videoRef = useRef<HTMLVideoElement>(null)
   const { fingerEl, rippleEl, bot } = useBotFinger(screenRef)
 
   /* ── render recipes helper ───────────────────────────────── */
@@ -200,43 +247,101 @@ export function StellarScreen1() {
     const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
     const sc = screen
 
+    async function typeText(el: HTMLElement, text: string, scrollEl: HTMLElement) {
+      el.textContent = ''
+      for (const ch of text) {
+        el.textContent += ch
+        scrollEl.scrollTop = scrollEl.scrollHeight
+        const pause = /[,.:!?—]/.test(ch) ? 90 + Math.random() * 60 : 22 + Math.random() * 18
+        await wait(pause)
+      }
+    }
+
     async function runChat(promptText: string): Promise<HTMLButtonElement | null> {
-      const msgs = msgsRef.current
-      const chat = chatRef.current
-      if (!msgs || !chat) return null
+      const msgs    = msgsRef.current
+      const chat    = chatRef.current
+      const inputEl = inputTextRef.current
+      const sendEl  = inputSendRef.current
+      const kbEl    = keyboardRef.current
+      if (!msgs || !chat || !inputEl || !sendEl || !kbEl) return null
+
       msgs.innerHTML = ''
       chat.classList.add('open')
-      await wait(450)
+      await wait(600)
+
+      // show keyboard
+      kbEl.classList.add('show')
+      inputEl.textContent = ''
+      inputEl.classList.remove('placeholder')
+      await wait(300)
+
+      // type into input bar char by char — feels like user is typing
+      for (const ch of promptText) {
+        inputEl.textContent += ch
+        // light up a random key visually
+        const keys = kbEl.querySelectorAll<HTMLElement>('.s1-kb-key:not(.wide):not(.space):not(.send-key)')
+        const k = keys[Math.floor(Math.random() * keys.length)]
+        if (k) {
+          k.classList.add('lit')
+          setTimeout(() => k.classList.remove('lit'), 120)
+        }
+        await wait(55 + Math.random() * 45)
+      }
+      sendEl.classList.add('show')
+      await wait(600)
+
+      // "send" — clear input, message bubbles up
+      inputEl.textContent = ''
+      inputEl.classList.add('placeholder')
+      inputEl.textContent = 'Message Stellar…'
+      sendEl.classList.remove('show')
+      kbEl.classList.remove('show')
+      await wait(200)
+
       const u = document.createElement('div')
       u.className = 's1-msg user'
-      u.textContent = promptText
       msgs.appendChild(u)
+      u.textContent = promptText
       msgs.scrollTop = msgs.scrollHeight
-      await wait(700)
+      await wait(500)
+
+      // AI typing dots
       const tp = document.createElement('div')
       tp.className = 's1-typing'
       tp.innerHTML = '<i></i><i></i><i></i>'
       msgs.appendChild(tp)
       msgs.scrollTop = msgs.scrollHeight
-      await wait(1100)
+      await wait(2200)
       tp.remove()
+
+      // AI reply streams char by char
       const ai = document.createElement('div')
       ai.className = 's1-msg ai'
-      ai.textContent = 'Sunny day — perfect for something quick. Try this:'
       msgs.appendChild(ai)
+      await typeText(ai, 'You\'ve got eggs, pasta, and pancetta — that\'s basically Carbonara. Here\'s one that\'ll look seriously impressive:', msgs)
+      await wait(800)
+
+      // skeleton loading card
+      const skel = document.createElement('div')
+      skel.className = 's1-sugg-skel'
+      skel.innerHTML = `<div class="s1-skel-img"></div><div class="s1-skel-body"><div class="s1-skel-line"></div><div class="s1-skel-line s1-skel-short"></div><div class="s1-skel-btn"></div></div>`
+      msgs.appendChild(skel)
       msgs.scrollTop = msgs.scrollHeight
-      await wait(500)
+      await wait(1300)
+
+      // swap → real card
       const sugg = document.createElement('div')
       sugg.className = 's1-sugg'
       sugg.innerHTML = `
         <div class="s1-sugg-pic"></div>
         <div class="s1-sugg-body">
-          <div class="s1-sugg-name">Grilled Chicken & Veggie Skewers</div>
-          <div class="s1-sugg-meta"><span>10 Ingredients</span><span>20 mins</span></div>
-          <button class="s1-sugg-go">I'll go with this!</button>
+          <div class="s1-sugg-name">Spaghetti Carbonara from Scratch</div>
+          <div class="s1-sugg-meta"><span>6 Ingredients</span><span>35 mins</span></div>
+          <button class="s1-sugg-go">I'll make this tonight!</button>
         </div>`
-      msgs.appendChild(sugg)
+      skel.replaceWith(sugg)
       msgs.scrollTop = msgs.scrollHeight
+      await wait(400)
       return sugg.querySelector<HTMLButtonElement>('.s1-sugg-go')
     }
 
@@ -257,50 +362,63 @@ export function StellarScreen1() {
         if (reduced) { await wait(4000); continue }
 
         bot.current.show()
-        await wait(500)
+        await wait(900)
 
         /* 1. browse tabs */
         if (tabBtns[1]) await bot.current.tap(tabBtns[1], () => { tabBtns.forEach((t,i) => t.classList.toggle('on', i===1)); renderRecipes('Dinner') })
-        await wait(250)
+        await wait(700)
         if (tabBtns[4]) await bot.current.tap(tabBtns[4], () => { tabBtns.forEach((t,i) => t.classList.toggle('on', i===4)); renderRecipes('Chicken') })
-        await wait(250)
+        await wait(700)
         if (tabBtns[0]) await bot.current.tap(tabBtns[0], () => { tabBtns.forEach((t,i) => t.classList.toggle('on', i===0)); renderRecipes('For you') })
-        await wait(300)
+        await wait(900)
 
-        /* 2. tap a prompt → chat opens */
+        /* 2. tap a prompt → chat opens, wait for full conversation to play out */
         const prompts = sc.querySelectorAll<HTMLButtonElement>('.s1-prompt')
         let goBtn: HTMLButtonElement | null = null
         if (prompts[0]) {
-          await bot.current.tap(prompts[0], async () => { goBtn = await runChat('Want to impress your friends?') })
+          // tap the prompt card — opens the sheet
+          await bot.current.tap(prompts[0], () => {})
+          // run full conversation — message matches fridge context
+          goBtn = await runChat("What can I make with what's in my fridge?")
         }
-        await wait(900)
+        await wait(1200)
         if (goBtn) await bot.current.tap(goBtn, () => {})
-        await wait(500)
+        await wait(2200)   // stay open so user can read the card
         chatRef.current?.classList.remove('open')
-        await wait(500)
+        await wait(1500)
 
         /* 3. scroll to recipes */
         await bot.current.smoothScroll(scroll, scroll.scrollHeight)
-        await wait(500)
+        await wait(900)
 
         /* 4. add 2 recipes */
         const addBtns = sc.querySelectorAll<HTMLButtonElement>('.s1-add-btn')
         if (addBtns[0]) await bot.current.tap(addBtns[0])
-        await wait(350)
+        await wait(800)
         const addBtns2 = sc.querySelectorAll<HTMLButtonElement>('.s1-add-btn')
         if (addBtns2[2]) await bot.current.tap(addBtns2[2])
-        await wait(700)
+        await wait(1200)
 
         /* 5. back to top */
         await bot.current.smoothScroll(scroll, 0)
         bot.current.hide()
-        await wait(1100)
+        await wait(2000)
       }
     }
 
     renderRecipes('For you')
     const io = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) { io.disconnect(); setTimeout(loop, 700) }
+      if (entries[0].isIntersecting) {
+        // lazy-load + play video only when visible
+        const vid = videoRef.current
+        if (vid && !vid.src) {
+          vid.src = '/images/stellareating/phone%20mockup%20content/Hands_kneading_spaghetti_dough_202606261157.mp4'
+          vid.load()
+        }
+        vid?.play().catch(() => {})
+        io.disconnect()
+        setTimeout(loop, 700)
+      }
     }, { threshold: 0.4 })
     io.observe(screen)
     return () => { cancelled = true; io.disconnect() }
@@ -316,6 +434,16 @@ export function StellarScreen1() {
 
             {/* hero */}
             <div className="s1-hero">
+              <video
+                ref={videoRef}
+                className="s1-hero-video"
+                muted
+                loop
+                playsInline
+                preload="none"
+              >
+                <source src="/images/stellareating/phone%20mockup%20content/Hands_kneading_spaghetti_dough_202606261157.mp4" type="video/mp4" />
+              </video>
               <div className="s1-veil" />
               {/* status bar */}
               <div className="s1-statusbar">
@@ -337,18 +465,20 @@ export function StellarScreen1() {
                   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg>
                 </div>
               </div>
-              <h3>Japanese curry rice</h3>
-              <div className="s1-hero-meta">
-                <span>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h0a2 2 0 0 0 2-2V2M5 2v9m0 0v11M19 2a4 4 0 0 0-4 4v6h4m0-10v20"/></svg>
-                  20 Ingredients
-                </span>
-                <span>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                  38 mins
-                </span>
+              <div className="s1-hero-text">
+                <img src="/images/stellareating/logo/selected.png" alt="Stellar" style={{ width: 23, height: 23, objectFit: 'contain', display: 'block', marginBottom: 6, filter: 'drop-shadow(0 1px 4px rgba(0,0,0,.4))' }} />
+                <h3>Homemade Spaghetti al Pomodoro</h3>
+                <div className="s1-hero-meta">
+                  <span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h0a2 2 0 0 0 2-2V2M5 2v9m0 0v11M19 2a4 4 0 0 0-4 4v6h4m0-10v20"/></svg>
+                    8 Ingredients
+                  </span>
+                  <span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    45 mins
+                  </span>
+                </div>
               </div>
-              <div className="s1-dots"><i className="on" /><i /><i /></div>
             </div>
 
             {/* body */}
@@ -381,19 +511,22 @@ export function StellarScreen1() {
 
               {/* how can I help */}
               <div className="s1-section-head">
-                <span className="t">How can I help you today?</span>
+                <span className="t">What&apos;s cooking today?</span>
                 <button className="s1-chatbtn">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
                   Chat
                 </button>
               </div>
               <div className="s1-prompts">
-                {['Want to impress your friends?','Need a meal idea that\'s healthy & tasty?','Want to try something new?','Need a dinner idea?'].map(p => (
-                  <button key={p} className="s1-prompt">
-                    <span>{p}</span>
-                    <span className="em">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#14A800" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
-                    </span>
+                {[
+                  {text:"What's in my fridge?", em:'🧊'},
+                  {text:'Quick dinner, 20 mins', em:'⚡'},
+                  {text:'Surprise me tonight', em:'✨'},
+                  {text:'Use what I have', em:'🥚'},
+                ].map(p => (
+                  <button key={p.text} className="s1-prompt">
+                    <span>{p.text}</span>
+                    <span className="em">{p.em}</span>
                   </button>
                 ))}
               </div>
@@ -435,12 +568,50 @@ export function StellarScreen1() {
           <div ref={chatRef} className="s1-chatsheet">
             <div className="s1-sheet-grab" />
             <div className="s1-sheet-head">
-              <span className="s1-sheet-chef">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg>
-              </span>
-              <span className="s1-sheet-title">Dinner Ideas! Let&apos;s roll</span>
+              <div className="s1-sheet-top">
+                <span className="s1-sheet-chef">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"/><path d="M6 17h12"/></svg>
+                </span>
+                <div className="s1-sheet-info">
+                  <span className="s1-sheet-title">Stellar Chef</span>
+                  <span className="s1-sheet-sub">knows your fridge · always on</span>
+                </div>
+              </div>
+              {/* fridge context */}
+              <div className="s1-fridge-bar">
+                <div className="s1-fridge-label">🧊 In your fridge today</div>
+                <div className="s1-fridge-chips">
+                  {['🥚 Eggs','🍝 Pasta','🥓 Pancetta','🧀 Parmesan','🥛 Cream'].map(c => (
+                    <span key={c} className="s1-fridge-chip">{c}</span>
+                  ))}
+                </div>
+              </div>
             </div>
             <div ref={msgsRef} className="s1-sheet-body" />
+            {/* input bar */}
+            <div className="s1-input-bar">
+              <div className="s1-input-row">
+                <div ref={inputTextRef} className="s1-input-text placeholder">Message Stellar…</div>
+                <div ref={inputSendRef} className="s1-input-send">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                </div>
+              </div>
+            </div>
+            {/* iOS keyboard */}
+            <div ref={keyboardRef} className="s1-keyboard">
+              {[
+                ['q','w','e','r','t','y','u','i','o','p'],
+                ['a','s','d','f','g','h','j','k','l'],
+                ['⇧','z','x','c','v','b','n','m','⌫'],
+                ['123',' space ','return'],
+              ].map((row, ri) => (
+                <div key={ri} className="s1-kb-row">
+                  {row.map(k => (
+                    <div key={k} className={`s1-kb-key${k==='⇧'||k==='⌫'||k==='123'?'wide':k==='return'?'send-key':k===' space '?'space':''}`}>{k===' space '?'space':k}</div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* toast */}

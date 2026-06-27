@@ -68,7 +68,7 @@ export const S = {
     mono:    "'Space Mono', monospace",
   },
   size: {
-    hero:    'clamp(3rem,11vw,9.5rem)',
+    hero:    'clamp(2.4rem,7vw,6rem)',
     display: 'clamp(2.1rem,5.5vw,4rem)',
     title:   'clamp(1.4rem,3vw,2.1rem)',
     body:    'clamp(1.02rem,1.4vw,1.18rem)',

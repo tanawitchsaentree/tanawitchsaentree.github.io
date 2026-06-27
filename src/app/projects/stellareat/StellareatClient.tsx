@@ -81,6 +81,8 @@ export function StellareatClient() {
 
         /* JTBD scrollbar */
         .stellar-jtbd-scroll::-webkit-scrollbar { height:6px }
+        .stellar-jtbd-scroll::-webkit-scrollbar-track { background: transparent }
+        .stellar-jtbd-scroll::-webkit-scrollbar-thumb { background: rgba(27,43,24,.18); border-radius:99px }
 
         /* responsive */
         @media(max-width:720px){ .stellar-nav-links{display:none!important} }
