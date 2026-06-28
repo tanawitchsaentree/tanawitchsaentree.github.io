@@ -307,13 +307,21 @@ input[type=range]{flex:1;accent-color:var(--violet)}
 .tog.on{background:var(--violet)}
 .tog i{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .25s var(--spring)}
 .tog.on i{transform:translateX(18px)}
+/* ctrl-hint text under control rows */
+.ctrl-hint{font-size:.68rem;color:var(--muted);margin-top:-.5rem;margin-bottom:.5rem;padding-left:74px;font-family:var(--b)}
+/* native color picker styled as a swatch */
+input[type=color].swatch-pick{width:24px;height:24px;border-radius:7px;border:2px solid transparent;cursor:pointer;padding:0;background:none;-webkit-appearance:none;appearance:none;flex:none}
+input[type=color].swatch-pick::-webkit-color-swatch-wrapper{padding:0;border-radius:5px}
+input[type=color].swatch-pick::-webkit-color-swatch{border:none;border-radius:5px}
+input[type=color].swatch-pick::-moz-color-swatch{border:none;border-radius:5px}
 
 /* view toggle (designer / eng / pm) */
 .views{display:flex;gap:.4rem;background:var(--paper-2);border:1px solid var(--line);border-radius:11px;padding:3px}
-.view-t{flex:1;text-align:center;font-family:var(--m);font-size:.7rem;padding:.5rem;border-radius:8px;cursor:pointer;color:var(--ink-soft);transition:all .2s}
+.view-t{flex:1;text-align:center;font-family:var(--m);font-size:.7rem;padding:.5rem;border-radius:8px;cursor:pointer;color:var(--ink-soft);transition:background .25s cubic-bezier(0.16,1,0.3,1),color .25s cubic-bezier(0.16,1,0.3,1)}
 .view-t.on{background:var(--ink);color:#fff}
-.vpanel{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:1.2rem 1.3rem;min-height:150px}
-.vp{display:none}.vp.on{display:block}
+.vpanel{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;min-height:150px;position:relative;overflow:hidden}
+.vp{position:absolute;top:0;left:0;width:100%;padding:1.2rem 1.3rem;clip-path:inset(0 100% 0 0);pointer-events:none;transition:transform .35s cubic-bezier(0.16,1,0.3,1),clip-path .35s cubic-bezier(0.16,1,0.3,1)}
+.vp.on{clip-path:inset(0 0% 0 0);pointer-events:auto;position:relative;transform:translateX(0)}
 .vp .vh{font-family:var(--g);font-weight:700;font-size:1rem;margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem}
 .vp .vh .badge{font-family:var(--m);font-size:.58rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--violet);background:var(--lilac-soft);padding:.18em .55em;border-radius:99px}
 .vp p{font-size:.88rem;color:var(--ink-soft);line-height:1.55;margin:.4rem 0}
@@ -644,9 +652,12 @@ section{overflow:hidden}
 
         <div class="panel">
           <div class="ph">Tokens · live</div>
-          <div class="ctrl"><label>Primary</label><div class="swatches" id="swatches"></div></div>
+          <div class="ctrl"><label>Primary</label><div class="swatches" id="swatches"></div><input type="color" id="colorPick" class="swatch-pick" value="#0d9488" title="Pick any colour"></div>
+          <div class="ctrl-hint">Pick any colour — the phone updates live</div>
           <div class="ctrl"><label>Radius</label><input type="range" id="radius" min="4" max="28" value="20"><span class="rngval" id="radVal">20</span></div>
+          <div class="ctrl-hint">Drag to see corner radius cascade to every component</div>
           <div class="ctrl"><label>High contrast</label><div class="tog" id="hcTog"><i></i></div></div>
+          <div class="ctrl-hint">Enforces WCAG AAA — contrast ratio floors travel with the theme</div>
           <div class="ctrl"><label>Edge case</label><div class="edges" id="edges"><button class="on" data-edge="none">Default</button><button data-edge="empty">No admissions</button><button data-edge="long">Long name</button></div></div>
         </div>
 
@@ -1111,6 +1122,7 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   const newCli=document.getElementById('newCli');
   const edges=[...document.querySelectorAll('#edges button')];
   const swHost=document.getElementById('swatches');
+  const colorPick=document.getElementById('colorPick');
   const radius=document.getElementById('radius'),radVal=document.getElementById('radVal');
   const hcTog=document.getElementById('hcTog');
   const views=[...document.querySelectorAll('#views .view-t')];
@@ -1174,7 +1186,8 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   function renderSwatches(){
     const c=CLINICS[state.client];
     swHost.innerHTML=c.alt.map(hex=>`<button data-hex="${hex}" style="background:${hex}" class="${hex===state.primary?'on':''}"></button>`).join('');
-    swHost.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ state.primary=b.dataset.hex; paintVars(); lightXray(); }));
+    swHost.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ state.primary=b.dataset.hex; if(colorPick) colorPick.value=state.primary; paintVars(); lightXray(); }));
+    if(colorPick) colorPick.value=state.primary;
   }
   function renderCode(){
     const c=CLINICS[state.client];
@@ -1198,6 +1211,7 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   radius.addEventListener('input',()=>{ state.rad=+radius.value; paintVars(); });
   radius.addEventListener('change',lightXray);
   hcTog.addEventListener('click',()=>{ state.hc=!state.hc; paintVars(); lightXray(); });
+  if(colorPick) colorPick.addEventListener('input',()=>{ state.primary=colorPick.value; swHost.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.hex===state.primary)); paintVars(); lightXray(); });
 
   // create a new hospital from the current console settings (a theme is just a config)
   function createClinic(){
@@ -1228,10 +1242,40 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
     });
   }));
 
-  views.forEach(v=>v.addEventListener('click',()=>{
-    views.forEach(x=>x.classList.remove('on')); v.classList.add('on');
-    vps.forEach(p=>p.classList.toggle('on',p.dataset.view===v.dataset.view));
-  }));
+  // direction-aware slide for view panel
+  function switchView(newV){
+    const oldIdx=views.findIndex(x=>x.classList.contains('on'));
+    const newIdx=views.indexOf(newV);
+    if(oldIdx===newIdx) return;
+    const dir=newIdx>oldIdx?1:-1; // 1=right, -1=left
+    const oldVp=vps.find(p=>p.classList.contains('on'));
+    const newVp=vps.find(p=>p.dataset.view===newV.dataset.view);
+    if(!newVp) return;
+    // slide old panel out
+    if(oldVp && oldVp!==newVp){
+      oldVp.style.transition='none';
+      oldVp.style.transform='translateX(0)';
+      oldVp.style.clipPath='inset(0 0% 0 0)';
+      oldVp.getBoundingClientRect(); // flush
+      oldVp.style.transition='transform .35s cubic-bezier(0.16,1,0.3,1), clip-path .35s cubic-bezier(0.16,1,0.3,1)';
+      oldVp.style.transform='translateX('+(dir<0?'100%':'-100%')+')';
+      oldVp.style.clipPath='inset(0 100% 0 0)';
+      oldVp.addEventListener('transitionend',function h(){ oldVp.classList.remove('on'); oldVp.style.transform=''; oldVp.style.transition=''; oldVp.style.clipPath=''; oldVp.removeEventListener('transitionend',h); },{once:true});
+    } else if(oldVp) { oldVp.classList.remove('on'); }
+    // slide new panel in from opposite direction
+    newVp.style.transition='none';
+    newVp.style.transform='translateX('+(dir>0?'100%':'-100%')+')';
+    newVp.style.clipPath='inset(0 0% 0 0)';
+    newVp.classList.add('on');
+    newVp.getBoundingClientRect(); // flush
+    newVp.style.transition='transform .35s cubic-bezier(0.16,1,0.3,1), clip-path .35s cubic-bezier(0.16,1,0.3,1)';
+    newVp.style.transform='translateX(0)';
+    newVp.style.clipPath='inset(0 0% 0 0)';
+    newVp.addEventListener('transitionend',function h(){ newVp.style.transform=''; newVp.style.transition=''; newVp.style.clipPath=''; newVp.removeEventListener('transitionend',h); },{once:true});
+    // update tab indicators
+    views.forEach(x=>x.classList.remove('on')); newV.classList.add('on');
+  }
+  views.forEach(v=>v.addEventListener('click',()=>switchView(v)));
 
   lab.dataset.client='district'; paintVars();
 
