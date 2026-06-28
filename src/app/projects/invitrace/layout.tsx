@@ -11,7 +11,7 @@ export default function InvitraceLayout({ children }: { children: React.ReactNod
   return (
     <div
       data-universe="invitrace"
-      className="min-h-svh bg-[var(--bg)] text-[var(--fg)]"
+      className="h-dvh overflow-hidden bg-[var(--bg)] text-[var(--fg)]"
     >
       <InvitraceGate>
         {children}

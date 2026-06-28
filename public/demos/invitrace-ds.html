@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One system, every hospital — Invitrace Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:opsz,wght@9..40,300..600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fff;--paper-2:#f7f5fb;--ink:#160f24;--ink-soft:#564d6e;--muted:#998fb0;
+  --violet:#6d28d9;--lilac:#c4b5fd;--lilac-soft:#ede9fe;
+  --grad:linear-gradient(135deg,#7c3aed 0%,#a855f7 52%,#c084fc 100%);
+  --line:rgba(22,15,36,.10);--line-2:rgba(22,15,36,.055);
+  --g:'Bricolage Grotesque',sans-serif;--b:'DM Sans',sans-serif;--m:'Space Mono',monospace;
+  --e:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.56,.64,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--b);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden}
+::selection{background:var(--lilac);color:var(--ink)}
+h1,h2,h3{margin:0;font-weight:400}
+.wrap{max-width:1160px;margin:0 auto;padding:0 clamp(1.4rem,5vw,4rem)}
+.kick{font-family:var(--m);font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--violet);display:inline-flex;align-items:center;gap:.7em}
+.kick::before{content:"";width:24px;height:1.5px;background:var(--violet)}
+.gt{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:1rem clamp(1.4rem,5vw,4rem);background:rgba(255,255,255,.72);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .4s}
+nav.sc{border-bottom-color:var(--line)}
+nav .br{font-family:var(--g);font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:.5rem}
+nav .br .dot{width:13px;height:13px;border-radius:4px;background:var(--grad)}
+nav .lk{display:flex;gap:1.5rem;font-size:.82rem;color:var(--ink-soft)}
+nav .lk a{color:inherit;text-decoration:none;position:relative}
+nav .lk a:hover,nav .lk a.active{color:var(--violet)}
+nav .lk a.active::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1.5px;background:var(--violet)}
+@media(max-width:820px){nav .lk{display:none}}
+/* persona lens switcher */
+.lens-switch{display:flex;align-items:center;gap:.3rem;background:var(--paper-2);border:1px solid var(--line);border-radius:99px;padding:.28rem .3rem}
+.lens-switch .ls-lab{font-family:var(--m);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 .5rem 0 .55rem}
+.lens-switch button{display:inline-flex;align-items:center;gap:.4em;border:0;background:transparent;color:var(--ink-soft);font-family:var(--b);font-size:.76rem;font-weight:600;padding:.42rem .8rem;border-radius:99px;cursor:pointer;transition:all .22s var(--e);white-space:nowrap}
+.lens-switch button i{width:8px;height:8px;border-radius:99px;display:inline-block;transition:transform .22s}
+.lens-switch button:hover{color:var(--ink)}
+.lens-switch button.on{background:#fff;color:var(--ink);box-shadow:0 4px 12px -6px rgba(22,15,36,.3)}
+.lens-switch button.on i{transform:scale(1.3)}
+@media(max-width:880px){.lens-switch .ls-lab{display:none}.lens-switch button{padding:.42rem .62rem;font-size:.72rem}}
+@media(max-width:560px){.lens-switch .ls-lab{display:none}.lens-switch button{padding:.4rem .55rem}.lens-switch button span.t{display:none}.lens-switch button i{width:11px;height:11px}}
+/* ===== role-variant content swap ===== */
+:root{--accent:var(--violet);--accent-soft:var(--lilac-soft)}
+body[data-lens="recruiter"]{--accent:#d8902e;--accent-soft:#fbeed6}
+body[data-lens="designer"]{--accent:#6d28d9;--accent-soft:#ece4fb}
+body[data-lens="developer"]{--accent:#0d9488;--accent-soft:#d6efec}
+.rv-set{display:grid}
+.rv-set>.role-v{grid-area:1/1;display:none}
+body[data-lens="all"] .role-v[data-role~="all"],
+body[data-lens="recruiter"] .role-v[data-role~="recruiter"],
+body[data-lens="designer"] .role-v[data-role~="designer"],
+body[data-lens="developer"] .role-v[data-role~="developer"]{display:block;animation:roleIn .55s var(--e) both}
+@keyframes roleIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.role-v{animation:none!important}}
+/* role chip used inside variant copy */
+.rchip{display:inline-flex;align-items:center;gap:.45em;font-family:var(--m);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:.3em .7em;border-radius:99px;margin-bottom:1rem}
+.rchip i{width:8px;height:8px;border-radius:99px;background:var(--accent);display:inline-block}
+
+.rv{opacity:0;transform:translateY(34px);transition:opacity .9s var(--e),transform .9s var(--e)}
+.rv.in{opacity:1;transform:none}.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:8rem 0 5rem;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(680px 460px at 88% 8%,rgba(168,85,247,.20),transparent 60%),radial-gradient(560px 480px at 4% 92%,rgba(124,58,237,.13),transparent 60%)}
+.hero .kick{margin-bottom:2.1rem;opacity:0;animation:fade 1s var(--e) .2s forwards}
+.hero h1{font-family:var(--g);font-weight:700;font-size:clamp(2.5rem,6.6vw,5.6rem);line-height:.98;letter-spacing:-.03em;max-width:17ch}
+.hero h1 .ln{display:block;overflow:hidden}
+.hero h1 .ln i{display:inline-block;font-style:normal;transform:translateY(110%);animation:rise 1.1s var(--e) forwards}
+.hero h1 .ln:nth-child(2) i{animation-delay:.12s}
+.swap{position:relative;display:inline-block}
+.swap s{text-decoration:none;position:relative;color:var(--muted)}
+.swap s::after{content:"";position:absolute;left:-2%;right:-2%;top:52%;height:.09em;background:var(--violet);transform:scaleX(0);transform-origin:left;animation:strike .5s var(--e) 1.5s forwards}
+.swap b{font-weight:700;position:absolute;left:0;top:0;white-space:nowrap;opacity:0;transform:translateY(40%);animation:reveal .7s var(--spring) 1.9s forwards;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+@keyframes strike{to{transform:scaleX(1)}}@keyframes reveal{to{opacity:1;transform:none}}@keyframes rise{to{transform:none}}@keyframes fade{to{opacity:1}}
+.hero .sub{display:flex;gap:2.4rem;flex-wrap:wrap;margin-top:2.7rem;opacity:0;animation:fade 1s var(--e) 2.4s forwards;max-width:62ch}
+.hero .sub p{margin:0;color:var(--ink-soft);font-size:1.12rem;max-width:42ch}
+.hero .sub .meta b{display:block;font-family:var(--m);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:400;margin-bottom:.3rem}
+.hero .sub .meta span{font-family:var(--g);font-weight:600;font-size:.95rem}
+.hero .sub .role-v{width:100%}
+.hero .sub .role-v .meta{display:inline-block;vertical-align:top;margin-top:1.5rem;margin-right:2.6rem}
+
+section{padding:clamp(4.5rem,10vw,8rem) 0;position:relative}
+.lead-h{font-family:var(--g);font-weight:700;font-size:clamp(1.9rem,4.4vw,3.2rem);letter-spacing:-.025em;line-height:1.04;margin:1.1rem 0 1.3rem;max-width:21ch}
+.lead-p{color:var(--ink-soft);font-size:1.1rem;max-width:58ch}.lead-p b{color:var(--ink);font-weight:600}
+
+/* COST */
+.cost-row{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1.4rem,4vw,3rem);margin-top:2.6rem}
+@media(max-width:760px){.cost-row{grid-template-columns:1fr;gap:2.2rem}}
+.cost{border-top:2px solid var(--ink)}
+.cost .n{font-family:var(--g);font-weight:700;font-size:clamp(2.6rem,5.6vw,4.4rem);line-height:1;letter-spacing:-.03em;padding-top:1rem}
+.cost .n small{font-size:.36em;color:var(--violet)}
+.cost .k{font-family:var(--m);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:.7rem}
+.cost p{color:var(--ink-soft);font-size:.94rem;margin:.6rem 0 0;max-width:32ch}
+/* drift widget */
+.drift{margin-top:2.6rem;border:1px solid var(--line);border-radius:18px;padding:1.3rem 1.4rem;background:var(--paper-2)}
+.drift-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.drift-cap{font-family:var(--m);font-size:.74rem;color:var(--ink-soft);letter-spacing:.01em}.drift-cap b{color:var(--violet)}
+.drift-btn{font-family:var(--m);font-size:.72rem;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:.55rem .95rem;border-radius:99px;cursor:pointer;white-space:nowrap;transition:opacity .2s}
+.drift-btn:hover{opacity:.85}
+.drift-stage{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:0;max-height:0;overflow:hidden;transition:max-height .5s var(--e),margin-top .5s var(--e)}
+.drift-stage.open{max-height:360px;margin-top:1.3rem}
+.drift-stage.one{justify-content:center}
+.db{font-family:var(--b);font-weight:700;color:#fff;border:0;cursor:default;opacity:0;transform:translateY(8px) scale(.9);transition:all .45s var(--spring)}
+.db.show{opacity:1;transform:none}
+.db.calm{transition-delay:0s}
+/* unbreakable live-break demo */
+.brk-demo{margin-top:1.1rem;background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .8rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;min-height:56px}
+.bd-stage{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.bd-pill{background:var(--violet);color:#fff;border-radius:9px;padding:6px 12px;font-size:11px;font-weight:700;transition:all .35s var(--e)}
+.bd-pill.broke{background:#e6e2ee;color:#9a93ad}
+.bd-tag{font-family:var(--m);font-size:8px;letter-spacing:.04em;text-transform:uppercase;color:#c0492f;background:#fbe9e4;border-radius:99px;padding:4px 8px;opacity:0;transform:translateX(-4px);transition:all .3s}
+.bd-tag.show{opacity:1;transform:none}
+.bd-stale{background:#e6e2ee;color:#9a93ad;border-radius:9px;padding:6px 12px;font-size:11px;font-weight:700;opacity:0;transform:scale(.8);transition:all .3s;position:relative}
+.bd-stale.show{opacity:1;transform:none}
+.bd-stale::after{content:"stale";position:absolute;top:-7px;right:-6px;font-family:var(--m);font-size:6.5px;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:#c0492f;border-radius:99px;padding:1px 5px}
+.bd-odd{background:#d8902e;color:#fff;border-radius:2px;padding:8px 14px;font-size:13px;font-weight:800;opacity:0;transform:scale(.7);transition:all .3s}
+.bd-odd.show{opacity:1;transform:none}
+.bd-try{font-family:var(--m);font-size:.64rem;border:1px solid var(--ink);background:#fff;color:var(--ink);padding:.45rem .7rem;border-radius:99px;cursor:pointer;white-space:nowrap;transition:all .2s;flex:none}
+.bd-try.fix{background:var(--ink);color:#fff}
+
+/* SHIFT */
+.shift{background:var(--ink);color:#fff;border-radius:34px}
+.shift .in2{padding:clamp(4rem,9vw,7rem) clamp(1.4rem,5vw,4rem)}
+.shift blockquote{font-family:var(--g);font-weight:700;font-size:clamp(1.8rem,4.8vw,3.6rem);line-height:1.1;letter-spacing:-.025em;margin:0;max-width:22ch;color:#fff}
+.shift blockquote em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.shift .by{font-family:var(--m);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;margin-top:1.7rem;color:var(--lilac)}
+
+/* ===== THE BUILD LAB (centerpiece) ===== */
+.lab-grid{display:grid;grid-template-columns:300px 1fr;gap:clamp(1.6rem,4vw,3rem);margin-top:2.4rem;align-items:start}
+@media(max-width:900px){.lab-grid{grid-template-columns:1fr}}
+/* ladder */
+.ladder{display:flex;flex-direction:column;gap:0}
+.rung{position:relative;background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:1rem 1.1rem;margin-bottom:30px}
+.rung:last-child{margin-bottom:0}
+.rung::after{content:"";position:absolute;left:50%;bottom:-22px;width:1.5px;height:16px;background:var(--lilac)}
+.rung:last-child::after{display:none}
+.rung .rl{display:flex;align-items:center;gap:.5rem;font-family:var(--m);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--violet);margin-bottom:.7rem}
+.rung .rl .no{width:18px;height:18px;border-radius:50%;background:var(--lilac-soft);display:grid;place-content:center;font-size:.6rem}
+.rung .rd{font-size:.78rem;color:var(--ink-soft);margin-top:.6rem;line-height:1.45}
+/* tiny themed atoms preview (read lab vars) */
+.atomrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.a-btn{background:var(--c-primary);color:#fff;border-radius:var(--c-rad);padding:7px 13px;font-size:11px;font-weight:700}
+.a-chip{background:var(--c-soft);color:var(--c-primary);border-radius:var(--c-rad);padding:7px 11px;font-size:10px;font-family:var(--m)}
+.a-sw{width:24px;height:24px;border-radius:calc(var(--c-rad) * .5);background:var(--c-primary)}
+.a-field{flex:1;min-width:90px;border:1px solid var(--c-line);border-radius:var(--c-rad);padding:7px 10px;font-size:10px;color:var(--c-muted);background:#fff}
+.molecule-mini{background:#fff;border:1px solid var(--c-line);border-radius:var(--c-rad);padding:11px;display:flex;gap:9px;align-items:center}
+.molecule-mini .mav{width:30px;height:30px;border-radius:50%;background:var(--c-soft);display:grid;place-content:center;color:var(--c-primary);flex:none}
+.molecule-mini .mt{flex:1}.molecule-mini .mt .a{font-weight:700;font-size:11px;color:var(--c-text)}.molecule-mini .mt .b{font-size:9px;color:var(--c-muted)}
+.molecule-mini .mb{background:var(--c-primary);color:#fff;border-radius:var(--c-rad);padding:5px 9px;font-size:9px;font-weight:700}
+.org-mini{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.org-mini .t{background:var(--c-soft);border-radius:var(--c-rad);padding:9px;display:flex;flex-direction:column;gap:5px}
+.org-mini .t .ti{width:20px;height:20px;border-radius:6px;background:#fff;display:grid;place-content:center;color:var(--c-primary)}
+.org-mini .t .tl{font-size:9px;color:var(--c-text);font-weight:600}
+
+/* right column: phone + console */
+.stage2{display:grid;grid-template-columns:300px 1fr;gap:clamp(1.4rem,3vw,2.4rem);align-items:start}
+@media(max-width:1040px){.stage2{grid-template-columns:1fr;justify-items:center}}
+/* phone */
+.lab{--c-primary:#16a34a;--c-soft:#e9f8ee;--c-line:#dceede;--c-text:#0f2417;--c-muted:#7f9c89;--c-rad:20px;--c-pad:15px;--c-gap:11px}
+.lab.hc{--c-text:#000;--c-muted:#2a2a2a;--c-line:#888}
+.phone{position:relative;width:300px;aspect-ratio:9/19.3;border-radius:13%/6.5%;padding:2.4%;background:linear-gradient(145deg,#2a2d30,#0c0d0e 42%,#000 72%,#1a1c1e);box-shadow:0 50px 100px -34px rgba(22,15,36,.5)}
+.screen{position:relative;width:100%;height:100%;border-radius:11%/5.6%;overflow:hidden;background:#fbfdfb;transition:opacity .26s var(--e)}
+.screen.swapping{opacity:0}
+.ph{position:absolute;inset:0;display:flex;flex-direction:column;padding:16px 14px 0;gap:var(--c-gap);overflow:hidden;--hatch-light:repeating-linear-gradient(45deg,rgba(255,255,255,.32) 0 3px,transparent 3px 7px);--hatch-ink:repeating-linear-gradient(45deg,rgba(22,15,36,.13) 0 3px,transparent 3px 7px)}
+.ph-m{transition:background .4s var(--e),border-radius .4s,padding .4s;will-change:transform}
+.ph-greet{display:flex;align-items:center;justify-content:space-between}
+.ph-greet .h{font-family:var(--g);font-weight:700;font-size:18px;color:var(--c-text)}
+.ph-greet .s{font-size:10px;color:var(--c-muted)}
+.ph-greet .bell{width:32px;height:32px;border-radius:50%;background:var(--c-soft);display:grid;place-content:center;color:var(--c-primary);position:relative}
+.ph-greet .bell::after{content:"";position:absolute;top:7px;right:8px;width:6px;height:6px;border-radius:50%;background:#ef4444}
+.ph-appt{background:var(--c-soft);border-radius:calc(var(--c-rad) + 6px);padding:var(--c-pad);display:flex;gap:11px;align-items:center;flex-wrap:wrap;box-shadow:0 12px 26px -16px rgba(22,15,36,.22)}
+.ph-appt .dav{width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-content:center;color:var(--c-primary);flex:none;border:1px solid var(--c-line)}
+.ph-appt .di{flex:1}.ph-appt .di .a{font-family:var(--g);font-weight:700;font-size:13px;color:var(--c-text)}
+.ph-appt .di .b{font-size:9.5px;color:var(--c-muted);margin-top:1px}
+.ph-appt .di .when{display:inline-flex;align-items:center;gap:4px;font-size:9px;color:var(--c-primary);background:#fff;border-radius:99px;padding:3px 8px;margin-top:6px;font-family:var(--m)}
+.ph-appt .go{width:34px;height:34px;border-radius:var(--c-rad);background:var(--c-primary);color:#fff;display:grid;place-content:center;flex:none}
+.ph-appt .prog{flex-basis:100%;margin-top:2px}
+.ph-appt .prog .pl{display:flex;justify-content:space-between;font-family:var(--m);font-size:7.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--c-muted);margin-bottom:5px}
+.ph-appt .prog .bar{height:8px;border-radius:99px;background:var(--hatch-ink);position:relative;overflow:hidden}
+.ph-appt .prog .bar i{display:block;height:100%;width:75%;border-radius:99px;background:var(--c-primary)}
+.ph-vitals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ph-vitals .v{border-radius:calc(var(--c-rad) + 4px);padding:11px 9px;color:#fff;display:flex;flex-direction:column;gap:6px;min-height:80px;position:relative;overflow:hidden;box-shadow:0 12px 26px -16px rgba(22,15,36,.28)}
+.ph-vitals .v-accent{background:var(--c-primary)}
+.ph-vitals .v-violet{background:#8b5cf6}
+.ph-vitals .v-dark{background:#17151f}
+.ph-vitals .v .vic{color:rgba(255,255,255,.92)}
+.ph-vitals .v .vn{font-family:var(--g);font-weight:700;font-size:18px;color:#fff;line-height:1}
+.ph-vitals .v .vn small{font-size:.45em;color:rgba(255,255,255,.72)}
+.ph-vitals .v .vl{font-family:var(--m);font-size:7px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.ph-vitals .v .spark{height:6px;border-radius:99px;background:var(--hatch-light);overflow:hidden;margin-top:auto}
+.ph-vitals .v .spark i{display:block;height:100%;width:60%;border-radius:99px;background:#fff}
+.ph-vitals .v-bars .bars{display:flex;align-items:flex-end;gap:3px;height:34px;margin-top:auto}
+.ph-vitals .v-bars .bars i{flex:1;background:#fff;border-radius:3px 3px 1px 1px;opacity:.92}
+.ph-vitals .v-bars .bars i.proj{background:var(--hatch-light);box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
+.ph-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--c-gap)}
+.ph-tiles .tile{background:#fff;border:1px solid var(--c-line);border-radius:calc(var(--c-rad) + 4px);padding:13px;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 22px -16px rgba(22,15,36,.18)}
+.ph-tiles .tile .tic{width:30px;height:30px;border-radius:calc(var(--c-rad) * .6);background:var(--c-soft);display:grid;place-content:center;color:var(--c-primary)}
+.ph-tiles .tile .tl{font-weight:700;font-size:11px;color:var(--c-text)}
+.ph-tiles .tile .td{font-size:8.5px;color:var(--c-muted);line-height:1.35}
+.ph-tabs{margin-top:auto;display:flex;justify-content:space-between;padding:9px 6px calc(9px + env(safe-area-inset-bottom));border-top:1px solid var(--c-line)}
+.ph-tab{color:var(--c-muted);display:grid;place-content:center}
+.ph-tab.on{color:var(--c-primary)}
+/* ph-appt title + ph-find chips + ph-docs */
+.ph-appt .di .ttl{font-family:var(--m);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--c-muted);margin-bottom:3px}
+.ph-find .fh{font-family:var(--g);font-weight:700;font-size:13px;color:var(--c-text);margin-bottom:9px}
+.ph-find .chips{display:flex;gap:7px;overflow:hidden}
+.ph-find .chip{display:inline-flex;align-items:center;gap:5px;flex:none;background:#fff;border:1px solid var(--c-line);border-radius:99px;padding:7px 11px;font-size:10px;font-weight:600;color:var(--c-muted)}
+.ph-find .chip.on{background:var(--c-primary);color:#fff;border-color:var(--c-primary)}
+.ph-find .chip svg{opacity:.9}
+.ph-docs{display:flex;flex-direction:column;gap:8px}
+.ph-docs .doc{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--c-line);border-radius:var(--c-rad);padding:9px 11px;box-shadow:0 8px 20px -16px rgba(22,15,36,.18)}
+.ph-docs .dav2{position:relative;width:36px;height:36px;border-radius:50%;background:var(--c-soft);display:grid;place-content:center;color:var(--c-primary);flex:none}
+.ph-docs .dav2 .on-dot{position:absolute;right:0;bottom:0;width:9px;height:9px;border-radius:50%;background:#22c55e;border:2px solid #fff}
+.ph-docs .dm{flex:1;min-width:0}.ph-docs .dn{font-family:var(--g);font-weight:700;font-size:12px;color:var(--c-text)}
+.ph-docs .dmeta{font-size:8.5px;color:var(--c-muted);display:flex;align-items:center;gap:3px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph-docs .star{display:inline-flex;align-items:center;gap:2px;color:#f59e0b;font-weight:700}
+.ph-docs .bookbtn{flex:none;background:var(--c-primary);color:#fff;border-radius:var(--c-rad);padding:7px 12px;font-size:10px;font-weight:700}
+
+/* ===== lab v3 section chrome ===== */
+#lab{position:relative}
+.lab-hi{position:absolute;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(900px 500px at 80% 0%,rgba(168,85,247,.10),transparent 60%),
+  linear-gradient(180deg,rgba(124,58,237,.045),transparent 30%),var(--paper-2);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(180deg,transparent,#000 6%,#000 94%,transparent)}
+.lab-hi::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line-2) 1px,transparent 1px),linear-gradient(90deg,var(--line-2) 1px,transparent 1px);background-size:34px 34px;opacity:.6}
+.lab-tag{position:absolute;top:clamp(1.6rem,4vw,3rem);left:clamp(1.4rem,5vw,4rem);z-index:3;pointer-events:none;font-family:var(--m);font-size:.6rem;letter-spacing:.3em;color:var(--violet);writing-mode:vertical-rl;transform:rotate(180deg);opacity:.5}
+@media(max-width:760px){.lab-tag{display:none}}
+
+/* x-ray strip */
+.xray{display:flex;align-items:stretch;gap:.4rem;margin:2.2rem 0 1.8rem;flex-wrap:wrap}
+.xnode{flex:1;min-width:128px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:.8rem .9rem;position:relative;transition:box-shadow .3s,border-color .3s,transform .3s var(--spring)}
+.xnode.lit{border-color:var(--violet);box-shadow:0 0 0 3px var(--lilac-soft),0 12px 24px -14px rgba(124,58,237,.4);transform:translateY(-3px)}
+.xnode .xk{font-family:var(--m);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.xnode .xv{display:flex;align-items:center;gap:.45rem;font-family:var(--m);font-size:.86rem;color:var(--ink);font-weight:700;margin-top:.35rem}
+.xnode .xsw{width:16px;height:16px;border-radius:5px;background:var(--violet);transition:background .35s}
+.xnode .xrole{font-family:var(--m);font-size:.76rem;color:var(--violet);background:var(--lilac-soft);padding:.1em .5em;border-radius:6px}
+.xnode .xv2{font-family:var(--m);font-size:.58rem;color:var(--muted);margin-top:.3rem}
+.xnode-screen{background:var(--ink);border-color:var(--ink)}
+.xnode-screen .xk{color:var(--lilac)}.xnode-screen .xv{color:#fff}.xnode-screen .xv2{color:rgba(255,255,255,.6)}
+.xarrow{display:flex;align-items:center;color:var(--lilac)}
+@media(max-width:760px){.xarrow{transform:rotate(90deg)}.xnode{min-width:0;flex-basis:100%}}
+
+/* stage: phone (watched) + console (remote) */
+.stage3{display:grid;grid-template-columns:minmax(0,330px) 1fr;gap:clamp(1.6rem,4vw,3.2rem);align-items:start;position:relative}
+@media(max-width:980px){.stage3{grid-template-columns:1fr;justify-items:center}}
+.phone{justify-self:center}
+.remote-hint{display:block;text-align:center;font-family:var(--m);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.9rem}
+.console{width:100%;max-width:460px;display:flex;flex-direction:column;gap:1rem}
+.console-lab{font-family:var(--m);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--violet);display:flex;align-items:center;gap:.6em}
+.console-lab::before{content:"";width:22px;height:1.5px;background:var(--violet)}
+.cli-why{font-size:.84rem;color:var(--ink-soft);background:#fff;border:1px solid var(--line);border-radius:12px;padding:.7rem .9rem;margin-top:-.4rem}
+.cli-why b{color:var(--ink)}
+.cli-tab.newcli{border-style:dashed;color:var(--violet)}
+.cli-tab.newcli .nd{display:grid;place-content:center;width:14px;height:14px;border-radius:5px;background:var(--lilac-soft);color:var(--violet);font-weight:700;font-size:11px}
+.edges{display:flex;gap:.35rem;margin-left:auto;flex-wrap:wrap}
+.edges button{font-family:var(--m);font-size:.66rem;border:1px solid var(--line);background:#fff;color:var(--ink-soft);padding:.4rem .6rem;border-radius:8px;cursor:pointer;transition:all .2s}
+.edges button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.appt-empty{display:none;align-items:center;gap:11px;width:100%}
+.appt-empty .ee .e1{font-family:var(--g);font-weight:700;font-size:13px;color:var(--c-text)}
+.appt-empty .ee .e2{font-size:9.5px;color:var(--c-muted);margin-top:1px}
+.ph[data-edge="empty"] .ph-appt>:not(.appt-empty){display:none}
+.ph[data-edge="empty"] .ph-appt .appt-empty{display:flex}
+.ph-appt .di .a{overflow-wrap:anywhere}
+
+/* client layouts (reskin + reflow) */
+.lab[data-client="district"]{--c-primary:#0d9488;--c-soft:#e0f2f0;--c-line:#b2dfdb;--c-text:#0e2a26;--c-muted:#4d8f8a;--c-rad:6px;--c-pad:10px;--c-gap:8px}
+.lab[data-client="teaching"]{--c-primary:#c97a0a;--c-soft:#fef3e2;--c-line:#fddda0;--c-text:#2a1a00;--c-muted:#9a6a30;--c-rad:10px;--c-pad:16px;--c-gap:11px}
+.lab[data-client="specialty"]{--c-primary:#c0394b;--c-soft:#fde8ec;--c-line:#f8c0ca;--c-text:#2a0a10;--c-muted:#a05060;--c-rad:18px;--c-pad:13px;--c-gap:10px}
+/* reflow: order of modules per client */
+.lab .ph-greet{order:1}.lab .ph-appt{order:2}.lab .ph-find{order:3}.lab .ph-docs{order:4}.lab .ph-vitals{order:5}.lab .ph-tabs{order:9}
+.lab[data-client="district"] .ph-appt{order:2}.lab[data-client="district"] .ph-find{order:3}.lab[data-client="district"] .ph-docs{order:4}.lab[data-client="district"] .ph-vitals{order:5}
+.lab[data-client="teaching"] .ph-vitals{order:2}.lab[data-client="teaching"] .ph-appt{order:3}.lab[data-client="teaching"] .ph-docs{order:4}.lab[data-client="teaching"] .ph-find{order:5}
+.lab[data-client="specialty"] .ph-appt{order:2}.lab[data-client="specialty"] .ph-docs{order:3}.lab[data-client="specialty"] .ph-vitals{order:4}.lab[data-client="specialty"] .ph-find{order:5}
+
+/* console (client tabs + token controls + view panel) */
+.console{width:100%;max-width:440px;display:flex;flex-direction:column;gap:1rem}
+.cli-tabs{display:flex;gap:.5rem;flex-wrap:wrap}
+.cli-tab{font-family:var(--m);font-size:.7rem;border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);padding:.55rem .85rem;border-radius:99px;cursor:pointer;display:flex;align-items:center;gap:.45rem;transition:all .25s var(--e)}
+.cli-tab .d{width:10px;height:10px;border-radius:50%}
+.cli-tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.2rem}
+.panel .ph{font-family:var(--m);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem}
+.ctrl{display:flex;align-items:center;gap:.7rem;margin-bottom:.85rem}
+.ctrl:last-child{margin-bottom:0}
+.ctrl label{font-size:.78rem;color:var(--ink-soft);width:74px;flex:none}
+.swatches{display:flex;gap:.4rem}
+.swatches button{width:24px;height:24px;border-radius:7px;border:2px solid transparent;cursor:pointer;transition:transform .2s var(--spring)}
+.swatches button.on{border-color:var(--ink);transform:scale(1.12)}
+input[type=range]{flex:1;accent-color:var(--violet)}
+.rngval{font-family:var(--m);font-size:.72rem;color:var(--ink);width:34px;text-align:right}
+.tog{margin-left:auto;width:42px;height:24px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;transition:background .25s;flex:none}
+.tog.on{background:var(--violet)}
+.tog i{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .25s var(--spring)}
+.tog.on i{transform:translateX(18px)}
+
+/* view toggle (designer / eng / pm) */
+.views{display:flex;gap:.4rem;background:var(--paper-2);border:1px solid var(--line);border-radius:11px;padding:3px}
+.view-t{flex:1;text-align:center;font-family:var(--m);font-size:.7rem;padding:.5rem;border-radius:8px;cursor:pointer;color:var(--ink-soft);transition:all .2s}
+.view-t.on{background:var(--ink);color:#fff}
+.vpanel{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:1.2rem 1.3rem;min-height:150px}
+.vp{display:none}.vp.on{display:block}
+.vp .vh{font-family:var(--g);font-weight:700;font-size:1rem;margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem}
+.vp .vh .badge{font-family:var(--m);font-size:.58rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--violet);background:var(--lilac-soft);padding:.18em .55em;border-radius:99px}
+.vp p{font-size:.88rem;color:var(--ink-soft);line-height:1.55;margin:.4rem 0}
+.figchips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.6rem}
+.figchip{font-family:var(--m);font-size:.66rem;color:var(--ink-soft);background:#fff;border:1px solid var(--line);border-radius:8px;padding:.4rem .6rem;display:inline-flex;align-items:center;gap:.4rem}
+.figchip svg{color:var(--violet)}
+.code{font-family:var(--m);font-size:11.5px;line-height:1.7;color:#cfc6e6;background:#160f24;border-radius:12px;padding:14px 16px;overflow-x:auto;margin-top:.4rem}
+.code .c{color:#6f6690}.code .s{color:#a5d6a7}.code .v{color:#f0abfc}
+.pmstat{display:flex;gap:1.2rem;margin-top:.6rem;flex-wrap:wrap}
+.pmstat .x{}.pmstat .x b{font-family:var(--g);font-weight:700;font-size:1.5rem;display:block;color:var(--ink)}
+.pmstat .x small{font-family:var(--m);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lab-note{font-family:var(--m);font-size:.66rem;color:var(--muted);text-align:center;margin-top:1.4rem}
+
+/* UNBREAKABLE */
+.brk{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.4rem}
+/* wire stage — master token -> instances */
+.wire{background:var(--paper-2);border:1px solid var(--line);border-radius:24px;padding:clamp(1.4rem,3.5vw,2.4rem);margin-top:2.4rem;position:relative;--m-color:#6d28d9}
+.wire-master{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:16px;padding:1rem 1.3rem;box-shadow:0 14px 30px -20px rgba(22,15,36,.25)}
+.wm-l{font-family:var(--m);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.wm-tok{display:flex;align-items:center;gap:.6rem;font-family:var(--m);font-size:.95rem;color:var(--ink);font-weight:700;margin-top:.35rem}
+.wm-sw{width:24px;height:24px;border-radius:7px;background:var(--m-color);transition:background .45s var(--e);box-shadow:0 0 0 3px color-mix(in srgb,var(--m-color) 22%,transparent)}
+.wm-btn{margin-left:auto;display:inline-flex;align-items:center;gap:.5em;font-family:var(--m);font-size:.78rem;border:0;background:var(--grad);color:#fff;padding:.7rem 1.15rem;border-radius:99px;cursor:pointer;box-shadow:0 10px 22px -10px rgba(124,58,237,.6);transition:transform .2s var(--spring)}
+.wm-btn:hover{transform:translateY(-2px)}
+.insts{display:flex;gap:clamp(1rem,3vw,2rem);justify-content:center;flex-wrap:wrap;padding-top:42px;margin-top:6px;position:relative}
+.inst{display:flex;flex-direction:column;align-items:center;gap:.6rem;position:relative}
+.inst .conn{position:absolute;top:-42px;left:50%;transform:translateX(-50%);width:2px;height:42px;background:var(--m-color);transition:background .4s}
+.inst .conn::before{content:"";position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:var(--m-color);transition:background .4s}
+.inst .conn.pulse{animation:connflow .6s var(--e)}
+@keyframes connflow{0%{filter:none}40%{filter:brightness(1.6) drop-shadow(0 0 5px var(--m-color))}100%{filter:none}}
+.inst[data-state="detached"] .conn{background:repeating-linear-gradient(180deg,#c3bdd0 0 4px,transparent 4px 7px)}
+.inst[data-state="detached"] .conn::before{background:#c3bdd0}
+.inst[data-state="detached"] .conn::after{content:"";position:absolute;top:18px;left:-4px;right:-4px;height:6px;background:var(--paper-2);transform:rotate(-12deg)}
+.inst[data-state="copy"] .conn,.inst[data-state="invent"] .conn{display:none}
+.ibtn{background:var(--m-color);color:#fff;border:0;border-radius:13px;padding:12px 26px;font-family:var(--b);font-weight:700;font-size:14px;transition:background .45s var(--e),border-radius .3s}
+.inst[data-state="copy"] .ibtn{background:#cbc5d8}
+.inst[data-state="invent"] .ibtn{background:#d8902e;border-radius:3px;transform:rotate(-2deg)}
+.ibadge{font-family:var(--m);font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;padding:.28em .65em;border-radius:99px;white-space:nowrap}
+.inst[data-state="linked"] .ibadge{color:var(--violet);background:var(--lilac-soft)}
+.inst[data-state="detached"] .ibadge{color:#a06414;background:#fcefda}
+.inst[data-state="copy"] .ibadge{color:#6b6580;background:#eceaf2}
+.inst[data-state="invent"] .ibadge{color:#c0492f;background:#fbe9e4}
+.inst.pop{animation:instpop .4s var(--spring)}
+@keyframes instpop{0%{opacity:0;transform:scale(.6) translateY(8px)}100%{opacity:1;transform:none}}
+.wire-actions{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:1.9rem}
+.wire-actions button{display:inline-flex;align-items:center;gap:.45em;font-family:var(--m);font-size:.74rem;border:1px solid var(--line);background:#fff;color:var(--ink);padding:.6rem 1rem;border-radius:99px;cursor:pointer;transition:all .2s}
+.wire-actions button:hover{border-color:var(--ink);transform:translateY(-1px)}
+.wire-actions .reset{color:var(--muted)}
+.wire-log{font-family:var(--m);font-size:.74rem;color:var(--ink-soft);text-align:center;margin-top:1.2rem;min-height:1.5em;line-height:1.5}
+.wire-log b{color:var(--violet)}
+@media(max-width:820px){.brk{grid-template-columns:1fr}}
+.brk-c{background:var(--paper-2);border:1px solid var(--line);border-radius:18px;padding:1.5rem}
+.brk-c .ic2{width:38px;height:38px;border-radius:11px;background:#fff;border:1px solid var(--line);display:grid;place-content:center;color:var(--violet);margin-bottom:1rem}
+.brk-c h3{font-family:var(--g);font-weight:700;font-size:1.05rem;margin-bottom:.5rem}
+.brk-c p{font-size:.9rem;color:var(--ink-soft);margin:0;line-height:1.5}.brk-c p b{color:var(--ink);font-weight:600}
+.gov{margin-top:2rem;display:flex;gap:1rem;align-items:flex-start;background:var(--ink);color:#fff;border-radius:18px;padding:1.5rem 1.7rem}
+.gov svg{flex:none;color:var(--lilac);margin-top:.2rem}
+.gov p{margin:0;font-size:1rem;line-height:1.55}.gov p b{color:var(--lilac)}
+
+/* OUTCOME */
+.out-row{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(1.2rem,3vw,2.4rem);margin-top:2.4rem}
+@media(max-width:820px){.out-row{grid-template-columns:1fr 1fr}}@media(max-width:520px){.out-row{grid-template-columns:1fr}}
+.out{border-top:2px solid var(--ink)}
+.out .n{font-family:var(--g);font-weight:700;font-size:clamp(2rem,4.4vw,3.2rem);line-height:1;letter-spacing:-.03em;padding-top:1rem}
+.out .k{font-family:var(--m);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.6rem}
+.out p{color:var(--ink-soft);font-size:.88rem;margin:.5rem 0 0}
+
+.reflect blockquote{font-family:var(--g);font-weight:700;font-size:clamp(1.8rem,4.6vw,3.2rem);line-height:1.12;letter-spacing:-.025em;margin:0;max-width:24ch}
+.reflect blockquote em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.honesty{margin-top:2.2rem;font-size:.82rem;color:var(--muted);max-width:66ch;line-height:1.6;border-top:1px solid var(--line);padding-top:1.3rem}
+.coda{background:var(--grad);color:#fff;padding:clamp(4.5rem,10vw,8rem) 0 3.5rem;border-radius:40px 40px 0 0;margin-top:clamp(3rem,7vw,5rem)}
+.coda h2{font-family:var(--g);font-weight:700;font-size:clamp(2rem,5vw,3.8rem);letter-spacing:-.025em;line-height:1.06;max-width:18ch;color:#fff}
+.coda .ft{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1.4rem;margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.25)}
+.coda .ft small{font-family:var(--m);font-size:.64rem;letter-spacing:.1em;color:rgba(255,255,255,.78);line-height:1.8;display:block}
+
+/* ===== floating ambient components ===== */
+section{overflow:hidden}
+.wrap{position:relative;z-index:2}
+.floats{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.fl{position:absolute;opacity:.55;filter:drop-shadow(0 14px 26px rgba(22,15,36,.10));animation:floaty var(--dur,12s) ease-in-out var(--dl,0s) infinite;will-change:transform}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--rot,0deg))}50%{transform:translateY(-18px) rotate(calc(var(--rot,0deg) + 3deg))}}
+@media(prefers-reduced-motion:reduce){.fl{animation:none}}
+/* floaty: toggle */
+.fl-toggle{width:54px;height:30px;border-radius:99px;background:var(--grad);position:relative}
+.fl-toggle i{position:absolute;top:4px;left:28px;width:22px;height:22px;border-radius:50%;background:#fff}
+/* floaty: swatch trio */
+.fl-swatch{display:flex;gap:6px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:9px}
+.fl-swatch span{width:18px;height:18px;border-radius:6px}
+.fl-swatch span:nth-child(1){background:#7c3aed}.fl-swatch span:nth-child(2){background:#a855f7}.fl-swatch span:nth-child(3){background:#c084fc}
+/* floaty: slider */
+.fl-slider{width:120px;height:44px;background:#fff;border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;padding:0 12px}
+.fl-slider .tr{flex:1;height:5px;border-radius:99px;background:var(--lilac-soft);position:relative}
+.fl-slider .tr::before{content:"";position:absolute;left:0;top:0;bottom:0;width:58%;border-radius:99px;background:var(--grad)}
+.fl-slider .kn{position:absolute;left:54%;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--violet)}
+/* floaty: check pill */
+.fl-check{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:8px 13px;font-family:var(--m);font-size:11px;color:var(--ink-soft)}
+.fl-check .bx{width:18px;height:18px;border-radius:6px;background:var(--violet);color:#fff;display:grid;place-content:center}
+/* floaty: button */
+.fl-btn{background:var(--grad);color:#fff;border-radius:12px;padding:11px 20px;font-family:var(--b);font-weight:700;font-size:13px}
+.fl-btn.ghost{background:#fff;color:var(--violet);border:1.5px solid var(--lilac)}
+/* floaty: token chip */
+.fl-chip{font-family:var(--m);font-size:11px;color:var(--violet);background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 12px;display:flex;align-items:center;gap:7px}
+.fl-chip .dot{width:12px;height:12px;border-radius:4px;background:var(--grad)}
+/* floaty: mini card */
+.fl-card{width:140px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px}
+.fl-card .av{width:26px;height:26px;border-radius:50%;background:var(--lilac-soft)}
+.fl-card .l1{height:8px;width:70%;border-radius:99px;background:var(--lilac-soft);margin-top:11px}
+.fl-card .l2{height:8px;width:45%;border-radius:99px;background:#eee;margin-top:7px}
+.fl-card .bar{height:26px;border-radius:9px;background:var(--grad);margin-top:11px}
+/* floaty: radius ring */
+.fl-radius{width:46px;height:46px;border:3px solid var(--violet);border-radius:18px 4px 4px 4px;background:rgba(124,58,237,.06)}
+/* floaty: dot grid */
+.fl-dots{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.fl-dots span{width:8px;height:8px;border-radius:50%;background:var(--lilac)}
+@media(max-width:760px){.fl{opacity:.32;transform:scale(.8)}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <span class="br"><span class="dot"></span>Invitrace DS</span>
+  <div class="lens-switch" id="lensSwitch">
+    <span class="ls-lab">Read as</span>
+    <button class="on" data-lens="all"><span class="t">All</span></button>
+    <button data-lens="recruiter"><i style="background:#d8902e"></i><span class="t">Recruiter</span></button>
+    <button data-lens="designer"><i style="background:#6d28d9"></i><span class="t">Designer</span></button>
+    <button data-lens="developer"><i style="background:#0d9488"></i><span class="t">Developer</span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="floats"><div class="fl fl-toggle" style="top:18%;right:9%;--dur:13s;--rot:-6deg"><i></i></div><div class="fl fl-swatch" style="bottom:16%;left:6%;--dur:15s;--dl:1s;--rot:5deg"><span></span><span></span><span></span></div><div class="fl fl-chip" style="top:30%;left:4%;--dur:11s;--dl:.5s;--rot:-3deg"><span class="dot"></span>--color-primary</div></div>
+  <div class="wrap">
+    <span class="kick">Invitrace Health · 2024–2025 · Federated design system</span>
+    <h1>
+      <span class="ln"><i>One system.</i></span>
+      <span class="ln"><i>Every hospital's UI, <span class="swap"><s>rebuilt</s><b>rethemed</b></span>.</i></span>
+    </h1>
+    <div class="sub rv-set">
+      <div class="role-v" data-role="all">
+        <p>We license one clinical platform to District hospitals, Teaching hospitals, and Specialty clinics — same engine and workflows — but each needs its own brand, data density, and accessibility floor. Hand-building that UI per client was the bottleneck, so I made the interface a <b>theme</b>: colour, density, and a11y, all the way down to the atom.</p>
+        <div class="meta"><b>My role</b><span>Design systems lead</span></div>
+        <div class="meta"><b>Scope</b><span>Tokens · Figma kit · Storybook · code</span></div>
+      </div>
+      <div class="role-v" data-role="recruiter">
+        <span class="rchip"><i></i>The bet &amp; the payoff</span>
+        <p>I led the design system that turned a one-month, hand-built UI per hospital into a <b>three-day reskin</b> — onboarding clients faster while accessibility stopped regressing. The decision, the trade-offs, and the numbers are what this page is really about.</p>
+        <div class="meta"><b>My role</b><span>Design systems lead</span></div>
+        <div class="meta"><b>Impact</b><span>12 wks → 3 days · ~85% component reuse</span></div>
+      </div>
+      <div class="role-v" data-role="designer">
+        <span class="rchip"><i></i>The system &amp; the craft</span>
+        <p>I made the interface itself a <b>theme</b> — colour, layout, density and an accessibility floor, tokenised all the way down to the atom. A new hospital becomes a configuration, not a redraw, and the kit stays composable instead of forking into one-offs.</p>
+        <div class="meta"><b>My role</b><span>Design systems lead</span></div>
+        <div class="meta"><b>Craft</b><span>atom → screen tokens · Figma variables</span></div>
+      </div>
+      <div class="role-v" data-role="developer">
+        <span class="rchip"><i></i>The machine &amp; the guarantees</span>
+        <p>Tokens cascade <b>raw → theme → semantic → component</b>. A hospital is a small theme file the build consumes; change one variable and every screen re-renders, with contrast enforced by the system rather than remembered by a person.</p>
+        <div class="meta"><b>My role</b><span>Design systems lead</span></div>
+        <div class="meta"><b>Stack</b><span>tokens-as-code · Storybook · a11y in CI</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- COST -->
+<section id="cost">
+  <div class="floats"><div class="fl fl-card" style="top:12%;right:5%;--dur:16s;--rot:4deg"><div class="av"></div><div class="l1"></div><div class="l2"></div><div class="bar"></div></div><div class="fl fl-radius" style="bottom:14%;right:12%;--dur:12s;--dl:.8s;--rot:-5deg"></div></div>
+  <div class="wrap">
+    <div class="rv-set rv">
+      <div class="role-v" data-role="all">
+        <span class="kick">The cost</span>
+        <h2 class="lead-h">Selling the platform was a day. <span class="gt">Re-skinning it was a month.</span></h2>
+        <p class="lead-p">Every hospital got a hand-built interface from zero — and in clinical software the drift wasn't just ugly, it was risky: inconsistent ward fields, contrast that failed older clinicians, an "Admit" button that meant three different things across three codebases.</p>
+      </div>
+      <div class="role-v" data-role="recruiter">
+        <span class="rchip"><i></i>The bet &amp; the payoff</span>
+        <h2 class="lead-h">We could win the deal in a day. <span class="gt">We couldn't ship in under a month.</span></h2>
+        <p class="lead-p">Every signed hospital meant rebuilding the same interface by hand — roughly a designer-month per deal, with accessibility audits failing late in review. The cost wasn't taste; it was <b>velocity and regulatory risk</b>, and it scaled with every new client.</p>
+      </div>
+      <div class="role-v" data-role="designer">
+        <span class="rchip"><i></i>The system &amp; the craft</span>
+        <h2 class="lead-h">Three hospitals. <span class="gt">Three hand-drawn versions of the same component.</span></h2>
+        <p class="lead-p">With no shared token, one "Admit patient" button drifted into a dozen variants — different padding, radius, contrast, label. Drift like this isn't a taste failure; it's a <b>missing constraint</b>. The system never actually owned the component.</p>
+      </div>
+      <div class="role-v" data-role="developer">
+        <span class="rchip"><i></i>The machine &amp; the guarantees</span>
+        <h2 class="lead-h">One codebase. Three forks. <span class="gt">Zero shared tokens.</span></h2>
+        <p class="lead-p">Each hospital install was effectively its own codebase, so a single contrast fix had to be written three times — and could silently regress in any of them. <b>Three UIs is three places a patient-safety bug hides</b>, with no token layer to catch it.</p>
+      </div>
+    </div>
+
+    <div class="rv-set rv d1">
+      <div class="role-v" data-role="all"><div class="cost-row">
+        <div class="cost"><div class="n" data-count="3">0</div><div class="k">hospitals onboarded</div><p>One platform, three bespoke front-ends — none sharing a token.</p></div>
+        <div class="cost"><div class="n">~12<small>wks</small></div><div class="k">per hospital UI</div><p>Mostly re-drawing what already existed, slightly differently each time.</p></div>
+        <div class="cost"><div class="n" data-count="3">0</div><div class="k">a11y audits failed</div><p>Re-built screens kept slipping below contrast — caught late, in review.</p></div>
+      </div></div>
+      <div class="role-v" data-role="recruiter"><div class="cost-row">
+        <div class="cost"><div class="n">~12<small>wks</small></div><div class="k">senior time / hospital</div><p>Three months spent rebuilding what already existed elsewhere.</p></div>
+        <div class="cost"><div class="n">3+</div><div class="k">deals waiting on UI</div><p>Sales closed in a day; delivery dragged the revenue by months.</p></div>
+        <div class="cost"><div class="n">3</div><div class="k">compliance audits failed</div><p>Contrast slipping below AA — a regulatory risk, not a nitpick.</p></div>
+      </div></div>
+      <div class="role-v" data-role="designer"><div class="cost-row">
+        <div class="cost"><div class="n">12+</div><div class="k">"Admit" variants</div><p>One intent, three drifting executions — padding, radius, contrast.</p></div>
+        <div class="cost"><div class="n">3</div><div class="k">unsynced Figma kits</div><p>Each hospital forked the file once and never merged back.</p></div>
+        <div class="cost"><div class="n">0</div><div class="k">shared tokens</div><p>Nothing tied colour, spacing or contrast together across hospitals.</p></div>
+      </div></div>
+      <div class="role-v" data-role="developer"><div class="cost-row">
+        <div class="cost"><div class="n">3<small>×</small></div><div class="k">maintenance surface</div><p>One contrast fix, applied by hand across three separate codebases.</p></div>
+        <div class="cost"><div class="n">0</div><div class="k">source of truth</div><p>No token layer — every value hard-coded per app, per screen.</p></div>
+        <div class="cost"><div class="n">3</div><div class="k">silent a11y regressions</div><p>Caught in human review, not by the system. Three that we know of.</p></div>
+      </div></div>
+    </div>
+
+    <!-- interactive: see the drift, then consolidate -->
+    <div class="drift rv" id="drift">
+      <div class="drift-head">
+        <span class="drift-cap" id="driftCap">The same "Admit patient" button, drifting across 9 hospital installs</span>
+        <button class="drift-btn" id="driftBtn">See the drift →</button>
+      </div>
+      <div class="drift-stage" id="driftStage" aria-hidden="true"></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- SHIFT -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="shift rv"><div class="in2 rv-set">
+      <div class="role-v" data-role="all"><blockquote>What if onboarding a hospital was a <em>theme</em> — colour, density, and accessibility — not a rebuild?</blockquote><div class="by">the reframe the whole system is built on</div></div>
+      <div class="role-v" data-role="recruiter"><blockquote>What if every new hospital was a <em>three-day reskin</em> — not a three-month rebuild?</blockquote><div class="by">the bet that changed how fast we could deliver</div></div>
+      <div class="role-v" data-role="designer"><blockquote>The moment we separated what each hospital <em>controls</em> from what the contract <em>enforces</em>, onboarding stopped being a project.</blockquote><div class="by">design principle · Invitrace · 2025</div></div>
+      <div class="role-v" data-role="developer"><blockquote>What if a new hospital was a <em>theme file</em> the build consumes — not another codebase to maintain?</blockquote><div class="by">configuration over rebuild, all the way down</div></div>
+    </div></div>
+  </div>
+
+</section>
+
+<!-- ===== THE LAB ===== -->
+<section id="lab">
+  <div class="lab-hi"></div>
+  <span class="lab-tag">THE LAB</span>
+  <div class="wrap">
+    <div class="rv-set rv">
+      <div class="role-v" data-role="all"><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">Work the console. <span class="gt">Watch the ward app morph.</span></h2><p class="lead-p">The phone is the clinician's ward console — the thing we ship to hospitals. You touch the <b>console</b>: pick a hospital archetype, a colour, a radius, an accessibility floor. The token flows <b>raw → theme → semantic → screen</b>, and the live app <b>re-shapes</b> to match — same components, different hospitals.</p></div>
+      <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">I can stand up a new hospital <span class="gt">live, in front of you.</span></h2><p class="lead-p">Pick a hospital on the console and the ward app re-shapes to match. The point isn't the animation — it's that <b>onboarding a client is now this fast</b>. Try the "+ New hospital" tab and watch a brand-new theme appear from the current settings.</p></div>
+      <div class="role-v" data-role="designer"><span class="rchip"><i></i>The system &amp; the craft</span><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">One kit, <span class="gt">re-composed per hospital.</span></h2><p class="lead-p">The phone is built from the same components every hospital uses. The console changes tokens — colour, radius, density, layout order — and the screen <b>recomposes</b>, modules travelling to new positions. Composable, not three look-alikes that drift apart.</p></div>
+      <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">Change a token, <span class="gt">watch it cascade to the ward screen.</span></h2><p class="lead-p">The console mutates raw values; they flow <b>raw → theme → semantic → component</b> and the app re-renders. The x-ray strip traces the path. Nothing is hand-edited per screen — and the contrast floor travels with the theme.</p></div>
+    </div>
+
+    <!-- x-ray pipeline strip -->
+    <div class="xray rv" id="xray">
+      <div class="xnode" data-node="raw"><div class="xk">Raw</div><div class="xv"><span class="xsw" id="xRawSw"></span><span id="xRawHex">#0d9488</span></div><div class="xv2" id="xRawRad">radius 6</div></div>
+      <span class="xarrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <div class="xnode" data-node="theme"><div class="xk">Theme</div><div class="xv" id="xTheme">District</div><div class="xv2">picks the raw value</div></div>
+      <span class="xarrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <div class="xnode" data-node="sem"><div class="xk">Semantic</div><div class="xv"><span class="xrole">color-primary</span></div><div class="xv2">a role, not a value</div></div>
+      <span class="xarrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <div class="xnode xnode-screen" data-node="screen"><div class="xk">Screen</div><div class="xv">ward console</div><div class="xv2">assembled below ↓</div></div>
+    </div>
+
+    <div class="stage3">
+      <!-- the product (watched) -->
+      <div class="phone rv">
+        <div class="screen" id="screen">
+          <div class="lab ph" id="labPhone" data-client="district">
+            <div class="ph-m ph-greet">
+              <div><div class="h">Ward Console</div><div class="s">4 admitted · 1 critical</div></div>
+              <div class="bell"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+            </div>
+            <div class="ph-m ph-appt">
+              <span class="dav"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg></span>
+              <div class="di"><div class="ttl">Next patient</div><div class="a">Somchai Kittisak</div><div class="b">Cardiology · 3A</div><span class="when"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Admitted 09:15</span></div>
+              <span class="go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+              <div class="prog"><div class="pl"><span>Pre-admission checklist</span><span>3 of 4</span></div><div class="bar"><i></i></div></div>
+              <div class="appt-empty"><span class="dav"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></span><div class="ee"><div class="e1">No pending admissions</div><div class="e2">All current patients are assigned</div></div></div>
+            </div>
+            <div class="ph-m ph-find">
+              <div class="fh">Patient wards</div>
+              <div class="chips">
+                <span class="chip on"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l2 5 4-12 2 7h6"/></svg>Cardio</span>
+                <span class="chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c-3 0-5 2-5 5 0 4 5 9 5 9s5-5 5-9c0-3-2-5-5-5Z"/></svg>Emergency</span>
+                <span class="chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>ICU</span>
+                <span class="chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>General</span>
+              </div>
+            </div>
+            <div class="ph-m ph-docs">
+              <div class="doc">
+                <span class="dav2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg><i class="on-dot"></i></span>
+                <div class="dm"><div class="dn">Napat Wongsa</div><div class="dmeta"><span class="star" style="color:#ef4444">⚠</span> Emergency · Waiting · ER bay 2</div></div>
+                <span class="bookbtn">Admit</span>
+              </div>
+              <div class="doc">
+                <span class="dav2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg><i class="on-dot"></i></span>
+                <div class="dm"><div class="dn">Siriporn Thana</div><div class="dmeta"><span class="star">●</span> ICU Bed 2 · Stable · obs q4h</div></div>
+                <span class="bookbtn">View</span>
+              </div>
+            </div>
+            <div class="ph-m ph-vitals">
+              <div class="v v-accent"><div class="vic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div class="vn">24</div><div class="vl">Admitted</div><div class="spark"><i></i></div></div>
+              <div class="v v-violet"><div class="vic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/></svg></div><div class="vn">8</div><div class="vl">Pending</div><div class="spark"><i style="width:33%"></i></div></div>
+              <div class="v v-dark v-bars"><div class="vl">Critical</div><div class="bars"><i style="height:30%"></i><i style="height:50%"></i><i style="height:40%"></i><i style="height:70%"></i><i class="proj" style="height:20%"></i></div></div>
+            </div>
+            <div class="ph-m ph-tabs">
+              <span class="ph-tab on"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v11h14V9"/></svg></span>
+              <span class="ph-tab"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg></span>
+              <span class="ph-tab"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+              <span class="ph-tab"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+              <span class="ph-tab"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 5 4-12 2 7h6"/></svg></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- the console (remote) -->
+      <div class="console rv">
+        <div class="console-lab">The console · the remote</div>
+        <div class="cli-tabs" id="cliTabs">
+          <button class="cli-tab on" data-client="district"><span class="d" style="background:#0d9488"></span>District</button>
+          <button class="cli-tab" data-client="teaching"><span class="d" style="background:#c97a0a"></span>Teaching</button>
+          <button class="cli-tab" data-client="specialty"><span class="d" style="background:#c0394b"></span>Specialty</button>
+          <button class="cli-tab newcli" id="newCli"><span class="nd">+</span>New hospital</button>
+        </div>
+        <div class="cli-why" id="cliWhy">200-bed general hospital — compact density, high-throughput ward tracking.</div>
+
+        <div class="panel">
+          <div class="ph">Tokens · live</div>
+          <div class="ctrl"><label>Primary</label><div class="swatches" id="swatches"></div></div>
+          <div class="ctrl"><label>Radius</label><input type="range" id="radius" min="4" max="28" value="20"><span class="rngval" id="radVal">20</span></div>
+          <div class="ctrl"><label>High contrast</label><div class="tog" id="hcTog"><i></i></div></div>
+          <div class="ctrl"><label>Edge case</label><div class="edges" id="edges"><button class="on" data-edge="none">Default</button><button data-edge="empty">No admissions</button><button data-edge="long">Long name</button></div></div>
+        </div>
+
+        <div class="views" id="views">
+          <span class="view-t on" data-view="design">Designer</span>
+          <span class="view-t" data-view="eng">Engineer</span>
+          <span class="view-t" data-view="pm">PM</span>
+        </div>
+        <div class="vpanel">
+          <div class="vp on" data-view="design">
+            <div class="vh">In Figma <span class="badge">design</span></div>
+            <p>One component, variant props for each hospital archetype. The token names here are Figma variables — so a colour change lands in both, once.</p>
+            <div class="figchips">
+              <span class="figchip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>Auto-layout</span>
+              <span class="figchip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>Hospital archetypes</span>
+              <span class="figchip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h10M4 17h7"/></svg>Variable modes</span>
+              <span class="figchip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>A11y annotation</span>
+            </div>
+          </div>
+          <div class="vp" data-view="eng">
+            <div class="vh">In code <span class="badge">engineer</span></div>
+            <div class="code" id="codeBox" aria-hidden="true"></div>
+          </div>
+          <div class="vp" data-view="pm">
+            <div class="vh">For the business <span class="badge">pm</span></div>
+            <p>A hospital is a config file, not a project. The change you just made ships to every hospital next release — reviewed, not redrawn.</p>
+            <div class="pmstat">
+              <div class="x"><b>3 days</b><small>per hospital onboarding</small></div>
+              <div class="x"><b>0</b><small>a11y regressions</small></div>
+              <div class="x"><b>1</b><small>source of truth</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="lab-note rv">↑ change the console — the token flows raw → theme → semantic, and the app re-shapes to match</p>
+  </div>
+
+</section>
+
+<!-- UNBREAKABLE -->
+<section id="unbreakable">
+  <div class="floats"><div class="fl fl-btn ghost" style="top:13%;left:5%;--dur:15s;--rot:-5deg">Admit</div><div class="fl fl-dots" style="bottom:16%;right:7%;--dur:12s;--dl:.6s;--rot:6deg"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+  <div class="wrap">
+    <div class="rv-set rv">
+      <div class="role-v" data-role="all"><span class="kick">Making it unbreakable</span><h2 class="lead-h">In healthcare, a broken component <span class="gt">isn't a style bug.</span></h2><p class="lead-p">A detached card that skips the contrast token can fail a patient who can't read it. So the kit is built so the three habits that rot a system simply don't pay off.</p></div>
+      <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">Making it unbreakable</span><h2 class="lead-h">I designed for the people who'd <span class="gt">misuse the system.</span></h2><p class="lead-p">Governance is the unglamorous work that decides whether a design system survives a real team under deadline. Below is how I made the <b>wrong move stop paying off</b> — change the master token and watch what stays in line.</p></div>
+      <div class="role-v" data-role="designer"><span class="rchip"><i></i>The system &amp; the craft</span><span class="kick">Making it unbreakable</span><h2 class="lead-h">Detach, copy, invent — <span class="gt">the three ways a system rots.</span></h2><p class="lead-p">Every Figma library decays the same way. The fix isn't a rules doc; it's making the <b>correct path the easiest one</b> so drift never starts. Poke the stage below to see each failure — and why the system resists it.</p></div>
+      <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">Making it unbreakable</span><h2 class="lead-h">Bound instances propagate; <span class="gt">forks go stale.</span></h2><p class="lead-p">An instance wired to the master updates with it; a detached or copied one freezes. Same reason you don't fork a shared component in code — and the same fix: <b>one source, enforced</b>. Change the master below and watch propagation.</p></div>
+    </div>
+    <!-- shared wire stage: master token -> instances, prove propagation -->
+    <div class="wire rv" id="wire">
+      <div class="wire-master">
+        <div><div class="wm-l">Master token · source of truth</div><div class="wm-tok"><span class="wm-sw" id="wmSw"></span><span id="wmHex">color/primary → #6d28d9</span></div></div>
+        <button class="wm-btn" id="wmChange"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg>Change the master</button>
+      </div>
+      <div class="insts" id="insts"></div>
+      <div class="wire-actions">
+        <button data-act="detach"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>Detach one</button>
+        <button data-act="copy"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy-paste</button>
+        <button data-act="invent"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Invent one</button>
+        <button data-act="reset" class="reset"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Reset</button>
+      </div>
+      <div class="wire-log" id="wireLog"></div>
+    </div>
+
+    <div class="brk">
+      <div class="brk-c rv">
+        <div class="ic2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4"/></svg></div>
+        <h3>Detach</h3>
+        <p>Detaching to tweak one value also drops the a11y token. <b>Fix:</b> every real need is a prop — including contrast mode — so there's nothing to detach for.</p>
+      </div>
+      <div class="brk-c rv d1">
+        <div class="ic2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></div>
+        <h3>Copy-paste</h3>
+        <p>A pasted copy looks right today and silently rots tomorrow. <b>Fix:</b> the kit is the only on-ramp — inserting is faster than rebuilding.</p>
+      </div>
+      <div class="brk-c rv d2">
+        <div class="ic2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></div>
+        <h3>Invent</h3>
+        <p>A hospital's "special" one-off becomes the tenth dosage field. <b>Fix:</b> new patterns enter by contribution and review — forking outside is the friction.</p>
+      </div>
+    </div>
+    <div class="gov rv">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+      <p>Every component ships to <b>Storybook</b> with its states and an a11y check baked in — so clinical teams', engineering, and QA all read the same source of truth, not a screenshot in a thread.</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- HOW AUTHORED -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="rv" style="background:var(--paper-2);border-radius:34px"><div class="wrap"><div style="padding:clamp(3rem,7vw,5rem) 0;display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:center" class="auth-row">
+      <div>
+        <div class="rv-set">
+          <div class="role-v" data-role="all"><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">A hospital, written as <span class="gt">one reviewable file.</span></h2><p class="lead-p">Tokens live as code; Figma variables and the Storybook kit sync to it. Onboarding a hospital is a small diff — colour, layout map, and a11y floor — not a fresh build. The latest themes I authored end-to-end in <b>Claude Code</b> straight from the schema.</p></div>
+          <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">A hospital ships in days because <span class="gt">it's a reviewed config.</span></h2><p class="lead-p">Onboarding is a small file someone reviews — not a project someone staffs. That's the <b>margin story</b>, and why the model scales with sales instead of headcount.</p></div>
+          <div class="role-v" data-role="designer"><span class="rchip"><i></i>The system &amp; the craft</span><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">Design and engineering <span class="gt">share one vocabulary.</span></h2><p class="lead-p">Figma variables and the code kit read the <b>same token names</b>. The file beside this is the contract; both sides edit the same nouns, so design intent and shipped UI can't quietly diverge.</p></div>
+          <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">A theme is a small file: <span class="gt">colour, layout, a11y floor.</span></h2><p class="lead-p">Versionable, reviewable diff — no pixel-pushing. I authored the latest themes end-to-end in <b>Claude Code</b> straight from the schema, and the build consumes them directly.</p></div>
+        </div>
+      </div>
+      <div class="afile-wrap">
+        <div class="afile-bar">
+          <span class="lbl">Tap a line — watch it change</span>
+          <div class="modetog" id="modeTog"><button class="on" data-mode="code">Code</button><button data-mode="plain">Plain English</button></div>
+        </div>
+        <div class="afile" id="afile" data-mode="code">
+          <span class="aln c">// hospital: "District" (200-bed general)</span>
+          <span class="aln">theme district {</span>
+          <button class="aln row" data-tok="color"><span class="key">  color-primary</span><span class="arr">→</span><span class="val"><span class="code-val">raw.teal-500</span><span class="plain-val">the hospital's brand colour</span></span><span class="hint">tap</span></button>
+          <button class="aln row" data-tok="radius"><span class="key">  radius-base</span><span class="arr">→</span><span class="val"><span class="code-val">raw.radius-sm</span><span class="plain-val">how round the corners are</span></span><span class="hint">tap</span></button>
+          <button class="aln row" data-tok="density"><span class="key">  density</span><span class="arr">→</span><span class="val"><span class="code-val">compact</span><span class="plain-val">how much fits on screen</span></span><span class="hint">tap</span></button>
+          <button class="aln row" data-tok="contrast"><span class="key">  a11y.contrast</span><span class="arr">→</span><span class="val"><span class="code-val">AA-large</span><span class="plain-val">readable for low-vision patients</span></span><span class="hint">tap</span></button>
+          <button class="aln row" data-tok="layout"><span class="key">  layout.vitals</span><span class="arr">→</span><span class="val"><span class="code-val">order-2</span><span class="plain-val">put vitals near the top</span></span><span class="hint">tap</span></button>
+          <span class="aln">}</span>
+          <span class="aln c">// whole UI re-themes + re-flows</span>
+        </div>
+
+        <div class="aprev" id="aprev">
+          <div class="ap-card">
+            <div class="ap-block ap-head"><span class="ap-logo">M</span><div class="ap-ht">District Ward<small>clinician view</small></div></div>
+            <div class="ap-block ap-vitals" id="apVitals">
+              <div class="pv"><b>72</b><span>Heart</span></div>
+              <div class="pv"><b>120</b><span>BP</span></div>
+              <div class="pv"><b>98%</b><span>SpO₂</span></div>
+            </div>
+            <div class="ap-block ap-appt"><div class="a">Dr. Somchai Wongkamol<small>Cardiology · In ward 3B</small></div><span class="bk">Admit</span></div>
+          </div>
+          <div class="ap-cap" id="apCap">This is one hospital's ward screen, built from the file above. <b>Tap any line</b> to see what that one token controls.</div>
+        </div>
+      </div>
+    </div></div></div>
+  </div>
+
+</section>
+<style>@media(max-width:820px){.auth-row{grid-template-columns:1fr !important;gap:2rem !important}}
+/* interactive theme file */
+.afile-wrap{display:flex;flex-direction:column;gap:1rem}
+.afile-bar{display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap}
+.afile-bar .lbl{font-family:var(--m);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.modetog{display:flex;gap:.3rem;background:#fff;border:1px solid var(--line);border-radius:99px;padding:3px}
+.modetog button{font-family:var(--m);font-size:.66rem;border:0;background:none;color:var(--ink-soft);padding:.4rem .8rem;border-radius:99px;cursor:pointer;transition:all .2s}
+.modetog button.on{background:var(--ink);color:#fff}
+.afile{font-family:var(--m);font-size:12.5px;line-height:1.85;color:#cfc6e6;background:#160f24;border-radius:16px;padding:16px 18px;overflow:hidden}
+.aln{white-space:pre;display:block}
+.aln.c{color:#6f6690}
+.aln.row{width:100%;text-align:left;background:none;border:0;color:inherit;font:inherit;cursor:pointer;border-radius:7px;padding:1px 8px;margin:1px -8px;transition:background .2s;display:flex;gap:.5ch;align-items:baseline}
+.aln.row:hover{background:rgba(196,181,253,.12)}
+.aln.row.on{background:rgba(196,181,253,.2)}
+.aln.row .key{color:#cfc6e6}
+.aln.row .arr{color:#6f6690}
+.aln.row .val .code-val{color:#a5d6a7}
+.aln.row .val .plain-val{color:#f0abfc;display:none}
+.afile[data-mode="plain"] .val .code-val{display:none}
+.afile[data-mode="plain"] .val .plain-val{display:inline}
+.aln.row .hint{margin-left:auto;color:#4b4368;font-size:10px;align-self:center}
+.aln.row.on .hint{color:var(--lilac)}
+/* live preview */
+.aprev{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.1rem;--p-primary:#2563eb;--p-rad:9px;--p-pad:11px}
+.aprev.hc{--p-text:#000;--p-mut:#333}
+.ap-card{display:flex;flex-direction:column;gap:9px}
+.ap-block{transition:order .3s,background .35s var(--e),border-radius .35s,padding .35s}
+.ap-head{display:flex;align-items:center;gap:9px;order:1}
+.ap-logo{width:34px;height:34px;border-radius:var(--p-rad);background:var(--p-primary);color:#fff;display:grid;place-content:center;font-family:var(--g);font-weight:800;transition:background .35s,border-radius .35s}
+.ap-ht{font-family:var(--g);font-weight:700;font-size:14px;color:var(--p-text,#0b1e3a)}
+.ap-ht small{display:block;font-family:var(--m);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--p-mut,#7388ad);font-weight:400}
+.ap-vitals{order:3;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.ap-vitals .pv{background:#f4f7fc;border-radius:var(--p-rad);padding:var(--p-pad) 6px;text-align:center;transition:border-radius .35s,padding .35s}
+.aprev.hc .ap-vitals .pv{background:#e9eef6;outline:1px solid #c3cede}
+.ap-vitals .pv b{font-family:var(--g);font-weight:700;font-size:15px;color:var(--p-text,#0b1e3a);display:block;line-height:1}
+.ap-vitals .pv span{font-family:var(--m);font-size:7px;letter-spacing:.06em;text-transform:uppercase;color:var(--p-mut,#7388ad)}
+.ap-appt{order:4;background:#f4f7fc;border-radius:var(--p-rad);padding:var(--p-pad);display:flex;align-items:center;gap:9px;transition:border-radius .35s,padding .35s}
+.aprev.hc .ap-appt{background:#e9eef6}
+.ap-appt .a{flex:1;font-size:11px;font-weight:700;color:var(--p-text,#0b1e3a)}
+.ap-appt .a small{display:block;font-weight:400;font-size:9px;color:var(--p-mut,#7388ad)}
+.ap-appt .bk{background:var(--p-primary);color:#fff;border-radius:var(--p-rad);padding:7px 13px;font-size:10px;font-weight:700;transition:background .35s,border-radius .35s}
+.ap-promoted{order:2 !important}
+.ap-cap{margin-top:1rem;font-size:.9rem;color:var(--ink-soft);line-height:1.5;min-height:2.6em}
+.ap-cap b{color:var(--ink);font-weight:600}</style>
+
+<!-- OUTCOME -->
+<section id="outcome">
+  <div class="floats"><div class="fl fl-toggle" style="top:16%;left:5%;--dur:13s;--rot:5deg"><i></i></div><div class="fl fl-chip" style="bottom:18%;right:5%;--dur:14s;--dl:1s;--rot:-4deg"><span class="dot"></span>--radius: 14</div></div>
+  <div class="wrap">
+    <div class="rv-set rv">
+      <div class="role-v" data-role="all"><span class="kick">What moved</span><h2 class="lead-h">Onboarding became <span class="gt">a config, not a project.</span></h2></div>
+      <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">What moved</span><h2 class="lead-h">A month of work <span class="gt">became three days.</span></h2></div>
+      <div class="role-v" data-role="designer"><span class="rchip"><i></i>The system &amp; the craft</span><span class="kick">What moved</span><h2 class="lead-h">One component, <span class="gt">themed nine ways.</span></h2></div>
+      <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">What moved</span><h2 class="lead-h">Change one token, <span class="gt">every screen re-renders.</span></h2></div>
+    </div>
+    <div class="rv-set rv d1">
+      <div class="role-v" data-role="all"><div class="out-row">
+        <div class="out"><div class="n">4<span class="gt">wk</span>→3<span class="gt">d</span></div><div class="k">per hospital onboarding</div><p>Colour, layout & a11y as a diff.</p></div>
+        <div class="out"><div class="n">23→<span class="gt">1</span></div><div class="k">component definitions</div><p>Same component, themed per hospital.</p></div>
+        <div class="out"><div class="n">0</div><div class="k">a11y regressions</div><p>Contrast is a token, not a memory.</p></div>
+        <div class="out"><div class="n">100<span class="gt">%</span></div><div class="k">in Storybook</div><p>Design, code & QA, one truth.</p></div>
+      </div></div>
+      <div class="role-v" data-role="recruiter"><div class="out-row">
+        <div class="out"><div class="n">4<span class="gt">wk</span>→3<span class="gt">d</span></div><div class="k">to onboard a hospital</div><p>Delivery stopped gating the deal.</p></div>
+        <div class="out"><div class="n">9</div><div class="k">hospitals, one system</div><p>Each new client adds margin, not headcount.</p></div>
+        <div class="out"><div class="n">0</div><div class="k">a11y regressions</div><p>Compliance risk taken off the table.</p></div>
+        <div class="out"><div class="n">1</div><div class="k">team to maintain it</div><p>No per-hospital front-end to staff.</p></div>
+      </div></div>
+      <div class="role-v" data-role="designer"><div class="out-row">
+        <div class="out"><div class="n">23→<span class="gt">1</span></div><div class="k">component definitions</div><p>Drift collapsed into one source.</p></div>
+        <div class="out"><div class="n">1</div><div class="k">kit, atom→screen</div><p>Composable, not nine look-alikes.</p></div>
+        <div class="out"><div class="n">0</div><div class="k">detached overrides</div><p>The right path is the easy path.</p></div>
+        <div class="out"><div class="n">100<span class="gt">%</span></div><div class="k">tokens in Figma</div><p>Same names as code.</p></div>
+      </div></div>
+      <div class="role-v" data-role="developer"><div class="out-row">
+        <div class="out"><div class="n">1</div><div class="k">source of truth</div><p>raw→theme→semantic→component.</p></div>
+        <div class="out"><div class="n">0</div><div class="k">a11y regressions</div><p>Contrast enforced, not remembered.</p></div>
+        <div class="out"><div class="n">100<span class="gt">%</span></div><div class="k">Storybook coverage</div><p>States + a11y check per component.</p></div>
+        <div class="out"><div class="n">n</div><div class="k">hospitals = n configs</div><p>A theme file — reviewable, versioned, diffable.</p></div>
+      </div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- REFLECTION -->
+<section class="reflect">
+  <div class="floats"><div class="fl fl-swatch" style="top:18%;right:7%;--dur:15s;--rot:-6deg"><span></span><span></span><span></span></div><div class="fl fl-radius" style="bottom:20%;left:7%;--dur:12s;--dl:.7s;--rot:4deg"></div></div>
+  <div class="wrap rv" style="max-width:880px;margin:0 auto">
+    <div class="rv-set">
+      <div class="role-v" data-role="all"><blockquote>The component I'm proudest of is the one a tired engineer <em>can't</em> ship inaccessible.</blockquote></div>
+      <div class="role-v" data-role="recruiter"><blockquote>What I optimise for: systems a tired team <em>can't</em> break under deadline pressure.</blockquote></div>
+      <div class="role-v" data-role="designer"><blockquote>The artifact I'm proudest of isn't a screen — it's the <em>guardrail</em> that protects craft when nobody's watching.</blockquote></div>
+      <div class="role-v" data-role="developer"><blockquote>Make the safe path the default path — the system should make an inaccessible build <em>impossible</em> to ship.</blockquote></div>
+    </div>
+    <p class="honesty">Health-tech design-systems case study. The multi-hospital platform, the atom→screen token architecture with layout and accessibility maps, and the Figma/Storybook workflow reflect the real work; hospital names (District, Teaching, Specialty) are stand-ins and figures are directional from internal tracking, shown to convey scale rather than as published metrics. The ward console is an interactive prototype, not a medical device.</p>
+  </div>
+
+</section>
+
+<footer class="coda">
+  <div class="wrap rv">
+    <h2>Don't rebuild the hospital. Configure it.</h2>
+    <div class="ft">
+      <small>HEALTH-TECH DESIGN SYSTEM<br>SYSTEMS LEAD · TOKENS · FIGMA · STORYBOOK · CODE</small>
+      <small>CASE STUDY<br>RAW → THEME → SEMANTIC → ATOM → SCREEN</small>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('sc',scrollY>20),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.14,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+/* ===== persona lens — filters each section to the role's concerns ===== */
+(function(){
+  const sw=document.getElementById('lensSwitch'); if(!sw) return;
+  const btns=[...sw.querySelectorAll('button')];
+  document.body.dataset.lens='all';
+  const viewFor={all:'design',recruiter:'pm',designer:'design',developer:'eng'};
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.toggle('on',x===b));
+    const role=b.dataset.lens;
+    document.body.dataset.lens=role;
+    // sync the lab console to the matching audience view
+    const vt=document.querySelector('#views .view-t[data-view="'+viewFor[role]+'"]');
+    if(vt && !vt.classList.contains('on')) vt.click();
+  }));
+})();
+(function(){
+  const links=[...document.querySelectorAll('nav .lk a')];
+  const map=links.map(a=>({a,sec:document.querySelector(a.getAttribute('href'))})).filter(x=>x.sec);
+  const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id='#'+e.target.id;links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===id));}}),{rootMargin:'-45% 0px -50% 0px'});
+  map.forEach(x=>spy.observe(x.sec));
+})();
+
+/* ===== count-up stats on view ===== */
+(function(){
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els=[...document.querySelectorAll('[data-count]')];
+  const run=el=>{ const t=+el.dataset.count; if(reduce){el.textContent=t;return;}
+    const dur=900;let t0=null; (function step(ts){ if(!t0)t0=ts; const p=Math.min((ts-t0)/dur,1),e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(t*e); if(p<1)requestAnimationFrame(step); })(performance.now()); };
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){run(e.target);io.unobserve(e.target);}}),{threshold:.6});
+  els.forEach(el=>io.observe(el));
+})();
+
+/* ===== drift -> consolidate (curiosity + the problem the system solves) ===== */
+(function(){
+  const btn=document.getElementById('driftBtn'),stage=document.getElementById('driftStage'),cap=document.getElementById('driftCap');
+  if(!btn) return;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const labels=['Admit','ADMIT','Admit now','Admit →','admit','Confirm','Admit pt','Schedule','Ward entry'];
+  const hues=[150,210,265,12,190,330,45,280,170];
+  let phase=0; // 0 idle, 1 drifted, 2 consolidated
+  function rnd(a,b){return a+Math.random()*(b-a);}
+  function makeMess(){
+    stage.innerHTML='';
+    for(let i=0;i<9;i++){
+      const b=document.createElement('button');
+      b.className='db';
+      b.textContent=labels[i%labels.length];
+      const h=hues[i%hues.length];
+      b.style.background=`hsl(${h} ${rnd(45,70)}% ${rnd(42,58)}%)`;
+      b.style.borderRadius=rnd(2,26)+'px';
+      b.style.padding=`${rnd(7,15)}px ${rnd(11,26)}px`;
+      b.style.fontSize=rnd(10,15)+'px';
+      b.style.fontWeight=[400,600,700,800][i%4];
+      b.style.letterSpacing=rnd(-.3,1.2)+'px';
+      stage.appendChild(b);
+      setTimeout(()=>b.classList.add('show'), reduce?0:i*55);
+    }
+  }
+  function consolidate(){
+    const bs=[...stage.querySelectorAll('.db')];
+    bs.forEach((b,i)=>{ setTimeout(()=>{
+      b.style.background='var(--violet)';b.style.borderRadius='12px';b.style.padding='11px 20px';
+      b.style.fontSize='13px';b.style.fontWeight='700';b.style.letterSpacing='0';b.textContent='Admit';
+    }, reduce?0:i*40); });
+    setTimeout(()=>{
+      stage.classList.add('one');
+      bs.forEach((b,i)=>{ if(i>0){ b.style.transition='opacity .3s, transform .3s'; b.style.opacity='0'; b.style.transform='scale(.6)'; setTimeout(()=>b.remove(),300);} });
+      cap.innerHTML='One component · <b>themed per hospital</b>, never redrawn';
+    }, reduce?60:bs.length*40+260);
+  }
+  btn.addEventListener('click',()=>{
+    if(phase===0){ stage.classList.add('open'); makeMess(); cap.innerHTML='<b>9 hospital installs, 9 hand-built buttons</b> — nothing matches'; btn.textContent='Consolidate to one →'; phase=1; }
+    else if(phase===1){ consolidate(); btn.textContent='Reset'; phase=2; }
+    else { stage.classList.remove('open','one'); stage.innerHTML=''; cap.textContent='The same "Admit patient" button, drifting across 9 hospital installs'; btn.textContent='See the drift →'; phase=0; }
+  });
+})();
+
+/* ===== unbreakable: master token -> instances, prove propagation ===== */
+(function(){
+  const wire=document.getElementById('wire'); if(!wire) return;
+  const insts=document.getElementById('insts');
+  const wmSw=document.getElementById('wmSw'),wmHex=document.getElementById('wmHex'),wmChange=document.getElementById('wmChange'),log=document.getElementById('wireLog');
+  const COLORS=['#6d28d9','#16a34a','#2563eb','#db2777']; let ci=0;
+  const LINKED='<div class="inst" data-state="linked"><span class="conn"></span><button class="ibtn">Admit</button><span class="ibadge">linked</span></div>';
+  function setMaster(c){ wire.style.setProperty('--m-color',c); wmSw.style.background=c; wmHex.textContent='color/primary → '+c; }
+  function reset(){ ci=0; setMaster(COLORS[0]); insts.innerHTML=LINKED+LINKED+LINKED;
+    log.innerHTML='3 instances, all <b>linked</b> to the master. Hit “Change the master” — watch them follow as one.'; }
+  function changeMaster(){
+    ci=(ci+1)%COLORS.length; const c=COLORS[ci]; setMaster(c);
+    insts.querySelectorAll('.inst[data-state="linked"] .conn').forEach(cn=>{cn.classList.remove('pulse'); void cn.offsetWidth; cn.classList.add('pulse');});
+    const linked=insts.querySelectorAll('.inst[data-state="linked"]').length;
+    const stuck=insts.querySelectorAll('.inst:not([data-state="linked"])').length;
+    log.innerHTML = stuck
+      ? `master → <b>${c}</b> · ${linked} linked followed instantly — ${stuck} stuck on the old value. That gap is the bug.`
+      : `master → <b>${c}</b> · all ${linked} followed in one change. <b>That's the whole point.</b>`;
+  }
+  function detach(){
+    const el=insts.querySelector('.inst[data-state="linked"]');
+    if(!el){ log.textContent='Nothing left linked to detach.'; return; }
+    const frozen=getComputedStyle(wire).getPropertyValue('--m-color').trim();
+    el.dataset.state='detached';
+    el.querySelector('.ibtn').style.background=frozen;
+    el.querySelector('.ibadge').textContent='detached · '+frozen;
+    log.innerHTML='Detached one — its wire is <b>cut</b>. It froze the current value and will ignore the master from now on.';
+  }
+  function spawn(state,badge,label){
+    const el=document.createElement('div'); el.className='inst pop'; el.dataset.state=state;
+    el.innerHTML=`<span class="conn"></span><button class="ibtn">${label}</button><span class="ibadge">${badge}</span>`;
+    insts.appendChild(el); setTimeout(()=>el.classList.remove('pop'),400);
+  }
+  function copy(){ spawn('copy','copy · untracked','Admit'); log.innerHTML='Pasted a copy — <b>no wire to the master</b>. Looks right today, never updates again.'; }
+  function invent(){ spawn('invent','btn-024 · untracked','Admit'); log.innerHTML='Invented a button outside the system — <b>untracked</b>. The 24th variant nobody can theme.'; }
+  wmChange.addEventListener('click',changeMaster);
+  wire.querySelectorAll('.wire-actions button').forEach(b=>b.addEventListener('click',()=>{
+    const a=b.dataset.act; if(a==='detach')detach(); else if(a==='copy')copy(); else if(a==='invent')invent(); else reset();
+  }));
+  reset();
+})();
+
+/* ===== interactive theme file (anyone can read it) ===== */
+(function(){
+  const afile=document.getElementById('afile'),prev=document.getElementById('aprev'),cap=document.getElementById('apCap');
+  const rows=[...document.querySelectorAll('#afile .row')];
+  const modeBtns=[...document.querySelectorAll('#modeTog button')];
+  const vitals=document.getElementById('apVitals');
+  if(!afile||!prev) return;
+  const st={color:0,radius:0,density:0,contrast:0,layout:0};
+  const COLORS=['#2563eb','#16a34a','#db2777','#4f46e5'];
+  const TOK={
+    color:{
+      do(){ st.color=(st.color+1)%COLORS.length; prev.style.setProperty('--p-primary',COLORS[st.color]); },
+      cap:'<b>Primary colour.</b> Change this one value and every button, header and link across the whole app follows — no hunting through screens.'
+    },
+    radius:{
+      do(){ st.radius^=1; prev.style.setProperty('--p-rad', st.radius?'18px':'9px'); },
+      cap:'<b>Corner radius.</b> Sharp corners read clinical and focused; rounder reads approachable. One setting, applied everywhere at once.'
+    },
+    density:{
+      do(){ st.density^=1; prev.style.setProperty('--p-pad', st.density?'16px':'11px'); },
+      cap:'<b>Density.</b> A busy hospital wants more on the screen; a wellness app wants room to breathe. The theme decides the spacing for you.'
+    },
+    contrast:{
+      do(){ st.contrast^=1; prev.classList.toggle('hc',st.contrast); },
+      cap:'<b>Accessibility floor.</b> Switch it on and text is guaranteed readable for low-vision and older patients — it\u2019s built in, not left to memory.'
+    },
+    layout:{
+      do(){ st.layout^=1; vitals.classList.toggle('ap-promoted',st.layout); },
+      cap:'<b>Layout map.</b> The theme can reorder the screen — here it lifts the patient\u2019s vitals to the top, because for a hospital that matters most.'
+    }
+  };
+  rows.forEach(r=>r.addEventListener('click',()=>{
+    rows.forEach(x=>x.classList.toggle('on',x===r));
+    const t=TOK[r.dataset.tok]; if(!t) return; t.do(); cap.innerHTML=t.cap;
+  }));
+  modeBtns.forEach(b=>b.addEventListener('click',()=>{
+    modeBtns.forEach(x=>x.classList.toggle('on',x===b)); afile.dataset.mode=b.dataset.mode;
+  }));
+})();
+
+/* ===== THE LAB v3 — console drives morph + x-ray ===== */
+(function(){
+  const lab=document.getElementById('labPhone');
+  const cliTabs=[...document.querySelectorAll('#cliTabs .cli-tab:not(.newcli)')];
+  const newCli=document.getElementById('newCli');
+  const edges=[...document.querySelectorAll('#edges button')];
+  const swHost=document.getElementById('swatches');
+  const radius=document.getElementById('radius'),radVal=document.getElementById('radVal');
+  const hcTog=document.getElementById('hcTog');
+  const views=[...document.querySelectorAll('#views .view-t')];
+  const vps=[...document.querySelectorAll('.vp')];
+  const codeBox=document.getElementById('codeBox');
+  const cliWhy=document.getElementById('cliWhy');
+  const xnodes=[...document.querySelectorAll('#xray .xnode')];
+  const xRawSw=document.getElementById('xRawSw'),xRawHex=document.getElementById('xRawHex'),xRawRad=document.getElementById('xRawRad'),xTheme=document.getElementById('xTheme');
+  if(!lab) return;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const CLINICS={
+    district:{name:'District',primary:'#0d9488',rad:6,density:'compact',contrast:'AA',why:'<b>200-bed general hospital</b> — compact density, high-throughput ward tracking.',alt:['#0d9488','#0e7490','#14b8a6','#1f7a6e']},
+    teaching:{name:'Teaching',primary:'#c97a0a',rad:10,density:'comfortable',contrast:'AA',why:'<b>800-bed academic hospital</b> — spacious layout, larger type for complex workflows.',alt:['#c97a0a','#d97706','#b45309','#92400e']},
+    specialty:{name:'Specialty',primary:'#c0394b',rad:18,density:'cozy',contrast:'AA',why:'<b>40-bed oncology specialty</b> — warm radius, softer contrast, accessibility-forward.',alt:['#c0394b','#e11d48','#9f1239','#be185d']}
+};
+  let state={client:'district',primary:'#0d9488',rad:6,hc:false};
+
+  // FLIP: let the phone modules travel to new positions instead of fading
+  function flip(mutate){
+    if(reduce){ mutate(); return; }
+    const items=[...lab.querySelectorAll('.ph-m')];
+    const first=items.map(el=>el.getBoundingClientRect());
+    mutate();
+    items.forEach((el,idx)=>{
+      const last=el.getBoundingClientRect();
+      const dx=first[idx].left-last.left, dy=first[idx].top-last.top;
+      if(!dx && !dy) return;
+      el.style.transition='none';
+      el.style.transform=`translate(${dx}px,${dy}px)`;
+      el.getBoundingClientRect();
+      requestAnimationFrame(()=>{
+        el.style.transition='transform .6s cubic-bezier(.16,1,.3,1)';
+        el.style.transform='';
+      });
+    });
+  }
+  function lightXray(){
+    if(reduce) return;
+    xnodes.forEach((n,idx)=>setTimeout(()=>{ n.classList.add('lit'); setTimeout(()=>n.classList.remove('lit'),520); }, idx*130));
+  }
+  function paintVars(){
+    lab.style.setProperty('--c-primary',state.primary);
+    lab.style.setProperty('--c-rad',state.rad+'px');
+    if(state.client==='custom'){
+      const p=state.primary;
+      lab.style.setProperty('--c-soft','color-mix(in srgb, '+p+' 12%, #fff)');
+      lab.style.setProperty('--c-line','color-mix(in srgb, '+p+' 26%, #fff)');
+      lab.style.setProperty('--c-text','#181225');
+      lab.style.setProperty('--c-muted','color-mix(in srgb, '+p+' 45%, #8a8a9a)');
+    } else {
+      ['--c-soft','--c-line','--c-text','--c-muted'].forEach(v=>lab.style.removeProperty(v));
+    }
+    lab.classList.toggle('hc',state.hc);
+    radius.value=state.rad; radVal.textContent=state.rad;
+    hcTog.classList.toggle('on',state.hc);
+    xRawSw.style.background=state.primary; xRawHex.textContent=state.primary;
+    xRawRad.textContent='radius '+state.rad; xTheme.textContent=CLINICS[state.client].name;
+    renderSwatches(); renderCode();
+  }
+  function renderSwatches(){
+    const c=CLINICS[state.client];
+    swHost.innerHTML=c.alt.map(hex=>`<button data-hex="${hex}" style="background:${hex}" class="${hex===state.primary?'on':''}"></button>`).join('');
+    swHost.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ state.primary=b.dataset.hex; paintVars(); lightXray(); }));
+  }
+  function renderCode(){
+    const c=CLINICS[state.client];
+    codeBox.innerHTML=
+      `<span class="c">// hospital: "${c.name}"</span><br>theme <span class="v">${state.client}</span> {<br>`+
+      `&nbsp;&nbsp;color-primary&nbsp;→ <span class="s">${state.primary}</span><br>`+
+      `&nbsp;&nbsp;radius-base&nbsp;&nbsp;&nbsp;→ <span class="s">${state.rad}px</span><br>`+
+      `&nbsp;&nbsp;density&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span class="s">${c.density}</span><br>`+
+      `&nbsp;&nbsp;a11y.contrast&nbsp;→ <span class="s">${state.hc?'AAA (high)':c.contrast}</span><br>}`;
+  }
+  function applyClient(key,reset){
+    const c=CLINICS[key]; if(!c) return;
+    state.client=key;
+    if(reset!==false){ state.primary=c.primary; state.rad=c.rad; }
+    cliTabs.forEach(b=>b.classList.toggle('on',b.dataset.client===key));
+    cliWhy.innerHTML=c.why;
+    flip(()=>{ lab.dataset.client=key; paintVars(); });
+    lightXray();
+  }
+  cliTabs.forEach(b=>b.addEventListener('click',()=>applyClient(b.dataset.client,true)));
+  radius.addEventListener('input',()=>{ state.rad=+radius.value; paintVars(); });
+  radius.addEventListener('change',lightXray);
+  hcTog.addEventListener('click',()=>{ state.hc=!state.hc; paintVars(); lightXray(); });
+
+  // create a new hospital from the current console settings (a theme is just a config)
+  function createClinic(){
+    CLINICS.custom={name:'Custom',primary:state.primary,rad:state.rad,density:'custom',contrast:state.hc?'AAA':'AA',
+      why:'<b>Your hospital</b> — authored live from the console, saved as a config.',alt:[state.primary,'#10b981','#3b82f6','#6d5ef0']};
+    let tab=document.querySelector('#cliTabs .cli-tab[data-client="custom"]');
+    if(!tab){
+      tab=document.createElement('button'); tab.className='cli-tab'; tab.dataset.client='custom';
+      tab.innerHTML='<span class="d"></span>Custom';
+      newCli.before(tab);
+      tab.addEventListener('click',()=>applyClient('custom',false));
+      cliTabs.push(tab);
+    }
+    tab.querySelector('.d').style.background=state.primary;
+    applyClient('custom',false);
+  }
+  newCli.addEventListener('click',createClinic);
+
+  // edge cases — prove the components hold up
+  const apptA=lab.querySelector('.ph-appt .di .a');
+  const origName=apptA?apptA.textContent:'';
+  edges.forEach(b=>b.addEventListener('click',()=>{
+    edges.forEach(x=>x.classList.toggle('on',x===b));
+    const e=b.dataset.edge;
+    flip(()=>{
+      lab.dataset.edge = (e==='none'?'':e);
+      if(apptA) apptA.textContent = (e==='long') ? 'Dr. Maximiliana Featherstonehaugh-Worthington III' : origName;
+    });
+  }));
+
+  views.forEach(v=>v.addEventListener('click',()=>{
+    views.forEach(x=>x.classList.remove('on')); v.classList.add('on');
+    vps.forEach(p=>p.classList.toggle('on',p.dataset.view===v.dataset.view));
+  }));
+
+  lab.dataset.client='district'; paintVars();
+
+  // gentle auto-tour when in view, pause on hover anywhere in the stage
+  let hovering=false; const host=lab.closest('.stage3');
+  if(host){ host.addEventListener('mouseenter',()=>hovering=true); host.addEventListener('mouseleave',()=>hovering=false); }
+  const order=['district','teaching','specialty']; let i=0;
+  if(!reduce){
+    const io2=new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting){ if(!window.__lab){ window.__lab=setInterval(()=>{ if(hovering)return; i=(i+1)%order.length; applyClient(order[i],true); },4600); } }
+      else { clearInterval(window.__lab); window.__lab=null; }
+    }),{threshold:.3});
+    io2.observe(lab);
+  }
+})();
+</script>
+</body>
+</html>
