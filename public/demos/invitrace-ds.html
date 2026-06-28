@@ -76,9 +76,17 @@ body[data-lens="developer"] .role-v[data-role~="developer"]{display:block;animat
 .swap{display:inline}
 .swap s{text-decoration:none;position:relative;color:var(--muted)}
 .swap s::after{content:"";position:absolute;left:-2%;right:-2%;top:52%;height:.09em;background:var(--violet);transform:scaleX(0);transform-origin:left;animation:strike .55s var(--e) 1.5s forwards}
-.swap b{font-weight:700;display:inline-block;white-space:nowrap;margin-left:.18em;position:relative;clip-path:inset(0 100% 0 0);transform:rotate(-2deg) translateY(2px);animation:handwrite .75s cubic-bezier(0.16,1,0.3,1) 2.05s forwards;color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
-.swap b::after{content:"";position:absolute;left:0;bottom:-.12em;width:100%;height:.06em;background:var(--grad);border-radius:99px;transform:scaleX(0);transform-origin:left;animation:uline .4s cubic-bezier(0.16,1,0.3,1) 2.75s forwards}
-@keyframes strike{to{transform:scaleX(1)}}@keyframes handwrite{to{clip-path:inset(0 0% 0 0);transform:rotate(-1.4deg) translateY(2px)}}@keyframes uline{to{transform:scaleX(1)}}@keyframes rise{to{transform:none}}@keyframes fade{to{opacity:1}}
+/* written word — JS splits into .sc spans + inserts .pen cursor */
+.swap b{font-weight:700;display:inline-block;white-space:nowrap;margin-left:.18em;position:relative;transform:rotate(-1.4deg) translateY(2px);color:transparent;background:var(--grad);-webkit-background-clip:text;background-clip:text}
+.swap b::after{content:"";position:absolute;left:0;bottom:-.12em;width:100%;height:.06em;background:var(--grad);border-radius:99px;transform:scaleX(0);transform-origin:left;animation:uline .45s cubic-bezier(0.16,1,0.3,1) var(--uline-delay,3.4s) forwards}
+/* per-letter spans */
+.sc{display:inline-block;opacity:0;transform:translateY(6px) rotate(var(--tilt,0deg));transition:none}
+.sc.in{animation:scIn .18s cubic-bezier(0.34,1.56,0.64,1) forwards}
+/* pen-nib cursor that travels ahead of each letter */
+.pen{display:inline-block;width:.55em;height:.55em;border-radius:50% 50% 50% 0/60% 60% 40% 40%;background:var(--grad);position:relative;top:.05em;margin-left:.05em;opacity:0;transition:opacity .08s}
+.pen.visible{opacity:1}
+@keyframes scIn{to{opacity:1;transform:translateY(0) rotate(var(--tilt,0deg))}}
+@keyframes strike{to{transform:scaleX(1)}}@keyframes uline{to{transform:scaleX(1)}}@keyframes rise{to{transform:none}}@keyframes fade{to{opacity:1}}
 .hero .sub{display:flex;gap:2.4rem;flex-wrap:wrap;margin-top:2.7rem;opacity:0;animation:fade 1s var(--e) 2.4s forwards;max-width:62ch}
 .hero .sub p{margin:0;color:var(--ink-soft);font-size:1.12rem;max-width:42ch}
 .hero .sub .meta b{display:block;font-family:var(--m);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:400;margin-bottom:.3rem}
@@ -887,6 +895,51 @@ section{overflow:hidden}
 </footer>
 
 <script>
+/* ── Handwriting animation for hero swap word ─────────────────────── */
+(function(){
+  const bEl = document.querySelector('.swap b');
+  if (!bEl) return;
+  const word = bEl.textContent || '';
+  bEl.textContent = '';
+
+  // pen-nib cursor
+  const pen = document.createElement('span');
+  pen.className = 'pen';
+  bEl.appendChild(pen);
+
+  // slight per-letter tilt variation for organic feel
+  const tilts = [1,-1.5,0.5,-0.5,1.2,-0.8,0.3,-1,0.6,-0.4,1,-0.7];
+  const spans = [];
+  for (let i = 0; i < word.length; i++) {
+    const sp = document.createElement('span');
+    sp.className = 'sc';
+    sp.textContent = word[i];
+    sp.style.setProperty('--tilt', tilts[i % tilts.length] + 'deg');
+    bEl.insertBefore(sp, pen);
+    spans.push(sp);
+  }
+
+  const LETTER_GAP = 72; // ms between letters
+  const START      = 2050; // ms after page load — after strike lands
+
+  // reveal letters one by one, pen hops ahead
+  spans.forEach((sp, i) => {
+    const t = START + i * LETTER_GAP;
+    setTimeout(() => {
+      pen.classList.add('visible');
+      sp.classList.add('in');
+      // move pen after each letter by repositioning it after the next span
+      const next = spans[i + 1];
+      if (next) bEl.insertBefore(pen, next);
+      else { bEl.appendChild(pen); setTimeout(() => pen.classList.remove('visible'), 120); }
+    }, t);
+  });
+
+  // underline draws after last letter
+  const ulineDelay = START + word.length * LETTER_GAP + 180;
+  bEl.style.setProperty('--uline-delay', ulineDelay + 'ms');
+})();
+
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>nav.classList.toggle('sc',scrollY>20),{passive:true});
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.14,rootMargin:'0px 0px -40px 0px'});
