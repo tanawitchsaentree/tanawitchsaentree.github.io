@@ -23,44 +23,70 @@ function mkRng(seed: number) {
 // ── Per-project draw functions ────────────────────────────────
 
 function drawVoronoi(ctx: CanvasRenderingContext2D, w: number, h: number, t: number) {
-  const nodes: [number, number][] = [
-    [w*0.22, h*0.26], [w*0.74, h*0.22], [w*0.50, h*0.46],
-    [w*0.16, h*0.63], [w*0.80, h*0.59], [w*0.44, h*0.78],
+  // 3 hospital archetypes (root) + component atoms they share (leaves)
+  const ARCH = ['#0d9488', '#c97a0a', '#c0394b'] // District · Teaching · Specialty
+  const nodes: [number, number, string][] = [
+    [w*0.50, h*0.20, '#7c3aed'], // root — shared core
+    [w*0.22, h*0.48, ARCH[0]],   // District
+    [w*0.50, h*0.52, ARCH[1]],   // Teaching
+    [w*0.78, h*0.48, ARCH[2]],   // Specialty
+    [w*0.14, h*0.75, ARCH[0]],   // District leaf
+    [w*0.38, h*0.78, ARCH[1]],   // Teaching leaf
+    [w*0.62, h*0.78, ARCH[2]],   // Specialty leaf
+    [w*0.86, h*0.75, ARCH[2]],   // Specialty leaf 2
   ]
-  const edges: [number, number][] = [[0,2],[1,2],[2,3],[2,4],[3,5],[4,5],[0,3],[1,4]]
+  const edges: [number, number][] = [
+    [0,1],[0,2],[0,3],
+    [1,4],[2,5],[3,6],[3,7],
+  ]
 
-  // Static dim edges
+  // Dim static edges
   ctx.lineWidth = 0.8
   for (const [a, b] of edges) {
     ctx.strokeStyle = 'rgba(255,255,255,0.10)'
     ctx.beginPath(); ctx.moveTo(nodes[a][0], nodes[a][1]); ctx.lineTo(nodes[b][0], nodes[b][1]); ctx.stroke()
   }
 
-  // Animated active edge — yellow current tracing
-  const cycle = (t * 0.5) % edges.length
-  const ei = Math.floor(cycle)
-  const prog = cycle - ei
+  // Animated token-propagation pulse — traces one edge at a time
+  const cycle = (t * 0.45) % edges.length
+  const ei    = Math.floor(cycle)
+  const prog  = cycle - ei
   const [ea, eb] = edges[ei % edges.length]
   const ex = nodes[ea][0] + (nodes[eb][0] - nodes[ea][0]) * prog
   const ey = nodes[ea][1] + (nodes[eb][1] - nodes[ea][1]) * prog
+  const pulseAlpha = 0.75 * Math.sin(prog * Math.PI)
 
-  ctx.strokeStyle = `rgba(255,229,0,${0.7 * Math.sin(prog * Math.PI)})`
-  ctx.lineWidth = 1.8
+  ctx.strokeStyle = `rgba(255,229,0,${pulseAlpha})`
+  ctx.lineWidth = 1.6
   ctx.beginPath(); ctx.moveTo(nodes[ea][0], nodes[ea][1]); ctx.lineTo(ex, ey); ctx.stroke()
 
-  // Nodes
+  // Nodes — archetype colors, root pulses
   for (let i = 0; i < nodes.length; i++) {
-    const active = i === ea || i === eb
-    const r2 = active ? 5 + 1.5 * Math.sin(t * 4) : 3
-    ctx.beginPath(); ctx.arc(nodes[i][0], nodes[i][1], r2, 0, Math.PI*2)
-    ctx.fillStyle = active ? 'rgba(255,229,0,0.92)' : 'rgba(255,255,255,0.50)'; ctx.fill()
+    const nx  = nodes[i][0]
+    const ny  = nodes[i][1]
+    const col = nodes[i][2]
+    const isActive = i === ea || i === eb
+    const isRoot   = i === 0
+    const pulse    = isRoot ? 1.5 * Math.sin(t * 2.2) : 0
+    const r        = isRoot ? 5.5 + pulse : isActive ? 4.5 : 3
+
+    if (isRoot) {
+      const grad = ctx.createRadialGradient(nx, ny, 0, nx, ny, r * 3.5)
+      grad.addColorStop(0, `rgba(124,58,237,${0.25 + 0.1 * Math.sin(t * 2.2)})`)
+      grad.addColorStop(1, 'rgba(124,58,237,0)')
+      ctx.fillStyle = grad
+      ctx.beginPath(); ctx.arc(nx, ny, r * 3.5, 0, Math.PI * 2); ctx.fill()
+    }
+
+    ctx.beginPath(); ctx.arc(nx, ny, r, 0, Math.PI * 2)
+    ctx.fillStyle = isActive ? col : col + '99'
+    ctx.fill()
   }
 
-  // Label
-  const fs = Math.round(w * 0.032)
-  ctx.font = `400 ${fs}px 'Inter Variable', 'Inter', sans-serif`
-  ctx.fillStyle = 'rgba(255,255,255,0.22)'; ctx.textAlign = 'center'
-  ctx.fillText('FEDERATED', w/2, h*0.93)
+  const fs = Math.round(w * 0.030)
+  ctx.font = `400 ${fs}px 'JetBrains Mono', ui-monospace, monospace`
+  ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.textAlign = 'center'
+  ctx.fillText('FEDERATED · 3 ARCHETYPES', w/2, h*0.93)
 }
 
 function drawGaussian(ctx: CanvasRenderingContext2D, w: number, h: number, t: number) {
