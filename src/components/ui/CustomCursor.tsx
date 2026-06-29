@@ -138,7 +138,7 @@ export function CustomCursor() {
               position:      'absolute',
               top:           '100%',
               marginTop:     8,
-              fontFamily:    'monospace',
+              fontFamily:    "'League Spartan', sans-serif",
               fontSize:      9,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',

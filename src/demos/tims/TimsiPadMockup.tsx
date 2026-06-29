@@ -46,6 +46,7 @@ export function TimsiPadMockup() {
         ref={iframeRef}
         src="/demos/tims-pos.html"
         title="Tims POS — iPad terminal prototype"
+        tabIndex={-1}
         style={{
           width:      '100%',
           height:     '100%',
@@ -53,6 +54,7 @@ export function TimsiPadMockup() {
           display:    'block',
           opacity:    loaded ? 1 : 0,
           transition: `opacity .4s cubic-bezier(.16,1,.3,1)`,
+          pointerEvents: 'none',
         }}
         allow="autoplay"
         loading="lazy"

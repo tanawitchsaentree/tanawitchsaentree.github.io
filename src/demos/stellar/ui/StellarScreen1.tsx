@@ -179,7 +179,7 @@ const CSS = `
 const ICON_PLUS = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`
 const ICON_CHECK = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`
 
-export function StellarScreen1() {
+export function StellarScreen1({ preview = false }: { preview?: boolean }) {
   const screenRef  = useRef<HTMLDivElement>(null)
   const scrollRef  = useRef<HTMLDivElement>(null)
   const chatRef    = useRef<HTMLDivElement>(null)
@@ -242,7 +242,8 @@ export function StellarScreen1() {
   useEffect(() => {
     const screen = screenRef.current
     if (!screen) return
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+    /* preview = card cover — always run full animation regardless of OS setting */
+    const reduced = preview ? false : matchMedia('(prefers-reduced-motion: reduce)').matches
     let cancelled = false
     const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
     const sc = screen
@@ -407,6 +408,15 @@ export function StellarScreen1() {
     }
 
     renderRecipes('For you')
+
+    if (preview) {
+      /* card cover — load + play video, start loop immediately without waiting for IO */
+      const vid = videoRef.current
+      if (vid) { vid.load(); vid.play().catch(() => {}) }
+      setTimeout(loop, 700)
+      return () => { cancelled = true }
+    }
+
     const io = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
         // lazy-load + play video only when visible
@@ -423,11 +433,15 @@ export function StellarScreen1() {
     io.observe(screen)
     return () => { cancelled = true; io.disconnect() }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [preview])
 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
+      {/* In preview mode, force bot finger visible regardless of OS reduced-motion setting */}
+      {preview && (
+        <style dangerouslySetInnerHTML={{ __html: `.sbot-finger,.sbot-ripple{display:block!important}` }} />
+      )}
       <StellarPhone>
         <div ref={screenRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
           <div ref={scrollRef} className="s1-scroll">

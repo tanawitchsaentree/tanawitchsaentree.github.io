@@ -63,15 +63,14 @@ export function HomeClient({ projects }: HomeClientProps) {
     function readUrl() {
       const params = new URLSearchParams(window.location.search)
       setActiveSlug(params.get('project'))
-      // ?view=work lands straight into the work grid (e.g. back from a project page)
-      if (params.get('view') === 'work') {
-        setView('work')
+      const v = params.get('view') as View | null
+      if (v && v !== 'home') {
+        setView(v)
         setPortalPhase('open')
         setPortalEverOpened(true)
-        // Clean the param without re-navigating
-        const clean = new URL(window.location.href)
-        clean.searchParams.delete('view')
-        window.history.replaceState(null, '', clean.toString())
+      } else if (!v) {
+        // no ?view param = home
+        setView('home')
       }
     }
     readUrl()
@@ -104,12 +103,21 @@ export function HomeClient({ projects }: HomeClientProps) {
   }, [router])
 
   const activeProject = activeSlug ? (projects.find(p => p.slug === activeSlug) ?? null) : null
-  const goHome = useCallback(() => {
-    setView('home')
-    // Restore the open/split state so the three doors are visible immediately
+
+  const goToView = useCallback((v: View) => {
+    const url = new URL(window.location.href)
+    if (v === 'home') {
+      url.searchParams.delete('view')
+    } else {
+      url.searchParams.set('view', v)
+    }
+    window.history.pushState({}, '', url.toString())
+    setView(v)
     setPortalPhase('open')
     setPortalEverOpened(true)
   }, [])
+
+  const goHome = useCallback(() => goToView('home'), [goToView])
 
   return (
     <>
@@ -129,7 +137,7 @@ export function HomeClient({ projects }: HomeClientProps) {
           >
             {view === 'home' && (
               <PortalNav
-                onEnter={door => { setPortalPhase('open'); setView(door) }}
+                onEnter={door => goToView(door)}
                 phase={portalPhase}
                 setPhase={setPortalPhase}
                 everOpened={portalEverOpened}

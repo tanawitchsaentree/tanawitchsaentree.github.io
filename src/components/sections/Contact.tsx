@@ -95,10 +95,10 @@ export function Contact() {
 
         {/* Colophon */}
         <div className="flex flex-col items-center gap-1">
-          <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">
-            Set in Inter · Built with Next.js · GitHub Pages
+          <p className="text-[var(--type-xs)] text-[var(--fg-subtle)]" style={{ fontFamily: "'League Spartan', sans-serif", letterSpacing: '0.08em' }}>
+            Set in League Spartan · Built with Next.js · GitHub Pages
           </p>
-          <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">
+          <p className="text-[var(--type-xs)] text-[var(--fg-subtle)]" style={{ fontFamily: "'League Spartan', sans-serif", letterSpacing: '0.08em' }}>
             © {new Date().getFullYear()} Tanawitch Saentree
           </p>
         </div>

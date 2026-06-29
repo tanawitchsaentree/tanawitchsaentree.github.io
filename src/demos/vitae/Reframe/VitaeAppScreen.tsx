@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { V } from '../tokens'
 import { useFingerBot } from './useFingerBot'
+import { PhoneFrame } from '../PhoneFrame'
 
 // ── icons (inline SVG strings to avoid dependency) ─────────────────────────
 const IconUser  = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg>
@@ -80,7 +81,9 @@ export function VitaeAppScreen() {
     <>
       <style dangerouslySetInnerHTML={{ __html: APP_CSS }} />
 
-      {/* screen — passed as children into the phone shell */}
+      <PhoneFrame>
+      {/* Fixed 390×844 shell — same approach as StellarScreen1 so scale() works correctly */}
+      <div style={{ position: 'relative', width: 390, height: 844, flexShrink: 0 }}>
       <div ref={screenRef} className="va-root">
 
         {/* top bar */}
@@ -164,6 +167,8 @@ export function VitaeAppScreen() {
         <div ref={rippleRef} className="va-ripple" />
         <div ref={fingerRef} className="va-finger" />
       </div>
+      </div>
+      </PhoneFrame>
     </>
   )
 }

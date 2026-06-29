@@ -89,7 +89,9 @@
   --fg-on-cover:         #FFFFFF;
   --fg-on-cover-muted:   rgba(255, 255, 255, 0.55);
   --fg-on-cover-subtle:  rgba(255, 255, 255, 0.50);
+  --fg-on-cover-border:  rgba(255, 255, 255, 0.25);
   --cover-vignette:      rgba(0, 0, 0, 0.60);
+  --cover-tims:          #DA291C;
 
   /* ── Semantic status — functional signal, NOT brand accent ──────────────
      The site's one mark is yellow. But interactive DEMOS need pass/fail/warn
