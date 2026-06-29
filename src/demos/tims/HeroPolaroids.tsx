@@ -1,16 +1,15 @@
 'use client'
 
 import { useState, useCallback, useRef } from 'react'
-import Image from 'next/image'
 import styles from './HeroPolaroids.module.css'
 
 const PHOTOS = [
-  { src: '/images/timhortons/heroes-1.png', caption: '5am. snow. clocked in.' },
-  { src: '/images/timhortons/heroes6.png',  caption: 'day one'            },
-  { src: '/images/timhortons/hereos5.png',  caption: 'the floor'          },
-  { src: '/images/timhortons/heroes4.png',  caption: 'the case'           },
-  { src: '/images/timhortons/heroes-3.png', caption: 'fv cold brew. daily.' },
-  { src: '/images/timhortons/heroes-2.png', caption: 'the machine'        },
+  { base: '/images/timhortons/heroes-1', caption: '5am. snow. clocked in.' },
+  { base: '/images/timhortons/heroes6',  caption: 'day one'                },
+  { base: '/images/timhortons/hereos5',  caption: 'the floor'              },
+  { base: '/images/timhortons/heroes4',  caption: 'the case'               },
+  { base: '/images/timhortons/heroes-3', caption: 'fv cold brew. daily.'   },
+  { base: '/images/timhortons/heroes-2', caption: 'the machine'            },
 ]
 
 // Slot offsets: index 0 = top (front), last = bottom (back)
@@ -90,9 +89,10 @@ export function HeroPolaroids() {
             isArcCard ? styles.arcCard : '',
           ].filter(Boolean).join(' ')
 
+          const photo = PHOTOS[photoIdx]
           return (
             <div
-              key={PHOTOS[photoIdx].src}
+              key={photo.base}
               className={cardClass}
               style={{
                 '--rot': `${offset.rot}deg`,
@@ -106,18 +106,23 @@ export function HeroPolaroids() {
             >
               <div className={styles.frame}>
                 <div className={styles.photoWrap}>
-                  <Image
-                    src={PHOTOS[photoIdx].src}
-                    alt={PHOTOS[photoIdx].caption}
-                    width={220}
-                    height={258}
-                    className={styles.photo}
-                    loading={depth <= 1 ? 'eager' : 'lazy'}
-                    draggable={false}
-                  />
+                  <picture>
+                    <source srcSet={`${photo.base}.avif`} type="image/avif" />
+                    <source srcSet={`${photo.base}.jpg`}  type="image/jpeg" />
+                    <img
+                      src={`${photo.base}.jpg`}
+                      alt={photo.caption}
+                      width={220}
+                      height={258}
+                      className={styles.photo}
+                      loading={depth <= 1 ? 'eager' : 'lazy'}
+                      decoding={depth <= 1 ? 'sync' : 'async'}
+                      draggable={false}
+                    />
+                  </picture>
                 </div>
                 <figcaption className={styles.caption}>
-                  {PHOTOS[photoIdx].caption}
+                  {photo.caption}
                 </figcaption>
               </div>
             </div>

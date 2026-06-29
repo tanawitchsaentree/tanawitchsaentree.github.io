@@ -47,10 +47,10 @@ export function PhoneShell({
       />
 
       {/* Side buttons */}
-      <div style={{ position: 'absolute', left: -3, top: 100, width: 3, height: 32, background: '#2a2a2a', borderRadius: '2px 0 0 2px' }} aria-hidden />
-      <div style={{ position: 'absolute', left: -3, top: 144, width: 3, height: 56, background: '#2a2a2a', borderRadius: '2px 0 0 2px' }} aria-hidden />
-      <div style={{ position: 'absolute', left: -3, top: 212, width: 3, height: 56, background: '#2a2a2a', borderRadius: '2px 0 0 2px' }} aria-hidden />
-      <div style={{ position: 'absolute', right: -3, top: 160, width: 3, height: 80, background: '#2a2a2a', borderRadius: '0 2px 2px 0' }} aria-hidden />
+      <div style={{ position: 'absolute', left: -3, top: 100, width: 3, height: 32, background: V.color.phoneButtonEdge, borderRadius: '2px 0 0 2px' }} aria-hidden />
+      <div style={{ position: 'absolute', left: -3, top: 144, width: 3, height: 56, background: V.color.phoneButtonEdge, borderRadius: '2px 0 0 2px' }} aria-hidden />
+      <div style={{ position: 'absolute', left: -3, top: 212, width: 3, height: 56, background: V.color.phoneButtonEdge, borderRadius: '2px 0 0 2px' }} aria-hidden />
+      <div style={{ position: 'absolute', right: -3, top: 160, width: 3, height: 80, background: V.color.phoneButtonEdge, borderRadius: '0 2px 2px 0' }} aria-hidden />
 
       {/* Screen */}
       <div

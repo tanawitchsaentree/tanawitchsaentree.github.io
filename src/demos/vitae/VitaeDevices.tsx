@@ -6,7 +6,7 @@ import { StatisticsScreen } from './StatisticsScreen'
 
 export function VitaeDevices() {
   return (
-    <section id="build" style={{ paddingBottom: 'clamp(5rem,12vw,10rem)' }}>
+    <section id="build" style={{ padding: 'clamp(4.5rem,10vw,8rem) 0 clamp(5rem,12vw,10rem)' }}>
       <div className="vitae-wrap">
         <div
           className="vitae-animate"

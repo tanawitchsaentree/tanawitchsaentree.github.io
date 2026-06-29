@@ -1,5 +1,6 @@
 'use client'
 
+import type { ReactNode } from 'react'
 import { V } from './tokens'
 import { PhoneShell } from './ui/PhoneShell'
 import { StatusBar }  from './ui/StatusBar'
@@ -16,7 +17,7 @@ function Avatar() {
 }
 
 /* ── Icon button ─────────────────────────────────────── */
-function IconBtn({ children }: { children: React.ReactNode }) {
+function IconBtn({ children }: { children: ReactNode }) {
   return (
     <span style={{ width: 34, height: 34, borderRadius: '50%', background: V.color.white, display: 'grid', placeContent: 'center', boxShadow: V.shadow.sm, color: V.color.inkSoft, flexShrink: 0 }}>
       {children}
@@ -48,14 +49,14 @@ function WeeklyProgressCard() {
   return (
     <div style={{ margin: '0 14px 10px', background: `linear-gradient(120deg,${V.color.limeCard},${V.color.limeSoft})`, borderRadius: 22, padding: '14px 16px', position: 'relative', overflow: 'hidden' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, color: V.color.limeDeep, marginBottom: 6 }}>
-        <span style={{ width: 18, height: 18, borderRadius: 6, background: 'rgba(255,255,255,0.7)', display: 'grid', placeContent: 'center' }}>⚡</span>
+        <span style={{ width: 18, height: 18, borderRadius: 6, background: V.alpha.white70, display: 'grid', placeContent: 'center' }}>⚡</span>
         Daily intake
       </div>
       <h5 style={{ fontFamily: V.font.sans, fontWeight: 700, fontSize: 20, lineHeight: 1.2, color: V.color.limeText, maxWidth: 140, margin: 0 }}>
         Your Weekly<br />Progress
       </h5>
       {/* Ring */}
-      <div style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', width: 60, height: 60, borderRadius: '50%', background: `conic-gradient(${V.color.white} 0 78%, rgba(255,255,255,0.3) 78% 100%)`, display: 'grid', placeContent: 'center' }}>
+      <div style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', width: 60, height: 60, borderRadius: '50%', background: `conic-gradient(${V.color.white} 0 78%, ${V.alpha.white30} 78% 100%)`, display: 'grid', placeContent: 'center' }}>
         <div style={{ position: 'absolute', inset: 7, borderRadius: '50%', background: V.color.limeCard }} />
         <span style={{ position: 'relative', textAlign: 'center', lineHeight: 1, color: V.color.limeText }}>
           <b style={{ fontSize: 17, fontWeight: 700, display: 'block' }}>6</b>

@@ -32,7 +32,7 @@ export function VitaeNav() {
         backdropFilter:   'blur(14px) saturate(150%)',
         background:       scrolled ? V.alpha.paper82 : V.alpha.paper60,
         borderBottom:     scrolled ? `1px solid ${V.alpha.ink10}` : '1px solid transparent',
-        transition:       `border-color 400ms ${V.ease.quart}, background 400ms ${V.ease.quart}`,
+        transition:       `border-color ${V.motion.durationNav} ${V.ease.quart}, background ${V.motion.durationNav} ${V.ease.quart}`,
       }}
     >
       {/* left: back to work */}
@@ -67,8 +67,8 @@ export function VitaeNav() {
           fontFamily: V.font.sans,
         }}
       >
-        {(['Process', 'Phases', 'The Build', 'Outcome'] as const).map((label, i) => {
-          const href = ['#loop', '#phases', '#build', '#outcome'][i]
+        {(['The room', 'The reframe', 'The loop', 'The calls', 'What moved'] as const).map((label, i) => {
+          const href = ['#room', '#reframe', '#loop', '#forks', '#moved'][i]
           return (
             <a
               key={label}

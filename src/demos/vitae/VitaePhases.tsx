@@ -125,7 +125,7 @@ function MiniCard({ icon, title, body }: { icon: string; title: string; body: st
             display:      'grid',
             placeContent: 'center',
             color:        V.color.limeDeep,
-            fontSize:     13,
+            fontSize:     V.size.cap,
             flexShrink:   0,
           }}
         >
