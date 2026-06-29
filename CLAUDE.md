@@ -33,7 +33,8 @@ Never submit UI work without an audit report.
 
 ## Hard constraints
 
-- Never use Inter, Geist, system-ui as font-family
+- Portfolio shell font: **League Spartan** only — never Inter, Geist, JetBrains Mono, system-ui
+- Project demos keep their own fonts (Bricolage Grotesque, Space Mono, etc.) scoped to their surface
 - Never hardcode #000 or #FFF — use token variables
 - Never use `ease` or `linear` as animation easing
 - Demo logic goes in `src/demos/` — page files stay thin

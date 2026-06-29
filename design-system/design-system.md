@@ -64,29 +64,33 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
 
 ## Typography
 
-> **Direction: Typewriter / monospace (เครื่องพิมพ์ดีด).** The entire site is set in
-> one monospace face. Hierarchy comes from **size, weight, and case** — never from a
-> second typeface. Monospace glyphs carry ~0.6em advance width, so display sizes run
-> physically wider than a proportional face: keep the scale restrained and tracking
-> near-neutral. This direction deliberately supersedes the earlier serif spec.
+> **Direction: Bold geometric sans.** The portfolio shell is set in one face — League
+> Spartan. Hierarchy comes from **size, weight, and case**. Each project keeps its own
+> typeface identity (Bricolage Grotesque for Tims, Space Mono for Tims KDS, etc.) —
+> the shell is the neutral canvas, the projects are individual.
 
-### The one typeface
-- Font: **JetBrains Mono** (weights 300 / 400 / 500 / 700)
-- Fallback: `ui-monospace`, `SFMono-Regular`, `monospace`
-- Used for display, body, eyebrows, meta — everything
+### Portfolio shell typeface
+- Font: **League Spartan** (weights 400 / 500 / 600 / 700 / 800)
+- Fallback: `sans-serif`
+- Used for: nav, home grid, eyebrows, body copy, meta — everything in the shell
 
-### Display (headings, hero, thesis)
-- Weight: 400 (regular) — let scale, not weight, carry the hero
-- Letter-spacing: -0.02em hero, -0.015em sub-headings (mono is already wide; never crush it)
-- Line-height: 1.05 hero, 1.15 sub-headings
+### Project typefaces (individual, scoped to their demo surface)
+- **Tims**: Bricolage Grotesque (display) + DM Sans (body) + Space Mono (mono/KDS)
+- **Invitrace**: Bricolage Grotesque + DM Sans + Space Mono (in standalone HTML)
+- **Vitae / others**: their own scoped tokens — never bleed into the shell
+
+### Display (headings, hero, thesis) — shell
+- Weight: 700–800 for hero, 600 for sub-headings
+- Letter-spacing: -0.03em hero, -0.02em sub-headings
+- Line-height: 1.0 hero, 1.1 sub-headings
 - Sizes (token-driven — see `tokens.css`):
   - Hero display: clamp(2rem, 5.5vw, 4.5rem)
   - Sub-case thesis: clamp(1.5rem, 4vw, 3rem)
   - Principle name: clamp(1.375rem, 3vw, 2.5rem)
 
-### Body (paragraphs, button labels, eyebrows)
+### Body (paragraphs, button labels, eyebrows) — shell
 - Weight: 400 body, 500 for emphasis
-- Letter-spacing: 0 body, 0.1em eyebrow/meta (uppercase)
+- Letter-spacing: 0 body, 0.08em eyebrow/meta (uppercase)
 - Line-height: 1.6 body, 1.2 eyebrow
 - Sizes:
   - Body: 17px desktop / 16px mobile
@@ -95,11 +99,12 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
   - Footer/meta: 11–12px
 
 ### Hard rules
-- ❌ Inter, Geist, Geist Mono, system-ui — never (default AI feel)
-- ❌ Any second typeface — the site is mono-only; hierarchy = size/weight/case
+- ❌ Inter, Geist, Geist Mono, system-ui in the shell — default AI feel
+- ❌ JetBrains Mono in the shell — was the old direction, now project-only
+- ❌ A second typeface in the shell — League Spartan only; hierarchy = size/weight/case
 - ❌ Text smaller than 16px outside of meta/eyebrow
 - ❌ More than 3 typographic hierarchies in a single column
-- ❌ Tracking tighter than -0.02em on mono (cramps the glyphs)
+- ❌ Tracking tighter than -0.03em (cramps Spartan's geometric forms)
 
 ## Spacing
 

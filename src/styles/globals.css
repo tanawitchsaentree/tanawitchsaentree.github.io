@@ -25,7 +25,7 @@
   }
 
   body {
-    font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    font-family: 'League Spartan', sans-serif;
     font-size: var(--type-base);
     line-height: 1.6;
     letter-spacing: 0;
@@ -57,9 +57,9 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    font-family: 'League Spartan', sans-serif;
     line-height: 1.1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
     color: var(--fg);
     margin: 0;
   }
@@ -170,7 +170,7 @@
 .universe-switcher__item {
   padding: 8px 16px;
   border-radius: 9999px;
-  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-family: 'League Spartan', sans-serif;
   font-size: var(--type-xs);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -256,7 +256,7 @@ html.modal-open {
    blinks once typing completes. Sized to the current font via `em`. */
 .tw-caret {
   display: inline-block;
-  width: 0.56em;          /* ≈ one monospace advance */
+  width: 0.6em;          /* ≈ one monospace advance */
   height: 0.92em;
   margin-right: 0.04em;
   transform: translateY(0.08em);
@@ -310,14 +310,14 @@ html.modal-open {
 
 /* ─── Universe prose (SubCase content HTML) ─────────────────── */
 .prose-sub-case {
-  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-family: 'League Spartan', sans-serif;
   font-size: var(--type-base);
   line-height: 1.75;
   color: var(--fg-muted);
 }
 
 .prose-sub-case h2 {
-  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-family: 'League Spartan', sans-serif;
   font-weight: normal;
   font-size: var(--type-xl);
   line-height: 1.2;
@@ -328,7 +328,7 @@ html.modal-open {
 }
 
 .prose-sub-case h3 {
-  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-family: 'League Spartan', sans-serif;
   font-weight: 500;
   font-size: var(--type-base);
   color: var(--fg);
@@ -361,7 +361,7 @@ html.modal-open {
   content: "—";
   position: absolute;
   left: 0;
-  font-family: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  font-family: 'League Spartan', sans-serif;
   color: var(--accent-text);
 }
 

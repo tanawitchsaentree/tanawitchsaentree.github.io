@@ -6,8 +6,7 @@
   --color-white: #FFFFFF;
   --color-black: #0A0A0A;
 
-  /* Typography scale — recalibrated for monospace (≈0.6em advance per glyph,
-     so display steps run physically wider than a proportional face). */
+  /* Typography scale — League Spartan (geometric bold sans, proportional). */
   --type-xs:   0.75rem;
   --type-sm:   0.875rem;
   --type-base: 1rem;
