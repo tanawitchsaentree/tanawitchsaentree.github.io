@@ -54,7 +54,7 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
   ].sort((a, b) => a.order - b.order)
 
   const featured  = allProjects[0]
-  const gridItems = allProjects.slice(1, 4)
+  const gridItems = allProjects.slice(1, 5)
 
   return (
     <section id="work" aria-label="Selected work" className="w-full">
@@ -104,7 +104,7 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
           }}>
             <div style={{
               display:             'grid',
-              gridTemplateColumns: `repeat(${gridItems.length}, 1fr)`,
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))',
               gap:                 'var(--space-4)',
             }}>
               {gridItems.map((project, i) => (
