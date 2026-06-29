@@ -126,10 +126,13 @@ export function ClaimsSkeleton() {
                 {POLICIES.map(p => <PolicyRow key={p.id} p={p} />)}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginTop: '1rem', flexWrap: 'wrap' }}>
                   <span
+                    role="button"
+                    tabIndex={-1}
                     onClick={() => setWhyVisible(true)}
+                    onKeyDown={e => e.key === 'Enter' && setWhyVisible(true)}
                     style={{ fontFamily: C.font.mono, fontSize: '.7rem', color: C.color.fail, opacity: whyVisible ? 1 : 0, transition: `opacity .3s ${C.ease.std}`, marginRight: 'auto', cursor: 'default', maxWidth: '60%' }}
                   >
-                    why disabled? you can't even see the skeleton you're matching against
+                    why disabled? you can&apos;t even see the skeleton you&apos;re matching against
                   </span>
                   <button
                     onClick={() => setWhyVisible(true)}
@@ -157,7 +160,9 @@ export function ClaimsSkeleton() {
           {/* New flow modal */}
           {view === 'new' && (
             <div
+              role="presentation"
               onClick={e => { if (e.target === e.currentTarget) setModalOpen(false) }}
+              onKeyDown={e => e.key === 'Escape' && setModalOpen(false)}
               style={{
                 position: 'absolute', inset: 0,
                 background: C.color.overlay,
@@ -193,7 +198,14 @@ export function ClaimsSkeleton() {
                   {POLICIES.map(p => (
                     <div
                       key={p.id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => {
+                        if (!p.ok) { setPeeked(peeked === p.id ? null : p.id); return }
+                        setSelected(p.id); setPeeked(null)
+                      }}
+                      onKeyDown={e => {
+                        if (e.key !== 'Enter' && e.key !== ' ') return
                         if (!p.ok) { setPeeked(peeked === p.id ? null : p.id); return }
                         setSelected(p.id); setPeeked(null)
                       }}
@@ -257,7 +269,7 @@ export function ClaimsSkeleton() {
         </div>
 
         <p className="claims-animate claims-d2" style={{ fontSize: '.95rem', color: C.color.tx, maxWidth: '64ch', marginTop: '1.6rem', lineHeight: 1.6, paddingLeft: '.9rem', borderLeft: `2px solid ${C.color.live}` }}>
-          <b style={{ color: C.color.txHi }}>the detail that only exists in a real build:</b> policy #2 matches the client but its date is out of period. without it, the date rule is never demonstrated — the client check short-circuits first. that decision doesn't fit in a Figma file.
+          <b style={{ color: C.color.txHi }}>the detail that only exists in a real build:</b> policy #2 matches the client but its date is out of period. without it, the date rule is never demonstrated — the client check short-circuits first. that decision doesn&apos;t fit in a Figma file.
         </p>
       </div>
     </section>

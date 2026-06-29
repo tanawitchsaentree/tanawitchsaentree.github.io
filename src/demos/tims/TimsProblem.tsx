@@ -270,7 +270,7 @@ function DecodePanel() {
       </span>
 
       <h3 style={{ fontFamily: T.font.display, fontWeight: 800, fontSize: 'clamp(1.5rem,3.6vw,2.05rem)', lineHeight: 1.12, letterSpacing: '-.02em', margin: '1.1rem 0 2rem', color: '#f3ede2' }}>
-        You don't type the order. <span style={{ color: T.color.gold }}>You translate it — fast.</span>
+        You don&apos;t type the order. <span style={{ color: T.color.gold }}>You translate it — fast.</span>
       </h3>
 
       <div style={{ fontFamily: T.font.mono, fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: '#988d7c', marginBottom: '.7rem' }}>
@@ -289,7 +289,7 @@ function DecodePanel() {
       <div ref={tapsRef} style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', minHeight: '6rem', alignContent: 'flex-start' }} />
 
       <p style={{ marginTop: '1.5rem', fontSize: '.92rem', lineHeight: 1.5, color: '#b3a896', maxWidth: '44ch' }}>
-        One breath from the customer turns into a handful of taps for me — found and hit before the next car. The screen's only job is to make that translation{' '}
+        One breath from the customer turns into a handful of taps for me — found and hit before the next car. The screen&apos;s only job is to make that translation{' '}
         <b style={{ color: '#f3ede2' }}>disappear</b>.
       </p>
     </div>
@@ -305,7 +305,7 @@ const TAKES = [
   },
   {
     icon: <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><circle cx={12} cy={13} r={8}/><path d="M12 9v4l2.5 2.5M12 1h0M9 1h6"/></svg>,
-    title: "Speed isn't an opinion.",
+    title: "Speed isn’t an opinion.",
     body:  'It was a glowing number on the wall, judging me on every single car. The screen had to keep up with my hands, not the other way around.',
   },
   {

@@ -30,7 +30,7 @@ export function ClaimsLoop() {
           </div>
           <h2 style={{ fontFamily: C.font.display, fontWeight: 700, fontSize: 'clamp(1.7rem,3.8vw,2.8rem)', lineHeight: 1.08, letterSpacing: '-.02em', color: C.color.txHi, maxWidth: '20ch', margin: 0 }}>
             Build and verify{' '}
-            <span style={{ color: C.color.live }}>can't be the same prompt.</span>
+            <span style={{ color: C.color.live }}>can&apos;t be the same prompt.</span>
           </h2>
           <p style={{ fontSize: 'clamp(1rem,1.5vw,1.12rem)', color: C.color.tx, maxWidth: '60ch', marginTop: '1.1rem', lineHeight: 1.66 }}>
             Requirement in → audit what exists → one precise build prompt → a <b style={{ fontWeight: 600, color: C.color.txHi }}>separate</b> verify pass → ship, checked against the acceptance criteria.
@@ -109,7 +109,7 @@ export function ClaimsLoop() {
         </div>
 
         <p className="claims-animate claims-d2" style={{ fontFamily: C.font.mono, fontSize: '.74rem', color: C.color.txDim, marginTop: '1.2rem', paddingLeft: '.9rem', borderLeft: `2px solid ${C.color.lineBri}`, maxWidth: '58ch', lineHeight: 1.6 }}>
-          <b style={{ color: C.color.live, fontWeight: 500 }}>why it matters —</b> ask one agent to "do X and verify X" and you get a self-justifying report. once it claimed save-error-handling done with a <em style={{ fontStyle: 'normal', color: C.color.live }}>try/finally and no catch</em>. a separate verifier reads the evidence instead of the builder's word.
+          <b style={{ color: C.color.live, fontWeight: 500 }}>why it matters —</b> ask one agent to &ldquo;do X and verify X&rdquo; and you get a self-justifying report. once it claimed save-error-handling done with a <em style={{ fontStyle: 'normal', color: C.color.live }}>try/finally and no catch</em>. a separate verifier reads the evidence instead of the builder&apos;s word.
         </p>
       </div>
     </section>

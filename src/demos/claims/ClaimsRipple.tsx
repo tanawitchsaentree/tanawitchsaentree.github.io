@@ -68,7 +68,10 @@ export function ClaimsRipple() {
               {BLOCKERS.map(b => (
                 <div
                   key={b.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => toggle(b.id)}
+                  onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && toggle(b.id)}
                   style={{
                     border: `1px solid ${open === b.id ? C.color.live : C.color.line}`,
                     borderRadius: 8, marginBottom: '.5rem', background: C.color.inset,

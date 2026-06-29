@@ -19,7 +19,7 @@ export function ClaimsLimits() {
           </div>
           <h2 style={{ fontFamily: C.font.display, fontWeight: 700, fontSize: 'clamp(1.7rem,3.8vw,2.8rem)', lineHeight: 1.08, letterSpacing: '-.02em', color: C.color.txHi, maxWidth: '20ch', margin: 0 }}>
             Not a religion.{' '}
-            <span style={{ color: C.color.live }}>Here's where it breaks.</span>
+            <span style={{ color: C.color.live }}>Here&apos;s where it breaks.</span>
           </h2>
         </div>
 
