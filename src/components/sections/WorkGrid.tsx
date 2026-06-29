@@ -3,6 +3,7 @@
 import type { ProjectFrontmatter } from '@/types/project'
 import { WorkGridFeaturedCard } from './WorkGridFeaturedCard'
 import { WorkGridCard } from './WorkGridCard'
+import { WorkListRow } from './WorkListRow'
 
 // ── Routing ────────────────────────────────────────────────────
 const UNIVERSE_SLUGS: Record<string, string> = {
@@ -53,8 +54,9 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
     ...inGridProjects,
   ].sort((a, b) => a.order - b.order)
 
-  const featured  = allProjects[0]
-  const gridItems = allProjects.slice(1, 5)
+  const featured   = allProjects[0]
+  const gridItems  = allProjects.slice(1, 4)
+  const listItems  = allProjects.slice(4)
 
   return (
     <section id="work" aria-label="Selected work" className="w-full">
@@ -104,7 +106,7 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
           }}>
             <div style={{
               display:             'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))',
+              gridTemplateColumns: 'repeat(3, 1fr)',
               gap:                 'var(--space-4)',
             }}>
               {gridItems.map((project, i) => (
@@ -119,6 +121,23 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
                 />
               ))}
             </div>
+          </div>
+        )}
+
+        {listItems.length > 0 && (
+          <div style={{ marginTop: 'var(--space-10)' }}>
+            {listItems.map((project, i) => (
+              <WorkListRow
+                key={project.slug}
+                project={project}
+                index={gridItems.length + i + 1}
+                locked={LOCKED.has(project.slug)}
+                onOpen={onOpenProject}
+                onNavigate={onNavigate}
+                universePath={UNIVERSE_SLUGS[project.slug]}
+              />
+            ))}
+            <div style={{ height: 1, background: 'var(--border)' }} />
           </div>
         )}
       </div>
