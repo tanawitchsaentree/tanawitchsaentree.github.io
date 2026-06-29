@@ -92,6 +92,9 @@
   --fg-on-cover-border:  rgba(255, 255, 255, 0.25);
   --cover-vignette:      rgba(0, 0, 0, 0.60);
   --cover-tims:          #DA291C;
+  --cover-stellar:       #14A800;   /* Stellareat brand green */
+  --cover-vitae:         #6FA01C;   /* Vitae health green     */
+  --cover-invitrace:     var(--arch-root); /* #6B5BD6 — reuses arch token */
 
   /* ── Semantic status — functional signal, NOT brand accent ──────────────
      The site's one mark is yellow. But interactive DEMOS need pass/fail/warn

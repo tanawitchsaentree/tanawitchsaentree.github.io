@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, Suspense, lazy } from 'react'
+import { useCallback, Suspense, lazy, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ProjectFrontmatter } from '@/types/project'
 import { LockGlyph, Tags } from './WorkGridAtoms'
@@ -30,18 +30,21 @@ const OVERLAY_INSET_TOP = 24  // px — breathing room above phone in overlay va
 // variant 'overlay' → component full-bleed, dark gradient scrim, white text over
 // Both Invitrace slugs share the same cover intentionally — same design system, different case.
 type CoverDef = {
-  Component: React.ComponentType
-  zoom:      number
-  variant:   'split' | 'overlay'
+  Component:   React.ComponentType
+  zoom:        number
+  variant:     'split' | 'overlay'
+  accentColor: string
 }
 export const COVERS: Record<string, CoverDef> = {
-  'invitrace-design-system':    { Component: InvitraceCover, zoom: 0.42, variant: 'split'   },
-  'allianz-doc-classification': { Component: InvitraceCover, zoom: 0.42, variant: 'split'   }, // same cover — both are Invitrace system work
-  'stellareat':                 { Component: StellarCover,   zoom: 0.85, variant: 'overlay' },
-  'vitae':                      { Component: VitaeCover,     zoom: 0.85, variant: 'overlay' },
+  'invitrace-design-system':    { Component: InvitraceCover, zoom: 0.42, variant: 'split',   accentColor: 'var(--cover-invitrace)' },
+  'allianz-doc-classification': { Component: InvitraceCover, zoom: 0.42, variant: 'split',   accentColor: 'var(--cover-invitrace)' },
+  'stellareat':                 { Component: StellarCover,   zoom: 0.85, variant: 'overlay', accentColor: 'var(--cover-stellar)'   },
+  'vitae':                      { Component: VitaeCover,     zoom: 0.85, variant: 'overlay', accentColor: 'var(--cover-vitae)'     },
 }
 
-const EASE_DECISIVE = [0.16, 1, 0.3, 1] as const
+const EASE_DECISIVE  = [0.16, 1, 0.3, 1] as const
+const DURATION_SLOW  = 0.48   // matches --duration-slow: 480ms
+const STAGGER_DELAY  = 0.07   // per-card entrance stagger (seconds)
 
 // ── Types ──────────────────────────────────────────────────────
 interface Props {
@@ -57,6 +60,8 @@ interface Props {
 export function WorkGridCard({ project, index, locked, onOpen, onNavigate, universePath }: Props) {
   const reduced = useReducedMotion()
   const cover   = COVERS[project.slug]
+  const [hovered, setHovered] = useState(false)
+  const accent  = cover?.accentColor ?? 'var(--fg-subtle)'
 
   const handleClick = useCallback(() => {
     if (universePath) onNavigate(universePath)
@@ -67,27 +72,43 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
     <motion.button
       type="button"
       onClick={handleClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '0px 0px -64px 0px' }}
-      transition={{ duration: 0.5, delay: index * 0.07, ease: EASE_DECISIVE }}
+      transition={{ duration: DURATION_SLOW, delay: index * STAGGER_DELAY, ease: EASE_DECISIVE }}
       className="group relative w-full text-left border-none cursor-pointer p-0"
       style={{
         height:       CARD_H,
         borderRadius: 'var(--radius-xl)',
-        background:   cover?.variant === 'overlay' ? 'var(--color-black)' : 'var(--bg-elevated)',
+        background:   cover?.variant === 'overlay'
+          ? `color-mix(in srgb, ${accent} 18%, var(--color-black))`
+          : `color-mix(in srgb, ${accent} 8%, var(--bg-elevated))`,
         fontFamily:   "'League Spartan', sans-serif",
         overflow:     'hidden',
         boxShadow:    'var(--shadow-sm)',
         display:      'block',
+        transition:   reduced ? undefined : 'background var(--duration-slow) var(--ease-out-standard)',
       }}
       aria-label={`${project.title}${locked ? ' (password-protected)' : ''}`}
     >
+      {/* Hover accent gradient */}
+      <div aria-hidden="true" style={{
+        position:      'absolute',
+        inset:         0,
+        background:    `radial-gradient(ellipse 80% 60% at 15% 110%, color-mix(in srgb, ${accent} 40%, transparent), transparent 65%)`,
+        opacity:       hovered ? 1 : 0,
+        transition:    reduced ? undefined : 'opacity var(--duration-slow) var(--ease-out-standard)',
+        pointerEvents: 'none',
+        zIndex:        10,
+      }} />
+
       {cover?.variant === 'overlay' ? (
         /* ── Overlay variant: full-bleed component + dark scrim + white text ── */
         <>
           {/* Component fills entire card — centered, crops sides, inset from top */}
-          <div aria-hidden="true" style={{
+          <div aria-hidden="true" data-demo style={{
             position:       'absolute',
             inset:          0,
             overflow:       'hidden',
@@ -166,7 +187,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
         /* ── Split variant: component top, solid text zone below ── */
         <>
           {cover && (
-            <div aria-hidden="true" style={{
+            <div aria-hidden="true" data-demo style={{
               position:       'absolute',
               top:            0,
               left:           0,
@@ -199,7 +220,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
             left:          0,
             right:         0,
             height:        48,
-            background:    'linear-gradient(to bottom, color-mix(in srgb, var(--bg-elevated) 0%, transparent), var(--bg-elevated))',
+            background:    `linear-gradient(to bottom, transparent, color-mix(in srgb, ${accent} 8%, var(--bg-elevated)))`,
             pointerEvents: 'none',
             zIndex:        2,
           }} />
@@ -217,7 +238,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
             flexDirection: 'column',
             gap:           'var(--space-2)',
             zIndex:        3,
-            background:    'var(--bg-elevated)',
+            background:    `color-mix(in srgb, ${accent} 8%, var(--bg-elevated))`,
             borderRadius:  '0 0 var(--radius-xl) var(--radius-xl)',
           }}>
             <h3 style={{

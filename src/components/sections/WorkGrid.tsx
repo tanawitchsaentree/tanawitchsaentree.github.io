@@ -82,6 +82,7 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
           <WorkGridFeaturedCard
             project={featured}
             locked={LOCKED.has(featured.slug)}
+            accentColor={featured.coverColor ?? 'var(--cover-tims)'}
             onOpen={onOpenProject}
             onNavigate={onNavigate}
             universePath={UNIVERSE_SLUGS[featured.slug]}

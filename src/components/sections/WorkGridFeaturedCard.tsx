@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, Suspense, lazy } from 'react'
+import { useCallback, Suspense, lazy, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ProjectFrontmatter } from '@/types/project'
 import { LockGlyph, Tags } from './WorkGridAtoms'
@@ -20,19 +20,22 @@ const IFRAME_H       = 750    // iframe native render height
 const TEXT_WIDTH     = '46%'  // left column width for title/summary
 
 const EASE_DECISIVE = [0.16, 1, 0.3, 1] as const
+const DURATION_SLOW = 0.48  // matches --duration-slow: 480ms
 
 // ── Types ──────────────────────────────────────────────────────
 interface Props {
-  project:    ProjectFrontmatter
-  locked:     boolean
-  onOpen:     (slug: string) => void
-  onNavigate: (href: string) => void
+  project:      ProjectFrontmatter
+  locked:       boolean
+  accentColor:  string
+  onOpen:       (slug: string) => void
+  onNavigate:   (href: string) => void
   universePath: string | undefined
 }
 
 // ── FeaturedCard ───────────────────────────────────────────────
-export function WorkGridFeaturedCard({ project, locked, onOpen, onNavigate, universePath }: Props) {
-  const reduced = useReducedMotion()
+export function WorkGridFeaturedCard({ project, locked, accentColor, onOpen, onNavigate, universePath }: Props) {
+  const reduced  = useReducedMotion()
+  const [hovered, setHovered] = useState(false)
 
   const handleClick = useCallback(() => {
     if (universePath) onNavigate(universePath)
@@ -56,22 +59,37 @@ export function WorkGridFeaturedCard({ project, locked, onOpen, onNavigate, univ
         initial={reduced ? { opacity: 0 } : { opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '0px 0px -64px 0px' }}
-        transition={{ duration: 0.5, ease: EASE_DECISIVE }}
+        transition={{ duration: DURATION_SLOW, ease: EASE_DECISIVE }}
         className="group relative w-full text-left border-none cursor-pointer p-0"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         style={{
           height:       CARD_HEIGHT,
           borderRadius: 'var(--radius-xl)',
-          background:   'var(--bg-elevated)',
+          background:   `color-mix(in srgb, ${accentColor} 12%, var(--bg-elevated))`,
           fontFamily:   "'League Spartan', sans-serif",
           overflow:     'visible',
           boxShadow:    'var(--shadow-sm)',
           display:      'block',
+          transition:   reduced ? undefined : 'background var(--duration-slow) var(--ease-out-standard)',
         }}
         aria-label={`${project.title}${locked ? ' (password-protected)' : ''}`}
       >
+        {/* Hover gradient — accent bleeds in from bottom-left */}
+        <div aria-hidden="true" style={{
+          position:   'absolute',
+          inset:      0,
+          borderRadius: 'var(--radius-xl)',
+          background: `radial-gradient(ellipse 70% 60% at 20% 110%, color-mix(in srgb, ${accentColor} 35%, transparent), transparent 70%)`,
+          opacity:    hovered ? 1 : 0,
+          transition: reduced ? undefined : 'opacity var(--duration-slow) var(--ease-out-standard)',
+          pointerEvents: 'none',
+        }} />
+
         {/* iPad — right side, bleeds below via clipPath on wrapper */}
         <div
           aria-hidden="true"
+          data-demo
           style={{
             position:      'absolute',
             right:         IPAD_RIGHT,
@@ -98,11 +116,11 @@ export function WorkGridFeaturedCard({ project, locked, onOpen, onNavigate, univ
             </Suspense>
           </div>
 
-          {/* Left-edge fade into card bg */}
+          {/* Left-edge fade into card bg (uses accentColor tinted bg) */}
           <div style={{
             position:      'absolute',
             inset:         0,
-            background:    'linear-gradient(to right, var(--bg-elevated) 0%, color-mix(in srgb, var(--bg-elevated) 50%, transparent) 25%, transparent 55%)',
+            background:    `linear-gradient(to right, color-mix(in srgb, ${accentColor} 12%, var(--bg-elevated)) 0%, color-mix(in srgb, ${accentColor} 6%, var(--bg-elevated)) 25%, transparent 55%)`,
             pointerEvents: 'none',
           }} />
         </div>
