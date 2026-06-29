@@ -83,26 +83,22 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
         height:       CARD_H,
         borderRadius: 'var(--radius-xl)',
         background:   cover?.variant === 'overlay'
-          ? `color-mix(in srgb, ${accent} 18%, var(--color-black))`
+          ? `linear-gradient(160deg, color-mix(in srgb, ${accent} 32%, var(--color-black)) 0%, color-mix(in srgb, ${accent} 8%, var(--color-black)) 100%)`
           : `color-mix(in srgb, ${accent} 8%, var(--bg-elevated))`,
         fontFamily:   "'League Spartan', sans-serif",
         overflow:     'hidden',
-        boxShadow:    'var(--shadow-sm)',
+        boxShadow:    hovered
+          ? '0 8px 32px -8px rgba(0,0,0,0.22), 0 2px 8px -2px rgba(0,0,0,0.12)'
+          : 'var(--shadow-sm)',
+        transform:    hovered ? 'translateY(-2px)' : 'translateY(0)',
         display:      'block',
-        transition:   reduced ? undefined : 'background var(--duration-slow) var(--ease-out-standard)',
+        transition:   reduced ? undefined : [
+          'box-shadow var(--duration-slow) var(--ease-out-standard)',
+          'transform var(--duration-slow) var(--ease-out-standard)',
+        ].join(', '),
       }}
       aria-label={`${project.title}${locked ? ' (password-protected)' : ''}`}
     >
-      {/* Hover accent gradient */}
-      <div aria-hidden="true" style={{
-        position:      'absolute',
-        inset:         0,
-        background:    `radial-gradient(ellipse 80% 60% at 15% 110%, color-mix(in srgb, ${accent} 40%, transparent), transparent 65%)`,
-        opacity:       hovered ? 1 : 0,
-        transition:    reduced ? undefined : 'opacity var(--duration-slow) var(--ease-out-standard)',
-        pointerEvents: 'none',
-        zIndex:        10,
-      }} />
 
       {cover?.variant === 'overlay' ? (
         /* ── Overlay variant: full-bleed component + dark scrim + white text ── */
@@ -131,11 +127,11 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
             </div>
           </div>
 
-          {/* Dark gradient scrim — bottom 80% fades to near-black */}
+          {/* Bottom scrim — accent-tinted dark, not pure black */}
           <div aria-hidden="true" style={{
             position:      'absolute',
             inset:         0,
-            background:    `linear-gradient(to bottom, transparent 20%, color-mix(in srgb, var(--color-black) 55%, transparent) 55%, color-mix(in srgb, var(--color-black) 88%, transparent) 100%)`,
+            background:    `linear-gradient(to bottom, transparent 15%, color-mix(in srgb, ${accent} 12%, var(--color-black)) 50%, color-mix(in srgb, ${accent} 22%, var(--color-black)) 100%)`,
             pointerEvents: 'none',
           }} />
 
