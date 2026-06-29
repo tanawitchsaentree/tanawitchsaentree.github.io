@@ -383,7 +383,8 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
           goBtn = await runChat("What can I make with what's in my fridge?")
         }
         await wait(1200)
-        if (goBtn) await bot.current.tap(goBtn, () => {})
+        /* preview mode: skip tapping goBtn — it would bubble up to card's onClick and navigate */
+        if (goBtn && !preview) await bot.current.tap(goBtn, () => {})
         await wait(2200)   // stay open so user can read the card
         chatRef.current?.classList.remove('open')
         await wait(1500)

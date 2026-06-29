@@ -12,6 +12,7 @@ const UNIVERSE_SLUGS: Record<string, string> = {
   'stellareat':                 '/projects/stellareat',
   'vitae':                      '/projects/vitae',
   'tims-pos':                   '/projects/tims',
+  'claims':                     '/projects/claims',
 }
 
 const LOCKED = new Set(['allianz-doc-classification', 'invitrace-design-system'])

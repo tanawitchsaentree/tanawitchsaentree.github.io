@@ -82,8 +82,6 @@ export function VitaeAppScreen() {
       <style dangerouslySetInnerHTML={{ __html: APP_CSS }} />
 
       <PhoneFrame>
-      {/* Fixed 390×844 shell — same approach as StellarScreen1 so scale() works correctly */}
-      <div style={{ position: 'relative', width: 390, height: 844, flexShrink: 0 }}>
       <div ref={screenRef} className="va-root">
 
         {/* top bar */}
@@ -166,7 +164,6 @@ export function VitaeAppScreen() {
         {/* ghost finger + ripple */}
         <div ref={rippleRef} className="va-ripple" />
         <div ref={fingerRef} className="va-finger" />
-      </div>
       </div>
       </PhoneFrame>
     </>
