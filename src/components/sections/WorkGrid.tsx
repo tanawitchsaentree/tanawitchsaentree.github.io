@@ -86,6 +86,7 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
             project={featured}
             locked={LOCKED.has(featured.slug)}
             accentColor={featured.coverColor ?? 'var(--cover-tims)'}
+            hoverColor={featured.slug === 'tims-pos' ? 'var(--cover-tims-accent)' : undefined}
             onOpen={onOpenProject}
             onNavigate={onNavigate}
             universePath={UNIVERSE_SLUGS[featured.slug]}

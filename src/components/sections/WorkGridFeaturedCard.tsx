@@ -27,15 +27,17 @@ interface Props {
   project:      ProjectFrontmatter
   locked:       boolean
   accentColor:  string
+  hoverColor?:  string   // optional separate color for hover bloom; defaults to accentColor
   onOpen:       (slug: string) => void
   onNavigate:   (href: string) => void
   universePath: string | undefined
 }
 
 // ── FeaturedCard ───────────────────────────────────────────────
-export function WorkGridFeaturedCard({ project, locked, accentColor, onOpen, onNavigate, universePath }: Props) {
-  const reduced  = useReducedMotion()
+export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor, onOpen, onNavigate, universePath }: Props) {
+  const reduced    = useReducedMotion()
   const [hovered, setHovered] = useState(false)
+  const bloomColor = hoverColor ?? accentColor
 
   const handleClick = useCallback(() => {
     if (universePath) onNavigate(universePath)
@@ -66,25 +68,21 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, onOpen, onN
         style={{
           height:       CARD_HEIGHT,
           borderRadius: 'var(--radius-xl)',
-          background:   `color-mix(in srgb, ${accentColor} 12%, var(--bg-elevated))`,
+          background:   `color-mix(in srgb, ${accentColor} 40%, var(--bg-elevated))`,
           fontFamily:   "'League Spartan', sans-serif",
           overflow:     'visible',
-          boxShadow:    'var(--shadow-sm)',
+          boxShadow:    hovered
+            ? '0 8px 32px -8px rgba(0,0,0,0.18), 0 2px 8px -2px rgba(0,0,0,0.10)'
+            : 'var(--shadow-sm)',
           display:      'block',
-          transition:   reduced ? undefined : 'background var(--duration-slow) var(--ease-out-standard)',
+          transform:    hovered ? 'translateY(-2px)' : 'translateY(0)',
+          transition:   reduced ? undefined : [
+            'box-shadow var(--duration-slow) var(--ease-out-standard)',
+            'transform var(--duration-slow) var(--ease-out-standard)',
+          ].join(', '),
         }}
         aria-label={`${project.title}${locked ? ' (password-protected)' : ''}`}
       >
-        {/* Hover gradient — accent bleeds in from bottom-left */}
-        <div aria-hidden="true" style={{
-          position:   'absolute',
-          inset:      0,
-          borderRadius: 'var(--radius-xl)',
-          background: `radial-gradient(ellipse 70% 60% at 20% 110%, color-mix(in srgb, ${accentColor} 35%, transparent), transparent 70%)`,
-          opacity:    hovered ? 1 : 0,
-          transition: reduced ? undefined : 'opacity var(--duration-slow) var(--ease-out-standard)',
-          pointerEvents: 'none',
-        }} />
 
         {/* iPad — right side, bleeds below via clipPath on wrapper */}
         <div
@@ -117,13 +115,6 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, onOpen, onN
             </Suspense>
           </div>
 
-          {/* Left-edge fade into card bg (uses accentColor tinted bg) */}
-          <div style={{
-            position:      'absolute',
-            inset:         0,
-            background:    `linear-gradient(to right, color-mix(in srgb, ${accentColor} 12%, var(--bg-elevated)) 0%, color-mix(in srgb, ${accentColor} 6%, var(--bg-elevated)) 25%, transparent 55%)`,
-            pointerEvents: 'none',
-          }} />
         </div>
 
         {/* Text — bottom-left */}
