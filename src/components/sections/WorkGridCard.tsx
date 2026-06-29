@@ -108,7 +108,8 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
         /* ── Overlay variant: full-bleed component + dark scrim + white text ── */
         <>
           {/* Component fills entire card — centered, crops sides, inset from top */}
-          <div aria-hidden="true" data-demo style={{
+          {/* onClick stopPropagation: bot.tap() calls el.click() which bubbles even through pointerEvents:none */}
+          <div aria-hidden="true" data-demo onClick={e => e.stopPropagation()} style={{
             position:       'absolute',
             inset:          0,
             overflow:       'hidden',
@@ -187,7 +188,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
         /* ── Split variant: component top, solid text zone below ── */
         <>
           {cover && (
-            <div aria-hidden="true" data-demo style={{
+            <div aria-hidden="true" data-demo onClick={e => e.stopPropagation()} style={{
               position:       'absolute',
               top:            0,
               left:           0,

@@ -90,6 +90,7 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, onOpen, onN
         <div
           aria-hidden="true"
           data-demo
+          onClick={e => e.stopPropagation()}
           style={{
             position:      'absolute',
             right:         IPAD_RIGHT,
