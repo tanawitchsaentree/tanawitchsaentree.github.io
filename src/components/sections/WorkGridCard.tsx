@@ -9,6 +9,9 @@ import { LockGlyph, Tags } from './WorkGridAtoms'
 const InvitraceCoverLazy = lazy(() =>
   import('@/demos/allianz/InvitraceCover').then(m => ({ default: m.InvitraceCover }))
 )
+const ProfitaCoverLazy = lazy(() =>
+  import('@/demos/profita/ProfitaCover').then(m => ({ default: m.ProfitaCover }))
+)
 const StellarCover = lazy(() =>
   import('@/demos/stellar/ui/StellarScreen1').then(m => ({
     default: () => m.StellarScreen1({ preview: true }),
@@ -41,6 +44,7 @@ export const COVERS: Record<string, CoverDef> = {
   'allianz-doc-classification': { Component: InvitraceCoverLazy, zoom: 0.42, variant: 'split',   accentColor: 'var(--cover-invitrace)' },
   'stellareat':                 { Component: StellarCover,       zoom: 0.85, variant: 'overlay', accentColor: 'var(--cover-stellar)'   },
   'vitae':                      { Component: VitaeCover,         zoom: 0.85, variant: 'overlay', accentColor: 'var(--cover-vitae)'     },
+  'profita-mutual-fund':        { Component: ProfitaCoverLazy,   zoom: 0.42, variant: 'split',   accentColor: 'var(--cover-profita)'   },
 }
 
 const EASE_DECISIVE  = [0.16, 1, 0.3, 1] as const

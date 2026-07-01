@@ -97,6 +97,7 @@
   --cover-vitae:         #6FA01C;   /* Vitae health green     */
   --cover-invitrace:     var(--arch-root); /* #6B5BD6 — reuses arch token */
   --cover-claims:        #1E3A5F;          /* Claims platform navy        */
+  --cover-profita:       #0c1c33;          /* Profita — LH Bank navy      */
 
   /* ── Semantic status — functional signal, NOT brand accent ──────────────
      The site's one mark is yellow. But interactive DEMOS need pass/fail/warn
