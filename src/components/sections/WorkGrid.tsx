@@ -131,7 +131,7 @@ export function WorkGrid({ projects, onOpenProject, onNavigate }: WorkGridProps)
               <WorkListRow
                 key={project.slug}
                 project={project}
-                index={gridItems.length + i + 1}
+                index={1 + gridItems.length + i + 1}
                 locked={LOCKED.has(project.slug)}
                 onOpen={onOpenProject}
                 onNavigate={onNavigate}
