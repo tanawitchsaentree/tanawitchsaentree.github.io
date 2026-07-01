@@ -178,18 +178,18 @@ function KdsRail() {
   }, [arrive, bump, refresh])
 
   return (
-    <div style={{ background: '#181410', borderRadius: 26, padding: 'clamp(1.1rem,2vw,1.5rem)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ background: T.color.espresso2, borderRadius: 26, padding: 'clamp(1.1rem,2vw,1.5rem)', display: 'flex', flexDirection: 'column' }}>
       {/* header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', flexWrap: 'wrap', padding: '.2rem .4rem .9rem', borderBottom: '1px solid rgba(255,255,255,.07)' }}>
-        <span style={{ fontFamily: T.font.mono, fontSize: '.7rem', letterSpacing: '.18em', textTransform: 'uppercase', color: '#e9ddc9', display: 'flex', alignItems: 'center', gap: '.55em' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', flexWrap: 'wrap', padding: '.2rem .4rem .9rem', borderBottom: `1px solid ${T.alpha.lineDk}` }}>
+        <span style={{ fontFamily: T.font.mono, fontSize: '.7rem', letterSpacing: '.18em', textTransform: 'uppercase', color: T.alpha.cream62, display: 'flex', alignItems: 'center', gap: '.55em' }}>
           <span className="tims-kds-live" />
           Drive-thru KDS · morning rush
         </span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: '1.1rem' }}>
-          <div style={{ fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.06em', color: '#9b907e', textAlign: 'right' }}>
-            In queue<b style={{ display: 'block', fontSize: '1.15rem', color: '#f3ede2', letterSpacing: 0, lineHeight: 1.1 }} ref={queueEl}>0</b>
+          <div style={{ fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.06em', color: T.color.muted, textAlign: 'right' }}>
+            In queue<b style={{ display: 'block', fontSize: '1.15rem', color: T.color.cream, letterSpacing: 0, lineHeight: 1.1 }} ref={queueEl}>0</b>
           </div>
-          <div style={{ fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.06em', color: '#9b907e', textAlign: 'right' }}>
+          <div style={{ fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.06em', color: T.color.muted, textAlign: 'right' }}>
             Over target<b style={{ display: 'block', fontSize: '1.15rem', color: T.color.red, letterSpacing: 0, lineHeight: 1.1 }} ref={overEl}>0</b>
           </div>
         </div>
@@ -203,16 +203,16 @@ function KdsRail() {
       />
 
       {/* bump bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', padding: '.9rem .4rem 0', borderTop: '1px solid rgba(255,255,255,.07)', marginTop: '.2rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', padding: '.9rem .4rem 0', borderTop: `1px solid ${T.alpha.lineDk}`, marginTop: '.2rem' }}>
         <button
           onClick={bump}
           className="tims-bump-btn"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '.5em', background: T.color.green, color: '#16210a', border: 0, fontFamily: T.font.mono, fontWeight: 700, fontSize: '.74rem', letterSpacing: '.06em', textTransform: 'uppercase', padding: '.7rem 1.2rem', borderRadius: 11, cursor: 'pointer' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '.5em', background: T.color.green, color: T.color.cream, border: 0, fontFamily: T.font.mono, fontWeight: 700, fontSize: '.74rem', letterSpacing: '.06em', textTransform: 'uppercase', padding: '.7rem 1.2rem', borderRadius: 11, cursor: 'pointer' }}
         >
           ✓ Bump served
         </button>
-        <span style={{ fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.05em', color: '#857b6b' }}>
-          Clear the car at the window. <b style={{ color: '#cabfad' }} ref={servedEl}>0 cleared</b>
+        <span style={{ fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.05em', color: T.color.muted }}>
+          Clear the car at the window. <b style={{ color: T.alpha.cream62 }} ref={servedEl}>0 cleared</b>
         </span>
       </div>
     </div>
@@ -260,37 +260,37 @@ function DecodePanel() {
   }, [])
 
   return (
-    <div style={{ position: 'relative', background: 'radial-gradient(120% 100% at 80% 0%,#2a221b,#15110d 60%)', borderRadius: 26, padding: 'clamp(1.5rem,3vw,2.2rem)', color: '#f3ede2', overflow: 'hidden', isolation: 'isolate' }}>
-      <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'radial-gradient(60% 50% at 85% 8%,rgba(230,163,60,.2),transparent 70%)', zIndex: -1, pointerEvents: 'none' }} />
+    <div style={{ position: 'relative', background: `radial-gradient(120% 100% at 80% 0%, ${T.color.espresso2}, ${T.color.espresso} 60%)`, borderRadius: 26, padding: 'clamp(1.5rem,3vw,2.2rem)', color: T.color.cream, overflow: 'hidden', isolation: 'isolate' }}>
+      <div aria-hidden style={{ position: 'absolute', inset: 0, background: `radial-gradient(60% 50% at 85% 8%, ${T.alpha.red10}, transparent 70%)`, zIndex: -1, pointerEvents: 'none' }} />
 
       {/* live pip */}
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '.55em', fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.2em', textTransform: 'uppercase', color: '#d6cdbd' }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '.55em', fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.2em', textTransform: 'uppercase', color: T.alpha.cream62 }}>
         <span className="tims-decode-pip" />
         The order, decoded
       </span>
 
-      <h3 style={{ fontFamily: T.font.display, fontWeight: 800, fontSize: 'clamp(1.5rem,3.6vw,2.05rem)', lineHeight: 1.12, letterSpacing: '-.02em', margin: '1.1rem 0 2rem', color: '#f3ede2' }}>
-        You don&apos;t type the order. <span style={{ color: T.color.gold }}>You translate it — fast.</span>
+      <h3 style={{ fontFamily: T.font.display, fontWeight: 800, fontSize: 'clamp(1.5rem,3.6vw,2.05rem)', lineHeight: 1.12, letterSpacing: '-.02em', margin: '1.1rem 0 2rem', color: T.color.cream }}>
+        You don&apos;t type the order. <span style={{ color: T.color.red }}>You translate it — fast.</span>
       </h3>
 
-      <div style={{ fontFamily: T.font.mono, fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: '#988d7c', marginBottom: '.7rem' }}>
+      <div style={{ fontFamily: T.font.mono, fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '.7rem' }}>
         What the customer says
       </div>
-      <p ref={spokenRef} className="tims-spoken" style={{ fontFamily: T.font.display, fontWeight: 700, fontSize: 'clamp(1.15rem,2.8vw,1.55rem)', lineHeight: 1.34, color: '#f3ede2', margin: '0 0 1.7rem', minHeight: '3.5em' }} />
+      <p ref={spokenRef} className="tims-spoken" style={{ fontFamily: T.font.display, fontWeight: 700, fontSize: 'clamp(1.15rem,2.8vw,1.55rem)', lineHeight: 1.34, color: T.color.cream, margin: '0 0 1.7rem', minHeight: '3.5em' }} />
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '.7em', fontFamily: T.font.mono, fontSize: '.63rem', letterSpacing: '.08em', textTransform: 'uppercase', color: '#8c8170', marginBottom: '1.1rem' }}>
-        <span style={{ flex: 'none', width: 20, height: 1, background: '#5a5145', display: 'inline-block' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.7em', fontFamily: T.font.mono, fontSize: '.63rem', letterSpacing: '.08em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '1.1rem' }}>
+        <span style={{ flex: 'none', width: 20, height: 1, background: T.color.muted, display: 'inline-block' }} />
         becomes the buttons I have to find
       </div>
-      <div style={{ fontFamily: T.font.mono, fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: '#988d7c', marginBottom: '.7rem' }}>
+      <div style={{ fontFamily: T.font.mono, fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '.7rem' }}>
         What I press
       </div>
 
       <div ref={tapsRef} style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', minHeight: '6rem', alignContent: 'flex-start' }} />
 
-      <p style={{ marginTop: '1.5rem', fontSize: '.92rem', lineHeight: 1.5, color: '#b3a896', maxWidth: '44ch' }}>
+      <p style={{ marginTop: '1.5rem', fontSize: '.92rem', lineHeight: 1.5, color: T.alpha.cream62, maxWidth: '44ch' }}>
         One breath from the customer turns into a handful of taps for me — found and hit before the next car. The screen&apos;s only job is to make that translation{' '}
-        <b style={{ color: '#f3ede2' }}>disappear</b>.
+        <b style={{ color: T.color.cream }}>disappear</b>.
       </p>
     </div>
   )
@@ -319,31 +319,31 @@ export function TimsProblem() {
   return (
     <section id="problem" style={{ padding: 'clamp(5rem,13vw,11rem) 0', background: T.color.cream2, fontFamily: T.font.sans }}>
       <style>{`
-        .tims-kds-live{width:7px;height:7px;border-radius:50%;background:#86a24e;box-shadow:0 0 8px #86a24e;animation:timsKdsBlink 1.6s steps(2) infinite;display:inline-block}
+        .tims-kds-live{width:7px;height:7px;border-radius:50%;background:#2f9e57;box-shadow:0 0 8px #2f9e57;animation:timsKdsBlink 1.6s steps(2) infinite;display:inline-block}
         @keyframes timsKdsBlink{50%{opacity:.35}}
-        .tims-decode-pip{width:8px;height:8px;border-radius:50%;background:#e6a33c;display:inline-block;animation:timsDecPip 2s cubic-bezier(.4,0,.2,1) infinite}
-        @keyframes timsDecPip{0%{box-shadow:0 0 0 0 rgba(230,163,60,.55)}70%{box-shadow:0 0 0 9px rgba(230,163,60,0)}100%{box-shadow:0 0 0 0 rgba(230,163,60,0)}}
+        .tims-decode-pip{width:8px;height:8px;border-radius:50%;background:#CF162D;display:inline-block;animation:timsDecPip 2s cubic-bezier(.4,0,.2,1) infinite}
+        @keyframes timsDecPip{0%{box-shadow:0 0 0 0 rgba(207,22,45,.55)}70%{box-shadow:0 0 0 9px rgba(207,22,45,0)}100%{box-shadow:0 0 0 0 rgba(207,22,45,0)}}
         .tims-spoken{animation:timsSpokenIn .5s cubic-bezier(.4,0,.2,1)}
         @keyframes timsSpokenIn{from{opacity:0;transform:translateY(8px)}}
-        .tims-tap{display:inline-flex;align-items:center;background:#2a231b;border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:.55rem .85rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:#b3a896;opacity:.32;transform:translateY(5px);transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.16,1,.3,1),background .35s,color .35s,box-shadow .35s,border-color .35s}
-        .tims-tap.tims-tap-lit{opacity:1;transform:none;background:linear-gradient(135deg,#e6a33c,#c9832a);color:#241803;border-color:transparent;box-shadow:0 6px 16px -6px rgba(230,163,60,.55)}
-        .tims-tk{background:#221c16;border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;transition:transform .52s cubic-bezier(.16,1,.3,1),opacity .42s cubic-bezier(.4,0,.2,1),border-color .3s;will-change:transform;--tkc:#7aa84e;border-color:color-mix(in srgb,var(--tkc) 38%,rgba(255,255,255,.07))}
+        .tims-tap{display:inline-flex;align-items:center;background:#1a1a1a;border:1px solid rgba(255,255,255,.10);border-radius:11px;padding:.55rem .85rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:rgba(255,255,255,.45);opacity:.32;transform:translateY(5px);transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.16,1,.3,1),background .35s,color .35s,box-shadow .35s,border-color .35s}
+        .tims-tap.tims-tap-lit{opacity:1;transform:none;background:linear-gradient(135deg,#CF162D,#9E0E1F);color:#FFFFFF;border-color:transparent;box-shadow:0 6px 16px -6px rgba(207,22,45,.55)}
+        .tims-tk{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;transition:transform .52s cubic-bezier(.16,1,.3,1),opacity .42s cubic-bezier(.4,0,.2,1),border-color .3s;will-change:transform;--tkc:#7aa84e;border-color:color-mix(in srgb,var(--tkc) 38%,rgba(255,255,255,.07))}
         .tims-tk-arriving{opacity:0;transform:translateX(54px) scale(.92)}
         .tims-tk-leaving{opacity:0;transform:scale(.9) translateY(-10px);transition:opacity .34s cubic-bezier(.4,0,.2,1),transform .34s cubic-bezier(.4,0,.2,1)}
         .tims-tk-hd{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.5rem .7rem;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,color-mix(in srgb,var(--tkc) 20%,transparent),transparent);color:var(--tkc)}
         .tims-tk-st{font-weight:700;display:flex;align-items:center;gap:.45em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .tims-tk-dot{flex:none;width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 7px currentColor;display:inline-block}
         .tims-tk-tm{font-variant-numeric:tabular-nums;font-weight:700;flex:none}
-        .tims-tk[data-zone="window"]{--tkc:#e6a33c;border-color:color-mix(in srgb,var(--tkc) 55%,rgba(255,255,255,.07))}
+        .tims-tk[data-zone="window"]{--tkc:#CF162D;border-color:color-mix(in srgb,var(--tkc) 55%,rgba(255,255,255,.07))}
         .tims-tk[data-zone="over"]{animation:timsKdsPulse 1.5s cubic-bezier(.4,0,.2,1) infinite}
         @keyframes timsKdsPulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 0 2px color-mix(in srgb,var(--tkc) 45%,transparent)}}
-        .tims-tk-car{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.1em;color:#8c8170;padding:0 .7rem .1rem}
+        .tims-tk-car{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.1em;color:rgba(255,255,255,.38);padding:0 .7rem .1rem}
         .tims-tk-items{padding:.5rem .7rem .8rem;display:flex;flex-direction:column;gap:.55rem}
         .tims-tk-it{display:flex;gap:.5rem;align-items:flex-start}
-        .tims-tk-ic{flex:none;width:18px;height:18px;color:#cabfad;opacity:.85;margin-top:1px}
-        .tims-tk-nm{font-size:.84rem;color:#ece4d6;line-height:1.25;font-weight:500}
-        .tims-tk-mod{display:block;font-size:.72rem;color:#9a8f7d;margin-top:.12rem}
-        .tims-tk-flag{color:#e6a33c}
+        .tims-tk-ic{flex:none;width:18px;height:18px;color:rgba(255,255,255,.65);opacity:.85;margin-top:1px}
+        .tims-tk-nm{font-size:.84rem;color:rgba(255,255,255,.90);line-height:1.25;font-weight:500}
+        .tims-tk-mod{display:block;font-size:.72rem;color:rgba(255,255,255,.50);margin-top:.12rem}
+        .tims-tk-flag{color:#CF162D}
         .tims-bump-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
         .tims-bump-btn:active{transform:translateY(0)}
         .tims-bump-btn{transition:transform .18s cubic-bezier(.16,1,.3,1),filter .2s}

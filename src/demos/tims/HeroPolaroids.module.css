@@ -76,13 +76,13 @@
 .frame {
   width: 100%;
   height: 100%;
-  background: #fffdf9;
+  background: #ffffff;
   padding: 9px 9px 26px;
   border-radius: 2px;
   box-shadow:
-    0 2px 6px  rgba(28, 20, 16, 0.09),
-    0 10px 28px rgba(28, 20, 16, 0.14),
-    0 28px 60px rgba(28, 20, 16, 0.10);
+    0 2px 6px  rgba(0, 0, 0, 0.10),
+    0 10px 28px rgba(0, 0, 0, 0.16),
+    0 28px 60px rgba(0, 0, 0, 0.12);
 }
 
 /* ─── Photo area ───────────────────────────────────────── */
@@ -91,7 +91,7 @@
   width: 100%;
   height: calc(100% - 26px);
   overflow: hidden;
-  background: #cfc8be;
+  background: #d0d0d0;
 }
 
 .photo {
@@ -118,7 +118,7 @@
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #7a6e63;
+  color: #888888;
   white-space: nowrap;
   line-height: 1;
 }

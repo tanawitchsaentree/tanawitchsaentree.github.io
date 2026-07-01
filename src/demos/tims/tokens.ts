@@ -1,52 +1,53 @@
 // Tims POS case study design tokens — Bricolage Grotesque + DM Sans + Space Mono
 // Scoped to the demo surface (data-demo="tims"). NOT portfolio shell tokens.
+// Primary palette: #000000 / #CF162D / #FFFFFF
 
 export const T = {
   color: {
-    red:       '#da291c',
-    redDk:     '#b01f15',
-    espresso:  '#1c1410',
-    espresso2: '#2a201a',
-    cream:     '#f7f1e8',
-    cream2:    '#efe6d8',
-    paper:     '#fffdf9',
-    ink:       '#1c1410',
-    inkSoft:   '#5c4f45',
-    muted:     '#9a8d7e',
-    gold:      '#e8a13a',
-    green:     '#2f9e57',
-    amber:     '#c4700a',
-    amberDk:   '#d98a2b',
-    onAccent:  '#f7f1e8',
-    smoke1:    '#d9d2c6',
-    smoke2:    '#c8c0b2',
-    smoke3:    '#bcb3a3',
+    red:       '#CF162D',  // Tim Hortons brand red
+    redDk:     '#9E0E1F',  // 15% darker — hover / gradient end
+    espresso:  '#000000',  // pure black — dark section backgrounds
+    espresso2: '#111111',  // near-black — card surfaces in dark sections
+    cream:     '#FFFFFF',  // pure white — text on dark backgrounds
+    cream2:    '#F5F5F5',  // light gray — alternating section backgrounds
+    paper:     '#FFFFFF',  // pure white — card backgrounds
+    ink:       '#000000',  // pure black — primary text
+    inkSoft:   '#555555',  // mid gray — body text
+    muted:     '#888888',  // light gray — labels, meta
+    gold:      '#CF162D',  // red replaces gold in dark sections
+    green:     '#2f9e57',  // functional — KDS timer green zone (keep)
+    amber:     '#c4700a',  // functional — KDS timer amber zone (keep)
+    amberDk:   '#d98a2b',  // functional — KDS timer amber dark (keep)
+    onAccent:  '#FFFFFF',  // white text on red
+    smoke1:    '#D0D0D0',
+    smoke2:    '#B8B8B8',
+    smoke3:    '#A0A0A0',
   },
   alpha: {
-    line:    'rgba(28,20,16,.12)',
-    lineDk:  'rgba(247,241,232,.12)',
-    red10:   'rgba(218,41,28,.10)',
-    red40:   'rgba(218,41,28,.40)',
-    red00:   'rgba(218,41,28,0)',
-    red50:   'rgba(218,41,28,.50)',
-    gold16:  'rgba(232,161,58,.16)',
-    gold40:  'rgba(232,161,58,.40)',
-    gold55:  'rgba(232,161,58,.55)',
-    cream70: 'rgba(247,241,232,.70)',
-    cream62: 'rgba(247,241,232,.62)',
-    cream60: 'rgba(247,241,232,.60)',
-    cream55: 'rgba(247,241,232,.55)',
-    cream07: 'rgba(247,241,232,.07)',
-    cream02: 'rgba(247,241,232,.02)',
-    ink05:   'rgba(28,20,16,.05)',
-    ink06:   'rgba(28,20,16,.06)',
-    ink07:   'rgba(28,20,16,.07)',
-    ink10:   'rgba(28,20,16,.10)',
-    ink12:   'rgba(28,20,16,.12)',
-    ink18:   'rgba(28,20,16,.18)',
-    ink55:   'rgba(28,20,16,.55)',
-    shadow:  '0 1px 2px rgba(28,20,16,.05), 0 14px 34px rgba(28,20,16,.07)',
-    shadowLg:'0 18px 40px rgba(28,20,16,.18)',
+    line:    'rgba(0,0,0,.10)',
+    lineDk:  'rgba(255,255,255,.12)',
+    red10:   'rgba(207,22,45,.10)',
+    red40:   'rgba(207,22,45,.40)',
+    red00:   'rgba(207,22,45,0)',
+    red50:   'rgba(207,22,45,.50)',
+    gold16:  'rgba(207,22,45,.16)',
+    gold40:  'rgba(207,22,45,.40)',
+    gold55:  'rgba(207,22,45,.55)',
+    cream70: 'rgba(255,255,255,.70)',
+    cream62: 'rgba(255,255,255,.62)',
+    cream60: 'rgba(255,255,255,.60)',
+    cream55: 'rgba(255,255,255,.55)',
+    cream07: 'rgba(255,255,255,.07)',
+    cream02: 'rgba(255,255,255,.02)',
+    ink05:   'rgba(0,0,0,.05)',
+    ink06:   'rgba(0,0,0,.06)',
+    ink07:   'rgba(0,0,0,.07)',
+    ink10:   'rgba(0,0,0,.10)',
+    ink12:   'rgba(0,0,0,.12)',
+    ink18:   'rgba(0,0,0,.18)',
+    ink55:   'rgba(0,0,0,.55)',
+    shadow:  '0 1px 2px rgba(0,0,0,.05), 0 14px 34px rgba(0,0,0,.07)',
+    shadowLg:'0 18px 40px rgba(0,0,0,.18)',
   },
   font: {
     display: "'Bricolage Grotesque', sans-serif",
