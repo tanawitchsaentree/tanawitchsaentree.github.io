@@ -38,6 +38,7 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor,
   const reduced    = useReducedMotion()
   const [hovered, setHovered] = useState(false)
   const bloomColor = hoverColor ?? accentColor
+  const onLight    = project.coverFg === 'light'
 
   const handleClick = useCallback(() => {
     if (universePath) onNavigate(universePath)
@@ -68,7 +69,9 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor,
         style={{
           height:       CARD_HEIGHT,
           borderRadius: 'var(--radius-xl)',
-          background:   `color-mix(in srgb, ${accentColor} 40%, var(--bg-elevated))`,
+          background:   onLight
+            ? `color-mix(in srgb, ${accentColor} 88%, var(--color-black))`
+            : `color-mix(in srgb, ${accentColor} 40%, var(--bg-elevated))`,
           fontFamily:   "'League Spartan', sans-serif",
           overflow:     'visible',
           boxShadow:    hovered
@@ -129,24 +132,32 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor,
           gap:           'var(--space-2)',
           zIndex:        2,
         }}>
-          <Tags tags={project.tags} max={4} />
+          <Tags
+            tags={project.tags}
+            max={4}
+            textColor={onLight ? 'var(--fg-on-cover-muted)' : undefined}
+            borderColor={onLight ? 'var(--fg-on-cover-border)' : undefined}
+          />
 
           <h3 style={{
             fontSize:      'clamp(var(--type-xl), 2.2vw, var(--type-3xl))',
             fontWeight:    800,
             letterSpacing: '-0.02em',
             lineHeight:    1.05,
-            color:         'var(--fg)',
+            color:         onLight ? 'var(--fg-on-cover)' : 'var(--fg)',
             margin:        0,
           }}>
             {locked && <span style={{ marginRight: 'var(--space-2)', opacity: 0.4 }}><LockGlyph /></span>}
+            {project.slug === 'tims-pos' && (
+              <span aria-hidden="true" style={{ marginRight: '0.3em', display: 'inline-block', filter: 'brightness(0) invert(1)', fontSize: '0.85em', verticalAlign: 'middle' }}>🍁</span>
+            )}
             {project.title}
           </h3>
 
           <p style={{
             fontSize:   'var(--type-base)',
             lineHeight: 1.55,
-            color:      'var(--fg-muted)',
+            color:      onLight ? 'var(--fg-on-cover-muted)' : 'var(--fg-muted)',
             margin:     0,
           }}>
             {project.summary}

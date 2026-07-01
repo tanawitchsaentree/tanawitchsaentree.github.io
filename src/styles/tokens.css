@@ -91,8 +91,8 @@
   --fg-on-cover-subtle:  rgba(255, 255, 255, 0.50);
   --fg-on-cover-border:  rgba(255, 255, 255, 0.25);
   --cover-vignette:      rgba(0, 0, 0, 0.60);
-  --cover-tims:          #FCF7F5;   /* Tim Hortons — brand cream bg */
-  --cover-tims-accent:   #C9102E;   /* Tim Hortons — brand red (hover only) */
+  --cover-tims:          #CF162D;   /* Tim Hortons — brand red */
+  --cover-tims-accent:   #CF162D;   /* Tim Hortons — brand red (hover) */
   --cover-stellar:       #14A800;   /* Stellareat brand green */
   --cover-vitae:         #6FA01C;   /* Vitae health green     */
   --cover-invitrace:     var(--arch-root); /* #6B5BD6 — reuses arch token */
@@ -127,6 +127,11 @@
   --preset-clinical:   #0E9F6E;  /* green  — night shift        */
 
   --cursor-ring: #0A0A0A;
+}
+
+@keyframes invitrace-shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
 }
 
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, Suspense, lazy, useState } from 'react'
+import { useCallback, Suspense, lazy, useState, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ProjectFrontmatter } from '@/types/project'
 import { LockGlyph, Tags } from './WorkGridAtoms'
@@ -61,7 +61,10 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
   const reduced = useReducedMotion()
   const cover   = COVERS[project.slug]
   const [hovered, setHovered] = useState(false)
+  const shimmerKey = useRef(0)
+  const [shimmerTick, setShimmerTick] = useState(0)
   const accent  = cover?.accentColor ?? 'var(--fg-subtle)'
+  const isInvitrace = project.slug === 'invitrace-design-system'
 
   const handleClick = useCallback(() => {
     if (universePath) onNavigate(universePath)
@@ -72,7 +75,13 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
     <motion.button
       type="button"
       onClick={handleClick}
-      onMouseEnter={() => setHovered(true)}
+      onMouseEnter={() => {
+        setHovered(true)
+        if (isInvitrace && !reduced) {
+          shimmerKey.current += 1
+          setShimmerTick(shimmerKey.current)
+        }
+      }}
       onMouseLeave={() => setHovered(false)}
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -83,7 +92,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
         height:       CARD_H,
         borderRadius: 'var(--radius-xl)',
         background:   cover?.variant === 'overlay'
-          ? `linear-gradient(160deg, color-mix(in srgb, ${accent} 32%, var(--color-black)) 0%, color-mix(in srgb, ${accent} 8%, var(--color-black)) 100%)`
+          ? `color-mix(in srgb, ${accent} 55%, var(--color-black))`
           : `color-mix(in srgb, ${accent} 8%, var(--bg-elevated))`,
         fontFamily:   "'League Spartan', sans-serif",
         overflow:     'hidden',
@@ -127,11 +136,11 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
             </div>
           </div>
 
-          {/* Bottom scrim — accent-tinted dark, not pure black */}
+          {/* Scrim — only covers bottom text zone, leaves phone clear */}
           <div aria-hidden="true" style={{
             position:      'absolute',
             inset:         0,
-            background:    `linear-gradient(to bottom, transparent 15%, color-mix(in srgb, ${accent} 12%, var(--color-black)) 50%, color-mix(in srgb, ${accent} 22%, var(--color-black)) 100%)`,
+            background:    `linear-gradient(to bottom, transparent 55%, color-mix(in srgb, ${accent} 14%, var(--color-black)) 72%, color-mix(in srgb, ${accent} 20%, var(--color-black)) 100%)`,
             pointerEvents: 'none',
           }} />
 
@@ -221,6 +230,30 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
             pointerEvents: 'none',
             zIndex:        2,
           }} />
+
+          {/* Invitrace: one-shot shimmer sweep on hover */}
+          {isInvitrace && shimmerTick > 0 && (
+            <div
+              key={shimmerTick}
+              aria-hidden="true"
+              style={{
+                position:   'absolute',
+                inset:      0,
+                zIndex:     4,
+                pointerEvents: 'none',
+                overflow:   'hidden',
+                borderRadius: 'var(--radius-xl)',
+              }}
+            >
+              <div style={{
+                position:   'absolute',
+                inset:      0,
+                transform:  'translateX(-100%)',
+                background: 'linear-gradient(105deg, transparent 25%, color-mix(in srgb, var(--arch-root) 30%, white) 45%, color-mix(in srgb, var(--arch-root) 18%, white) 55%, transparent 75%)',
+                animation:  'invitrace-shimmer 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              }} />
+            </div>
+          )}
 
           {/* Text zone */}
           <div style={{
