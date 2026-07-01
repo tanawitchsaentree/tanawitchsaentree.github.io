@@ -1,242 +1,168 @@
 'use client'
 
 /*
- * InvitraceCover — exploded design-system cover for the work grid card.
- * Shows floating component fragments + color tokens to communicate
- * "federated design system" at a glance.
- *
- * Designed at 900×700px — zoomed to 0.42 in the grid card, showing top ~620px.
+ * InvitraceCover — chrome manifesto card.
+ * Designed at 900×700px native, zoomed to 0.42 in the grid card.
+ * Top ~619px of 700px is visible in the preview zone.
  */
-
-// Shimmer STAGGER per swatch index (ms) — 60ms apart, 4 swatches = last fires at 180ms
-const SWATCH_STAGGER_MS = 60
-
-const ARCH = [
-  { token: '--arch-medium',    name: 'District',  label: 'arch-medium'    },
-  { token: '--arch-large',     name: 'Teaching',  label: 'arch-large'     },
-  { token: '--arch-specialty', name: 'Specialty', label: 'arch-specialty' },
-  { token: '--arch-root',      name: 'Root',      label: 'arch-root'      },
-]
-
-const TOKENS = [
-  { label: '--spacing-sm',    value: '4px'   },
-  { label: '--spacing-md',    value: '8px'   },
-  { label: '--radius-lg',     value: '12px'  },
-  { label: '--duration-base', value: '280ms' },
-]
-
-const BADGES = [
-  { text: 'ROUTED',   signal: '--signal-ok'     },
-  { text: 'FLAGGED',  signal: '--signal-warn'   },
-  { text: 'REVIEWED', signal: '--arch-root'     },
-]
-
-// Thin card shell reused across fragments
-function FragCard({
-  children,
-  rotate = 0,
-  style = {},
-}: {
-  children: React.ReactNode
-  rotate?: number
-  style?: React.CSSProperties
-}) {
-  return (
-    <div style={{
-      position:     'absolute',
-      background:   'var(--bg)',
-      borderRadius: 12,
-      border:       '1px solid var(--border)',
-      boxShadow:    '0 2px 8px color-mix(in srgb, var(--fg) 7%, transparent), 0 1px 2px color-mix(in srgb, var(--fg) 4%, transparent)',
-      transform:    `rotate(${rotate}deg)`,
-      ...style,
-    }}>
-      {children}
-    </div>
-  )
-}
-
-// Eyebrow label inside fragment cards
-function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <p style={{
-      fontSize:      10,
-      fontWeight:    600,
-      letterSpacing: '0.12em',
-      textTransform: 'uppercase',
-      color:         'var(--fg-subtle)',
-      margin:        '0 0 10px 0',
-      fontFamily:    "'League Spartan', sans-serif",
-    }}>{children}</p>
-  )
-}
 
 export function InvitraceCover({ shimmerTick = 0 }: { shimmerTick?: number }) {
   return (
-    <div style={{
-      position:   'relative',
-      width:      900,
-      height:     700,
-      background: 'var(--bg-elevated)',
-      overflow:   'hidden',
-      fontFamily: "'League Spartan', sans-serif",
-    }}>
+    <div style={{ position: 'relative', width: 900, height: 700, overflow: 'hidden' }}>
 
-      {/* ── Frag 1: Archetype color palette — top-left, slight tilt ── */}
-      <FragCard rotate={-3} style={{ top: 48, left: 56, padding: '20px 24px', width: 280 }}>
-        <Label>Archetype Palette</Label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {ARCH.map(a => (
-            <div key={a.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{
-                width:        32,
-                height:       32,
-                borderRadius: 8,
-                background:   `var(${a.token})`,
-                flexShrink:   0,
-              }} />
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fg)', lineHeight: 1.2 }}>
-                  {a.name}
-                </div>
-                <div style={{ fontSize: 10, color: 'var(--fg-subtle)', letterSpacing: '0.06em', marginTop: 1 }}>
-                  {a.token}
-                </div>
-              </div>
-              <div style={{
-                marginLeft:    'auto',
-                fontSize:      9,
-                color:         `var(${a.token})`,
-                letterSpacing: '0.1em',
-                fontWeight:    600,
-                background:    `color-mix(in srgb, var(${a.token}) 12%, transparent)`,
-                padding:       '2px 7px',
-                borderRadius:  4,
-              }}>
-                {a.label.replace('arch-', '')}
-              </div>
-            </div>
-          ))}
-        </div>
-      </FragCard>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,500;1,9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-      {/* ── Frag 2: Confidence bar — top-right, slight tilt other way ── */}
-      <FragCard rotate={2.5} style={{ top: 36, left: 390, padding: '20px 24px', width: 340 }}>
-        <Label>Confidence Gate</Label>
-        {[
-          { doc: 'INV-4421 · Invoice',      pct: 94, routing: 'ROUTED',  signal: '--signal-ok',   flag: false },
-          { doc: 'CLM-0082 · Claim',        pct: 71, routing: 'ROUTED',  signal: '--signal-ok',   flag: false },
-          { doc: 'LGL-1190 · Legal notice', pct: 38, routing: 'FLAGGED', signal: '--signal-warn', flag: true  },
-          { doc: 'MED-3342 · Medical',      pct: 82, routing: 'ROUTED',  signal: '--signal-ok',   flag: false },
-        ].map((row, i) => (
-          <div key={i} style={{
-            display:      'flex',
-            alignItems:   'center',
-            gap:          10,
-            borderBottom: i < 3 ? '1px solid var(--border)' : 'none',
-            background:   row.flag ? 'color-mix(in srgb, var(--accent) 10%, transparent)' : 'transparent',
-            margin:       row.flag ? '0 -8px' : '0',
-            padding:      row.flag ? '7px 8px' : '7px 0',
-            borderRadius: row.flag ? 4 : 0,
+        @keyframes inv-chrome-drift {
+          0%,100% { background-position: 20% 30% }
+          50%      { background-position: 80% 70% }
+        }
+        @keyframes inv-chrome-shine {
+          0%   { background-position: 0% 50% }
+          100% { background-position: 150% 50% }
+        }
+        @keyframes inv-card-shimmer {
+          from { transform: translateX(-150%) }
+          to   { transform: translateX(150%) }
+        }
+
+        .inv-cbase {
+          display: block;
+          background: linear-gradient(125deg,
+            #fdfcff 0%, #cfc9dc 14%, #8b84a3 30%,
+            #5b5470 42%, #fdfcff 54%, #8b84a3 68%,
+            #c9c3da 82%, #fdfcff 100%);
+          background-size: 220% 220%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: inv-chrome-drift 11s ease-in-out infinite;
+        }
+        .inv-cshine {
+          position: absolute;
+          inset: 0;
+          display: block;
+          background: linear-gradient(115deg,
+            transparent 38%, rgba(255,255,255,.95) 50%, transparent 62%);
+          background-size: 260% 260%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          mix-blend-mode: overlay;
+          animation: inv-chrome-shine 4.2s ease-in-out infinite;
+          pointer-events: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .inv-cbase, .inv-cshine { animation: none !important; }
+        }
+      `}</style>
+
+      {/* ── Background ── */}
+      <div aria-hidden="true" style={{
+        position: 'absolute',
+        inset:    0,
+        background: `
+          radial-gradient(90% 70% at 14% -6%, rgba(255,255,255,.88), transparent 58%),
+          radial-gradient(65% 55% at 102% 108%, rgba(140,120,185,.38), transparent 58%),
+          linear-gradient(160deg, #f6f4fa 0%, #e6e1f0 55%, #ede8f5 100%)
+        `,
+      }} />
+
+      {/* Noise texture */}
+      <div aria-hidden="true" style={{
+        position:            'absolute',
+        inset:               0,
+        opacity:             0.042,
+        mixBlendMode:        'multiply' as const,
+        backgroundImage:     `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        pointerEvents:       'none',
+      }} />
+
+      {/* ── Main content ── */}
+      <div style={{
+        position:       'relative',
+        zIndex:         1,
+        height:         '100%',
+        display:        'flex',
+        flexDirection:  'column',
+        justifyContent: 'center',
+        padding:        '0 88px',
+        gap:            '1.4rem',
+      }}>
+
+        {/* Overline */}
+        <span style={{
+          fontFamily:    "'IBM Plex Mono', monospace",
+          fontSize:      '0.88rem',
+          letterSpacing: '0.18em',
+          textTransform: 'uppercase' as const,
+          color:         '#7b7488',
+          marginBottom:  '-0.2rem',
+        }}>
+          Federated design system
+        </span>
+
+        {/* Chrome headline */}
+        <div style={{
+          position:  'relative',
+          display:   'block',
+          lineHeight: 1.0,
+        }}>
+          <span style={{
+            fontFamily:    "'Fraunces', serif",
+            fontWeight:    700,
+            fontSize:      '5.4rem',
+            letterSpacing: '-0.02em',
+            lineHeight:    1.0,
+            position:      'relative',
+            display:       'block',
+            userSelect:    'none' as const,
           }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 11, color: 'var(--fg)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {row.doc}
-              </div>
-              <div style={{ marginTop: 4, height: 4, borderRadius: 2, background: 'var(--bg-muted)', overflow: 'hidden' }}>
-                <div style={{
-                  height:          '100%',
-                  width:           `${row.pct}%`,
-                  borderRadius:    2,
-                  background:      row.flag ? 'var(--accent)' : 'var(--arch-medium)',
-                  transition:      'width var(--duration-reveal) var(--ease-out-standard)',
-                }} />
-              </div>
-            </div>
-            <div style={{
-              fontSize:      9,
-              fontWeight:    600,
-              color:         `var(${row.signal})`,
-              background:    `color-mix(in srgb, var(${row.signal}) 12%, transparent)`,
-              padding:       '2px 6px',
-              borderRadius:  3,
-              letterSpacing: '0.08em',
-              flexShrink:    0,
-            }}>
-              {row.routing}
-            </div>
-          </div>
-        ))}
-      </FragCard>
-
-      {/* ── Frag 3: Token chips — middle left ── */}
-      <FragCard rotate={1.5} style={{ top: 310, left: 72, padding: '16px 20px', width: 220 }}>
-        <Label>Design Tokens</Label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-          {TOKENS.map(t => (
-            <div key={t.label} style={{
-              display:        'flex',
-              alignItems:     'center',
-              justifyContent: 'space-between',
-              padding:        '4px 8px',
-              background:     'var(--bg-elevated)',
-              borderRadius:   5,
-              border:         '1px solid var(--border)',
-            }}>
-              <span style={{ fontSize: 10, color: 'var(--fg-muted)', fontWeight: 500, letterSpacing: '0.04em' }}>
-                {t.label}
-              </span>
-              <span style={{ fontSize: 10, color: 'var(--fg)', fontWeight: 700 }}>
-                {t.value}
-              </span>
-            </div>
-          ))}
+            <span className="inv-cbase">Same system.</span>
+            <span className="inv-cshine" aria-hidden="true">Same system.</span>
+          </span>
         </div>
-      </FragCard>
 
-      {/* ── Frag 4: Badge cluster — middle right ── */}
-      <FragCard rotate={-1.5} style={{ top: 300, left: 380, padding: '16px 20px', width: 200 }}>
-        <Label>Status</Label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-          {BADGES.map(b => (
-            <div key={b.text} style={{
-              display:       'inline-flex',
-              alignItems:    'center',
-              gap:           6,
-              padding:       '6px 12px',
-              background:    `color-mix(in srgb, var(${b.signal}) 12%, transparent)`,
-              borderRadius:  6,
-              fontSize:      11,
-              fontWeight:    700,
-              letterSpacing: '0.1em',
-              color:         `var(${b.signal})`,
-            }}>
-              <span style={{
-                width:        6,
-                height:       6,
-                borderRadius: '50%',
-                background:   `var(${b.signal})`,
-                flexShrink:   0,
-              }} />
-              {b.text}
-            </div>
-          ))}
+        {/* Italic subtitle */}
+        <div style={{
+          fontFamily:    "'Fraunces', serif",
+          fontStyle:     'italic',
+          fontWeight:    500,
+          fontSize:      '3.2rem',
+          letterSpacing: '-0.01em',
+          lineHeight:    1.1,
+          color:         '#9b93b0',
+          marginTop:     '-0.5rem',
+        }}>
+          Different{' '}
+          <b style={{ fontStyle: 'normal', fontWeight: 600, color: '#6a5f8c' }}>skin.</b>
         </div>
-      </FragCard>
 
-      {/* ── Frag 5: Arch color swatches — bottom, partially cropped ── */}
-      <FragCard rotate={-1} style={{ top: 480, left: 40, padding: '16px 20px', width: 560 }}>
-        <Label>Hospital Archetypes</Label>
-        <div style={{ display: 'flex', gap: 10 }}>
-          {ARCH.map((a, i) => (
-            <div key={a.label} style={{ flex: 1 }}>
+        {/* Arch swatch row — data markers, not decoration */}
+        <div style={{
+          display:    'flex',
+          gap:        '10px',
+          marginTop:  '2.4rem',
+          alignItems: 'center',
+        }}>
+          {[
+            { token: 'var(--arch-medium)',    name: 'District'  },
+            { token: 'var(--arch-large)',     name: 'Teaching'  },
+            { token: 'var(--arch-specialty)', name: 'Specialty' },
+            { token: 'var(--arch-root)',      name: 'Root'      },
+          ].map((a, i) => (
+            <div key={a.name} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div style={{
-                height:       56,
-                borderRadius: 8,
-                background:   `var(${a.token})`,
+                width:        52,
+                height:       10,
+                borderRadius: 99,
+                background:   a.token,
+                opacity:      0.72,
                 position:     'relative',
                 overflow:     'hidden',
               }}>
+                {/* per-swatch shimmer on hover */}
                 {shimmerTick > 0 && (
                   <div
                     key={shimmerTick}
@@ -245,42 +171,48 @@ export function InvitraceCover({ shimmerTick = 0 }: { shimmerTick?: number }) {
                       position:   'absolute',
                       inset:      0,
                       transform:  'translateX(-150%)',
-                      background: 'linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.55) 50%, transparent 80%)',
-                      animation:  `swatch-shimmer 0.38s cubic-bezier(0.16, 1, 0.3, 1) ${i * SWATCH_STAGGER_MS}ms forwards`,
+                      background: 'linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.65) 50%, transparent 80%)',
+                      animation:  `swatch-shimmer 0.38s cubic-bezier(0.16, 1, 0.3, 1) ${i * 60}ms forwards`,
                     }}
                   />
                 )}
               </div>
-              <div style={{ fontSize: 10, color: 'var(--fg-muted)', marginTop: 5, letterSpacing: '0.05em' }}>
+              <span style={{
+                fontFamily:    "'IBM Plex Mono', monospace",
+                fontSize:      '0.58rem',
+                letterSpacing: '0.04em',
+                color:         '#9d95b2',
+                whiteSpace:    'nowrap' as const,
+              }}>
                 {a.name}
-              </div>
+              </span>
             </div>
           ))}
         </div>
-      </FragCard>
+      </div>
 
-      {/* ── Frag 6: Type scale — bottom-right ── */}
-      <FragCard rotate={3} style={{ top: 470, left: 650, padding: '16px 20px', width: 210 }}>
-        <Label>Type Scale</Label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          {[
-            { size: 28, weight: 800, text: 'Aa',                   muted: false },
-            { size: 20, weight: 700, text: 'Bb',                   muted: false },
-            { size: 14, weight: 500, text: 'Cc Dd Ee',             muted: false },
-            { size: 11, weight: 400, text: 'Fine print / eyebrow', muted: true  },
-          ].map((t, i) => (
-            <div key={i} style={{
-              fontSize:      t.size,
-              fontWeight:    t.weight,
-              color:         t.muted ? 'var(--fg-subtle)' : 'var(--fg)',
-              lineHeight:    1.2,
-              letterSpacing: '-0.01em',
-            }}>
-              {t.text}
-            </div>
-          ))}
+      {/* ── Full-card shimmer on hover — sweeps once across the whole surface ── */}
+      {shimmerTick > 0 && (
+        <div
+          key={`shimmer-${shimmerTick}`}
+          aria-hidden="true"
+          style={{
+            position:      'absolute',
+            inset:         0,
+            zIndex:        3,
+            pointerEvents: 'none',
+            overflow:      'hidden',
+          }}
+        >
+          <div style={{
+            position:   'absolute',
+            inset:      0,
+            transform:  'translateX(-150%)',
+            background: 'linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.22) 45%, rgba(255,255,255,0.14) 55%, transparent 75%)',
+            animation:  'inv-card-shimmer 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          }} />
         </div>
-      </FragCard>
+      )}
 
     </div>
   )
