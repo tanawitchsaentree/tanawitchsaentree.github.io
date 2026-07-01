@@ -6,7 +6,7 @@ import type { ProjectFrontmatter } from '@/types/project'
 import { LockGlyph, Tags } from './WorkGridAtoms'
 
 // Lazy demo covers
-const InvitraceCover = lazy(() =>
+const InvitraceCoverLazy = lazy(() =>
   import('@/demos/allianz/InvitraceCover').then(m => ({ default: m.InvitraceCover }))
 )
 const StellarCover = lazy(() =>
@@ -30,16 +30,17 @@ const OVERLAY_INSET_TOP = 24  // px — breathing room above phone in overlay va
 // variant 'overlay' → component full-bleed, dark gradient scrim, white text over
 // Both Invitrace slugs share the same cover intentionally — same design system, different case.
 type CoverDef = {
-  Component:   React.ComponentType
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Component:   React.ComponentType<any>
   zoom:        number
   variant:     'split' | 'overlay'
   accentColor: string
 }
 export const COVERS: Record<string, CoverDef> = {
-  'invitrace-design-system':    { Component: InvitraceCover, zoom: 0.42, variant: 'split',   accentColor: 'var(--cover-invitrace)' },
-  'allianz-doc-classification': { Component: InvitraceCover, zoom: 0.42, variant: 'split',   accentColor: 'var(--cover-invitrace)' },
-  'stellareat':                 { Component: StellarCover,   zoom: 0.85, variant: 'overlay', accentColor: 'var(--cover-stellar)'   },
-  'vitae':                      { Component: VitaeCover,     zoom: 0.85, variant: 'overlay', accentColor: 'var(--cover-vitae)'     },
+  'invitrace-design-system':    { Component: InvitraceCoverLazy, zoom: 0.42, variant: 'split',   accentColor: 'var(--cover-invitrace)' },
+  'allianz-doc-classification': { Component: InvitraceCoverLazy, zoom: 0.42, variant: 'split',   accentColor: 'var(--cover-invitrace)' },
+  'stellareat':                 { Component: StellarCover,       zoom: 0.85, variant: 'overlay', accentColor: 'var(--cover-stellar)'   },
+  'vitae':                      { Component: VitaeCover,         zoom: 0.85, variant: 'overlay', accentColor: 'var(--cover-vitae)'     },
 }
 
 const EASE_DECISIVE  = [0.16, 1, 0.3, 1] as const
@@ -213,7 +214,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
                 pointerEvents:   'none',
               }}>
                 <Suspense fallback={null}>
-                  <cover.Component />
+                  <cover.Component shimmerTick={isInvitrace ? shimmerTick : undefined} />
                 </Suspense>
               </div>
             </div>
@@ -230,30 +231,6 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
             pointerEvents: 'none',
             zIndex:        2,
           }} />
-
-          {/* Invitrace: one-shot shimmer sweep on hover */}
-          {isInvitrace && shimmerTick > 0 && (
-            <div
-              key={shimmerTick}
-              aria-hidden="true"
-              style={{
-                position:   'absolute',
-                inset:      0,
-                zIndex:     4,
-                pointerEvents: 'none',
-                overflow:   'hidden',
-                borderRadius: 'var(--radius-xl)',
-              }}
-            >
-              <div style={{
-                position:   'absolute',
-                inset:      0,
-                transform:  'translateX(-100%)',
-                background: 'linear-gradient(105deg, transparent 25%, color-mix(in srgb, var(--arch-root) 30%, white) 45%, color-mix(in srgb, var(--arch-root) 18%, white) 55%, transparent 75%)',
-                animation:  'invitrace-shimmer 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              }} />
-            </div>
-          )}
 
           {/* Text zone */}
           <div style={{

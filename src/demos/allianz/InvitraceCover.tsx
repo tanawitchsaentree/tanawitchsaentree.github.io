@@ -8,6 +8,9 @@
  * Designed at 900×700px — zoomed to 0.42 in the grid card, showing top ~620px.
  */
 
+// Shimmer STAGGER per swatch index (ms) — 60ms apart, 4 swatches = last fires at 180ms
+const SWATCH_STAGGER_MS = 60
+
 const ARCH = [
   { token: '--arch-medium',    name: 'District',  label: 'arch-medium'    },
   { token: '--arch-large',     name: 'Teaching',  label: 'arch-large'     },
@@ -68,7 +71,7 @@ function Label({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function InvitraceCover() {
+export function InvitraceCover({ shimmerTick = 0 }: { shimmerTick?: number }) {
   return (
     <div style={{
       position:   'relative',
@@ -225,13 +228,29 @@ export function InvitraceCover() {
       <FragCard rotate={-1} style={{ top: 480, left: 40, padding: '16px 20px', width: 560 }}>
         <Label>Hospital Archetypes</Label>
         <div style={{ display: 'flex', gap: 10 }}>
-          {ARCH.map(a => (
+          {ARCH.map((a, i) => (
             <div key={a.label} style={{ flex: 1 }}>
               <div style={{
                 height:       56,
                 borderRadius: 8,
                 background:   `var(${a.token})`,
-              }} />
+                position:     'relative',
+                overflow:     'hidden',
+              }}>
+                {shimmerTick > 0 && (
+                  <div
+                    key={shimmerTick}
+                    aria-hidden="true"
+                    style={{
+                      position:   'absolute',
+                      inset:      0,
+                      transform:  'translateX(-150%)',
+                      background: 'linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.55) 50%, transparent 80%)',
+                      animation:  `swatch-shimmer 0.38s cubic-bezier(0.16, 1, 0.3, 1) ${i * SWATCH_STAGGER_MS}ms forwards`,
+                    }}
+                  />
+                )}
+              </div>
               <div style={{ fontSize: 10, color: 'var(--fg-muted)', marginTop: 5, letterSpacing: '0.05em' }}>
                 {a.name}
               </div>

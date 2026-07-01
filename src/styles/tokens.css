@@ -129,9 +129,9 @@
   --cursor-ring: #0A0A0A;
 }
 
-@keyframes invitrace-shimmer {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(100%); }
+@keyframes swatch-shimmer {
+  from { transform: translateX(-150%); }
+  to   { transform: translateX(150%); }
 }
 
 
