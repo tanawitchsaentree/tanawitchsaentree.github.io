@@ -54,7 +54,7 @@ export function ProfitaTension() {
         </p>
 
         {/* Two-column tension grid */}
-        <div style={{
+        <div className="prof-grid-2" style={{
           display:             'grid',
           gridTemplateColumns: '1fr 1fr',
           gap:                 '1px',

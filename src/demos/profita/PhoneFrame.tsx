@@ -45,13 +45,14 @@ export function PhoneFrame({ label, caption, children }: PhoneFrameProps) {
 
       {/* screen content */}
       <div style={{
-        flex:          1,
-        display:       'flex',
+        flex:       1,
+        overflow:   'hidden',
+        display:    'flex',
         flexDirection: 'column',
-        alignItems:    'center',
-        justifyContent:'center',
-        padding:       '12px 10px',
-        gap:           8,
+        alignItems: children ? 'flex-start' : 'center',
+        justifyContent: children ? 'flex-start' : 'center',
+        padding:    children ? 0 : '12px 10px',
+        gap:        children ? 0 : 8,
       }}>
         {children ?? (
           <span style={{

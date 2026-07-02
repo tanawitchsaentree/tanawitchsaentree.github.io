@@ -2,7 +2,40 @@
 
 import { useEffect, useRef } from 'react'
 import { P } from './tokens'
-import { PhoneFrame } from './PhoneFrame'
+import { ProfitaPhoneScreen, PROFITA_PHONE_W, PROFITA_PHONE_H, type ScreenName } from './ProfitaPhoneScreen'
+import { useContainerWidth } from './useContainerWidth'
+
+const LABEL_TO_SCREEN: Record<string, ScreenName> = {
+  Feed:      'feed',
+  Advisor:   'robo',
+  Portfolio: 'portfolio',
+}
+
+function PiecePhone({ label, targetW }: { label: string; targetW: number }) {
+  const screen = LABEL_TO_SCREEN[label]
+  if (!screen) return null
+  const scale = targetW / PROFITA_PHONE_W
+  return (
+    <div style={{
+      width:     targetW,
+      height:    PROFITA_PHONE_H * scale,
+      flexShrink:0,
+      position:  'relative',
+    }}>
+      <div style={{
+        position:        'absolute',
+        top:             0,
+        left:            0,
+        transform:       `scale(${scale})`,
+        transformOrigin: 'top left',
+        width:           PROFITA_PHONE_W,
+        height:          PROFITA_PHONE_H,
+      }}>
+        <ProfitaPhoneScreen screen={screen} />
+      </div>
+    </div>
+  )
+}
 
 // ── helpers ────────────────────────────────────────────────────────
 function lerp(a: number, b: number, t: number) { return a + (b - a) * t }
@@ -33,13 +66,16 @@ const DECISIONS = [
   },
 ] as const
 
-// ── Piece config: [startX%, startY%, homeX%, homeY%] (relative to viewport center) ──
+// ── Piece config ──────────────────────────────────────────────────────
+// s/e: [x%vw, y%vh] start → end positions relative to viewport center
+// s0/s1: CSS scale start → end
+// rot: initial rotation in degrees → lerps to 0
 const PIECES = [
-  { type: 'phone', label: 'Feed',        s: [-70,-46], e: [-30,-4]  },
-  { type: 'phone', label: 'Advisor',     s: [ 72, 40], e: [ 31, 6]  },
-  { type: 'phone', label: 'Portfolio',   s: [ 60,-52], e: [ 20,-30] },
-  { type: 'card',  label: '+12.4% YTD',  s: [-64, 52], e: [-26, 30] },
-  { type: 'card',  label: '฿48,000',     s: [ 30, 64], e: [ 14, 34] },
+  { type: 'phone', label: 'Feed',        s: [-70,-46], e: [-30,-4],  s0: 0.82, s1: 1.0,  rot:  -8 },
+  { type: 'phone', label: 'Advisor',     s: [ 72, 40], e: [ 31, 6],  s0: 0.78, s1: 1.0,  rot:   6 },
+  { type: 'phone', label: 'Portfolio',   s: [ 60,-52], e: [ 20,-30], s0: 0.85, s1: 1.0,  rot:  -4 },
+  { type: 'card',  label: '+12.4% YTD',  s: [-64, 52], e: [-26, 30], s0: 0.75, s1: 1.0,  rot:  10 },
+  { type: 'card',  label: '฿48,000',     s: [ 30, 64], e: [ 14, 34], s0: 0.80, s1: 1.0,  rot:  -6 },
 ] as const
 
 // ── Stat card piece ────────────────────────────────────────────────
@@ -76,30 +112,49 @@ function StatCard({ label }: { label: string }) {
 function ScrollCollage() {
   const trackRef  = useRef<HTMLDivElement>(null)
   const pieceRefs = useRef<(HTMLDivElement | null)[]>([])
+  const vw = useContainerWidth()
+  // Responsive phone width: 148px desktop, scales down for narrow viewports
+  const pieceTargetW = vw > 0 && vw < 640 ? Math.round(vw * 0.36) : 148
 
   useEffect(() => {
-    const tick = () => {
-      const track = trackRef.current
-      if (!track) return
-      const rect = track.getBoundingClientRect()
-      const vh   = window.innerHeight
-      // t: 0 when track top hits viewport top, 1 when track bottom hits viewport bottom
-      const raw  = -rect.top / (rect.height - vh)
-      const t    = clamp(raw, 0, 1)
-
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       pieceRefs.current.forEach((el, i) => {
         if (!el) return
-        const piece = PIECES[i]
-        const x = lerp(piece.s[0], piece.e[0], t)
-        const y = lerp(piece.s[1], piece.e[1], t)
-        el.style.transform = `translate(calc(${x}vw - 50%), calc(${y}vh - 50%))`
-        el.style.opacity   = String(lerp(0.4, 1, clamp(t * 2, 0, 1)))
+        const p = PIECES[i]
+        el.style.transform = `translate(calc(${p.e[0]}vw - 50%), calc(${p.e[1]}vh - 50%)) scale(${p.s1}) rotate(0deg)`
+        el.style.opacity   = '1'
       })
+      return
     }
 
-    window.addEventListener('scroll', tick, { passive: true })
-    tick()
-    return () => window.removeEventListener('scroll', tick)
+    // RAF loop — reads getBoundingClientRect() every frame so it works
+    // with Lenis (which drives scroll via its own RAF, not native events).
+    let rafId: number
+
+    const tick = () => {
+      const track = trackRef.current
+      if (track) {
+        const rect = track.getBoundingClientRect()
+        const vh   = window.innerHeight
+        const raw  = -rect.top / (rect.height - vh)
+        const t    = clamp(raw, 0, 1)
+
+        pieceRefs.current.forEach((el, i) => {
+          if (!el) return
+          const piece = PIECES[i]
+          const x     = lerp(piece.s[0], piece.e[0], t)
+          const y     = lerp(piece.s[1], piece.e[1], t)
+          const scale = lerp(piece.s0, piece.s1, t)
+          const rot   = lerp(piece.rot, 0, t)
+          el.style.transform = `translate(calc(${x}vw - 50%), calc(${y}vh - 50%)) scale(${scale}) rotate(${rot}deg)`
+          el.style.opacity   = String(lerp(0.4, 1, clamp(t * 2, 0, 1)))
+        })
+      }
+      rafId = requestAnimationFrame(tick)
+    }
+
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
   }, [])
 
   return (
@@ -165,13 +220,12 @@ function ScrollCollage() {
               top:       '50%',
               left:      '50%',
               opacity:   0,
-              transform: `translate(calc(${piece.s[0]}vw - 50%), calc(${piece.s[1]}vh - 50%))`,
+              transform: `translate(calc(${piece.s[0]}vw - 50%), calc(${piece.s[1]}vh - 50%)) scale(${piece.s0}) rotate(${piece.rot}deg)`,
               zIndex:    5,
-              '--pw':    '148px',
-            } as React.CSSProperties}
+            }}
           >
             {piece.type === 'phone'
-              ? <PhoneFrame label={piece.label} />
+              ? <PiecePhone label={piece.label} targetW={pieceTargetW} />
               : <StatCard label={piece.label} />
             }
           </div>
@@ -195,7 +249,7 @@ export function ProfitaDecisions() {
         padding:    'clamp(4rem,8vw,7rem) 0',
       }}>
         <div className="prof-wrap">
-          <div style={{
+          <div className="prof-grid-3" style={{
             display:             'grid',
             gridTemplateColumns: 'repeat(3,1fr)',
             gap:                 'clamp(1rem,2vw,1.5rem)',

@@ -8,11 +8,12 @@ export const metadata: Metadata = {
 
 export default function ProfitaLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      data-universe="profita"
-      className="min-h-svh bg-[var(--bg)] text-[var(--fg)]"
-    >
-      {children}
-    </div>
+    <>
+      {/* Paint html bg dark immediately — prevents white flash on View Transition enter */}
+      <style>{`html { background-color: #0c1c33 }`}</style>
+      <div data-universe="profita" style={{ minHeight: '100svh' }}>
+        {children}
+      </div>
+    </>
   )
 }

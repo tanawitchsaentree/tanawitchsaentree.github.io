@@ -30,9 +30,10 @@ export const P = {
     white15: 'rgba(255,255,255,.15)',
     line:    'rgba(255,255,255,.10)',
     lineHi:  'rgba(255,255,255,.16)',
-    dark12:  'rgba(0,0,0,.12)',
-    dark30:  'rgba(0,0,0,.30)',
-    dark45:  'rgba(0,0,0,.45)',
+    dark12:      'rgba(0,0,0,.12)',
+    dark30:      'rgba(0,0,0,.30)',
+    dark45:      'rgba(0,0,0,.45)',
+    navy700_70:  'rgba(24,47,82,.70)',
   },
   font: {
     disp: "'Instrument Serif', serif",

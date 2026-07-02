@@ -38,7 +38,7 @@ export function ProfitaReflection() {
       <div className="prof-wrap" style={{ position: 'relative', zIndex: 1 }}>
 
         <p className="prof-kick" style={{ justifyContent: 'center' }}>
-          06 · Reflection
+          07 · Reflection
         </p>
 
         <blockquote style={{

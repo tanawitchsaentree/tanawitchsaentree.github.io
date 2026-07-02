@@ -44,7 +44,7 @@ export function ProfitaSystem() {
           <em style={{ fontStyle: 'italic', color: P.color.gold }}>Naval Blue.</em>
         </h2>
 
-        <div style={{
+        <div className="prof-grid-2" style={{
           display:             'grid',
           gridTemplateColumns: '1fr 1fr',
           gap:                 'clamp(2rem,4vw,4rem)',

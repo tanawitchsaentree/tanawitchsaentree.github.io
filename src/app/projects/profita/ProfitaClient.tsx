@@ -8,8 +8,9 @@ import { ProfitaProblem }     from '@/demos/profita/ProfitaProblem'
 import { ProfitaTension }     from '@/demos/profita/ProfitaTension'
 import { ProfitaDecisions }   from '@/demos/profita/ProfitaDecisions'
 import { ProfitaFlow }        from '@/demos/profita/ProfitaFlow'
-import { ProfitaSystem }      from '@/demos/profita/ProfitaSystem'
-import { ProfitaReflection }  from '@/demos/profita/ProfitaReflection'
+import { ProfitaSystem }        from '@/demos/profita/ProfitaSystem'
+import { ProfitaScreenGallery } from '@/demos/profita/ProfitaScreenGallery'
+import { ProfitaReflection }    from '@/demos/profita/ProfitaReflection'
 
 export function ProfitaClient() {
   // Scroll reveal
@@ -18,7 +19,7 @@ export function ProfitaClient() {
       entries => entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('prof-vis'); io.unobserve(e.target) }
       }),
-      { threshold: 0.10, rootMargin: '0px 0px -48px 0px' }
+      { threshold: 0.06, rootMargin: '0px 0px 80px 0px' }
     )
     document.querySelectorAll('.prof-animate').forEach(el => io.observe(el))
     return () => io.disconnect()
@@ -43,10 +44,10 @@ export function ProfitaClient() {
         /* Scroll reveal */
         [data-demo="profita"] .prof-animate {
           opacity: 0;
-          transform: translateY(32px);
+          transform: translateY(24px);
           transition:
-            opacity  .9s ${P.ease.expo},
-            transform .9s ${P.ease.expo};
+            opacity  .6s ${P.ease.expo},
+            transform .6s ${P.ease.expo};
         }
         [data-demo="profita"] .prof-animate.prof-vis {
           opacity: 1;
@@ -89,18 +90,14 @@ export function ProfitaClient() {
           color: ${P.color.navy900};
         }
 
-        /* Responsive */
+        /* Responsive — use class names, not style-string matching */
         @media (max-width: 760px) {
-          [data-demo="profita"] [style*="grid-template-columns: 1fr 1fr"] {
+          [data-demo="profita"] .prof-grid-2,
+          [data-demo="profita"] .prof-grid-3,
+          [data-demo="profita"] .prof-grid-auto {
             grid-template-columns: 1fr !important;
           }
-          [data-demo="profita"] [style*="grid-template-columns: auto 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-          [data-demo="profita"] [style*="grid-template-columns: repeat(3,1fr)"] {
-            grid-template-columns: 1fr !important;
-          }
-          [data-demo="profita"] [style*="grid-template-columns: repeat(4,1fr)"] {
+          [data-demo="profita"] .prof-grid-4 {
             grid-template-columns: 1fr 1fr !important;
           }
         }
@@ -124,7 +121,7 @@ export function ProfitaClient() {
           fontFamily:  P.font.body,
           fontSize:    '1rem',
           lineHeight:  1.6,
-          overflowX:   'hidden',
+          overflowX:   'clip',
           minHeight:   '100vh',
         }}
       >
@@ -135,6 +132,7 @@ export function ProfitaClient() {
         <ProfitaDecisions />
         <ProfitaFlow />
         <ProfitaSystem />
+        <ProfitaScreenGallery />
         <ProfitaReflection />
       </div>
     </>
