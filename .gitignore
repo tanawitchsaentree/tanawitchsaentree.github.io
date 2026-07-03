@@ -26,8 +26,9 @@ out
 *.sln
 *.sw?
 
-# editor/agent + stray caches
-.claude/
+# editor/agent + stray caches — ignore everything EXCEPT skills
+.claude/*
+!.claude/skills
 ${local_app_data}*
 *.DS_Store
 .DS_Store
