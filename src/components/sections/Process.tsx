@@ -9,7 +9,7 @@ const PRINCIPLES = [
     number: '01',
     title: "The interesting problem isn't the model — it's where it fails.",
     body: "At Allianz, the classification AI was accurate enough. The design problem was what happened when it wasn't — and how to make that uncertainty legible to operators who needed to act on it. Low-confidence states, exception queues, fallback UX: this is where AI tooling lives or dies for real users.",
-    source: 'Allianz — UI fallbacks for low-confidence ML predictions.',
+    source: 'Allianz — UI fallbacks for low-confidence ML predictions. Design validation: weeks → hours.',
   },
   {
     number: '02',
@@ -25,7 +25,7 @@ const PRINCIPLES = [
   },
 ] as const
 
-const VP = { once: true, margin: '-8% 0px' } as const
+const VP = { once: true, margin: '0px 0px 80px 0px' } as const
 
 export function Process() {
   const reduced = useReducedMotion()

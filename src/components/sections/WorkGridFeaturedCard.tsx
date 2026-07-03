@@ -61,7 +61,7 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor,
         onClick={handleClick}
         initial={reduced ? { opacity: 0 } : { opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '0px 0px -64px 0px' }}
+        viewport={{ once: true, margin: '0px 0px 80px 0px' }}
         transition={{ duration: DURATION_SLOW, ease: EASE_DECISIVE }}
         className="group relative w-full text-left border-none cursor-pointer p-0"
         onMouseEnter={() => setHovered(true)}

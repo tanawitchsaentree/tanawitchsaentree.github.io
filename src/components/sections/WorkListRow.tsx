@@ -30,7 +30,7 @@ export function WorkListRow({ project, index, locked, onOpen, onNavigate, univer
     <motion.div
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '0px 0px -48px 0px' }}
+      viewport={{ once: true, margin: '0px 0px 80px 0px' }}
       transition={{ duration: DURATION, delay: index * STAGGER, ease: EASE_DECISIVE }}
     >
       {/* top hairline */}

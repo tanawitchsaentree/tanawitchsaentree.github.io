@@ -87,7 +87,7 @@ export function VitaeClient() {
           fontFamily:      V.font.sans,
           fontSize:        V.size.body,
           lineHeight:      1.65,
-          overflowX:       'hidden',
+          overflowX:       'clip',
           backgroundImage: `
             radial-gradient(900px 600px at 12% -5%, ${V.alpha.lime20}, transparent 55%),
             radial-gradient(800px 600px at 95% 8%,  ${V.alpha.lime10}, transparent 55%)
@@ -118,7 +118,7 @@ function VitaeRevealScript() {
       (entries) => entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target) }
       }),
-      { threshold: 0.12, rootMargin: '0px 0px -50px 0px' }
+      { threshold: 0.06, rootMargin: '0px 0px 80px 0px' }
     )
     document.querySelectorAll('.vitae-animate').forEach(el => io.observe(el))
     return () => io.disconnect()

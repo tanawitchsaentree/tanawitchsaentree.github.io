@@ -9,6 +9,8 @@ export interface ProjectFrontmatter {
   tags: string[]
   /** Short sentence for grid card */
   summary: string
+  /** Industry facet — Insurance, Health Tech, Fintech, Food Tech, etc. */
+  industry?: string
   /** Solid hex for typographic cover background */
   coverColor: string
   /** Text color on cover — 'light' | 'dark' */

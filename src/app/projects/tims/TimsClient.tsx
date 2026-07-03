@@ -22,7 +22,7 @@ export function TimsClient() {
       entries => entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('tims-vis'); io.unobserve(e.target) }
       }),
-      { threshold: 0.12, rootMargin: '0px 0px -50px 0px' }
+      { threshold: 0.06, rootMargin: '0px 0px 80px 0px' }
     )
     document.querySelectorAll('.tims-animate').forEach(el => io.observe(el))
     return () => io.disconnect()
@@ -125,7 +125,7 @@ export function TimsClient() {
           fontFamily:      T.font.sans,
           fontSize:        T.size.body,
           lineHeight:      1.65,
-          overflowX:       'hidden',
+          overflowX:       'clip',
           backgroundImage: `radial-gradient(900px 480px at 88% -6%, ${T.alpha.red10}, transparent 60%)`,
           minHeight:       '100vh',
         }}

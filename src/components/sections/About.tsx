@@ -20,10 +20,10 @@ const TAGS = ['Based in Bangkok', 'Valid Canadian work permit'] as const
 const BIO = [
   <>I&apos;m Nat — a product designer who builds. For seven years I&apos;ve worked on hard, regulated products: enterprise AI tooling at Allianz Technology, a hospital information system at Invitrace Health, an AI-powered consumer platform at Stellareat, and an award-winning investment app at Robowealth.</>,
   <>I didn&apos;t get here on a straight line. I studied graphic design, film, and web development — three things that looked unrelated until they weren&apos;t. Film taught me to tell a story. Code taught me what&apos;s actually buildable. Design taught me to care about the person on the other side of the screen. I taught myself most of it, one problem at a time.</>,
-  <>These days I work with AI as a primary collaborator. At Allianz I built a pipeline that turns requirements into live, deployable Angular prototypes with the design system built in — moving design validation from weeks to hours. I&apos;m most useful where things are messy: regulated constraints, incomplete data, systems that have to hold up when the AI gets it wrong.</>,
+  <>These days I work with AI as a primary collaborator. At Allianz I built a pipeline that turns requirements into live, deployable Angular prototypes with the design system built in — moving design validation from weeks to hours. I&apos;m most useful where things are messy: regulated constraints, incomplete data, systems that have to hold up when the AI gets it wrong. If you&apos;re building in that territory — that&apos;s the brief I&apos;m sharpest on.</>,
 ] as const
 
-const VP = { once: true, margin: '-8% 0px' } as const
+const VP = { once: true, margin: '0px 0px 80px 0px' } as const
 
 export function About() {
   const reduced = useReducedMotion()

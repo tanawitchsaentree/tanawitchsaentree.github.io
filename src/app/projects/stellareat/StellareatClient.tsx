@@ -23,7 +23,7 @@ export function StellareatClient() {
       entries => entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('stellar-vis'); io.unobserve(e.target) }
       }),
-      { threshold: 0.14, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.06, rootMargin: '0px 0px 80px 0px' }
     )
     document.querySelectorAll('.stellar-animate').forEach(el => io.observe(el))
     return () => io.disconnect()
@@ -110,7 +110,7 @@ export function StellareatClient() {
           fontFamily:      S.font.body,
           fontSize:        S.size.body,
           lineHeight:      1.65,
-          overflowX:       'hidden',
+          overflowX:       'clip',
           position:        'relative',
           minHeight:       '100vh',
         }}

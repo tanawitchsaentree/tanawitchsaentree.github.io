@@ -27,7 +27,7 @@ const GLOBAL_CSS = `
     font-size: 16.5px;
     line-height: 1.62;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    overflow-x: clip;
     min-height: 100dvh;
   }
   [data-demo="claims"]::before {
@@ -96,7 +96,7 @@ export function ClaimsClient() {
       entries => entries.forEach(e => {
         if (e.isIntersecting) { e.target.classList.add('claims-in'); io.unobserve(e.target) }
       }),
-      { threshold: .14, rootMargin: '0px 0px -40px 0px' }
+      { threshold: .06, rootMargin: '0px 0px 80px 0px' }
     )
     document.querySelectorAll('[data-demo="claims"] .claims-animate').forEach(el => io.observe(el))
     return () => io.disconnect()

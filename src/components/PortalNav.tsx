@@ -68,14 +68,15 @@ function CardMedia({ video, poster, active, load }: {
 
 interface CardDef {
   id: Door; label: string; z: number
-  video?: string; poster?: string   // poster shows while the loop loads
+  video?: string; poster?: string
+  sublabel?: string
 }
 
 // About is the front/live card (highest z); Work fans left, Contact fans right.
 // Each card plays a silent looping clip (dribbble vibe), with its still as poster.
 const CARDS: CardDef[] = [
   { id: 'work',    label: 'Work',    z: 1, video: '/images/work.mp4',      poster: '/images/work.jpg' },
-  { id: 'about',   label: 'About',   z: 3, video: '/images/home-hero.mp4', poster: '/images/home-hero.jpg' },
+  { id: 'about',   label: 'About',   z: 3, video: '/images/home-hero.mp4', poster: '/images/home-hero.jpg', sublabel: '& How I Work' },
   { id: 'contact', label: 'Contact', z: 2, video: '/images/contact.mp4',   poster: '/images/contact.jpg' },
 ]
 
@@ -280,7 +281,7 @@ export function PortalNav({ onEnter, phase, setPhase, everOpened, setEverOpened 
                 animate={{
                   boxShadow: phase === 'hover' && card.id === 'about'
                     ? '0 18px 40px -12px var(--shadow-color-mid)'
-                    : '0 0px 0px 0px rgba(0,0,0,0)',
+                    : '0 0px 0px 0px color-mix(in srgb, var(--fg) 0%, transparent)',
                 }}
                 transition={moveTransition}
                 whileHover={open && !reduced ? { y: -10, scale: 1.04 } : undefined}
@@ -301,7 +302,7 @@ export function PortalNav({ onEnter, phase, setPhase, everOpened, setEverOpened 
               {/* door label — pinned under the card, auto-centred */}
               <AnimatePresence>
                 {isDoor && (
-                  <div className="absolute inset-x-0 top-full mt-3.5 flex justify-center pointer-events-none">
+                  <div className="absolute inset-x-0 top-full mt-3.5 flex flex-col items-center gap-0.5 pointer-events-none">
                     <motion.span
                       className="whitespace-nowrap font-sans text-[var(--fg)]"
                       style={{ fontSize: 14, fontWeight: 400 }}
@@ -312,6 +313,18 @@ export function PortalNav({ onEnter, phase, setPhase, everOpened, setEverOpened 
                     >
                       {card.label}
                     </motion.span>
+                    {card.sublabel && (
+                      <motion.span
+                        className="whitespace-nowrap font-sans text-[var(--fg-subtle)]"
+                        style={{ fontSize: 'var(--type-xs)', fontWeight: 400 }}
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3, delay: reduced ? 0 : 0.32, ease: EASE_DECISIVE }}
+                      >
+                        {card.sublabel}
+                      </motion.span>
+                    )}
                   </div>
                 )}
               </AnimatePresence>

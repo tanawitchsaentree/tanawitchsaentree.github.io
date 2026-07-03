@@ -33,8 +33,7 @@ const OVERLAY_INSET_TOP = 24  // px — breathing room above phone in overlay va
 // variant 'overlay' → component full-bleed, dark gradient scrim, white text over
 // Both Invitrace slugs share the same cover intentionally — same design system, different case.
 type CoverDef = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Component:   React.ComponentType<any>
+  Component:   React.ComponentType<Record<string, unknown>>
   zoom:        number
   variant:     'split' | 'overlay'
   accentColor: string
@@ -90,7 +89,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
       onMouseLeave={() => setHovered(false)}
       initial={reduced ? { opacity: 0 } : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '0px 0px -64px 0px' }}
+      viewport={{ once: true, margin: '0px 0px 80px 0px' }}
       transition={{ duration: DURATION_SLOW, delay: index * STAGGER_DELAY, ease: EASE_DECISIVE }}
       className="group relative w-full text-left border-none cursor-pointer p-0"
       style={{
