@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { P } from './tokens'
 
@@ -85,6 +85,7 @@ function renderBlock(b: Block, i: number) {
 // ── modal ─────────────────────────────────────────────────────────────
 function ProcessModal({ onClose }: { onClose: () => void }) {
   const ease = 'cubic-bezier(.16,1,.3,1)'
+  const overlayRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -100,9 +101,18 @@ function ProcessModal({ onClose }: { onClose: () => void }) {
     return () => document.removeEventListener('keydown', handleKey)
   }, [handleKey])
 
+  // Backdrop click via ref — avoids jsx-a11y/no-static-element-interactions
+  useEffect(() => {
+    const el = overlayRef.current
+    if (!el) return
+    const handler = (e: MouseEvent) => { if (e.target === el) onClose() }
+    el.addEventListener('click', handler)
+    return () => el.removeEventListener('click', handler)
+  }, [onClose])
+
   return createPortal(
     <div
-      onClick={e => { if (e.target === e.currentTarget) onClose() }}
+      ref={overlayRef}
       style={{
         position:       'fixed',
         inset:          0,
@@ -178,7 +188,7 @@ function ProcessModal({ onClose }: { onClose: () => void }) {
             01 · The problem
           </div>
           <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontWeight: 400, fontSize: 'clamp(1.7rem,4.5vw,2.5rem)', lineHeight: 1.12, color: '#12233f', margin: '8px 0 0', maxWidth: '26ch' }}>
-            Most people who needed to invest <em>didn't believe they could</em>
+            Most people who needed to invest <em>didn&apos;t believe they could</em>
           </h2>
           <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 11, letterSpacing: '.05em', color: '#8a93a0', marginTop: 14 }}>
             Lead Product Designer · Discovery · 4 min read
