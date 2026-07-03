@@ -346,7 +346,11 @@ export function PortalNav({ onEnter, phase, setPhase, everOpened, setEverOpened 
             >
               <Typewriter
                 key={phase === 'hover' ? 'hover' : 'idle'}
-                lines={[[{ text: phase === 'hover' ? 'Learn more about me?' : greeting }]]}
+                lines={phase === 'hover' ? [
+                  [{ text: 'Trained in code & self-taught in' }],
+                  [{ text: 'design, for 10 years building impactful' }],
+                  [{ text: 'digital products for work and for love.' }],
+                ] : [[{ text: greeting }]]}
                 speed={26}
                 startDelay={phase === 'hover' ? 120 : 850}
                 className="font-mono text-[var(--type-base)] text-[var(--fg)] tracking-[0.01em] text-center"
