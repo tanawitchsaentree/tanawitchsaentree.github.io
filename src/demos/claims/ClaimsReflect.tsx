@@ -17,13 +17,26 @@ export function ClaimsReflect() {
               lineHeight: 1.15, letterSpacing: '-.025em',
               color: C.color.txHi, maxWidth: '22ch', margin: 0,
             }}>
-              I came in expecting to ship more Figma. I left shipping{' '}
-              <span style={{ color: C.color.live }}>working software</span>{' '}
-              — and still calling it design.
+              I don&apos;t design screens.{' '}
+              I design <span style={{ color: C.color.live }}>behavior</span>{' '}
+              — and then decide what medium makes it testable.
             </blockquote>
 
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem', marginTop: '2.2rem', maxWidth: '62ch' }}>
+              {[
+                { q: 'Figma isn\'t the output.', a: 'It\'s a tool. A good one for early exploration, for communication, for surfaces that don\'t involve reactive state. But one option in a larger decision about what form a design should take.' },
+                { q: 'Code surfaces what Figma hides.', a: 'In Figma, the Close Section button looks enabled because you drew it that way. In a running app, computed(() => form.control.invalid) stays disabled regardless. The bug has nowhere to hide — and it lands on the designer\'s desk, not the engineer\'s.' },
+                { q: 'Nobody asked me to work this way.', a: 'I decided the deliverable needed to change. The loop, the skill library, the verify-separate-from-build constraint — all personal initiative. That\'s not a credential. It\'s a choice I\'ll keep making.' },
+              ].map(({ q, a }) => (
+                <div key={q} style={{ borderLeft: `2px solid ${C.color.lineBri}`, paddingLeft: '1rem' }}>
+                  <p style={{ fontFamily: C.font.display, fontWeight: 600, fontSize: '.96rem', color: C.color.txHi, margin: '0 0 .35rem' }}>{q}</p>
+                  <p style={{ fontSize: '.9rem', color: C.color.tx, lineHeight: 1.6, margin: 0 }}>{a}</p>
+                </div>
+              ))}
+            </div>
+
             <p style={{ fontFamily: C.font.mono, fontSize: '.76rem', color: C.color.txDim, lineHeight: 1.65, maxWidth: '68ch', marginTop: '2rem', borderTop: `1px solid ${C.color.line}`, paddingTop: '1.3rem' }}>
-              {'// enterprise claims case study. the platform, the conversion flow, the audit-build-verify workflow and the skill library reflect real work. client and colleague names are stand-ins; ticket IDs and internal figures are omitted; the panels here are an interactive demonstration — mock data, placeholder routes — not the production system.'}
+              {'// enterprise claims case study. the platform, the features, the audit-build-verify loop and the skill library reflect real work at a leading european commercial insurer. ticket IDs and reserve figures are illustrative; the panels here are an interactive demonstration — mock data, placeholder routes — not the production system.'}
             </p>
           </div>
         </div>
