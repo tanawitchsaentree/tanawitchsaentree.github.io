@@ -55,13 +55,14 @@ interface Props {
   project:      ProjectFrontmatter
   index:        number
   locked:       boolean
+  hideText?:    boolean  // suppress text overlay inside card (title/tags/summary shown outside)
   onOpen:       (slug: string) => void
   onNavigate:   (href: string) => void
   universePath: string | undefined
 }
 
 // ── GridCard ───────────────────────────────────────────────────
-export function WorkGridCard({ project, index, locked, onOpen, onNavigate, universePath }: Props) {
+export function WorkGridCard({ project, index, locked, hideText, onOpen, onNavigate, universePath }: Props) {
   const reduced = useReducedMotion()
   const cover   = COVERS[project.slug]
   const [hovered, setHovered] = useState(false)
@@ -149,6 +150,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
           }} />
 
           {/* White text — bottom-left */}
+          {!hideText && (
           <div style={{
             position:      'absolute',
             bottom:        0,
@@ -192,6 +194,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
               {project.summary}
             </p>
           </div>
+          )}
         </>
       ) : (
         /* ── Split variant: component top, solid text zone below ── */
@@ -202,7 +205,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
               top:            0,
               left:           0,
               right:          0,
-              height:         PREVIEW_H,
+              height:         hideText ? '100%' : PREVIEW_H,
               overflow:       'hidden',
               pointerEvents:  'none',
               zIndex:         1,
@@ -223,6 +226,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
             </div>
           )}
 
+          {!hideText && <>
           {/* Bottom fade into text zone */}
           <div aria-hidden="true" style={{
             position:      'absolute',
@@ -278,6 +282,7 @@ export function WorkGridCard({ project, index, locked, onOpen, onNavigate, unive
               {project.summary}
             </p>
           </div>
+          </>}
         </>
       )}
     </motion.button>

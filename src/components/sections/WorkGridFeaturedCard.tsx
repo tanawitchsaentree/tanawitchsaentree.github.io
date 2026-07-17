@@ -28,13 +28,15 @@ interface Props {
   locked:       boolean
   accentColor:  string
   hoverColor?:  string   // optional separate color for hover bloom; defaults to accentColor
+  noBleed?:     boolean  // disable downward iPad bleed (use when stacked above other content)
+  hideText?:    boolean  // suppress text overlay inside card (title/tags/summary shown outside)
   onOpen:       (slug: string) => void
   onNavigate:   (href: string) => void
   universePath: string | undefined
 }
 
 // ── FeaturedCard ───────────────────────────────────────────────
-export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor, onOpen, onNavigate, universePath }: Props) {
+export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor, noBleed, hideText, onOpen, onNavigate, universePath }: Props) {
   const reduced    = useReducedMotion()
   const [hovered, setHovered] = useState(false)
   const bloomColor = hoverColor ?? accentColor
@@ -54,7 +56,9 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor,
      */
     <div style={{
       borderRadius: 'var(--radius-xl)',
-      clipPath:     `inset(0 0 -${IPAD_BLEED_PX}px 0 round var(--radius-xl))`,
+      clipPath:     noBleed
+        ? `inset(0 round var(--radius-xl))`
+        : `inset(0 0 -${IPAD_BLEED_PX}px 0 round var(--radius-xl))`,
     }}>
       <motion.button
         type="button"
@@ -87,17 +91,18 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor,
         aria-label={`${project.title}${locked ? ' (password-protected)' : ''}`}
       >
 
-        {/* iPad — right side, bleeds below via clipPath on wrapper */}
+        {/* iPad — when hideText, fill full card; otherwise right-side only */}
         <div
           aria-hidden="true"
           data-demo
           onClick={e => e.stopPropagation()}
           style={{
             position:      'absolute',
-            right:         IPAD_RIGHT,
+            right:         hideText ? 0 : IPAD_RIGHT,
             top:           0,
-            width:         IPAD_WIDTH,
-            height:        `calc(100% + ${IPAD_BLEED_PX}px)`,
+            left:          hideText ? 0 : 'auto',
+            width:         hideText ? '100%' : IPAD_WIDTH,
+            height:        hideText ? '100%' : `calc(100% + ${IPAD_BLEED_PX}px)`,
             overflow:      'hidden',
             pointerEvents: 'none',
           }}
@@ -121,7 +126,7 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor,
         </div>
 
         {/* Text — bottom-left */}
-        <div style={{
+        {!hideText && <div style={{
           position:      'absolute',
           bottom:        0,
           left:          0,
@@ -162,7 +167,7 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor,
           }}>
             {project.summary}
           </p>
-        </div>
+        </div>}
       </motion.button>
     </div>
   )
