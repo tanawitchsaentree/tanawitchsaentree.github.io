@@ -3,12 +3,23 @@
 ## Workflow for any UI, component, page, or section
 
 1. Read `design-system/design-system.md` BEFORE writing any code
-2. Build the work
-3. Run the `design-auditor` subagent on the output
-4. If audit FAILS → fix issues → re-audit
-5. If audit PASSES → submit to Tanawitch with audit report attached
+2. Plan before building: write a short token plan (4-6 named hex values, 2+ type
+   roles, a one-sentence layout concept, and the single "signature element" this
+   piece should be remembered by). Check the plan against generic AI defaults —
+   cream+terracotta serif, near-black+acid-green, broadsheet hairline layouts —
+   and against the site's own paper+highlighter direction. Revise anything that
+   reads as templated before writing code.
+3. Build the work. Spend boldness on the signature element only; keep everything
+   else quiet and disciplined.
+4. Run the `design-auditor` subagent on the output
+5. If audit FAILS → fix issues → re-audit
+6. If audit PASSES → submit to Tanawitch with audit report attached
 
 Never submit UI work without an audit report.
+
+Reference: `.agents/skills/frontend-design/SKILL.md` for the full plan/critique
+process and copy-writing principles (active voice, name things by what the user
+controls, no double-duty elements).
 
 ## Always-loaded references
 

@@ -7,7 +7,7 @@ const WORK = [
   { dates: 'Sep 2025 – Present',  title: 'Senior Designer',         company: 'Allianz Technology' },
   { dates: 'Nov 2024 – Aug 2025', title: 'Lead Product Designer',   company: 'Invitrace Health' },
   { dates: 'Jan 2024 – Jun 2024', title: 'Product Designer',        company: 'Stellareat' },
-  { dates: 'May 2020 – Oct 2020', title: 'Senior UX/UI Designer · Profita (for LH Bank)', company: 'Robowealth' },
+  { dates: 'Aug 2020 – Dec 2020', title: 'Senior UX/UI Designer · Profita (for LH Bank)', company: 'Robowealth' },
 ] as const
 
 const EDUCATION = [
