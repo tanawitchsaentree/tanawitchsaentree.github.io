@@ -1,0 +1,107 @@
+/* the fold — grid-rows so the SAME container simply grows */
+.fold {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.9s var(--ease-in-out-natural);
+}
+.fold.open {
+  grid-template-rows: 1fr;
+}
+.foldInner {
+  overflow: hidden;
+}
+
+/* lines inside the fold appear in writing order */
+.ln {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.5s var(--ease-out-quick), transform 0.5s var(--ease-out-quick);
+}
+.open .ln {
+  opacity: 1;
+  transform: none;
+}
+.open .ln:nth-child(1)  { transition-delay: 0.15s; }
+.open .ln:nth-child(2)  { transition-delay: 0.21s; }
+.open .ln:nth-child(3)  { transition-delay: 0.27s; }
+.open .ln:nth-child(4)  { transition-delay: 0.33s; }
+.open .ln:nth-child(5)  { transition-delay: 0.39s; }
+.open .ln:nth-child(6)  { transition-delay: 0.45s; }
+.open .ln:nth-child(7)  { transition-delay: 0.51s; }
+.open .ln:nth-child(8)  { transition-delay: 0.57s; }
+.open .ln:nth-child(9)  { transition-delay: 0.63s; }
+.open .ln:nth-child(10) { transition-delay: 0.69s; }
+.open .ln:nth-child(11) { transition-delay: 0.75s; }
+.open .ln:nth-child(12) { transition-delay: 0.81s; }
+
+.h {
+  color: var(--fg-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: var(--type-xs);
+  line-height: 1.2;
+}
+
+.row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  color: var(--fg-muted);
+}
+.row .yr {
+  display: inline-block;
+  width: 9ch;
+  color: var(--fg-subtle);
+  flex-shrink: 0;
+}
+.row .nm {
+  color: var(--fg);
+}
+.row .dt {
+  transition: color 0.25s var(--ease-out-quick);
+}
+.row:hover .dt,
+.row.show .dt {
+  color: var(--accent-text);
+}
+
+.toggle {
+  color: var(--fg-subtle);
+  transition: color 0.3s var(--ease-out-quick);
+  display: inline-block;
+}
+.toggle:hover {
+  color: var(--accent-text);
+}
+
+.cursor {
+  animation: blink 1.2s steps(1) infinite;
+  color: var(--fg-muted);
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@media (max-width: 620px) {
+  .row .dt {
+    display: block;
+    padding-left: 9ch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fold,
+  .ln,
+  .row .dt,
+  .toggle,
+  .cursor {
+    transition-duration: 0.01ms !important;
+    animation: none !important;
+  }
+  .open .ln {
+    transition-delay: 0s !important;
+  }
+}

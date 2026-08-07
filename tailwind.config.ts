@@ -5,9 +5,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['League Spartan', 'sans-serif'],
-        sans:    ['League Spartan', 'sans-serif'],
-        mono:    ['League Spartan', 'sans-serif'],
+        display: ['"JetBrains Mono Variable"', 'monospace'],
+        sans:    ['"JetBrains Mono Variable"', 'monospace'],
+        mono:    ['"JetBrains Mono Variable"', 'monospace'],
       },
       colors: {
         bg: 'var(--bg)',

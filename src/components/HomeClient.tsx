@@ -2,14 +2,8 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic'
-import type { ProjectFrontmatter } from '@/types/project'
-import { HomeProjectCard } from '@/components/sections/HomeProjectCard'
-
-const ProjectModal = dynamic(
-  () => import('@/components/project/ProjectModal').then(m => m.ProjectModal),
-  { ssr: false },
-)
+import { FieldCanvas } from '@/components/home/FieldCanvas'
+import styles from '@/components/home/HomeDocument.module.css'
 
 // ── routing / data ────────────────────────────────────────────
 
@@ -23,131 +17,98 @@ const UNIVERSE_SLUGS: Record<string, string> = {
   'claims':                     '/projects/claims',
 }
 
-const LOCKED = new Set(['allianz-doc-classification', 'invitrace-design-system'])
-
-const TIMS_PROJECT: ProjectFrontmatter = {
-  slug:       'tims-pos',
-  title:      'Terminal Velocity',
-  company:    'Personal / Concept',
-  year:       '2026',
-  role:       'Design + Front-end Build',
-  timeline:   'Capped at 3 iterations',
-  team:       'Solo · weekends',
-  tags:       ['POS', 'iPad', 'Drive-thru'],
-  summary:    "Two years on the drive-thru line. One POS that fought back every shift. Built a version that doesn't.",
-  coverColor: 'var(--cover-tims)',
-  coverImage: '/images/work-cover/tims-pos.png',
-  coverFg:    'light',
-  order:      0,
-  inGrid:     true,
-  highlight:  true,
+interface WorkRow {
+  year:      string
+  company:   string
+  role:      string
+  outcome:   string
+  slug?:     string
 }
 
-const WORK_HISTORY = [
-  { year: '2025 →',  company: 'Allianz Technology', role: 'Senior Designer' },
-  { year: '2024–25', company: 'Invitrace Health',    role: 'Lead Product Designer' },
-  { year: '2024',    company: 'Stellareat',          role: 'Product Designer' },
-  { year: '2020',    company: 'Robowealth',          role: 'Senior UX/UI Designer' },
+const WORK_HISTORY: WorkRow[] = [
+  {
+    year: '2025 →', company: 'Allianz Technology', role: 'Senior Designer',
+    outcome: 'Built a pipeline turning requirements into deployable prototypes — design validation from weeks to hours',
+    slug: 'allianz-doc-classification',
+  },
+  {
+    year: '2024–25', company: 'Invitrace Health', role: 'Lead Product Designer',
+    outcome: 'One design-system engine, three hospital archetypes, themed without rebuilding',
+    slug: 'invitrace-design-system',
+  },
+  {
+    year: '2024', company: 'Stellareat', role: 'Product Designer',
+    outcome: 'Solo designer on the personalisation flow for an AI recipe-discovery platform',
+    slug: 'stellareat',
+  },
+  {
+    year: '2020', company: 'Robowealth · LH Bank', role: 'Senior UX/UI Designer',
+    outcome: 'Profita won Best App for Customer Experience, Retail Banker International Asia (2023)',
+    slug: 'profita-mutual-fund',
+  },
+]
+
+const SOCIAL = [
+  { label: 'mail',     href: 'mailto:tanawitch.saentree@gmail.com' },
+  { label: 'github',   href: 'https://github.com/tanawitchsaentree' },
+  { label: 'medium',   href: 'https://medium.com/@tanawitchsaentree' },
+  { label: 'behance',  href: 'https://www.behance.net/tanawitchsaentree' },
 ] as const
 
-// ── ProjectStack ──────────────────────────────────────────────
-// title + tagline ด้านบนแต่ละ project แล้วตามด้วย animated card เดิม
+// ── WorkRow ───────────────────────────────────────────────────
 
-interface StackProps {
-  projects:      ProjectFrontmatter[]
-  onOpenProject: (slug: string) => void
-  onNavigate:    (href: string) => void
-}
+function WorkRowItem({ entry, onNavigate }: { entry: WorkRow; onNavigate: (href: string) => void }) {
+  const [show, setShow] = useState(false)
+  const path = entry.slug ? UNIVERSE_SLUGS[entry.slug] : undefined
 
-function ProjectStack({ projects, onOpenProject, onNavigate }: StackProps) {
-  const inGrid      = projects.filter(p => p.inGrid !== false)
-  const hasTims     = inGrid.some(p => p.slug === 'tims-pos')
-  const allProjects = [
-    ...(hasTims ? [] : [TIMS_PROJECT]),
-    ...inGrid,
-  ].sort((a, b) => a.order - b.order)
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(2.5rem, 5vw, 4rem)' }}>
-      {allProjects.map((p, i) => (
-        <ProjectEntry
-          key={p.slug}
-          project={p}
-          cardIndex={i}
-          onOpenProject={onOpenProject}
-          onNavigate={onNavigate}
-        />
-      ))}
-    </div>
+  const body = (
+    <>
+      <span className={styles.yr}>{entry.year}</span>
+      <span className={styles.nm}>{entry.company.toLowerCase()}</span>
+      {' · '}
+      <span className={styles.dt}>{show ? entry.outcome : entry.role}</span>
+    </>
   )
-}
 
-function ProjectEntry({
-  project, cardIndex, onOpenProject, onNavigate,
-}: {
-  project:       ProjectFrontmatter
-  cardIndex:     number
-  onOpenProject: (slug: string) => void
-  onNavigate:    (href: string) => void
-}) {
-  const path = UNIVERSE_SLUGS[project.slug]
+  const handlers = {
+    onMouseEnter: () => setShow(true),
+    onMouseLeave: () => setShow(false),
+    onFocus: () => setShow(true),
+    onBlur:  () => setShow(false),
+  }
+
+  if (path) {
+    return (
+      <button
+        type="button"
+        className={`${styles.row} ${styles.ln} ${show ? styles.show : ''}`}
+        {...handlers}
+        onClick={() => onNavigate(path)}
+      >
+        {body}
+      </button>
+    )
+  }
 
   return (
-    <div>
-      {/* title + tagline */}
-      <div style={{ marginBottom: '0.75rem' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <span
-            className="font-display font-bold text-[var(--fg)]"
-            style={{ fontSize: 'clamp(1rem, 1.6vw, 1.15rem)', lineHeight: 1.25 }}
-          >
-            {project.title}
-          </span>
-          <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">
-            {project.company} · {project.year}
-          </span>
-        </div>
-        <p
-          className="font-display text-[var(--fg-muted)]"
-          style={{ fontSize: 'var(--type-sm)', lineHeight: 1.55, marginTop: '0.2rem' }}
-        >
-          {project.summary}
-        </p>
-      </div>
-
-      <HomeProjectCard
-        project={project}
-        index={cardIndex}
-        onOpen={onOpenProject}
-        onNavigate={onNavigate}
-        universePath={path}
-      />
-    </div>
+    <button
+      type="button"
+      className={`${styles.row} ${styles.ln} ${show ? styles.show : ''}`}
+      {...handlers}
+      onClick={() => setShow(s => !s)}
+    >
+      {body}
+    </button>
   )
 }
 
 // ── HomeClient ────────────────────────────────────────────────
 
-interface HomeClientProps { projects: ProjectFrontmatter[] }
-
-export function HomeClient({ projects }: HomeClientProps) {
+export function HomeClient() {
   const router = useRouter()
-  const [activeSlug, setActiveSlug]     = useState<string | null>(null)
-  const [modalContent, setModalContent] = useState<string | null>(null)
-
-  const openProject = useCallback((slug: string) => {
-    const url = new URL(window.location.href)
-    url.searchParams.set('project', slug)
-    window.history.pushState({ project: slug }, '', url.toString())
-    setActiveSlug(slug)
-    setModalContent('')
-  }, [])
-
-  const closeProject = useCallback(() => {
-    window.history.pushState({}, '', window.location.pathname)
-    setActiveSlug(null)
-    setModalContent(null)
-  }, [])
+  const [open, setOpen]         = useState(false)
+  const [fieldOn, setFieldOn]   = useState(false)
+  const [pulseSignal, setPulseSignal] = useState(0)
 
   const navigateWithTransition = useCallback((href: string) => {
     if (typeof document !== 'undefined' && 'startViewTransition' in document) {
@@ -158,103 +119,79 @@ export function HomeClient({ projects }: HomeClientProps) {
     }
   }, [router])
 
-  const activeProject = activeSlug
-    ? (projects.find(p => p.slug === activeSlug) ?? null)
-    : null
-
   return (
     <>
-      <main id="main-content" tabIndex={-1}>
+      <FieldCanvas
+        active={fieldOn}
+        pulseSignal={pulseSignal}
+        className="fixed inset-0 -z-10 pointer-events-none transition-opacity duration-[1.1s] ease-[var(--ease-in-out-natural)]"
+        style={{ opacity: fieldOn ? 1 : 0 }}
+      />
+
+      <main id="main-content" tabIndex={-1} className="flex" style={{ minHeight: '100svh' }}>
         <h1 className="sr-only">Tanawitch Saentree — Senior Product Designer</h1>
 
         <div
-          className="mx-auto px-6 md:px-10"
-          style={{
-            maxWidth:      980,
-            paddingTop:    'clamp(3rem, 8vw, 5rem)',
-            paddingBottom: 'clamp(4rem, 10vw, 7rem)',
-          }}
+          className="m-auto px-6"
+          style={{ width: 'min(62ch, 100%)', padding: 'clamp(3rem, 8vw, 5rem) 1.5rem' }}
         >
           {/* ── Bio ─────────────────────────────────── */}
-          <header style={{ marginBottom: 'clamp(3rem, 7vw, 5rem)' }}>
-            <p
-              className="font-display text-[var(--fg)] leading-[1.45] mb-5"
-              style={{ fontSize: 'clamp(1.35rem, 3.5vw, 1.75rem)' }}
-            >
-              <strong className="font-bold">Tanawitch Saentree</strong> is a product designer
-              at Allianz Technology passionate about building AI-powered tools that make
-              regulated, complex systems feel human.
-            </p>
-            <p
-              className="font-display text-[var(--fg-muted)] leading-[1.6] mb-6"
-              style={{ fontSize: 'clamp(1rem, 2.2vw, 1.2rem)', maxWidth: '64ch' }}
-            >
-              Previously he worked on products that earn trust through design in{' '}
-              <a href="/projects/profita"   className="text-[var(--fg)] underline underline-offset-[3px] hover:text-[var(--accent-text)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)]">investment apps</a>,{' '}
-              <a href="/projects/invitrace" className="text-[var(--fg)] underline underline-offset-[3px] hover:text-[var(--accent-text)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)]">hospital information systems</a>,{' '}
-              and{' '}
-              <a href="/projects/stellareat" className="text-[var(--fg)] underline underline-offset-[3px] hover:text-[var(--accent-text)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)]">AI-driven food discovery</a>.
-            </p>
-            <div className="flex items-center gap-5 flex-wrap">
-              {[
-                { label: 'GitHub',  href: 'https://github.com/tanawitchsaentree' },
-                { label: 'Medium',  href: 'https://medium.com/@tanawitchsaentree' },
-                { label: 'Behance', href: 'https://www.behance.net/tanawitchsaentree' },
-              ].map(({ label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-[var(--type-sm)] text-[var(--fg-muted)] hover:text-[var(--fg)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)]"
-                >
-                  {label} ↗
-                </a>
-              ))}
-            </div>
-          </header>
-
-          {/* ── Two-col ──────────────────────────────── */}
-          <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-y-12 md:gap-x-14 items-start">
-
-            {/* Experience — sticky */}
-            <aside className="md:sticky md:top-10">
-              <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.14em] text-[var(--accent-text)] font-medium mb-5">
-                Experience
-              </p>
-              <ul className="list-none m-0 p-0 flex flex-col gap-5">
-                {WORK_HISTORY.map(entry => (
-                  <li key={entry.company}>
-                    <p className="font-display font-semibold text-[var(--type-sm)] text-[var(--fg)] mb-0.5 leading-[1.3]">
-                      {entry.company}
-                    </p>
-                    <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">
-                      {entry.year} · {entry.role}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-
-            {/* Projects */}
-            <section id="projects" aria-label="Selected projects">
-              <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.14em] text-[var(--accent-text)] font-medium mb-8">
-                Projects
-              </p>
-              <ProjectStack
-                projects={projects}
-                onOpenProject={openProject}
-                onNavigate={navigateWithTransition}
-              />
-            </section>
-
+          <div className="mb-1">
+            <span className="text-[var(--fg)]">tanawitch saentree</span>{' '}
+            <span className="text-[var(--fg-muted)]">· senior product designer at allianz technology</span>
           </div>
+          <p className="text-[var(--fg-muted)] leading-[1.9] mt-3 mb-4 max-w-[46ch]">
+            i design AI workflows for regulated industries — insurance, banks, hospitals —
+            and ship the production code that proves they work. bangkok, open to relocating.
+          </p>
+          <a href="mailto:tanawitch.saentree@gmail.com" className="text-[var(--fg-muted)]">
+            tanawitch.saentree@gmail.com
+          </a>
+
+          {/* ── the fold ────────────────────────────── */}
+          <div id="home-fold" className={`${styles.fold} ${open ? styles.open : ''}`}>
+            <div className={styles.foldInner}>
+              <div className={`${styles.h} ${styles.ln} mt-6 mb-1`}>work</div>
+              {WORK_HISTORY.map(entry => (
+                <WorkRowItem key={entry.company} entry={entry} onNavigate={navigateWithTransition} />
+              ))}
+
+              <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>contact</div>
+              <div className={styles.ln}>
+                {SOCIAL.map((link, i) => (
+                  <span key={link.label}>
+                    <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" className="text-[var(--fg-muted)]">
+                      {link.label}
+                    </a>
+                    {i < SOCIAL.length - 1 && ' · '}
+                  </span>
+                ))}
+              </div>
+              <button
+                type="button"
+                className={`${styles.row} ${styles.ln} mt-1`}
+                onClick={() => { setFieldOn(true); setPulseSignal(s => s + 1) }}
+                aria-label="Reveal the point field behind this page"
+              >
+                <span className={styles.yr}>live</span>
+                <span className={styles.nm}>field</span>
+                {' · '}
+                <span className={styles.dt}>the 4,500 points behind this page</span>
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className={`${styles.toggle} mt-6`}
+            aria-expanded={open}
+            aria-controls="home-fold"
+            onClick={() => setOpen(o => !o)}
+          >
+            ( {open ? 'less' : 'more'} )<span className={styles.cursor}>_</span>
+          </button>
         </div>
       </main>
-
-      {activeProject && (
-        <ProjectModal project={activeProject} content={modalContent} onClose={closeProject} />
-      )}
     </>
   )
 }

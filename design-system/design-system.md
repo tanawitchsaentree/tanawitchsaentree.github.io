@@ -4,41 +4,29 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
 
 ## Color tokens
 
-> **Direction: paper + highlighter.** The typewriter concept reads as a clean
-> typewritten page (paper white / near-black ink) marked up with a single
-> highlighter (electric yellow). The yellow is reserved for marks that "ink" the
-> page: text selection, the typing caret, and deliberately highlighted words —
+> **Direction: document + signal.** The concept reads as a typewritten page
+> that lives after dark — warm ink background, dim/faint neutral prose tones,
+> and a single amber signal mark. The amber is reserved for marks that matter:
+> the toggle cursor, hover/active state, and deliberately signaled words —
 > never for large fills. Source of truth is `src/styles/tokens.css`.
 
-### Light mode (paper)
-- Background: #FFFFFF (paper white)
-- Surface (cards/panels): #F5F5F5 — `--bg-elevated`
-- Surface muted: #EBEBEB — `--bg-muted`
-- Text primary (ink): #0A0A0A
-- Text muted: #444444
-- Text subtle: #888888
-- Accent (highlighter): #FFE500
-- Accent on-fill text: #0A0A0A — `--accent-fg`
-- Accent text (AA on white): #7A5F00 — `--accent-text`, use when yellow text needs contrast
-- Hairline border: #E0E0E0
-
-### Dark mode
-- Background: #0A0A0A
-- Surface: #161616 — `--bg-elevated`
-- Surface muted: #1F1F1F — `--bg-muted`
-- Text primary: #FFFFFF
-- Text muted: #AAAAAA
-- Text subtle: #666666
-- Accent (highlighter): #FFE500
-- Accent text (readable on dark): #FFD000 — `--accent-text`
-- Hairline border: #2A2A2A
+### Theme (warm ink — the only mode)
+- Background: #111417 (ink)
+- Surface (cards/panels): #1B1E22 — `--bg-elevated`
+- Surface muted: #24272B — `--bg-muted`
+- Text primary: #E4E1D9
+- Text muted: #9B978E
+- Text subtle: #847F76
+- Accent (signal): #E0A458
+- Accent on-fill text: #111417 — `--accent-fg`
+- Accent text (AA on ink): #E0A458 — `--accent-text`
+- Hairline border: #2A2C30
 
 ### Hard rules
-- ❌ More than one accent color per page — yellow is the only mark
-- ❌ Yellow as a large background fill — it's a highlighter, used on marks only
-  (selection, caret, highlighted words, single inline tags)
+- ❌ More than one accent color per page — amber is the only mark
+- ❌ Amber as a large background fill — it's a signal, used on marks only
+  (toggle cursor, hover state, single inline tags)
 - ❌ Cool grays (#808080-ish) — the neutral ramp is the warm-neutral ladder above
-- ❌ Yellow text on white without using `--accent-text` (#7A5F00) — fails contrast
 - ❌ Hardcoding hex in components — always reference the token variable
 - ❌ Tailwind palette utilities (`text-red-500`, `from-black/60`, `bg-emerald-600`)
   count as hardcoded hex — they produce CSS color declarations. Status green/red is
@@ -64,15 +52,16 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
 
 ## Typography
 
-> **Direction: Bold geometric sans.** The portfolio shell is set in one face — League
-> Spartan. Hierarchy comes from **size, weight, and case**. Each project keeps its own
-> typeface identity (Bricolage Grotesque for Tims, Space Mono for Tims KDS, etc.) —
-> the shell is the neutral canvas, the projects are individual.
+> **Direction: one monospace document.** The portfolio shell is set in one face —
+> JetBrains Mono Variable. Hierarchy comes from **size, weight, and case** — the
+> same principle as before, just on a mono grid instead of a geometric sans. Each
+> project keeps its own typeface identity (Bricolage Grotesque for Tims, Space Mono
+> for Tims KDS, etc.) — the shell is the neutral canvas, the projects are individual.
 
 ### Portfolio shell typeface
-- Font: **League Spartan** (weights 400 / 500 / 600 / 700 / 800)
-- Fallback: `sans-serif`
-- Used for: nav, home grid, eyebrows, body copy, meta — everything in the shell
+- Font: **JetBrains Mono Variable** (weights 400 / 500, italic 400)
+- Fallback: `monospace`
+- Used for: nav, home document, eyebrows, body copy, meta — everything in the shell
 
 ### Project typefaces (individual, scoped to their demo surface)
 - **Tims**: Bricolage Grotesque (display) + DM Sans (body) + Space Mono (mono/KDS)
@@ -100,11 +89,11 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
 
 ### Hard rules
 - ❌ Inter, Geist, Geist Mono, system-ui in the shell — default AI feel
-- ❌ JetBrains Mono in the shell — was the old direction, now project-only
-- ❌ A second typeface in the shell — League Spartan only; hierarchy = size/weight/case
+- ❌ League Spartan in the shell — was the old direction, now retired
+- ❌ A second typeface in the shell — JetBrains Mono Variable only; hierarchy = size/weight/case
 - ❌ Text smaller than 16px outside of meta/eyebrow
 - ❌ More than 3 typographic hierarchies in a single column
-- ❌ Tracking tighter than -0.03em (cramps Spartan's geometric forms)
+- ❌ Tracking tighter than -0.03em
 
 ## Spacing
 
@@ -115,7 +104,9 @@ Section vertical rhythm:
 - Major section gap: 128px mobile / 192px desktop
 - Hero padding-top: 96px mobile / 128px desktop
 
-Reading column max-width: 56ch (never wider for prose)
+Reading column max-width: 56ch (never wider for prose elements —
+paragraphs and body copy specifically, not outer page/section containers,
+which may run wider to hold non-prose content like tabular work rows)
 
 ## Animation curves
 

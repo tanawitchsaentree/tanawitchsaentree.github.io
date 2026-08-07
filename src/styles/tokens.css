@@ -1,12 +1,12 @@
 /* ─── Design Tokens ─────────────────────────────────────────── */
-/* Single light theme (paper). No dark mode.                     */
+/* Single dark theme (warm ink). No light mode.                  */
 
 :root {
   /* Absolute color primitives */
   --color-white: #FFFFFF;
   --color-black: #0A0A0A;
 
-  /* Typography scale — League Spartan (geometric bold sans, proportional). */
+  /* Typography scale — JetBrains Mono (one face, hierarchy via size/weight/case). */
   --type-xs:   0.75rem;
   --type-sm:   0.875rem;
   --type-base: 1rem;
@@ -67,22 +67,22 @@
   --shadow-modal: 0 8px 64px var(--shadow-color-heavy);
   --shadow-card:  0 1px 2px var(--shadow-color-subtle), 0 8px 24px -8px var(--shadow-color-soft);
 
-  /* ── Light mode defaults ── */
-  --bg:          #FFFFFF;
-  --bg-elevated: #F5F5F5;
-  --bg-muted:    #EBEBEB;
-  --fg:          #0A0A0A;
-  --fg-muted:    #444444;
-  --fg-subtle:   #888888;
-  --border:      #E0E0E0;
-  --accent:      #FFE500;
-  --accent-fg:   #0A0A0A;
-  --accent-text: #7A5F00;  /* amber-dark — WCAG AA on white */
+  /* ── Dark mode defaults (warm ink + amber signal) ── */
+  --bg:          #111417;
+  --bg-elevated: #1B1E22;
+  --bg-muted:    #24272B;
+  --fg:          #E4E1D9;
+  --fg-muted:    #9B978E;
+  --fg-subtle:   #847F76;  /* raised from #5A5850 to clear AA (4.65:1) on ink */
+  --border:      #2A2C30;
+  --accent:      #E0A458;
+  --accent-fg:   #111417;
+  --accent-text: #E0A458;  /* AA on ink — verify during audit */
 
-  --shadow-color-subtle: rgba(0, 0, 0, 0.04);
-  --shadow-color-soft:   rgba(0, 0, 0, 0.06);
-  --shadow-color-mid:    rgba(0, 0, 0, 0.10);
-  --shadow-color-heavy:  rgba(0, 0, 0, 0.18);
+  --shadow-color-subtle: rgba(0, 0, 0, 0.20);
+  --shadow-color-soft:   rgba(0, 0, 0, 0.30);
+  --shadow-color-mid:    rgba(0, 0, 0, 0.40);
+  --shadow-color-heavy:  rgba(0, 0, 0, 0.55);
 
   /* Cover-card surface — text rendered over a dark vignette gradient,
      so it stays white regardless of the page being light. */
@@ -127,7 +127,7 @@
   --preset-warm:       #9333EA;  /* purple — private clinic     */
   --preset-clinical:   #0E9F6E;  /* green  — night shift        */
 
-  --cursor-ring: #0A0A0A;
+  --cursor-ring: #E4E1D9;
 }
 
 @keyframes swatch-shimmer {

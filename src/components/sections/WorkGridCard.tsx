@@ -99,7 +99,7 @@ export function WorkGridCard({ project, index, locked, hideText, onOpen, onNavig
         background:   cover?.variant === 'overlay'
           ? `color-mix(in srgb, ${accent} 55%, var(--color-black))`
           : `color-mix(in srgb, ${accent} 8%, var(--bg-elevated))`,
-        fontFamily:   "'League Spartan', sans-serif",
+        fontFamily:   "'JetBrains Mono Variable', monospace",
         overflow:     'hidden',
         boxShadow:    hovered
           ? '0 8px 32px -8px rgba(0,0,0,0.22), 0 2px 8px -2px rgba(0,0,0,0.12)'

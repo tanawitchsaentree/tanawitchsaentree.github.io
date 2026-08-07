@@ -122,7 +122,7 @@ export function HomeProjectCard({ project, index, onOpen, onNavigate, universePa
         background:   bg,
         overflow:     'hidden',
         display:      'block',
-        fontFamily:   "'League Spartan', sans-serif",
+        fontFamily:   "'JetBrains Mono Variable', monospace",
         boxShadow:    'var(--shadow-sm)',
       }}
       aria-label={project.title}

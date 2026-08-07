@@ -44,7 +44,7 @@ controls, no double-duty elements).
 
 ## Hard constraints
 
-- Portfolio shell font: **League Spartan** only — never Inter, Geist, JetBrains Mono, system-ui
+- Portfolio shell font: **JetBrains Mono Variable** only — never Inter, Geist, League Spartan, system-ui
 - Project demos keep their own fonts (Bricolage Grotesque, Space Mono, etc.) scoped to their surface
 - Never hardcode #000 or #FFF — use token variables
 - Never use `ease` or `linear` as animation easing

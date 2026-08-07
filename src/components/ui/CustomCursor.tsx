@@ -101,7 +101,7 @@ export function CustomCursor() {
   // Dot visibility
   const dotHidden = isText || isDiagram
 
-  const TRANSITION = 'width 200ms cubic-bezier(0.22,1,0.36,1), height 200ms cubic-bezier(0.22,1,0.36,1), border-radius 200ms cubic-bezier(0.22,1,0.36,1), opacity 150ms ease'
+  const TRANSITION = 'width 200ms cubic-bezier(0.22,1,0.36,1), height 200ms cubic-bezier(0.22,1,0.36,1), border-radius 200ms cubic-bezier(0.22,1,0.36,1), opacity 150ms cubic-bezier(0.22,1,0.36,1)'
 
   return (
     <>
@@ -138,7 +138,7 @@ export function CustomCursor() {
               position:      'absolute',
               top:           '100%',
               marginTop:     8,
-              fontFamily:    "'League Spartan', sans-serif",
+              fontFamily:    "'JetBrains Mono Variable', monospace",
               fontSize:      9,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
@@ -173,7 +173,7 @@ export function CustomCursor() {
           marginTop:     -2,
           willChange:    'transform',
           opacity:       dotHidden ? 0 : 1,
-          transition:    'opacity 150ms ease',
+          transition:    'opacity 150ms cubic-bezier(0.22,1,0.36,1)',
         }}
       />
     </>
