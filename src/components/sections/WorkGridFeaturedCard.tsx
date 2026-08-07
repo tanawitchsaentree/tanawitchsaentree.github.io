@@ -76,7 +76,7 @@ export function WorkGridFeaturedCard({ project, locked, accentColor, hoverColor,
           background:   onLight
             ? `color-mix(in srgb, ${accentColor} 88%, var(--color-black))`
             : `color-mix(in srgb, ${accentColor} 40%, var(--bg-elevated))`,
-          fontFamily:   "'JetBrains Mono Variable', monospace",
+          fontFamily:   "'IBM Plex Mono', monospace",
           overflow:     'visible',
           boxShadow:    hovered
             ? '0 8px 32px -8px rgba(0,0,0,0.18), 0 2px 8px -2px rgba(0,0,0,0.10)'

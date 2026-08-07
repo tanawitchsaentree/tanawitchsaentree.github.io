@@ -28,23 +28,39 @@ interface WorkRow {
 const WORK_HISTORY: WorkRow[] = [
   {
     year: '2025 →', company: 'Allianz Technology', role: 'Senior Designer',
-    outcome: 'Built a pipeline turning requirements into deployable prototypes — design validation from weeks to hours',
+    outcome: 'Validation now takes hours',
     slug: 'allianz-doc-classification',
   },
   {
     year: '2024–25', company: 'Invitrace Health', role: 'Lead Product Designer',
-    outcome: 'One design-system engine, three hospital archetypes, themed without rebuilding',
+    outcome: 'Three archetypes, one engine',
     slug: 'invitrace-design-system',
   },
   {
     year: '2024', company: 'Stellareat', role: 'Product Designer',
-    outcome: 'Solo designer on the personalisation flow for an AI recipe-discovery platform',
+    outcome: 'Personalisation flow for recipes',
     slug: 'stellareat',
   },
   {
     year: '2020', company: 'Robowealth · LH Bank', role: 'Senior UX/UI Designer',
-    outcome: 'Profita won Best App for Customer Experience, Retail Banker International Asia (2023)',
+    outcome: 'Best App for CX (2023)',
     slug: 'profita-mutual-fund',
+  },
+]
+
+interface KitRow {
+  kind:      string
+  name:      string
+  role:      string
+  outcome:   string
+  href:      string
+}
+
+const KIT: KitRow[] = [
+  {
+    kind: 'skill', name: '/human-tone', role: 'made it, free to grab',
+    outcome: 'catches AI phrasing pre-publish',
+    href: 'https://github.com/tanawitchsaentree/Human-tone',
   },
 ]
 
@@ -102,6 +118,28 @@ function WorkRowItem({ entry, onNavigate }: { entry: WorkRow; onNavigate: (href:
   )
 }
 
+function KitRowItem({ entry }: { entry: KitRow }) {
+  const [show, setShow] = useState(false)
+
+  return (
+    <a
+      href={entry.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${styles.row} ${styles.ln} ${show ? styles.show : ''}`}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+      onFocus={() => setShow(true)}
+      onBlur={() => setShow(false)}
+    >
+      <span className={styles.yr}>{entry.kind}</span>
+      <span className={styles.nm}>{entry.name}</span>
+      {' · '}
+      <span className={styles.dt}>{show ? entry.outcome : entry.role}</span>
+    </a>
+  )
+}
+
 // ── HomeClient ────────────────────────────────────────────────
 
 export function HomeClient() {
@@ -141,7 +179,7 @@ export function HomeClient() {
             <span className="text-[var(--fg-muted)]">· senior product designer at allianz technology</span>
           </div>
           <p className="text-[var(--fg-muted)] leading-[1.9] mt-3 mb-4 max-w-[46ch]">
-            i design AI workflows for regulated industries — insurance, banks, hospitals —
+            i design AI workflows for regulated industries like insurance, banks, and hospitals,
             and ship the production code that proves they work. bangkok, open to relocating.
           </p>
           <a href="mailto:tanawitch.saentree@gmail.com" className="text-[var(--fg-muted)]">
@@ -154,6 +192,11 @@ export function HomeClient() {
               <div className={`${styles.h} ${styles.ln} mt-6 mb-1`}>work</div>
               {WORK_HISTORY.map(entry => (
                 <WorkRowItem key={entry.company} entry={entry} onNavigate={navigateWithTransition} />
+              ))}
+
+              <div className={`${styles.h} ${styles.ln} mt-6 mb-1`}>kit</div>
+              {KIT.map(entry => (
+                <KitRowItem key={entry.name} entry={entry} />
               ))}
 
               <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>contact</div>

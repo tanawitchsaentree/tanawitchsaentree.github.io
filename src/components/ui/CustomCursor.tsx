@@ -138,7 +138,7 @@ export function CustomCursor() {
               position:      'absolute',
               top:           '100%',
               marginTop:     8,
-              fontFamily:    "'JetBrains Mono Variable', monospace",
+              fontFamily:    "'IBM Plex Mono', monospace",
               fontSize:      9,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',

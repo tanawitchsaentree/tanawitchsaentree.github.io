@@ -6,7 +6,7 @@
   --color-white: #FFFFFF;
   --color-black: #0A0A0A;
 
-  /* Typography scale — JetBrains Mono (one face, hierarchy via size/weight/case). */
+  /* Typography scale — IBM Plex Mono (one face, hierarchy via size/weight/case). */
   --type-xs:   0.75rem;
   --type-sm:   0.875rem;
   --type-base: 1rem;

@@ -5,9 +5,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"JetBrains Mono Variable"', 'monospace'],
-        sans:    ['"JetBrains Mono Variable"', 'monospace'],
-        mono:    ['"JetBrains Mono Variable"', 'monospace'],
+        display: ['"IBM Plex Mono"', 'monospace'],
+        sans:    ['"IBM Plex Mono"', 'monospace'],
+        mono:    ['"IBM Plex Mono"', 'monospace'],
       },
       colors: {
         bg: 'var(--bg)',

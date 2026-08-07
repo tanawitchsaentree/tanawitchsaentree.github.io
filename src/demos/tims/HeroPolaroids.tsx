@@ -6,7 +6,7 @@ import styles from './HeroPolaroids.module.css'
 const PHOTOS = [
   { base: '/images/timhortons/heroes-1', caption: '5am. snow. clocked in.' },
   { base: '/images/timhortons/heroes6',  caption: 'day one'                },
-  { base: '/images/timhortons/hereos5',  caption: 'the floor'              },
+  { base: '/images/timhortons/heroes5',  caption: 'the floor'              },
   { base: '/images/timhortons/heroes4',  caption: 'the case'               },
   { base: '/images/timhortons/heroes-3', caption: 'fv cold brew. daily.'   },
   { base: '/images/timhortons/heroes-2', caption: 'the machine'            },

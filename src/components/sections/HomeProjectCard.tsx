@@ -122,7 +122,7 @@ export function HomeProjectCard({ project, index, onOpen, onNavigate, universePa
         background:   bg,
         overflow:     'hidden',
         display:      'block',
-        fontFamily:   "'JetBrains Mono Variable', monospace",
+        fontFamily:   "'IBM Plex Mono', monospace",
         boxShadow:    'var(--shadow-sm)',
       }}
       aria-label={project.title}

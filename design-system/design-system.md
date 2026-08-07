@@ -53,13 +53,16 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
 ## Typography
 
 > **Direction: one monospace document.** The portfolio shell is set in one face —
-> JetBrains Mono Variable. Hierarchy comes from **size, weight, and case** — the
-> same principle as before, just on a mono grid instead of a geometric sans. Each
+> IBM Plex Mono. Hierarchy comes from **size, weight, and case** — the same
+> principle as before, just on a mono grid instead of a geometric sans. Each
 > project keeps its own typeface identity (Bricolage Grotesque for Tims, Space Mono
 > for Tims KDS, etc.) — the shell is the neutral canvas, the projects are individual.
+> IBM Plex Mono over JetBrains Mono deliberately — JetBrains reads as "AI coding
+> tool default" (Copilot, Cursor, terminal chrome); Plex is a general-purpose
+> engineering mono without that association.
 
 ### Portfolio shell typeface
-- Font: **JetBrains Mono Variable** (weights 400 / 500, italic 400)
+- Font: **IBM Plex Mono** (weights 400 / 500, italic 400)
 - Fallback: `monospace`
 - Used for: nav, home document, eyebrows, body copy, meta — everything in the shell
 
@@ -90,7 +93,8 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
 ### Hard rules
 - ❌ Inter, Geist, Geist Mono, system-ui in the shell — default AI feel
 - ❌ League Spartan in the shell — was the old direction, now retired
-- ❌ A second typeface in the shell — JetBrains Mono Variable only; hierarchy = size/weight/case
+- ❌ A second typeface in the shell — IBM Plex Mono only; hierarchy = size/weight/case
+- ❌ JetBrains Mono in the shell — reads as AI-tool chrome, not an authored choice
 - ❌ Text smaller than 16px outside of meta/eyebrow
 - ❌ More than 3 typographic hierarchies in a single column
 - ❌ Tracking tighter than -0.03em

@@ -52,7 +52,7 @@ export function WorkListRow({ project, index, locked, onOpen, onNavigate, univer
           border:     'none',
           cursor:     locked ? 'default' : 'pointer',
           textAlign:  'left',
-          fontFamily: "'JetBrains Mono Variable', monospace",
+          fontFamily: "'IBM Plex Mono', monospace",
           transition: reduced ? undefined : `background var(--duration-base) var(--ease-out-quick)`,
         }}
         aria-label={`${project.title}${locked ? ' (password-protected)' : ''}`}
