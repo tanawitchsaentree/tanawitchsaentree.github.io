@@ -1,6 +1,6 @@
-// VITAE case study design tokens — Fraunces/Bricolage Grotesque/DM Sans/Space Mono, lime palette.
+// VITAE case study design tokens: Fraunces/Bricolage Grotesque/DM Sans/Space Mono, lime palette.
 // Scoped to the demo surface (data-demo="vitae"), NOT portfolio shell tokens.
-// Type override: Vitae is an editorial demo surface with its own type stack — intentional exception to the mono-only portfolio rule.
+// Type override: Vitae is an editorial demo surface with its own type stack. This is an intentional exception to the mono-only portfolio rule.
 
 // ── atomic alpha strings (resolved hex) ─────────────────────────────────────────
 const _a = {
@@ -27,10 +27,15 @@ const _a = {
   ink18:   'rgba(22,32,26,.18)',
   ink22:   'rgba(22,32,26,.22)',
   ink72:   'rgba(22,32,26,.72)',
+  ink28:   'rgba(22,32,26,.28)',
+  ink30:   'rgba(22,32,26,.30)',
+  ink42:   'rgba(22,32,26,.42)',
   white10: 'rgba(255,255,255,.10)',
   white30: 'rgba(255,255,255,.30)',
   white35: 'rgba(255,255,255,.35)',
   white70: 'rgba(255,255,255,.70)',
+  white80: 'rgba(255,255,255,.80)',
+  danger25: 'rgba(192,73,47,.25)',
 } as const
 
 // ── phone shell color stops ───────────────────────────────────────────────────────
@@ -111,17 +116,17 @@ export const V = {
     glide:       'cubic-bezier(.5,0,.2,1)',
   },
   motion: {
-    // duration tokens — no hardcoded ms values in components
+    // duration tokens: no hardcoded ms values in components
     durationFast:       '0.35s',
     durationBase:       '0.9s',
     durationHero:       '1.1s',
     durationNav:        '0.4s',
     durationStagger:    '0.08s',  // stagger step for multi-item reveals
     durationHeroDelay:  '0.2s',   // first hero eyebrow fade-in delay
-    // distance tokens — no hardcoded px values in components
+    // distance tokens: no hardcoded px values in components
     distanceReveal:     34,   // translateY offset for vitae-animate entrance (px)
     reframeParallax:    80,   // scroll-melt scene parallax coefficient (px)
-    // ghost-finger choreography timing (ms) — sync with CSS transition durations
+    // ghost-finger choreography timing (ms); sync with CSS transition durations
     fingerMoveMs:   820,  // CSS .vhf transition duration (must match)
     fingerPressMs:  165,  // tap hold duration
     fingerSettleMs: 440,  // post-tap settle before next action
@@ -132,9 +137,15 @@ export const V = {
     fingerExitMs:   800,  // pause after finger hides before loop restart
     killedRejectDwellMs: 1700, // dwell on the rejected "dangerous" screen
     killedShippedDwellMs:1300, // dwell on the shipped screen before cycle ends
+    // reframe/app-screen ghost-finger flow: screen-specific dwell timings
+    appLoopIdleMs:       1100, // idle before each loop cycle begins
+    appLoopIdleReduceMs: 2600, // same, reduced-motion variant
+    appReducedExpandMs:  3000, // reduced-motion: dwell with inputs expanded before next cycle
+    appDoneDwellMs:      700,  // dwell after "do" tap (score ticks up) before next action
+    appExpandDwellMs:    900,  // dwell after inputs toggle expand/collapse or tab switch
   },
   font: {
-    /** Display — editorial italic serif (Fraunces) */
+    /** Display: editorial italic serif (Fraunces) */
     serif:   "'Fraunces', serif",
     /** Bold numerals + headings */
     heading: "'Bricolage Grotesque', sans-serif",
@@ -149,7 +160,7 @@ export const V = {
     title:   'clamp(1.1rem,1.6vw,1.4rem)',
     body:    'clamp(1rem,1.1vw,1.05rem)',
     cap:     '0.8125rem',
-    eyebrow: '0.72rem',    // section eyebrow labels — between micro and cap
+    eyebrow: '0.72rem',    // section eyebrow labels, between micro and cap
     micro:   '0.6875rem',
   },
 } as const

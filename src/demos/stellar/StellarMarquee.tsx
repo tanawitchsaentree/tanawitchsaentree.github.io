@@ -15,6 +15,7 @@ const ALL = [...ITEMS, ...ITEMS]
 const PX_PER_S = 80
 
 export function StellarMarquee() {
+  const wrapRef  = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const xRef     = useRef(0)
   const rafRef   = useRef<number>(0)
@@ -22,14 +23,18 @@ export function StellarMarquee() {
   const pausedRef = useRef(false)
 
   useEffect(() => {
+    const wrap  = wrapRef.current
     const track = trackRef.current
-    if (!track) return
+    if (!wrap || !track) return
 
     // Respect prefers-reduced-motion
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (mq.matches) return
 
+    let visible = false
+
     function step(ts: number) {
+      if (!visible) { rafRef.current = 0; return }
       if (lastRef.current === null) lastRef.current = ts
       const dt = Math.min(ts - lastRef.current, 50) // cap at 50ms to avoid jump on tab-resume
       lastRef.current = ts
@@ -44,7 +49,14 @@ export function StellarMarquee() {
       rafRef.current = requestAnimationFrame(step)
     }
 
-    rafRef.current = requestAnimationFrame(step)
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      if (visible) {
+        lastRef.current = null // avoid a big dt jump after being scrolled back into view
+        if (!rafRef.current) rafRef.current = requestAnimationFrame(step)
+      }
+    }, { threshold: 0 })
+    io.observe(wrap)
 
     const onEnter = () => { pausedRef.current = true }
     const onLeave = () => { pausedRef.current = false }
@@ -52,7 +64,8 @@ export function StellarMarquee() {
     track.addEventListener('mouseleave', onLeave)
 
     return () => {
-      cancelAnimationFrame(rafRef.current)
+      io.disconnect()
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
       track.removeEventListener('mouseenter', onEnter)
       track.removeEventListener('mouseleave', onLeave)
     }
@@ -60,6 +73,7 @@ export function StellarMarquee() {
 
   return (
     <div
+      ref={wrapRef}
       aria-hidden
       style={{
         overflow:     'hidden',

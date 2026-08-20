@@ -207,7 +207,7 @@ export function VitaePhases() {
             From a vague goal to a shipped screen.
           </h2>
           <p style={{ color: V.color.inkSoft, fontSize: '1.08rem', lineHeight: 1.65 }}>
-            Each stage below carries its real decisions — what we asked, what we tried, what we cut.
+            Each stage below carries its real decisions: what we asked, what we tried, what we cut.
           </p>
         </div>
 
@@ -219,7 +219,7 @@ export function VitaePhases() {
             encouraged. So the goal got sharp and measurable.
           </p>
           <Quote>
-            &ldquo;Make today&apos;s health legible in under five seconds — and make it feel like momentum, not a report card.&rdquo;
+            &ldquo;Make today&apos;s health legible in under five seconds, and make it feel like momentum, not a report card.&rdquo;
           </Quote>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', marginBottom: '1.3rem' }}>
             {['5 interviews', '6-app teardown', 'Goal: time-to-insight <5s', 'Tone: encouraging'].map(c => (
@@ -235,9 +235,9 @@ export function VitaePhases() {
             the five-second goal and kept the three that read fastest at a glance.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <MiniCard icon="◐" title="Weekly progress ring"    body={'One streak number (“6 days”) wrapped in a fill ring — progress without a paragraph.'} />
+            <MiniCard icon="◐" title="Weekly progress ring"    body={'One streak number (“6 days”) wrapped in a fill ring. Progress without a paragraph.'} />
             <MiniCard icon="▤" title="Glanceable metric tiles" body="Steps & water as big numbers, one icon each. No charts on home." />
-            <MiniCard icon="▦" title="Meals as ranges"         body="Calorie ranges (456–512) instead of false precision — lowers logging anxiety." />
+            <MiniCard icon="▦" title="Meals as ranges"         body="Calorie ranges (456–512) instead of false precision. Lowers logging anxiety." />
             <MiniCard icon="▥" title="One stats deep-dive"     body="Push detail to a second screen so home stays calm." />
           </div>
         </Phase>
@@ -262,7 +262,7 @@ export function VitaePhases() {
         {/* 04 Execute */}
         <Phase n="04" kicker="Execute · ship the pixels" title="The two screens, built">
           <p style={{ color: V.color.inkSoft, maxWidth: '56ch', marginBottom: '1rem', lineHeight: 1.65 }}>
-            Below is the actual output of this stage — both screens, rebuilt in live HTML/CSS. The home view
+            Below is the actual output of this stage: both screens, rebuilt in live HTML/CSS. The home view
             answers &ldquo;how am I doing today?&rdquo;; the statistics view answers &ldquo;how was my week?&rdquo;.
           </p>
         </Phase>
@@ -273,7 +273,7 @@ export function VitaePhases() {
         {/* 05 Review */}
         <Phase n="05" kicker="Review · find what hurts" title="Five seconds, tested">
           <p style={{ color: V.color.inkSoft, maxWidth: '56ch', marginBottom: '1.4rem', lineHeight: 1.65 }}>
-            A quick heuristic pass plus five timed glance-tests surfaced three real problems — small,
+            A quick heuristic pass plus five timed glance-tests surfaced three real problems. Small,
             but each one cost the user clarity.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -286,13 +286,13 @@ export function VitaePhases() {
         {/* 06 Iterate */}
         <Phase n="06" kicker="Iterate · fix it, then stop" title="Three turns, then ship">
           <p style={{ color: V.color.inkSoft, maxWidth: '56ch', marginBottom: '1.4rem', lineHeight: 1.65 }}>
-            Each review fed exactly one focused iteration. The budget — three — forced decisions instead of endless polish.
+            Each review fed exactly one focused iteration. A three-pass budget forced decisions instead of endless polish.
           </p>
           <div style={{ display: 'grid', gap: '.8rem' }}>
             {[
               { pass: 'PASS 1', text: <><b style={{ color: V.color.ink }}>Anchored &ldquo;today.&rdquo;</b> The current day (Wed) became the deep-green peak bar with a bold label, so the week reads from one fixed point.</> },
               { pass: 'PASS 2', text: <><b style={{ color: V.color.ink }}>Restored hierarchy.</b> Added the target reference (1920 Kcal) beside the big number and tightened tile weights so home stays calm.</> },
-              { pass: 'PASS 3', text: <><b style={{ color: V.color.ink }}>Polished &amp; locked.</b> Chart easing, ring fill timing, and the lime accent locked into tokens. Budget spent — committed to ship.</> },
+              { pass: 'PASS 3', text: <><b style={{ color: V.color.ink }}>Polished &amp; locked.</b> Chart easing, ring fill timing, and the lime accent locked into tokens. Budget spent. Committed to ship.</> },
             ].map(({ pass, text }) => (
               <div
                 key={pass}

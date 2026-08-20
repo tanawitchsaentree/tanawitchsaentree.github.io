@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>One system, every hospital — Invitrace Design System</title>
+<title>One system, every hospital · Invitrace Design System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:opsz,wght@9..40,300..600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -12,6 +12,9 @@
   --violet:#6d28d9;--lilac:#c4b5fd;--lilac-soft:#ede9fe;
   --grad:linear-gradient(135deg,#7c3aed 0%,#a855f7 52%,#c084fc 100%);
   --line:rgba(22,15,36,.10);--line-2:rgba(22,15,36,.055);
+  --status-danger:#ef4444;--status-online:#22c55e;--status-rating:#f59e0b;
+  --lens-recruiter:#d8902e;--lens-designer:var(--violet);--lens-developer:#0d9488;
+  --arch-medium:#0d9488;--arch-large:#c97a0a;--arch-specialty:#c0394b;
   --g:'Bricolage Grotesque',sans-serif;--b:'DM Sans',sans-serif;--m:'Space Mono',monospace;
   --e:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.56,.64,1);
 }
@@ -47,9 +50,9 @@ nav .lk a.active::after{content:"";position:absolute;left:0;right:0;bottom:-4px;
 @media(max-width:560px){.lens-switch .ls-lab{display:none}.lens-switch button{padding:.4rem .55rem}.lens-switch button span.t{display:none}.lens-switch button i{width:11px;height:11px}}
 /* ===== role-variant content swap ===== */
 :root{--accent:var(--violet);--accent-soft:var(--lilac-soft)}
-body[data-lens="recruiter"]{--accent:#d8902e;--accent-soft:#fbeed6}
-body[data-lens="designer"]{--accent:#6d28d9;--accent-soft:#ece4fb}
-body[data-lens="developer"]{--accent:#0d9488;--accent-soft:#d6efec}
+body[data-lens="recruiter"]{--accent:var(--lens-recruiter);--accent-soft:#fbeed6}
+body[data-lens="designer"]{--accent:var(--lens-designer);--accent-soft:#ece4fb}
+body[data-lens="developer"]{--accent:var(--lens-developer);--accent-soft:#d6efec}
 .rv-set{display:grid}
 .rv-set>.role-v{grid-area:1/1;display:none}
 body[data-lens="all"] .role-v[data-role~="all"],
@@ -182,7 +185,7 @@ section{padding:clamp(4.5rem,10vw,8rem) 0;position:relative}
 .ph-greet .h{font-family:var(--g);font-weight:700;font-size:18px;color:var(--c-text)}
 .ph-greet .s{font-size:10px;color:var(--c-muted)}
 .ph-greet .bell{width:32px;height:32px;border-radius:50%;background:var(--c-soft);display:grid;place-content:center;color:var(--c-primary);position:relative}
-.ph-greet .bell::after{content:"";position:absolute;top:7px;right:8px;width:6px;height:6px;border-radius:50%;background:#ef4444}
+.ph-greet .bell::after{content:"";position:absolute;top:7px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--status-danger)}
 .ph-appt{background:var(--c-soft);border-radius:calc(var(--c-rad) + 6px);padding:var(--c-pad);display:flex;gap:11px;align-items:center;flex-wrap:wrap;box-shadow:0 12px 26px -16px rgba(22,15,36,.22)}
 .ph-appt .dav{width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-content:center;color:var(--c-primary);flex:none;border:1px solid var(--c-line)}
 .ph-appt .di{flex:1}.ph-appt .di .a{font-family:var(--g);font-weight:700;font-size:13px;color:var(--c-text)}
@@ -225,10 +228,10 @@ section{padding:clamp(4.5rem,10vw,8rem) 0;position:relative}
 .ph-docs{display:flex;flex-direction:column;gap:8px}
 .ph-docs .doc{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--c-line);border-radius:var(--c-rad);padding:9px 11px;box-shadow:0 8px 20px -16px rgba(22,15,36,.18)}
 .ph-docs .dav2{position:relative;width:36px;height:36px;border-radius:50%;background:var(--c-soft);display:grid;place-content:center;color:var(--c-primary);flex:none}
-.ph-docs .dav2 .on-dot{position:absolute;right:0;bottom:0;width:9px;height:9px;border-radius:50%;background:#22c55e;border:2px solid #fff}
+.ph-docs .dav2 .on-dot{position:absolute;right:0;bottom:0;width:9px;height:9px;border-radius:50%;background:var(--status-online);border:2px solid #fff}
 .ph-docs .dm{flex:1;min-width:0}.ph-docs .dn{font-family:var(--g);font-weight:700;font-size:12px;color:var(--c-text)}
 .ph-docs .dmeta{font-size:8.5px;color:var(--c-muted);display:flex;align-items:center;gap:3px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ph-docs .star{display:inline-flex;align-items:center;gap:2px;color:#f59e0b;font-weight:700}
+.ph-docs .star{display:inline-flex;align-items:center;gap:2px;color:var(--status-rating);font-weight:700}
 .ph-docs .bookbtn{flex:none;background:var(--c-primary);color:#fff;border-radius:var(--c-rad);padding:7px 12px;font-size:10px;font-weight:700}
 
 /* ===== lab v3 section chrome ===== */
@@ -278,9 +281,9 @@ section{padding:clamp(4.5rem,10vw,8rem) 0;position:relative}
 .ph-appt .di .a{overflow-wrap:anywhere}
 
 /* client layouts (reskin + reflow) */
-.lab[data-client="district"]{--c-primary:#0d9488;--c-soft:#e0f2f0;--c-line:#b2dfdb;--c-text:#0e2a26;--c-muted:#4d8f8a;--c-rad:6px;--c-pad:10px;--c-gap:8px}
-.lab[data-client="teaching"]{--c-primary:#c97a0a;--c-soft:#fef3e2;--c-line:#fddda0;--c-text:#2a1a00;--c-muted:#9a6a30;--c-rad:10px;--c-pad:16px;--c-gap:11px}
-.lab[data-client="specialty"]{--c-primary:#c0394b;--c-soft:#fde8ec;--c-line:#f8c0ca;--c-text:#2a0a10;--c-muted:#a05060;--c-rad:18px;--c-pad:13px;--c-gap:10px}
+.lab[data-client="district"]{--c-primary:var(--arch-medium);--c-soft:#e0f2f0;--c-line:#b2dfdb;--c-text:#0e2a26;--c-muted:#4d8f8a;--c-rad:6px;--c-pad:10px;--c-gap:8px}
+.lab[data-client="teaching"]{--c-primary:var(--arch-large);--c-soft:#fef3e2;--c-line:#fddda0;--c-text:#2a1a00;--c-muted:#9a6a30;--c-rad:10px;--c-pad:16px;--c-gap:11px}
+.lab[data-client="specialty"]{--c-primary:var(--arch-specialty);--c-soft:#fde8ec;--c-line:#f8c0ca;--c-text:#2a0a10;--c-muted:#a05060;--c-rad:18px;--c-pad:13px;--c-gap:10px}
 /* reflow: order of modules per client */
 .lab .ph-greet{order:1}.lab .ph-appt{order:2}.lab .ph-find{order:3}.lab .ph-docs{order:4}.lab .ph-vitals{order:5}.lab .ph-tabs{order:9}
 .lab[data-client="district"] .ph-appt{order:2}.lab[data-client="district"] .ph-find{order:3}.lab[data-client="district"] .ph-docs{order:4}.lab[data-client="district"] .ph-vitals{order:5}
@@ -338,7 +341,7 @@ input[type=color].swatch-pick::-moz-color-swatch{border:none;border-radius:5px}
 /* UNBREAKABLE */
 .brk{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.4rem}
 /* wire stage — master token -> instances */
-.wire{background:var(--paper-2);border:1px solid var(--line);border-radius:24px;padding:clamp(1.4rem,3.5vw,2.4rem);margin-top:2.4rem;position:relative;--m-color:#6d28d9}
+.wire{background:var(--paper-2);border:1px solid var(--line);border-radius:24px;padding:clamp(1.4rem,3.5vw,2.4rem);margin-top:2.4rem;position:relative;--m-color:var(--violet)}
 .wire-master{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:16px;padding:1rem 1.3rem;box-shadow:0 14px 30px -20px rgba(22,15,36,.25)}
 .wm-l{font-family:var(--m);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .wm-tok{display:flex;align-items:center;gap:.6rem;font-family:var(--m);font-size:.95rem;color:var(--ink);font-weight:700;margin-top:.35rem}
@@ -445,9 +448,9 @@ section{overflow:hidden}
   <div class="lens-switch" id="lensSwitch">
     <span class="ls-lab">Read as</span>
     <button class="on" data-lens="all"><span class="t">All</span></button>
-    <button data-lens="recruiter"><i style="background:#d8902e"></i><span class="t">Recruiter</span></button>
-    <button data-lens="designer"><i style="background:#6d28d9"></i><span class="t">Designer</span></button>
-    <button data-lens="developer"><i style="background:#0d9488"></i><span class="t">Developer</span></button>
+    <button data-lens="recruiter"><i style="background:var(--lens-recruiter)"></i><span class="t">Recruiter</span></button>
+    <button data-lens="designer"><i style="background:var(--lens-designer)"></i><span class="t">Designer</span></button>
+    <button data-lens="developer"><i style="background:var(--lens-developer)"></i><span class="t">Developer</span></button>
   </div>
 </nav>
 
@@ -462,19 +465,19 @@ section{overflow:hidden}
     </h1>
     <div class="sub rv-set">
       <div class="role-v" data-role="all">
-        <p>We license one clinical platform to District hospitals, Teaching hospitals, and Specialty clinics — same engine and workflows — but each needs its own brand, data density, and accessibility floor. Hand-building that UI per client was the bottleneck, so I made the interface a <b>theme</b>: colour, density, and a11y, all the way down to the atom.</p>
+        <p>We license one clinical platform to District hospitals, Teaching hospitals, and Specialty clinics. Same engine and workflows, but each needs its own brand, data density, and accessibility floor. Hand-building that UI per client was the bottleneck, so I made the interface a <b>theme</b>: colour, density, and a11y, all the way down to the atom.</p>
         <div class="meta"><b>My role</b><span>Design systems lead</span></div>
         <div class="meta"><b>Scope</b><span>Tokens · Figma kit · Storybook · code</span></div>
       </div>
       <div class="role-v" data-role="recruiter">
         <span class="rchip"><i></i>The bet &amp; the payoff</span>
-        <p>I led the design system that turned a one-month, hand-built UI per hospital into a <b>three-day reskin</b> — onboarding clients faster while accessibility stopped regressing. The decision, the trade-offs, and the numbers are what this page is really about.</p>
+        <p>I led the design system that turned a one-month, hand-built UI per hospital into a <b>three-day reskin</b>, onboarding clients faster while accessibility stopped regressing. The decision, the trade-offs, and the numbers are what this page is really about.</p>
         <div class="meta"><b>My role</b><span>Design systems lead</span></div>
         <div class="meta"><b>Impact</b><span>12 wks → 3 days · ~85% component reuse</span></div>
       </div>
       <div class="role-v" data-role="designer">
         <span class="rchip"><i></i>The system &amp; the craft</span>
-        <p>I made the interface itself a <b>theme</b> — colour, layout, density and an accessibility floor, tokenised all the way down to the atom. A new hospital becomes a configuration, not a redraw, and the kit stays composable instead of forking into one-offs.</p>
+        <p>I made the interface itself a <b>theme</b>: colour, layout, density and an accessibility floor, tokenised all the way down to the atom. A new hospital becomes a configuration, not a redraw, and the kit stays composable instead of forking into one-offs.</p>
         <div class="meta"><b>My role</b><span>Design systems lead</span></div>
         <div class="meta"><b>Craft</b><span>atom → screen tokens · Figma variables</span></div>
       </div>
@@ -496,44 +499,44 @@ section{overflow:hidden}
       <div class="role-v" data-role="all">
         <span class="kick">The cost</span>
         <h2 class="lead-h">Selling the platform was a day. <span class="gt">Re-skinning it was a month.</span></h2>
-        <p class="lead-p">Every hospital got a hand-built interface from zero — and in clinical software the drift wasn't just ugly, it was risky: inconsistent ward fields, contrast that failed older clinicians, an "Admit" button that meant three different things across three codebases.</p>
+        <p class="lead-p">Every hospital got a hand-built interface from zero, and in clinical software the drift wasn't just ugly. It was risky: inconsistent ward fields, contrast that failed older clinicians, an "Admit" button that meant three different things across three codebases.</p>
       </div>
       <div class="role-v" data-role="recruiter">
         <span class="rchip"><i></i>The bet &amp; the payoff</span>
         <h2 class="lead-h">We could win the deal in a day. <span class="gt">We couldn't ship in under a month.</span></h2>
-        <p class="lead-p">Every signed hospital meant rebuilding the same interface by hand — roughly a designer-month per deal, with accessibility audits failing late in review. The cost wasn't taste; it was <b>velocity and regulatory risk</b>, and it scaled with every new client.</p>
+        <p class="lead-p">Every signed hospital meant rebuilding the same interface by hand: roughly a designer-month per deal, with accessibility audits failing late in review. The cost wasn't taste; it was <b>velocity and regulatory risk</b>, and it scaled with every new client.</p>
       </div>
       <div class="role-v" data-role="designer">
         <span class="rchip"><i></i>The system &amp; the craft</span>
         <h2 class="lead-h">Three hospitals. <span class="gt">Three hand-drawn versions of the same component.</span></h2>
-        <p class="lead-p">With no shared token, one "Admit patient" button drifted into a dozen variants — different padding, radius, contrast, label. Drift like this isn't a taste failure; it's a <b>missing constraint</b>. The system never actually owned the component.</p>
+        <p class="lead-p">With no shared token, one "Admit patient" button drifted into a dozen variants: different padding, radius, contrast, label. Drift like this isn't a taste failure; it's a <b>missing constraint</b>. The system never actually owned the component.</p>
       </div>
       <div class="role-v" data-role="developer">
         <span class="rchip"><i></i>The machine &amp; the guarantees</span>
         <h2 class="lead-h">One codebase. Three forks. <span class="gt">Zero shared tokens.</span></h2>
-        <p class="lead-p">Each hospital install was effectively its own codebase, so a single contrast fix had to be written three times — and could silently regress in any of them. <b>Three UIs is three places a patient-safety bug hides</b>, with no token layer to catch it.</p>
+        <p class="lead-p">Each hospital install was effectively its own codebase, so a single contrast fix had to be written three times, and could silently regress in any of them. <b>Three UIs is three places a patient-safety bug hides</b>, with no token layer to catch it.</p>
       </div>
     </div>
 
     <div class="rv-set rv d1">
       <div class="role-v" data-role="all"><div class="cost-row">
-        <div class="cost"><div class="n" data-count="3">0</div><div class="k">hospitals onboarded</div><p>One platform, three bespoke front-ends — none sharing a token.</p></div>
+        <div class="cost"><div class="n" data-count="3">0</div><div class="k">hospitals onboarded</div><p>One platform, three bespoke front-ends, none sharing a token.</p></div>
         <div class="cost"><div class="n">~12<small>wks</small></div><div class="k">per hospital UI</div><p>Mostly re-drawing what already existed, slightly differently each time.</p></div>
-        <div class="cost"><div class="n" data-count="3">0</div><div class="k">a11y audits failed</div><p>Re-built screens kept slipping below contrast — caught late, in review.</p></div>
+        <div class="cost"><div class="n" data-count="3">0</div><div class="k">a11y audits failed</div><p>Re-built screens kept slipping below contrast, caught late, in review.</p></div>
       </div></div>
       <div class="role-v" data-role="recruiter"><div class="cost-row">
         <div class="cost"><div class="n">~12<small>wks</small></div><div class="k">senior time / hospital</div><p>Three months spent rebuilding what already existed elsewhere.</p></div>
         <div class="cost"><div class="n">3+</div><div class="k">deals waiting on UI</div><p>Sales closed in a day; delivery dragged the revenue by months.</p></div>
-        <div class="cost"><div class="n">3</div><div class="k">compliance audits failed</div><p>Contrast slipping below AA — a regulatory risk, not a nitpick.</p></div>
+        <div class="cost"><div class="n">3</div><div class="k">compliance audits failed</div><p>Contrast slipping below AA: a regulatory risk, not a nitpick.</p></div>
       </div></div>
       <div class="role-v" data-role="designer"><div class="cost-row">
-        <div class="cost"><div class="n">12+</div><div class="k">"Admit" variants</div><p>One intent, three drifting executions — padding, radius, contrast.</p></div>
+        <div class="cost"><div class="n">12+</div><div class="k">"Admit" variants</div><p>One intent, three drifting executions: padding, radius, contrast.</p></div>
         <div class="cost"><div class="n">3</div><div class="k">unsynced Figma kits</div><p>Each hospital forked the file once and never merged back.</p></div>
         <div class="cost"><div class="n">0</div><div class="k">shared tokens</div><p>Nothing tied colour, spacing or contrast together across hospitals.</p></div>
       </div></div>
       <div class="role-v" data-role="developer"><div class="cost-row">
         <div class="cost"><div class="n">3<small>×</small></div><div class="k">maintenance surface</div><p>One contrast fix, applied by hand across three separate codebases.</p></div>
-        <div class="cost"><div class="n">0</div><div class="k">source of truth</div><p>No token layer — every value hard-coded per app, per screen.</p></div>
+        <div class="cost"><div class="n">0</div><div class="k">source of truth</div><p>No token layer: every value hard-coded per app, per screen.</p></div>
         <div class="cost"><div class="n">3</div><div class="k">silent a11y regressions</div><p>Caught in human review, not by the system. Three that we know of.</p></div>
       </div></div>
     </div>
@@ -554,10 +557,10 @@ section{overflow:hidden}
 <section style="padding-top:0">
   <div class="wrap">
     <div class="shift rv"><div class="in2 rv-set">
-      <div class="role-v" data-role="all"><blockquote>What if onboarding a hospital was a <em>theme</em> — colour, density, and accessibility — not a rebuild?</blockquote><div class="by">the reframe the whole system is built on</div></div>
-      <div class="role-v" data-role="recruiter"><blockquote>What if every new hospital was a <em>three-day reskin</em> — not a three-month rebuild?</blockquote><div class="by">the bet that changed how fast we could deliver</div></div>
+      <div class="role-v" data-role="all"><blockquote>What if onboarding a hospital was a <em>theme</em>, made of colour, density, and accessibility, not a rebuild?</blockquote><div class="by">the reframe the whole system is built on</div></div>
+      <div class="role-v" data-role="recruiter"><blockquote>What if every new hospital was a <em>three-day reskin</em>, not a three-month rebuild?</blockquote><div class="by">the bet that changed how fast we could deliver</div></div>
       <div class="role-v" data-role="designer"><blockquote>The moment we separated what each hospital <em>controls</em> from what the contract <em>enforces</em>, onboarding stopped being a project.</blockquote><div class="by">design principle · Invitrace · 2025</div></div>
-      <div class="role-v" data-role="developer"><blockquote>What if a new hospital was a <em>theme file</em> the build consumes — not another codebase to maintain?</blockquote><div class="by">configuration over rebuild, all the way down</div></div>
+      <div class="role-v" data-role="developer"><blockquote>What if a new hospital was a <em>theme file</em> the build consumes, not another codebase to maintain?</blockquote><div class="by">configuration over rebuild, all the way down</div></div>
     </div></div>
   </div>
 
@@ -569,10 +572,10 @@ section{overflow:hidden}
   <span class="lab-tag">THE LAB</span>
   <div class="wrap">
     <div class="rv-set rv">
-      <div class="role-v" data-role="all"><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">Work the console. <span class="gt">Watch the ward app morph.</span></h2><p class="lead-p">The phone is the clinician's ward console — the thing we ship to hospitals. You touch the <b>console</b>: pick a hospital archetype, a colour, a radius, an accessibility floor. The token flows <b>raw → theme → semantic → screen</b>, and the live app <b>re-shapes</b> to match — same components, different hospitals.</p></div>
-      <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">I can stand up a new hospital <span class="gt">live, in front of you.</span></h2><p class="lead-p">Pick a hospital on the console and the ward app re-shapes to match. The point isn't the animation — it's that <b>onboarding a client is now this fast</b>. Try the "+ New hospital" tab and watch a brand-new theme appear from the current settings.</p></div>
-      <div class="role-v" data-role="designer"><span class="rchip"><i></i>The system &amp; the craft</span><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">One kit, <span class="gt">re-composed per hospital.</span></h2><p class="lead-p">The phone is built from the same components every hospital uses. The console changes tokens — colour, radius, density, layout order — and the screen <b>recomposes</b>, modules travelling to new positions. Composable, not three look-alikes that drift apart.</p></div>
-      <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">Change a token, <span class="gt">watch it cascade to the ward screen.</span></h2><p class="lead-p">The console mutates raw values; they flow <b>raw → theme → semantic → component</b> and the app re-renders. The x-ray strip traces the path. Nothing is hand-edited per screen — and the contrast floor travels with the theme.</p></div>
+      <div class="role-v" data-role="all"><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">Work the console. <span class="gt">Watch the ward app morph.</span></h2><p class="lead-p">The phone is the clinician's ward console: the thing we ship to hospitals. You touch the <b>console</b>: pick a hospital archetype, a colour, a radius, an accessibility floor. The token flows <b>raw → theme → semantic → screen</b>, and the live app <b>re-shapes</b> to match, same components, different hospitals.</p></div>
+      <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">I can stand up a new hospital <span class="gt">live, in front of you.</span></h2><p class="lead-p">Pick a hospital on the console and the ward app re-shapes to match. The point isn't the animation. It's that <b>onboarding a client is now this fast</b>. Try the "+ New hospital" tab and watch a brand-new theme appear from the current settings.</p></div>
+      <div class="role-v" data-role="designer"><span class="rchip"><i></i>The system &amp; the craft</span><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">One kit, <span class="gt">re-composed per hospital.</span></h2><p class="lead-p">The phone is built from the same components every hospital uses. The console changes tokens (colour, radius, density, layout order) and the screen <b>recomposes</b>, modules travelling to new positions. Composable, not three look-alikes that drift apart.</p></div>
+      <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">The lab · one system, every hospital</span><h2 class="lead-h">Change a token, <span class="gt">watch it cascade to the ward screen.</span></h2><p class="lead-p">The console mutates raw values; they flow <b>raw → theme → semantic → component</b> and the app re-renders. The x-ray strip traces the path. Nothing is hand-edited per screen, and the contrast floor travels with the theme.</p></div>
     </div>
 
     <!-- x-ray pipeline strip -->
@@ -614,7 +617,7 @@ section{overflow:hidden}
             <div class="ph-m ph-docs">
               <div class="doc">
                 <span class="dav2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg><i class="on-dot"></i></span>
-                <div class="dm"><div class="dn">Napat Wongsa</div><div class="dmeta"><span class="star" style="color:#ef4444">⚠</span> Emergency · Waiting · ER bay 2</div></div>
+                <div class="dm"><div class="dn">Napat Wongsa</div><div class="dmeta"><span class="star" style="color:var(--status-danger)">⚠</span> Emergency · Waiting · ER bay 2</div></div>
                 <span class="bookbtn">Admit</span>
               </div>
               <div class="doc">
@@ -643,21 +646,21 @@ section{overflow:hidden}
       <div class="console rv">
         <div class="console-lab">The console · the remote</div>
         <div class="cli-tabs" id="cliTabs">
-          <button class="cli-tab on" data-client="district"><span class="d" style="background:#0d9488"></span>District</button>
-          <button class="cli-tab" data-client="teaching"><span class="d" style="background:#c97a0a"></span>Teaching</button>
-          <button class="cli-tab" data-client="specialty"><span class="d" style="background:#c0394b"></span>Specialty</button>
+          <button class="cli-tab on" data-client="district"><span class="d" style="background:var(--arch-medium)"></span>District</button>
+          <button class="cli-tab" data-client="teaching"><span class="d" style="background:var(--arch-large)"></span>Teaching</button>
+          <button class="cli-tab" data-client="specialty"><span class="d" style="background:var(--arch-specialty)"></span>Specialty</button>
           <button class="cli-tab newcli" id="newCli"><span class="nd">+</span>New hospital</button>
         </div>
-        <div class="cli-why" id="cliWhy">200-bed general hospital — compact density, high-throughput ward tracking.</div>
+        <div class="cli-why" id="cliWhy">200-bed general hospital: compact density, high-throughput ward tracking.</div>
 
         <div class="panel">
           <div class="ph">Tokens · live</div>
           <div class="ctrl"><label>Primary</label><div class="swatches" id="swatches"></div><input type="color" id="colorPick" class="swatch-pick" value="#0d9488" title="Pick any colour"></div>
-          <div class="ctrl-hint">Pick any colour — the phone updates live</div>
+          <div class="ctrl-hint">Pick any colour, and the phone updates live</div>
           <div class="ctrl"><label>Radius</label><input type="range" id="radius" min="4" max="28" value="20"><span class="rngval" id="radVal">20</span></div>
           <div class="ctrl-hint">Drag to see corner radius cascade to every component</div>
           <div class="ctrl"><label>High contrast</label><div class="tog" id="hcTog"><i></i></div></div>
-          <div class="ctrl-hint">Enforces WCAG AAA — contrast ratio floors travel with the theme</div>
+          <div class="ctrl-hint">Enforces WCAG AAA: contrast ratio floors travel with the theme</div>
           <div class="ctrl"><label>Edge case</label><div class="edges" id="edges"><button class="on" data-edge="none">Default</button><button data-edge="empty">No admissions</button><button data-edge="long">Long name</button></div></div>
         </div>
 
@@ -669,7 +672,7 @@ section{overflow:hidden}
         <div class="vpanel">
           <div class="vp on" data-view="design">
             <div class="vh">In Figma <span class="badge">design</span></div>
-            <p>One component, variant props for each hospital archetype. The token names here are Figma variables — so a colour change lands in both, once.</p>
+            <p>One component, variant props for each hospital archetype. The token names here are Figma variables, so a colour change lands in both, once.</p>
             <div class="figchips">
               <span class="figchip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>Auto-layout</span>
               <span class="figchip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>Hospital archetypes</span>
@@ -683,7 +686,7 @@ section{overflow:hidden}
           </div>
           <div class="vp" data-view="pm">
             <div class="vh">For the business <span class="badge">pm</span></div>
-            <p>A hospital is a config file, not a project. The change you just made ships to every hospital next release — reviewed, not redrawn.</p>
+            <p>A hospital is a config file, not a project. The change you just made ships to every hospital next release, reviewed, not redrawn.</p>
             <div class="pmstat">
               <div class="x"><b>3 days</b><small>per hospital onboarding</small></div>
               <div class="x"><b>0</b><small>a11y regressions</small></div>
@@ -693,7 +696,7 @@ section{overflow:hidden}
         </div>
       </div>
     </div>
-    <p class="lab-note rv">↑ change the console — the token flows raw → theme → semantic, and the app re-shapes to match</p>
+    <p class="lab-note rv">↑ change the console: the token flows raw → theme → semantic, and the app re-shapes to match</p>
   </div>
 
 </section>
@@ -704,9 +707,9 @@ section{overflow:hidden}
   <div class="wrap">
     <div class="rv-set rv">
       <div class="role-v" data-role="all"><span class="kick">Making it unbreakable</span><h2 class="lead-h">In healthcare, a broken component <span class="gt">isn't a style bug.</span></h2><p class="lead-p">A detached card that skips the contrast token can fail a patient who can't read it. So the kit is built so the three habits that rot a system simply don't pay off.</p></div>
-      <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">Making it unbreakable</span><h2 class="lead-h">I designed for the people who'd <span class="gt">misuse the system.</span></h2><p class="lead-p">Governance is the unglamorous work that decides whether a design system survives a real team under deadline. Below is how I made the <b>wrong move stop paying off</b> — change the master token and watch what stays in line.</p></div>
-      <div class="role-v" data-role="designer"><span class="rchip"><i></i>The system &amp; the craft</span><span class="kick">Making it unbreakable</span><h2 class="lead-h">Detach, copy, invent — <span class="gt">the three ways a system rots.</span></h2><p class="lead-p">Every Figma library decays the same way. The fix isn't a rules doc; it's making the <b>correct path the easiest one</b> so drift never starts. Poke the stage below to see each failure — and why the system resists it.</p></div>
-      <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">Making it unbreakable</span><h2 class="lead-h">Bound instances propagate; <span class="gt">forks go stale.</span></h2><p class="lead-p">An instance wired to the master updates with it; a detached or copied one freezes. Same reason you don't fork a shared component in code — and the same fix: <b>one source, enforced</b>. Change the master below and watch propagation.</p></div>
+      <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">Making it unbreakable</span><h2 class="lead-h">I designed for the people who'd <span class="gt">misuse the system.</span></h2><p class="lead-p">Governance is the unglamorous work that decides whether a design system survives a real team under deadline. Below is how I made the <b>wrong move stop paying off</b>: change the master token and watch what stays in line.</p></div>
+      <div class="role-v" data-role="designer"><span class="rchip"><i></i>The system &amp; the craft</span><span class="kick">Making it unbreakable</span><h2 class="lead-h">Detach, copy, invent: <span class="gt">the three ways a system rots.</span></h2><p class="lead-p">Every Figma library decays the same way. The fix isn't a rules doc; it's making the <b>correct path the easiest one</b> so drift never starts. Poke the stage below to see each failure, and why the system resists it.</p></div>
+      <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">Making it unbreakable</span><h2 class="lead-h">Bound instances propagate; <span class="gt">forks go stale.</span></h2><p class="lead-p">An instance wired to the master updates with it; a detached or copied one freezes. Same reason you don't fork a shared component in code, and the same fix: <b>one source, enforced</b>. Change the master below and watch propagation.</p></div>
     </div>
     <!-- shared wire stage: master token -> instances, prove propagation -->
     <div class="wire rv" id="wire">
@@ -728,22 +731,22 @@ section{overflow:hidden}
       <div class="brk-c rv">
         <div class="ic2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4"/></svg></div>
         <h3>Detach</h3>
-        <p>Detaching to tweak one value also drops the a11y token. <b>Fix:</b> every real need is a prop — including contrast mode — so there's nothing to detach for.</p>
+        <p>Detaching to tweak one value also drops the a11y token. <b>Fix:</b> every real need is a prop, including contrast mode, so there's nothing to detach for.</p>
       </div>
       <div class="brk-c rv d1">
         <div class="ic2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></div>
         <h3>Copy-paste</h3>
-        <p>A pasted copy looks right today and silently rots tomorrow. <b>Fix:</b> the kit is the only on-ramp — inserting is faster than rebuilding.</p>
+        <p>A pasted copy looks right today and silently rots tomorrow. <b>Fix:</b> the kit is the only on-ramp: inserting is faster than rebuilding.</p>
       </div>
       <div class="brk-c rv d2">
         <div class="ic2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg></div>
         <h3>Invent</h3>
-        <p>A hospital's "special" one-off becomes the tenth dosage field. <b>Fix:</b> new patterns enter by contribution and review — forking outside is the friction.</p>
+        <p>A hospital's "special" one-off becomes the tenth dosage field. <b>Fix:</b> new patterns enter by contribution and review; forking outside is the friction.</p>
       </div>
     </div>
     <div class="gov rv">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
-      <p>Every component ships to <b>Storybook</b> with its states and an a11y check baked in — so clinical teams', engineering, and QA all read the same source of truth, not a screenshot in a thread.</p>
+      <p>Every component ships to <b>Storybook</b> with its states and an a11y check baked in, so clinical teams, engineering, and QA all read the same source of truth, not a screenshot in a thread.</p>
     </div>
   </div>
 
@@ -755,15 +758,15 @@ section{overflow:hidden}
     <div class="rv" style="background:var(--paper-2);border-radius:34px"><div class="wrap"><div style="padding:clamp(3rem,7vw,5rem) 0;display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:center" class="auth-row">
       <div>
         <div class="rv-set">
-          <div class="role-v" data-role="all"><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">A hospital, written as <span class="gt">one reviewable file.</span></h2><p class="lead-p">Tokens live as code; Figma variables and the Storybook kit sync to it. Onboarding a hospital is a small diff — colour, layout map, and a11y floor — not a fresh build. The latest themes I authored end-to-end in <b>Claude Code</b> straight from the schema.</p></div>
-          <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">A hospital ships in days because <span class="gt">it's a reviewed config.</span></h2><p class="lead-p">Onboarding is a small file someone reviews — not a project someone staffs. That's the <b>margin story</b>, and why the model scales with sales instead of headcount.</p></div>
+          <div class="role-v" data-role="all"><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">A hospital, written as <span class="gt">one reviewable file.</span></h2><p class="lead-p">Tokens live as code; Figma variables and the Storybook kit sync to it. Onboarding a hospital is a small diff (colour, layout map, and a11y floor), not a fresh build. The latest themes I authored end-to-end in <b>Claude Code</b> straight from the schema.</p></div>
+          <div class="role-v" data-role="recruiter"><span class="rchip"><i></i>The bet &amp; the payoff</span><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">A hospital ships in days because <span class="gt">it's a reviewed config.</span></h2><p class="lead-p">Onboarding is a small file someone reviews, not a project someone staffs. That's the <b>margin story</b>, and why the model scales with sales instead of headcount.</p></div>
           <div class="role-v" data-role="designer"><span class="rchip"><i></i>The system &amp; the craft</span><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">Design and engineering <span class="gt">share one vocabulary.</span></h2><p class="lead-p">Figma variables and the code kit read the <b>same token names</b>. The file beside this is the contract; both sides edit the same nouns, so design intent and shipped UI can't quietly diverge.</p></div>
-          <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">A theme is a small file: <span class="gt">colour, layout, a11y floor.</span></h2><p class="lead-p">Versionable, reviewable diff — no pixel-pushing. I authored the latest themes end-to-end in <b>Claude Code</b> straight from the schema, and the build consumes them directly.</p></div>
+          <div class="role-v" data-role="developer"><span class="rchip"><i></i>The machine &amp; the guarantees</span><span class="kick">How it's authored</span><h2 class="lead-h" style="margin-bottom:1rem">A theme is a small file: <span class="gt">colour, layout, a11y floor.</span></h2><p class="lead-p">Versionable, reviewable diff: no pixel-pushing. I authored the latest themes end-to-end in <b>Claude Code</b> straight from the schema, and the build consumes them directly.</p></div>
         </div>
       </div>
       <div class="afile-wrap">
         <div class="afile-bar">
-          <span class="lbl">Tap a line — watch it change</span>
+          <span class="lbl">Tap a line to watch it change</span>
           <div class="modetog" id="modeTog"><button class="on" data-mode="code">Code</button><button data-mode="plain">Plain English</button></div>
         </div>
         <div class="afile" id="afile" data-mode="code">
@@ -873,7 +876,7 @@ section{overflow:hidden}
         <div class="out"><div class="n">1</div><div class="k">source of truth</div><p>raw→theme→semantic→component.</p></div>
         <div class="out"><div class="n">0</div><div class="k">a11y regressions</div><p>Contrast enforced, not remembered.</p></div>
         <div class="out"><div class="n">100<span class="gt">%</span></div><div class="k">Storybook coverage</div><p>States + a11y check per component.</p></div>
-        <div class="out"><div class="n">n</div><div class="k">hospitals = n configs</div><p>A theme file — reviewable, versioned, diffable.</p></div>
+        <div class="out"><div class="n">n</div><div class="k">hospitals = n configs</div><p>A theme file: reviewable, versioned, diffable.</p></div>
       </div></div>
     </div>
   </div>
@@ -887,8 +890,8 @@ section{overflow:hidden}
     <div class="rv-set">
       <div class="role-v" data-role="all"><blockquote>The component I'm proudest of is the one a tired engineer <em>can't</em> ship inaccessible.</blockquote></div>
       <div class="role-v" data-role="recruiter"><blockquote>What I optimise for: systems a tired team <em>can't</em> break under deadline pressure.</blockquote></div>
-      <div class="role-v" data-role="designer"><blockquote>The artifact I'm proudest of isn't a screen — it's the <em>guardrail</em> that protects craft when nobody's watching.</blockquote></div>
-      <div class="role-v" data-role="developer"><blockquote>Make the safe path the default path — the system should make an inaccessible build <em>impossible</em> to ship.</blockquote></div>
+      <div class="role-v" data-role="designer"><blockquote>The artifact I'm proudest of isn't a screen. It's the <em>guardrail</em> that protects craft when nobody's watching.</blockquote></div>
+      <div class="role-v" data-role="developer"><blockquote>Make the safe path the default path: the system should make an inaccessible build <em>impossible</em> to ship.</blockquote></div>
     </div>
     <p class="honesty">Health-tech design-systems case study. The multi-hospital platform, the atom→screen token architecture with layout and accessibility maps, and the Figma/Storybook workflow reflect the real work; hospital names (District, Teaching, Specialty) are stand-ins and figures are directional from internal tracking, shown to convey scale rather than as published metrics. The ward console is an interactive prototype, not a medical device.</p>
   </div>
@@ -1027,7 +1030,7 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
     }, reduce?60:bs.length*40+260);
   }
   btn.addEventListener('click',()=>{
-    if(phase===0){ stage.classList.add('open'); makeMess(); cap.innerHTML='<b>9 hospital installs, 9 hand-built buttons</b> — nothing matches'; btn.textContent='Consolidate to one →'; phase=1; }
+    if(phase===0){ stage.classList.add('open'); makeMess(); cap.innerHTML='<b>9 hospital installs, 9 hand-built buttons</b>, nothing matches'; btn.textContent='Consolidate to one →'; phase=1; }
     else if(phase===1){ consolidate(); btn.textContent='Reset'; phase=2; }
     else { stage.classList.remove('open','one'); stage.innerHTML=''; cap.textContent='The same "Admit patient" button, drifting across 9 hospital installs'; btn.textContent='See the drift →'; phase=0; }
   });
@@ -1042,14 +1045,14 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   const LINKED='<div class="inst" data-state="linked"><span class="conn"></span><button class="ibtn">Admit</button><span class="ibadge">linked</span></div>';
   function setMaster(c){ wire.style.setProperty('--m-color',c); wmSw.style.background=c; wmHex.textContent='color/primary → '+c; }
   function reset(){ ci=0; setMaster(COLORS[0]); insts.innerHTML=LINKED+LINKED+LINKED;
-    log.innerHTML='3 instances, all <b>linked</b> to the master. Hit “Change the master” — watch them follow as one.'; }
+    log.innerHTML='3 instances, all <b>linked</b> to the master. Hit “Change the master” and watch them follow as one.'; }
   function changeMaster(){
     ci=(ci+1)%COLORS.length; const c=COLORS[ci]; setMaster(c);
     insts.querySelectorAll('.inst[data-state="linked"] .conn').forEach(cn=>{cn.classList.remove('pulse'); void cn.offsetWidth; cn.classList.add('pulse');});
     const linked=insts.querySelectorAll('.inst[data-state="linked"]').length;
     const stuck=insts.querySelectorAll('.inst:not([data-state="linked"])').length;
     log.innerHTML = stuck
-      ? `master → <b>${c}</b> · ${linked} linked followed instantly — ${stuck} stuck on the old value. That gap is the bug.`
+      ? `master → <b>${c}</b> · ${linked} linked followed instantly; ${stuck} stuck on the old value. That gap is the bug.`
       : `master → <b>${c}</b> · all ${linked} followed in one change. <b>That's the whole point.</b>`;
   }
   function detach(){
@@ -1059,15 +1062,15 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
     el.dataset.state='detached';
     el.querySelector('.ibtn').style.background=frozen;
     el.querySelector('.ibadge').textContent='detached · '+frozen;
-    log.innerHTML='Detached one — its wire is <b>cut</b>. It froze the current value and will ignore the master from now on.';
+    log.innerHTML='Detached one: its wire is <b>cut</b>. It froze the current value and will ignore the master from now on.';
   }
   function spawn(state,badge,label){
     const el=document.createElement('div'); el.className='inst pop'; el.dataset.state=state;
     el.innerHTML=`<span class="conn"></span><button class="ibtn">${label}</button><span class="ibadge">${badge}</span>`;
     insts.appendChild(el); setTimeout(()=>el.classList.remove('pop'),400);
   }
-  function copy(){ spawn('copy','copy · untracked','Admit'); log.innerHTML='Pasted a copy — <b>no wire to the master</b>. Looks right today, never updates again.'; }
-  function invent(){ spawn('invent','btn-024 · untracked','Admit'); log.innerHTML='Invented a button outside the system — <b>untracked</b>. The 24th variant nobody can theme.'; }
+  function copy(){ spawn('copy','copy · untracked','Admit'); log.innerHTML='Pasted a copy: <b>no wire to the master</b>. Looks right today, never updates again.'; }
+  function invent(){ spawn('invent','btn-024 · untracked','Admit'); log.innerHTML='Invented a button outside the system: <b>untracked</b>. The 24th variant nobody can theme.'; }
   wmChange.addEventListener('click',changeMaster);
   wire.querySelectorAll('.wire-actions button').forEach(b=>b.addEventListener('click',()=>{
     const a=b.dataset.act; if(a==='detach')detach(); else if(a==='copy')copy(); else if(a==='invent')invent(); else reset();
@@ -1087,7 +1090,7 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   const TOK={
     color:{
       do(){ st.color=(st.color+1)%COLORS.length; prev.style.setProperty('--p-primary',COLORS[st.color]); },
-      cap:'<b>Primary colour.</b> Change this one value and every button, header and link across the whole app follows — no hunting through screens.'
+      cap:'<b>Primary colour.</b> Change this one value and every button, header and link across the whole app follows. No hunting through screens.'
     },
     radius:{
       do(){ st.radius^=1; prev.style.setProperty('--p-rad', st.radius?'18px':'9px'); },
@@ -1099,11 +1102,11 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
     },
     contrast:{
       do(){ st.contrast^=1; prev.classList.toggle('hc',st.contrast); },
-      cap:'<b>Accessibility floor.</b> Switch it on and text is guaranteed readable for low-vision and older patients — it\u2019s built in, not left to memory.'
+      cap:'<b>Accessibility floor.</b> Switch it on and text is guaranteed readable for low-vision and older patients. It\u2019s built in, not left to memory.'
     },
     layout:{
       do(){ st.layout^=1; vitals.classList.toggle('ap-promoted',st.layout); },
-      cap:'<b>Layout map.</b> The theme can reorder the screen — here it lifts the patient\u2019s vitals to the top, because for a hospital that matters most.'
+      cap:'<b>Layout map.</b> The theme can reorder the screen: here it lifts the patient\u2019s vitals to the top, because for a hospital that matters most.'
     }
   };
   rows.forEach(r=>r.addEventListener('click',()=>{
@@ -1135,9 +1138,9 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const CLINICS={
-    district:{name:'District',primary:'#0d9488',rad:6,density:'compact',contrast:'AA',why:'<b>200-bed general hospital</b> — compact density, high-throughput ward tracking.',alt:['#0d9488','#0e7490','#14b8a6','#1f7a6e']},
-    teaching:{name:'Teaching',primary:'#c97a0a',rad:10,density:'comfortable',contrast:'AA',why:'<b>800-bed academic hospital</b> — spacious layout, larger type for complex workflows.',alt:['#c97a0a','#d97706','#b45309','#92400e']},
-    specialty:{name:'Specialty',primary:'#c0394b',rad:18,density:'cozy',contrast:'AA',why:'<b>40-bed oncology specialty</b> — warm radius, softer contrast, accessibility-forward.',alt:['#c0394b','#e11d48','#9f1239','#be185d']}
+    district:{name:'District',primary:'#0d9488',rad:6,density:'compact',contrast:'AA',why:'<b>200-bed general hospital</b>: compact density, high-throughput ward tracking.',alt:['#0d9488','#0e7490','#14b8a6','#1f7a6e']},
+    teaching:{name:'Teaching',primary:'#c97a0a',rad:10,density:'comfortable',contrast:'AA',why:'<b>800-bed academic hospital</b>: spacious layout, larger type for complex workflows.',alt:['#c97a0a','#d97706','#b45309','#92400e']},
+    specialty:{name:'Specialty',primary:'#c0394b',rad:18,density:'cozy',contrast:'AA',why:'<b>40-bed oncology specialty</b>: warm radius, softer contrast, accessibility-forward.',alt:['#c0394b','#e11d48','#9f1239','#be185d']}
 };
   let state={client:'district',primary:'#0d9488',rad:6,hc:false};
 
@@ -1216,7 +1219,7 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   // create a new hospital from the current console settings (a theme is just a config)
   function createClinic(){
     CLINICS.custom={name:'Custom',primary:state.primary,rad:state.rad,density:'custom',contrast:state.hc?'AAA':'AA',
-      why:'<b>Your hospital</b> — authored live from the console, saved as a config.',alt:[state.primary,'#10b981','#3b82f6','#6d5ef0']};
+      why:'<b>Your hospital</b>: authored live from the console, saved as a config.',alt:[state.primary,'#10b981','#3b82f6','#6d5ef0']};
     let tab=document.querySelector('#cliTabs .cli-tab[data-client="custom"]');
     if(!tab){
       tab=document.createElement('button'); tab.className='cli-tab'; tab.dataset.client='custom';

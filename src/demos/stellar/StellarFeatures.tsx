@@ -54,7 +54,7 @@ export function StellarFeatures() {
             One idea did the heavy lifting.
           </h2>
           <p style={{ color: S.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            Everything pointed at generation, not just search. Three features, but the middle one is the heart of Stellar.
+            Everything pointed toward generation. Three features shipped, but the recipe generator is the heart of Stellar.
           </p>
         </div>
 

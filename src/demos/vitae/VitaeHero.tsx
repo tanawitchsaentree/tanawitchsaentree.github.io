@@ -88,7 +88,7 @@ export function VitaeHero() {
             }}
           >
             Vitae reads a watch&apos;s raw signals into one daily number. The hard part was
-            never the number — it was earning the right to put it on screen.
+            never the number. It was earning the right to put it on screen.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.9rem' }}>
             {[

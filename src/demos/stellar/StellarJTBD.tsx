@@ -2,14 +2,13 @@
 
 import { S } from './tokens'
 
-// Post-it palette — warm paper tones, each with a slight tint
+// Post-it treatment — one warm paper tone (--stellar-sticky-bg / --stellar-sticky-ink),
+// varied only by rotation/offset so each note still reads as its own scrap of paper.
 const JOBS = [
   {
     when: 'WHEN I have a random assortment of ingredients',
     want: 'I want to discover something delicious without endless scrolling.',
     num:  '01',
-    bg:   '#f9f2a8', // classic yellow sticky
-    ink:  '#2d2800',
     rot:  '-1.6deg',
     tx:   '-2px',
   },
@@ -17,8 +16,6 @@ const JOBS = [
     when: "WHEN I'm uninspired or in a cooking rut",
     want: 'I want to be surprised with creative ideas that match my taste.',
     num:  '02',
-    bg:   '#b8e8c0', // mint green
-    ink:  '#0e2e14',
     rot:  '1.2deg',
     tx:   '1px',
   },
@@ -26,8 +23,6 @@ const JOBS = [
     when: "WHEN I'm trying to eat healthier",
     want: 'I want recipes that fit my diet without sacrificing flavour.',
     num:  '03',
-    bg:   '#ffd6a5', // peach
-    ink:  '#3a1400',
     rot:  '-0.8deg',
     tx:   '-1px',
   },
@@ -35,8 +30,6 @@ const JOBS = [
     when: "WHEN I'm hosting or want to impress",
     want: 'I want dishes I can confidently pull off for guests.',
     num:  '04',
-    bg:   '#c9e2ff', // sky blue
-    ink:  '#07213a',
     rot:  '1.8deg',
     tx:   '2px',
   },
@@ -44,8 +37,6 @@ const JOBS = [
     when: "WHEN I'm short on time",
     want: 'I want simple recipes from what I have, done in 30 minutes.',
     num:  '05',
-    bg:   '#f9c4d2', // blush pink
-    ink:  '#3a0c18',
     rot:  '-1.2deg',
     tx:   '-1px',
   },
@@ -95,7 +86,7 @@ export function StellarJTBD() {
                 scrollSnapAlign: 'start',
                 // Post-it structure
                 position:        'relative',
-                background:      j.bg,
+                background:      S.color.stickyBg,
                 borderRadius:    '3px 3px 3px 3px',
                 padding:         '2rem 1.5rem 1.4rem',
                 minHeight:       240,
@@ -105,22 +96,22 @@ export function StellarJTBD() {
                 transformOrigin: 'center 20%',
                 // Layered shadows: subtle lift + direction shadow mimicking pin
                 boxShadow:
-                  `0 1px 1px rgba(0,0,0,.10),
-                   0 4px 8px rgba(0,0,0,.10),
-                   0 12px 28px rgba(0,0,0,.12),
-                   inset 0 -2px 0 rgba(0,0,0,.06)`,
+                  `0 1px 1px ${S.alpha.black10},
+                   0 4px 8px ${S.alpha.black10},
+                   0 12px 28px ${S.alpha.black12},
+                   inset 0 -2px 0 ${S.alpha.black06}`,
                 transition:      'transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s cubic-bezier(.16,1,.3,1)',
                 cursor:          'grab',
               }}
               onMouseEnter={e => {
                 const t = e.currentTarget
                 t.style.transform = `rotate(0deg) translateX(0) scale(1.04) translateY(-6px)`
-                t.style.boxShadow = `0 2px 2px rgba(0,0,0,.08), 0 8px 16px rgba(0,0,0,.12), 0 22px 44px rgba(0,0,0,.15), inset 0 -2px 0 rgba(0,0,0,.06)`
+                t.style.boxShadow = `0 2px 2px ${S.alpha.black08}, 0 8px 16px ${S.alpha.black12}, 0 22px 44px ${S.alpha.black15}, inset 0 -2px 0 ${S.alpha.black06}`
               }}
               onMouseLeave={e => {
                 const t = e.currentTarget
                 t.style.transform = `rotate(${j.rot}) translateX(${j.tx})`
-                t.style.boxShadow = `0 1px 1px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.10), 0 12px 28px rgba(0,0,0,.12), inset 0 -2px 0 rgba(0,0,0,.06)`
+                t.style.boxShadow = `0 1px 1px ${S.alpha.black10}, 0 4px 8px ${S.alpha.black10}, 0 12px 28px ${S.alpha.black12}, inset 0 -2px 0 ${S.alpha.black06}`
               }}
             >
               {/* tape strip at top */}
@@ -128,9 +119,9 @@ export function StellarJTBD() {
                 position: 'absolute', top: -10, left: '50%',
                 transform: 'translateX(-50%)',
                 width: 52, height: 20,
-                background: 'rgba(255,255,255,.55)',
+                background: S.alpha.white55,
                 borderRadius: 2,
-                boxShadow: '0 1px 2px rgba(0,0,0,.10)',
+                boxShadow: `0 1px 2px ${S.alpha.black10}`,
                 backdropFilter: 'blur(2px)',
               }} />
 
@@ -138,7 +129,7 @@ export function StellarJTBD() {
               <div style={{
                 position: 'absolute', bottom: 0, right: 0,
                 width: 22, height: 22,
-                background: `linear-gradient(225deg, rgba(0,0,0,.12) 50%, transparent 50%)`,
+                background: `linear-gradient(225deg, ${S.alpha.black12} 50%, transparent 50%)`,
                 borderRadius: '0 0 3px 0',
               }} />
 
@@ -146,7 +137,7 @@ export function StellarJTBD() {
                 fontFamily:    S.font.mono,
                 fontSize:      '.72rem',
                 letterSpacing: '.08em',
-                color:         j.ink,
+                color:         S.color.stickyInk,
                 opacity:       0.55,
                 marginBottom:  '.7rem',
                 lineHeight:    1.4,
@@ -158,7 +149,7 @@ export function StellarJTBD() {
                 fontWeight:  700,
                 fontSize:    '1rem',
                 lineHeight:  1.45,
-                color:       j.ink,
+                color:         S.color.stickyInk,
                 flex:        1,
               }}>
                 {j.want}
@@ -171,7 +162,7 @@ export function StellarJTBD() {
                 alignSelf:   'flex-end',
                 lineHeight:  1,
                 marginTop:   '1.2rem',
-                color:       j.ink,
+                color:         S.color.stickyInk,
               }}>
                 {j.num}
               </span>

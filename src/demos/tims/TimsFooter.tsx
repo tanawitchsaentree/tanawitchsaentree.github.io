@@ -10,7 +10,7 @@ export function TimsFooter() {
           The POS I wish <em style={{ fontStyle: 'normal', color: T.color.red }}>past me</em> had.
         </h2>
         <p style={{ color: T.alpha.cream60, maxWidth: '54ch', lineHeight: 1.65 }}>
-          A weekend concept where the constraint that ran my mornings — seconds — drove every decision, and a hard iteration cap turned &ldquo;make it perfect&rdquo; into &ldquo;make it ship.&rdquo; Built with affection for everyone still on the headset.
+          A weekend concept where the constraint that ran my mornings, seconds, drove every decision, and a hard iteration cap turned &ldquo;make it perfect&rdquo; into &ldquo;make it ship.&rdquo; Built with affection for everyone still on the headset.
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', marginTop: '3rem', paddingTop: '2rem', borderTop: `1px solid ${T.alpha.lineDk}` }}>
@@ -25,7 +25,7 @@ export function TimsFooter() {
         </div>
 
         <small style={{ display: 'block', marginTop: '1.5rem', fontSize: '.75rem', letterSpacing: '.05em', textTransform: 'uppercase', color: T.alpha.cream55, maxWidth: '56ch', lineHeight: 1.6, fontStyle: 'normal' }}>
-          Unofficial concept project. Not affiliated with, endorsed by, or connected to Tim Hortons or Restaurant Brands International. Based entirely on my own experience as a former front-line employee and publicly available menu information — no internal systems, data, or proprietary tools are represented.
+          Unofficial concept project. Not affiliated with, endorsed by, or connected to Tim Hortons or Restaurant Brands International. Based entirely on my own experience as a former front-line employee and publicly available menu information. No internal systems, data, or proprietary tools are represented.
         </small>
       </div>
     </footer>

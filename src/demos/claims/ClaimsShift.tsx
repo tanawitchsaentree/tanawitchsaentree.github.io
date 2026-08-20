@@ -10,7 +10,7 @@ const INIT: Record<StepKey, StepState> = {
   s1:  { cls: 'open',  txt: 'open' },
   s2:  { cls: 'open',  txt: 'open' },
   cl:  { cls: 'open',  txt: 'open' },
-  ret: { cls: 'muted', txt: '—'    },
+  ret: { cls: 'muted', txt: '–'    },
 }
 
 const EASE = C.ease.spring
@@ -82,7 +82,7 @@ export function ClaimsShift() {
             <span style={{ color: C.color.live }}>It leaves as a feature.</span>
           </h2>
           <p style={{ fontSize: 'clamp(1rem,1.5vw,1.12rem)', color: C.color.tx, maxWidth: '60ch', marginTop: '1.1rem', lineHeight: 1.66 }}>
-            Same day. What used to be a Figma hand-off is now the working feature — built straight from the ticket and verified against its acceptance criteria. Trigger the payment event on the right.
+            Same day. What used to be a Figma hand-off is now the working feature, built straight from the ticket and verified against its acceptance criteria. Trigger the payment event on the right.
           </p>
         </div>
 
@@ -91,7 +91,7 @@ export function ClaimsShift() {
           {/* Ticket */}
           <div style={{ border: `1px solid ${C.color.line}`, borderRadius: 10, background: C.color.panel, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: C.shadow.card }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.55rem .8rem', borderBottom: `1px solid ${C.color.line}`, fontFamily: C.font.mono, fontSize: '.7rem', color: C.color.txDim, background: C.color.inset }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ color: C.color.info }}><path d="M11.5 2 21 11.5 11.5 21 2 11.5z" opacity=".85"/></svg>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ color: C.color.txDim }}><path d="M11.5 2 21 11.5 11.5 21 2 11.5z" opacity=".85"/></svg>
               issue · CLM-4437
               <span style={{ marginLeft: 'auto', fontFamily: C.font.mono, fontSize: '.62rem', padding: '.22em .55em', borderRadius: 5, border: `1px solid ${C.color.line2}`, color: C.color.txDim }}>JIRA</span>
             </div>
@@ -100,7 +100,7 @@ export function ClaimsShift() {
                 <span style={{ fontFamily: C.font.mono, fontSize: '.62rem', padding: '.22em .55em', borderRadius: 5, border: `1px solid ${C.color.line2}`, color: C.color.txDim }}>Epic</span>
                 <span style={{ fontFamily: C.font.mono, fontSize: '.62rem', padding: '.22em .55em', borderRadius: 5, border: `1px solid color-mix(in srgb,${C.color.fail} 35%,transparent)`, color: C.color.fail }}>● P2 Critical</span>
               </div>
-              <div style={{ fontFamily: C.font.display, fontWeight: 700, fontSize: '1.04rem', color: C.color.txHi, lineHeight: 1.2 }}>Closure of Claims — Last Payment</div>
+              <div style={{ fontFamily: C.font.display, fontWeight: 700, fontSize: '1.04rem', color: C.color.txHi, lineHeight: 1.2 }}>Closure of Claims: Last Payment</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.32rem', fontFamily: C.font.mono, fontSize: '.72rem', color: C.color.tx }}>
                 {[['status','In Progress'],['component','Claims Management'],['increment','PI 2026.3']].map(([k,v]) => (
                   <span key={k}><b style={{ color: C.color.txDim, fontWeight: 400, display: 'inline-block', width: '5.6rem' }}>{k}</b>{v}</span>
@@ -177,7 +177,7 @@ export function ClaimsShift() {
         </div>
 
         <p className="claims-animate claims-d2" style={{ fontFamily: C.font.mono, fontSize: '.76rem', color: C.color.txDim, marginTop: '1.1rem', lineHeight: 1.6 }}>
-          Left: the requirement, as it arrives. Right: the same requirement, <b style={{ color: C.color.txHi }}>shipped as a working feature</b> — the deliverable that used to be a hand-off.
+          The ticket, as it arrives, sits on the left. On the right, that same requirement arrives as <b style={{ color: C.color.txHi }}>a shipped, working feature</b>, the deliverable that used to be a hand-off.
         </p>
       </div>
     </section>

@@ -34,6 +34,80 @@ export function StellareatClient() {
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:opsz,wght@9..40,300..600&family=Fraunces:ital,opsz,wght@1,9..144,400..600&family=Space+Mono:wght@400;700&display=swap');
 
+        /* Stellar demo tokens — single source of truth for every hex value used
+           on this surface (case-study shell + phone-mockup screens). Everything
+           in src/demos/stellar/** references these via var(--stellar-x) instead
+           of hardcoding hex. Scoped to [data-demo="stellar"] per the demo-surface
+           exception in design-system.md. */
+        [data-demo="stellar"] {
+          /* case-study surface */
+          --stellar-paper: #f0f6e6;
+          --stellar-paper-2: #e6f0d4;
+          --stellar-on-fill: #f0f6e6;
+          --stellar-ink: #1b2b18;
+          --stellar-ink-soft: #48583f;
+          --stellar-muted: #8a9880;
+          --stellar-green: #3fa14a;
+          --stellar-green-deep: #2b6e34;
+          --stellar-lime: #9ad84e;
+          --stellar-lime-soft: #cdeb95;
+          --stellar-citrus: #ff8a3d;
+          --stellar-citrus-dark: #e8631f;
+          --stellar-green-mid: #314026;
+          --stellar-green-dark: #4a583f;
+          --stellar-green-star: #7ec43c;
+          --stellar-lime-mid: #5fae31;
+          --stellar-ink-forest: #2b3322;
+          --stellar-forest-1: #2b5018;
+          --stellar-forest-2: #264a17;
+          --stellar-forest-3: #234315;
+
+          /* phone-mockup "inside the app" surface — distinct scope from the
+             case-study ink/paper above, but drawn from the same warm-green family */
+          --stellar-ink-app: #16210f;
+          --stellar-ink-soft-app: #4a5a42;
+          --stellar-muted-app: #8a9882;
+          --stellar-white: #ffffff;
+          --stellar-black: #000000;
+          --stellar-surface-tint: #f3f8f1;
+          --stellar-surface-soft: #f7faf5;
+          --stellar-cta-bg-soft: #eef9ea;
+          --stellar-cta-bg-strong: #d6f3cf;
+          --stellar-skeleton-a: #e8f5e3;
+          --stellar-skeleton-b: #d4eece;
+          --stellar-star: #ffd34d;
+          --stellar-placeholder: #a8bda0;
+
+          /* iOS keyboard chrome (Screen1 typing demo) */
+          --stellar-kb-bg: #d1d5db;
+          --stellar-kb-key-alt: #adb5bd;
+          --stellar-kb-key-shadow: #8a8a8a;
+          --stellar-kb-lit: #e2f5dc;
+
+          /* device bezel (StellarPhone shell) */
+          --stellar-device-ring-1: #3c4044;
+          --stellar-device-ring-2: #141618;
+          --stellar-device-case-a: #2a2d30;
+          --stellar-device-case-b: #0c0d0e;
+          --stellar-device-case-c: #1a1c1e;
+          --stellar-device-button-1: #3a3d40;
+          --stellar-device-button-2: #16181a;
+
+          /* hero video fallback + mock "photo" gradients standing in for real photography */
+          --stellar-hero-fallback: #1e2e10;
+          --stellar-photo-amber-a: #e0a94a;
+          --stellar-photo-amber-b: #9c5a1e;
+          --stellar-photo-amber-c: #6e3d12;
+          --stellar-photo-green-light: #8fc24a;
+          --stellar-photo-green-dark: #3f8e2a;
+          --stellar-photo-sage-light: #5ba64a;
+          --stellar-photo-sage-dark: #2d6e1a;
+
+          /* JTBD sticky notes — one warm paper tone, varied by rotation/shadow only */
+          --stellar-sticky-bg: #f9f2a8;
+          --stellar-sticky-ink: #2d2800;
+        }
+
         .stellar-wrap { max-width:80rem; width:100%; margin:0 auto; padding:0 clamp(1.2rem,5vw,7.5rem) }
 
         /* scroll reveal */

@@ -25,7 +25,7 @@ export function TimsDemo() {
             The terminal, running.
           </h2>
           <p style={{ color: T.alpha.cream62, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            Built in front-end code, not screenshots — every tap responds instantly, and the order ticket stays live the whole time.
+            Built in front-end code, not screenshots. Every tap responds instantly, and the order ticket stays live the whole time.
           </p>
         </div>
 
@@ -39,7 +39,7 @@ export function TimsDemo() {
               key={h.prompt}
               style={{ fontFamily: T.font.mono, fontSize: '1rem', background: T.alpha.cream07, border: `1px solid ${T.alpha.lineDk}`, padding: '.6rem 1rem', borderRadius: 11, color: T.alpha.cream70 }}
             >
-              Try: <b style={{ color: T.color.gold }}>{h.prompt}</b> — {h.detail}
+              Try: <b style={{ color: T.color.gold }}>{h.prompt}</b>, {h.detail}
             </span>
           ))}
         </div>

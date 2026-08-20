@@ -67,7 +67,7 @@ export function ClaimsBroke() {
                     background: isCommit ? C.alpha.liveSoft : isRoot ? C.color.inset : 'transparent',
                   }}
                 >
-                  <span style={{ color: isCommit ? C.color.live : isRoot ? C.color.info : C.color.txFaint, flexShrink: 0, width: '6rem', fontSize: '.82rem' }}>
+                  <span style={{ color: isCommit ? C.color.live : isRoot ? C.color.warn : C.color.txFaint, flexShrink: 0, width: '6rem', fontSize: '.82rem' }}>
                     {row.rn}
                   </span>
                   <span style={{ color: C.color.tx }}>

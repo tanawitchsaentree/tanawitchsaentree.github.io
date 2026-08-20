@@ -32,12 +32,11 @@ export function VitaeOutcome() {
                 color:         V.color.ink,
               }}
             >
-              The proudest number wasn&apos;t{' '}
-              <em style={{ fontStyle: 'italic', color: V.color.limeDeep }}>engagement.</em>
+              The proudest number was{' '}
+              <em style={{ fontStyle: 'italic', color: V.color.limeDeep }}>zero caveats.</em>
             </h2>
             <p style={{ color: V.color.inkSoft, fontSize: '1.1rem', maxWidth: '50ch', fontFamily: V.font.sans, lineHeight: 1.65 }}>
-              It was that the clinical advisor signed off with <b style={{ color: V.color.ink }}>zero caveats</b> — because
-              the design never claims more than it knows.
+              The clinical advisor signed off without a single one, <b style={{ color: V.color.ink }}>because the design never claims more than it knows.</b>
             </p>
           </div>
 
@@ -96,7 +95,7 @@ export function VitaeOutcome() {
                 color:         V.color.ink,
               }}
             >
-              The best thing I designed never shipped —{' '}
+              The best thing I designed never shipped. It was{' '}
               <b style={{ fontStyle: 'normal', fontWeight: 600, color: V.color.limeDeep }}>the absolute score we killed.</b>
             </blockquote>
             <p
@@ -114,7 +113,7 @@ export function VitaeOutcome() {
               Case-study presentation of a product-design project. The score logic, stakeholder tensions,
               and decisions reflect the real work; figures (3s, review outcomes) come from the project&apos;s
               own usability testing and review notes and are shown as directional, not published metrics.
-              Vitae is not a medical device and does not provide medical advice — a framing that itself
+              Vitae is not a medical device and does not provide medical advice. That framing itself
               drove the relative-score decision above.
             </p>
           </div>
@@ -145,8 +144,8 @@ export function VitaeOutcome() {
               margin:        0,
             }}
           >
-            Restraint wasn&apos;t the style. It was{' '}
-            <em style={{ fontStyle: 'italic', color: V.color.lime }}>the safety mechanism.</em>
+            Zero clinical-safety flags. Every signal stayed{' '}
+            <em style={{ fontStyle: 'italic', color: V.color.lime }}>on the wrist.</em>
           </h2>
 
           <div

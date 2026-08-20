@@ -27,7 +27,7 @@ const ROUNDS: { n: string; h: string; steps: Step[] }[] = [
     h:    'Prototype → cut to one',
     steps: [
       { k: 'In',      text: 'A prototype showing the score plus four contributing sub-scores.' },
-      { k: 'Testers', text: "Couldn't read it in 3s — four numbers competed with the one that mattered.", bad: true },
+      { k: 'Testers', text: "Couldn't read it in 3s. Four numbers competed with the one that mattered.", bad: true },
       { k: 'Forward', text: 'One number, one move. Sub-scores collapse to one tap down.', good: true },
     ],
   },
@@ -60,7 +60,7 @@ export function VitaeLoop() {
           </h2>
           <p style={{ color: V.color.inkSoft, fontSize: '1.1rem', maxWidth: '56ch', fontFamily: V.font.sans, lineHeight: 1.65 }}>
             No screen shipped on my say-so. Each one came back through the people who could
-            veto it — and got quieter each pass.
+            veto it, and it got quieter each pass.
           </p>
         </div>
 

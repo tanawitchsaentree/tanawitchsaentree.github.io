@@ -1,27 +1,30 @@
-// Tims POS case study design tokens — Bricolage Grotesque + DM Sans + Space Mono
+// Tims POS case study design tokens: Bricolage Grotesque + DM Sans + Space Mono
 // Scoped to the demo surface (data-demo="tims"). NOT portfolio shell tokens.
 // Primary palette: #000000 / #CF162D / #FFFFFF
 
 export const T = {
   color: {
     red:       '#CF162D',  // Tim Hortons brand red
-    redDk:     '#9E0E1F',  // 15% darker — hover / gradient end
-    espresso:  '#000000',  // pure black — dark section backgrounds
-    espresso2: '#111111',  // near-black — card surfaces in dark sections
-    cream:     '#FFFFFF',  // pure white — text on dark backgrounds
-    cream2:    '#F5F5F5',  // light gray — alternating section backgrounds
-    paper:     '#FFFFFF',  // pure white — card backgrounds
-    ink:       '#000000',  // pure black — primary text
-    inkSoft:   '#555555',  // mid gray — body text
-    muted:     '#888888',  // light gray — labels, meta
+    redDk:     '#9E0E1F',  // 15% darker, for hover / gradient end
+    espresso:  '#000000',  // pure black, dark section backgrounds
+    espresso2: '#111111',  // near-black, card surfaces in dark sections
+    cream:     '#FFFFFF',  // pure white, text on dark backgrounds
+    cream2:    '#F5F5F5',  // light gray, alternating section backgrounds
+    paper:     '#FFFFFF',  // pure white, card backgrounds
+    ink:       '#000000',  // pure black, primary text
+    inkSoft:   '#555555',  // mid gray, body text
+    muted:     '#888888',  // light gray, labels, meta
     gold:      '#CF162D',  // red replaces gold in dark sections
-    green:     '#2f9e57',  // functional — KDS timer green zone (keep)
-    amber:     '#c4700a',  // functional — KDS timer amber zone (keep)
-    amberDk:   '#d98a2b',  // functional — KDS timer amber dark (keep)
+    green:     'var(--signal-ok)',                                    // functional, KDS timer fresh zone, shared demo-surface signal token
+    amber:     'var(--signal-warn)',                                  // functional, KDS timer getting-late zone, shared demo-surface signal token
+    amberDk:   'color-mix(in srgb, var(--signal-warn) 80%, black)',   // functional, KDS timer amber, darker fill for the progress bar
     onAccent:  '#FFFFFF',  // white text on red
     smoke1:    '#D0D0D0',
     smoke2:    '#B8B8B8',
     smoke3:    '#A0A0A0',
+    chipBg:    '#1A1A1A',  // dark chip background before it lights up (decode panel)
+    ticketBg:  '#141414',  // KDS ticket card background
+    paperWarm: '#FFFDF9',  // warm off-white, takeaway card background
   },
   alpha: {
     line:    'rgba(0,0,0,.10)',
@@ -33,10 +36,17 @@ export const T = {
     gold16:  'rgba(207,22,45,.16)',
     gold40:  'rgba(207,22,45,.40)',
     gold55:  'rgba(207,22,45,.55)',
+    cream90: 'rgba(255,255,255,.90)',
     cream70: 'rgba(255,255,255,.70)',
+    cream65: 'rgba(255,255,255,.65)',
     cream62: 'rgba(255,255,255,.62)',
     cream60: 'rgba(255,255,255,.60)',
     cream55: 'rgba(255,255,255,.55)',
+    cream50: 'rgba(255,255,255,.50)',
+    cream45: 'rgba(255,255,255,.45)',
+    cream38: 'rgba(255,255,255,.38)',
+    cream10: 'rgba(255,255,255,.10)',
+    cream08: 'rgba(255,255,255,.08)',
     cream07: 'rgba(255,255,255,.07)',
     cream02: 'rgba(255,255,255,.02)',
     ink05:   'rgba(0,0,0,.05)',

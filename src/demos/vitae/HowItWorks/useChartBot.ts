@@ -64,7 +64,7 @@ export function useChartBot(bars: Bar[], refs: ChartBotRefs) {
       if (scoreRef.current)   scoreRef.current.textContent   = low ? '—' : String(b.score ?? '')
       if (verdictRef.current) verdictRef.current.textContent = low ? 'Not enough data' : (b.verdict ?? '')
       if (noteRef.current)    noteRef.current.textContent    = low
-        ? 'Only 2 of 4 signals — missed sleep. No score invented.'
+        ? 'Missed sleep, so only 2 of 4 signals came in. No score invented.'
         : 'All 4 signals in.'
     }
 

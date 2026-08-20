@@ -4,8 +4,8 @@ import { S } from './tokens'
 
 const PRINCIPLES = [
   {
-    title: 'Design from the leftover, not the wishlist.',
-    body:  'People don\'t want infinite recipes — they want dinner from what\'s already wilting in the drawer.',
+    title: 'Design from the leftover ingredient.',
+    body:  'One tester scrolled past six generated recipes to search "random fridge things" by hand. That moment reset the priority list: design for the three items already wilting in her drawer, not for infinite choice.',
   },
   {
     title: 'Numbers turn opinions into a brief.',
@@ -16,8 +16,8 @@ const PRINCIPLES = [
     body:  'When someone\'s stuck, a blank search bar is the enemy. Surprise them instead.',
   },
   {
-    title: 'Photos are a feature, not decoration.',
-    body:  'If visuals decide whether people try a dish, the image system is core UX — not garnish.',
+    title: 'Photos decide whether someone taps.',
+    body:  '65% of respondents said a bad photo was reason enough to skip a recipe. After that, the image system got the same design attention as the recommendation logic.',
   },
 ] as const
 

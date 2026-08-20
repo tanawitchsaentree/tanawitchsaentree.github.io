@@ -52,7 +52,7 @@ const DECISIONS = [
   },
   {
     num:       '02',
-    title:     'Decide in one screen — no jargon',
+    title:     'One screen. No jargon.',
     body:      'Fund selection, risk level, and projected return all live on one screen. No modals. No glossary walls. Plain-language labels replace every financial term.',
     traded:    'Detailed fund spec sheets',
     bought:    'Clarity for first-timers',
@@ -60,7 +60,7 @@ const DECISIONS = [
   {
     num:       '03',
     title:     'The dashboard says where you stand',
-    body:      'Portfolio view leads with "You\'re up ฿X this month" — not NAV deltas. Gains and losses are framed as progress toward goals, not market performance.',
+    body:      'Portfolio view leads with "You\'re up ฿X this month," not a raw NAV delta. Gains and losses are framed as progress toward goals rather than market performance.',
     traded:    'Raw portfolio data at a glance',
     bought:    'Emotional safety for new investors',
   },
@@ -129,32 +129,43 @@ function ScrollCollage() {
 
     // RAF loop — reads getBoundingClientRect() every frame so it works
     // with Lenis (which drives scroll via its own RAF, not native events).
-    let rafId: number
+    // Only runs while the 300vh track is anywhere near the viewport.
+    const track = trackRef.current
+    if (!track) return
+
+    let rafId = 0
+    let visible = false
 
     const tick = () => {
-      const track = trackRef.current
-      if (track) {
-        const rect = track.getBoundingClientRect()
-        const vh   = window.innerHeight
-        const raw  = -rect.top / (rect.height - vh)
-        const t    = clamp(raw, 0, 1)
+      if (!visible) { rafId = 0; return }
+      const rect = track.getBoundingClientRect()
+      const vh   = window.innerHeight
+      const raw  = -rect.top / (rect.height - vh)
+      const t    = clamp(raw, 0, 1)
 
-        pieceRefs.current.forEach((el, i) => {
-          if (!el) return
-          const piece = PIECES[i]
-          const x     = lerp(piece.s[0], piece.e[0], t)
-          const y     = lerp(piece.s[1], piece.e[1], t)
-          const scale = lerp(piece.s0, piece.s1, t)
-          const rot   = lerp(piece.rot, 0, t)
-          el.style.transform = `translate(calc(${x}vw - 50%), calc(${y}vh - 50%)) scale(${scale}) rotate(${rot}deg)`
-          el.style.opacity   = String(lerp(0.4, 1, clamp(t * 2, 0, 1)))
-        })
-      }
+      pieceRefs.current.forEach((el, i) => {
+        if (!el) return
+        const piece = PIECES[i]
+        const x     = lerp(piece.s[0], piece.e[0], t)
+        const y     = lerp(piece.s[1], piece.e[1], t)
+        const scale = lerp(piece.s0, piece.s1, t)
+        const rot   = lerp(piece.rot, 0, t)
+        el.style.transform = `translate(calc(${x}vw - 50%), calc(${y}vh - 50%)) scale(${scale}) rotate(${rot}deg)`
+        el.style.opacity   = String(lerp(0.4, 1, clamp(t * 2, 0, 1)))
+      })
       rafId = requestAnimationFrame(tick)
     }
 
-    rafId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafId)
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      if (visible && !rafId) rafId = requestAnimationFrame(tick)
+    }, { threshold: 0 })
+    io.observe(track)
+
+    return () => {
+      io.disconnect()
+      if (rafId) cancelAnimationFrame(rafId)
+    }
   }, [])
 
   return (
@@ -194,9 +205,9 @@ function ScrollCollage() {
             margin:        0,
           }}>
             Three decisions that{' '}
-            <em style={{ fontStyle: 'italic', color: P.color.gold }}>
+            <span style={{ color: P.color.gold }}>
               carried the app.
-            </em>
+            </span>
           </h2>
           <p style={{
             fontFamily:    P.font.mono,
@@ -285,7 +296,7 @@ export function ProfitaDecisions() {
                   {d.title}
                 </h3>
                 <p style={{
-                  fontSize:   '.92rem',
+                  fontSize:   '1rem',
                   color:      P.color.onMut,
                   lineHeight: 1.65,
                   margin:     0,

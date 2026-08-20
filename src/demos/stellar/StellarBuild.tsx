@@ -52,13 +52,12 @@ function Screen1Row() {
           <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>command center</em>
         </h3>
         <p style={{ color: S.color.inkSoft, fontSize: 'clamp(1rem,1.4vw,1.15rem)', maxWidth: '46ch', lineHeight: 1.65, fontFamily: S.font.body }}>
-          Open Stellar and the day&apos;s already handled — a hero dish to inspire, quick prompts when you&apos;re stuck, and today&apos;s plan laid out.{' '}
-          <strong style={{ color: S.color.ink, fontWeight: 600 }}>Cooking starts with momentum, not a blank screen.</strong>
+          Open Stellar and the day&apos;s already handled: a hero dish to inspire, quick prompts when you&apos;re stuck, and today&apos;s plan laid out. Cooking starts with momentum.
         </p>
         <FeaturePoints points={[
           'A greeting and hero recipe set the tone instantly',
           'One-tap prompts for the four things people ask most',
-          'Today\'s meals, grouped — breakfast through dinner',
+          'Today\'s meals grouped by time of day, from breakfast through dinner',
         ]} />
       </div>
 
@@ -96,13 +95,11 @@ function Screen2Row() {
           <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>what you&apos;ve got.</em>
         </h3>
         <p style={{ color: S.color.inkSoft, fontSize: 'clamp(1rem,1.4vw,1.15rem)', maxWidth: '46ch', lineHeight: 1.65, fontFamily: S.font.body }}>
-          Point your camera at a half-empty fridge, a mystery sauce, last night&apos;s leftovers — Stellar&apos;s chef reads the photo and tells you exactly what to make.{' '}
-          <strong style={{ color: S.color.ink, fontWeight: 600 }}>The fastest path from &ldquo;I have stuff&rdquo; to &ldquo;I have dinner.&rdquo;</strong>
+          Point your camera at a half-empty fridge, a mystery sauce, or last night&apos;s leftovers, and Stellar&apos;s chef reads the photo and tells you exactly what to make. It&apos;s the fastest path from having ingredients to having dinner.
         </p>
         <FeaturePoints points={[
-          'Reads photos of ingredients — even product labels',
-          'Suggests real dishes from what it actually sees',
-          'Ask follow-ups, like texting a chef friend',
+          'Reads a photo of ingredients, including product labels, and suggests real dishes from what it actually sees',
+          'Ask follow-up questions, like texting a chef friend',
         ]} />
       </div>
     </div>
@@ -130,13 +127,13 @@ function Screen3Row() {
           <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>what you have.</em>
         </h3>
         <p style={{ color: S.color.inkSoft, fontSize: 'clamp(1rem,1.4vw,1.15rem)', maxWidth: '46ch', lineHeight: 1.65, fontFamily: S.font.body }}>
-          Tap what&apos;s actually in your fridge and pantry, hit one button, and Stellar builds a recipe around it.{' '}
-          <strong style={{ color: S.color.ink, fontWeight: 600 }}>No grocery run, no waste — dinner from the shelf you already own.</strong>
+          Tap what&apos;s actually in your fridge and pantry, hit one button, and Stellar builds a recipe around it. No grocery run, no waste, just dinner from the shelf you already own.
         </p>
         <FeaturePoints points={[
-          'Pick ingredients by category — produce, protein, pantry',
-          'One tap: Feed me! turns your shelf into a recipe',
-          'Shows what you have vs the few things to grab',
+          'Pick ingredients by category: produce, protein, pantry',
+          'One tap on "Feed me!" turns your shelf into a recipe',
+          'Shows what you already have next to the few things to grab',
+          'A quick search jumps straight to one ingredient in a long list',
         ]} />
       </div>
 
@@ -176,7 +173,7 @@ export function StellarBuild() {
           <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>screens.</em>
         </h2>
         <p style={{ color: S.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch', fontFamily: S.font.body }}>
-          Each screen shipped from a specific user problem. The bot demos the flow live — watch it tap through the app.
+          Each screen shipped from a specific user problem. The bot demos the flow live, so you can watch it tap through the app.
         </p>
       </div>
 

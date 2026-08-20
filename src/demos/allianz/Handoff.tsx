@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Handoff — the shared decision card used by ConfidenceGate and BatchDispatch.
+ * Handoff: the shared decision card used by ConfidenceGate and BatchDispatch.
  *
  * The visual embodiment of the Allianz thesis: a low-confidence document isn't
  * an error dialog, it's a handoff. AI's read + how sure it is + the runner-up +
@@ -66,8 +66,8 @@ export function Handoff({ doc }: { doc: HandoffDoc }) {
             </motion.div>
           ) : (
             <motion.p key="done" initial={reduced ? { opacity: 0 } : { opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em]" style={{ color: 'var(--signal-ok)' }}>
-              {done === 'confirm' ? `✓ routed to ${doc.aiChoice} — operator's call` : `↻ reassigned to ${doc.alternative} — operator's call`}
+              className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em]" style={{ color: 'var(--fg)' }}>
+              {done === 'confirm' ? `✓ routed to ${doc.aiChoice}, operator's call` : `↻ reassigned to ${doc.alternative}, operator's call`}
             </motion.p>
           )}
         </AnimatePresence>

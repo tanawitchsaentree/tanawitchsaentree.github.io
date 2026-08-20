@@ -102,7 +102,7 @@ export function TabBar({ active = 'home' }: { active?: string }) {
         </button>
       ))}
 
-      {/* Centre FAB — lifted */}
+      {/* Centre FAB, lifted */}
       <div
         style={{
           width:        52,

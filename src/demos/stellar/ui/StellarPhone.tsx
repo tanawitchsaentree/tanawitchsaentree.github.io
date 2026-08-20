@@ -20,24 +20,24 @@ export function StellarPhone({
         height,
         borderRadius: 56,
         padding: 13,
-        background: 'linear-gradient(145deg,#2a2d30,#0c0d0e 40%,#000 70%,#1a1c1e)',
+        background: 'linear-gradient(145deg,var(--stellar-device-case-a),var(--stellar-device-case-b) 40%,var(--stellar-black) 70%,var(--stellar-device-case-c))',
         boxShadow: `
-          0 0 0 2px #3c4044,
-          0 0 0 5px #141618,
-          inset 0 0 1px 1px rgba(255,255,255,.10),
-          0 50px 90px -28px rgba(22,33,15,.42),
-          0 22px 44px -20px rgba(22,33,15,.30)
+          0 0 0 2px var(--stellar-device-ring-1),
+          0 0 0 5px var(--stellar-device-ring-2),
+          inset 0 0 1px 1px color-mix(in srgb, var(--stellar-white) 10%, transparent),
+          0 50px 90px -28px color-mix(in srgb, var(--stellar-ink-app) 42%, transparent),
+          0 22px 44px -20px color-mix(in srgb, var(--stellar-ink-app) 30%, transparent)
         `,
         flexShrink: 0,
       }}
     >
       {/* shadow blob */}
-      <div style={{ position: 'absolute', left: '10%', right: '10%', bottom: -38, height: 52, background: 'rgba(22,33,15,.26)', filter: 'blur(32px)', borderRadius: '50%', zIndex: -1 }} />
+      <div style={{ position: 'absolute', left: '10%', right: '10%', bottom: -38, height: 52, background: 'color-mix(in srgb, var(--stellar-ink-app) 26%, transparent)', filter: 'blur(32px)', borderRadius: '50%', zIndex: -1 }} />
       {/* side buttons */}
-      <div style={{ position: 'absolute', left: -3, top: 118, width: 3, height: 28, background: 'linear-gradient(180deg,#3a3d40,#16181a)', borderRadius: '2px 0 0 2px' }} />
-      <div style={{ position: 'absolute', left: -3, top: 166, width: 3, height: 52, background: 'linear-gradient(180deg,#3a3d40,#16181a)', borderRadius: '2px 0 0 2px' }} />
-      <div style={{ position: 'absolute', left: -3, top: 230, width: 3, height: 52, background: 'linear-gradient(180deg,#3a3d40,#16181a)', borderRadius: '2px 0 0 2px' }} />
-      <div style={{ position: 'absolute', right: -3, top: 188, width: 3, height: 74, background: 'linear-gradient(180deg,#3a3d40,#16181a)', borderRadius: '0 2px 2px 0' }} />
+      <div style={{ position: 'absolute', left: -3, top: 118, width: 3, height: 28, background: 'linear-gradient(180deg,var(--stellar-device-button-1),var(--stellar-device-button-2))', borderRadius: '2px 0 0 2px' }} />
+      <div style={{ position: 'absolute', left: -3, top: 166, width: 3, height: 52, background: 'linear-gradient(180deg,var(--stellar-device-button-1),var(--stellar-device-button-2))', borderRadius: '2px 0 0 2px' }} />
+      <div style={{ position: 'absolute', left: -3, top: 230, width: 3, height: 52, background: 'linear-gradient(180deg,var(--stellar-device-button-1),var(--stellar-device-button-2))', borderRadius: '2px 0 0 2px' }} />
+      <div style={{ position: 'absolute', right: -3, top: 188, width: 3, height: 74, background: 'linear-gradient(180deg,var(--stellar-device-button-1),var(--stellar-device-button-2))', borderRadius: '0 2px 2px 0' }} />
       {/* screen */}
       <div
         className="stellar-phone-screen"
@@ -47,9 +47,9 @@ export function StellarPhone({
           height: '100%',
           borderRadius: 44,
           overflow: 'hidden',
-          background: '#fff',
+          background: 'var(--stellar-white)',
           fontFamily: "'DM Sans', sans-serif",
-          color: '#16210f',
+          color: 'var(--stellar-ink-app)',
           fontSize: 13,
           userSelect: 'none',
         }}
@@ -179,14 +179,14 @@ export function useBotFinger(screenRef: React.RefObject<HTMLElement | null>): {
         position: 'absolute', top: 0, left: 0,
         width: FINGER_W * 2, height: FINGER_W * 2,
         borderRadius: '50%',
-        background: 'radial-gradient(circle at 38% 34%,rgba(22,33,15,.42),rgba(22,33,15,.28))',
-        border: '1.5px solid rgba(255,255,255,.7)',
-        boxShadow: '0 4px 14px rgba(22,33,15,.3)',
+        background: 'radial-gradient(circle at 38% 34%,color-mix(in srgb, var(--stellar-ink-app) 42%, transparent),color-mix(in srgb, var(--stellar-ink-app) 28%, transparent))',
+        border: '1.5px solid color-mix(in srgb, var(--stellar-white) 70%, transparent)',
+        boxShadow: '0 4px 14px color-mix(in srgb, var(--stellar-ink-app) 30%, transparent)',
         transform: 'translate(150px,300px)',
         zIndex: 90,
         pointerEvents: 'none',
         opacity: 0,
-        transition: 'opacity 300ms, transform 950ms cubic-bezier(.5,0,.2,1)',
+        transition: 'opacity 300ms cubic-bezier(.22,1,.36,1), transform 950ms cubic-bezier(.5,0,.2,1)',
       }}
     />
   )
@@ -199,7 +199,7 @@ export function useBotFinger(screenRef: React.RefObject<HTMLElement | null>): {
         position: 'absolute', top: 0, left: 0,
         width: FINGER_W * 2, height: FINGER_W * 2,
         borderRadius: '50%',
-        border: '2px solid #14A800',
+        border: '2px solid var(--stellar-lime)',
         opacity: 0,
         transform: 'translate(150px,300px) scale(.3)',
         zIndex: 89,

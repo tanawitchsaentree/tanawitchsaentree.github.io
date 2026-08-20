@@ -8,8 +8,8 @@ const CALLS = [
     q:    'Absolute, or relative?',
     lose: 'A universal number',
     win:  'Relative to your baseline',
-    why:  'Served the clinical line — it makes no medical claim it can\'t stand behind.',
-    cost: 'Cost: lost the clean "everyone\'s a 90" marketing story.',
+    why:  'Served the clinical line. It makes no medical claim it can\'t stand behind.',
+    cost: 'It cost the clean "everyone\'s a 90" marketing story.',
   },
   {
     ix:   'Call 02',
@@ -17,7 +17,7 @@ const CALLS = [
     lose: 'Always a confident score',
     win:  'A quiet "low confidence" note',
     why:  'On sparse-data days the score says so. Trust comes from admitting the gaps.',
-    cost: 'Cost: a less tidy screen. Worth it.',
+    cost: 'It cost a tidier screen, but it was worth it.',
   },
   {
     ix:   'Call 03',
@@ -25,7 +25,7 @@ const CALLS = [
     lose: 'A richer cloud model',
     win:  'Everything on the wrist',
     why:  'Privacy was non-negotiable, so the model had to be small enough to run locally.',
-    cost: 'Cost: a simpler model. Privacy outranked precision.',
+    cost: 'It cost a simpler model, since privacy outranked precision.',
   },
 ] as const
 

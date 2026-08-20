@@ -4,9 +4,9 @@ import { TabBar } from './_TabBar'
 
 // SVG donut — avoids Chart.js dependency
 const SLICES = [
-  { name: 'DIY',            pct: 60, color: '#5cb37f' },
-  { name: 'Retirement Pl…', pct: 30, color: '#8a6fc0' },
-  { name: 'Travel Plan',    pct: 10, color: '#d3ac57' },
+  { name: 'DIY',            pct: 60, color: SC.allocDiy },
+  { name: 'Retirement Pl…', pct: 30, color: SC.allocRetirement },
+  { name: 'Travel Plan',    pct: 10, color: SC.allocTravel },
 ]
 
 function Donut({ size = 72 }: { size?: number }) {
@@ -53,9 +53,9 @@ function Donut({ size = 72 }: { size?: number }) {
 }
 
 const ITEMS = [
-  { color: '#5cb37f', label: 'DIY',            value: '37,375.31', pct: '60%', chg: '+5,005.55 (+15.10%)', up: true },
-  { color: '#8a6fc0', label: 'Retirement Plan', value: '9,248.00',  pct: '30%', chg: '-10.2 (-8.10%)',       up: false },
-  { color: '#d3ac57', label: 'Travel Plan',     value: '1,248.00',  pct: '10%', chg: '0 (0%)',               up: null },
+  { color: SC.allocDiy,        label: 'DIY',            value: '37,375.31', pct: '60%', chg: '+5,005.55 (+15.10%)', up: true },
+  { color: SC.allocRetirement, label: 'Retirement Plan', value: '9,248.00',  pct: '30%', chg: '-10.2 (-8.10%)',       up: false },
+  { color: SC.allocTravel,     label: 'Travel Plan',     value: '1,248.00',  pct: '10%', chg: '0 (0%)',               up: null },
 ]
 
 export function PortfolioScreen() {

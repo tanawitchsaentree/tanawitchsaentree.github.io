@@ -33,13 +33,42 @@ function fmt(s: number) {
   const r = s % 60
   return m > 0 ? `${m}:${String(r).padStart(2, '0')}` : `${s}s`
 }
-function rampColor(e: number) {
-  const stops: [number, [number, number, number]][] = [
-    [0,    [122, 168, 78]],
-    [0.45, [178, 176, 72]],
-    [0.72, [230, 163, 60]],
-    [1.0,  [216,  71, 58]],
+// Ramp endpoints are derived from the real T.color values (not a second,
+// disconnected literal palette). Resolved once via a detached probe element,
+// so CSS custom properties (signal-ok/signal-warn) resolve to actual RGB.
+type RGB = [number, number, number]
+let rampStopsCache: [number, RGB][] | null = null
+
+function hexToRgb(hex: string): RGB {
+  const m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i)
+  return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [0, 0, 0]
+}
+
+function resolveColor(probe: HTMLElement, value: string): RGB {
+  if (value.startsWith('#')) return hexToRgb(value)
+  probe.style.color = value
+  const m = getComputedStyle(probe).color.match(/(\d+),\s*(\d+),\s*(\d+)/)
+  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : [0, 0, 0]
+}
+
+function getRampStops(): [number, RGB][] {
+  if (rampStopsCache) return rampStopsCache
+  const probe = document.createElement('span')
+  probe.style.position = 'absolute'
+  probe.style.visibility = 'hidden'
+  document.body.appendChild(probe)
+  rampStopsCache = [
+    [0,    resolveColor(probe, T.color.green)],
+    [0.45, resolveColor(probe, T.color.amber)],
+    [0.72, resolveColor(probe, T.color.amberDk)],
+    [1.0,  resolveColor(probe, T.color.red)],
   ]
+  document.body.removeChild(probe)
+  return rampStopsCache
+}
+
+function rampColor(e: number) {
+  const stops = getRampStops()
   const t = Math.min(e / TARGET, 1)
   for (let i = 0; i < stops.length - 1; i++) {
     if (t <= stops[i + 1][0]) {
@@ -49,7 +78,8 @@ function rampColor(e: number) {
       return `rgb(${c[0]},${c[1]},${c[2]})`
     }
   }
-  return 'rgb(216,71,58)'
+  const last = stops[stops.length - 1][1]
+  return `rgb(${last[0]},${last[1]},${last[2]})`
 }
 function zoneLabel(e: number) {
   if (e >= TARGET) return 'OVER'
@@ -165,15 +195,31 @@ function KdsRail() {
     refresh()
 
     if (!reduce) {
-      const tick = setInterval(() => {
-        ordersRef.current.forEach(o => o.elapsed++)
-        refresh()
-      }, 1000)
-      const loop = setInterval(() => {
-        if (ordersRef.current.length >= MAX) { bump(); setTimeout(arrive, 520) }
-        else arrive()
-      }, 6500)
-      return () => { clearInterval(tick); clearInterval(loop) }
+      let tick: ReturnType<typeof setInterval> | null = null
+      let loop: ReturnType<typeof setInterval> | null = null
+
+      const start = () => {
+        if (tick) return
+        tick = setInterval(() => {
+          ordersRef.current.forEach(o => o.elapsed++)
+          refresh()
+        }, 1000)
+        loop = setInterval(() => {
+          if (ordersRef.current.length >= MAX) { bump(); setTimeout(arrive, 520) }
+          else arrive()
+        }, 6500)
+      }
+      const stop = () => {
+        if (tick) { clearInterval(tick); tick = null }
+        if (loop) { clearInterval(loop); loop = null }
+      }
+
+      const io = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) start(); else stop()
+      }, { threshold: 0 })
+      io.observe(rail)
+
+      return () => { stop(); io.disconnect() }
     }
   }, [arrive, bump, refresh])
 
@@ -221,18 +267,21 @@ function KdsRail() {
 
 // ── Decode panel ──────────────────────────────────────────────────────────────
 const DECODE_ORDERS = [
-  { say: '"Large double-double, extra hot — and a 10-pack of Timbits."', taps: ['Large', 'Coffee', 'Cream ×2', 'Sugar ×2', 'Extra hot', 'Timbits 10'] },
+  { say: '"Large double-double, extra hot, and a 10-pack of Timbits."', taps: ['Large', 'Coffee', 'Cream ×2', 'Sugar ×2', 'Extra hot', 'Timbits 10'] },
   { say: '"Medium French Vanilla, and a BELT on a bagel, toasted."',     taps: ['Medium', 'Fr. Vanilla', 'BELT', 'Bagel', 'Toasted'] },
-  { say: '"Two XL coffees — one black, one triple-triple."',             taps: ['XL Coffee', 'Black', 'XL Coffee', 'Cream ×3', 'Sugar ×3'] },
+  { say: '"Two XL coffees: one black, one triple-triple."',             taps: ['XL Coffee', 'Black', 'XL Coffee', 'Cream ×3', 'Sugar ×3'] },
 ] as const
 
 function DecodePanel() {
+  const rootRef   = useRef<HTMLDivElement>(null)
   const spokenRef = useRef<HTMLParagraphElement>(null)
   const tapsRef   = useRef<HTMLDivElement>(null)
   const idxRef    = useRef(0)
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
 
   useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
 
     function show(o: typeof DECODE_ORDERS[number]) {
@@ -255,12 +304,25 @@ function DecodePanel() {
 
     function cycle() { show(DECODE_ORDERS[idxRef.current]); idxRef.current = (idxRef.current + 1) % DECODE_ORDERS.length }
     cycle()
-    const iv = reduce ? 0 : setInterval(cycle, 8200)
-    return () => { clearInterval(iv); timersRef.current.forEach(clearTimeout) }
+
+    if (reduce) return
+
+    let iv: ReturnType<typeof setInterval> | null = null
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { if (!iv) iv = setInterval(cycle, 8200) }
+      else { if (iv) { clearInterval(iv); iv = null } }
+    }, { threshold: 0 })
+    io.observe(root)
+
+    return () => {
+      if (iv) clearInterval(iv)
+      io.disconnect()
+      timersRef.current.forEach(clearTimeout)
+    }
   }, [])
 
   return (
-    <div style={{ position: 'relative', background: `radial-gradient(120% 100% at 80% 0%, ${T.color.espresso2}, ${T.color.espresso} 60%)`, borderRadius: 26, padding: 'clamp(1.5rem,3vw,2.2rem)', color: T.color.cream, overflow: 'hidden', isolation: 'isolate' }}>
+    <div ref={rootRef} style={{ position: 'relative', background: `radial-gradient(120% 100% at 80% 0%, ${T.color.espresso2}, ${T.color.espresso} 60%)`, borderRadius: 26, padding: 'clamp(1.5rem,3vw,2.2rem)', color: T.color.cream, overflow: 'hidden', isolation: 'isolate' }}>
       <div aria-hidden style={{ position: 'absolute', inset: 0, background: `radial-gradient(60% 50% at 85% 8%, ${T.alpha.red10}, transparent 70%)`, zIndex: -1, pointerEvents: 'none' }} />
 
       {/* live pip */}
@@ -270,7 +332,7 @@ function DecodePanel() {
       </span>
 
       <h3 style={{ fontFamily: T.font.display, fontWeight: 800, fontSize: 'clamp(1.5rem,3.6vw,2.05rem)', lineHeight: 1.12, letterSpacing: '-.02em', margin: '1.1rem 0 2rem', color: T.color.cream }}>
-        You don&apos;t type the order. <span style={{ color: T.color.red }}>You translate it — fast.</span>
+        You don&apos;t type the order. <span style={{ color: T.color.red }}>You translate it. Fast.</span>
       </h3>
 
       <div style={{ fontFamily: T.font.mono, fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '.7rem' }}>
@@ -289,7 +351,7 @@ function DecodePanel() {
       <div ref={tapsRef} style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', minHeight: '6rem', alignContent: 'flex-start' }} />
 
       <p style={{ marginTop: '1.5rem', fontSize: '.92rem', lineHeight: 1.5, color: T.alpha.cream62, maxWidth: '44ch' }}>
-        One breath from the customer turns into a handful of taps for me — found and hit before the next car. The screen&apos;s only job is to make that translation{' '}
+        One breath from the customer turns into a handful of taps for me, found and hit before the next car. The screen&apos;s only job is to make that translation{' '}
         <b style={{ color: T.color.cream }}>disappear</b>.
       </p>
     </div>
@@ -301,12 +363,12 @@ const TAKES = [
   {
     icon: <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M7 8h10M7 8a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4M7 8l1 11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2l1-11"/></svg>,
     title: 'The language is the product.',
-    body:  '"Large triple-triple, extra hot, half steeped tea" — my job was to turn that into the right taps before the next car rolled up.',
+    body:  '"Large triple-triple, extra hot, half steeped tea." My job was to turn that into the right taps before the next car rolled up.',
   },
   {
     icon: <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><circle cx={12} cy={13} r={8}/><path d="M12 9v4l2.5 2.5M12 1h0M9 1h6"/></svg>,
-    title: "Speed isn’t an opinion.",
-    body:  'It was a glowing number on the wall, judging me on every single car. The screen had to keep up with my hands, not the other way around.',
+    title: 'Speed was a glowing number on the wall.',
+    body:  'It judged me on every single car. The screen had to keep up with my hands, not the other way around.',
   },
   {
     icon: <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>,
@@ -319,31 +381,31 @@ export function TimsProblem() {
   return (
     <section id="problem" style={{ padding: 'clamp(5rem,13vw,11rem) 0', background: T.color.cream2, fontFamily: T.font.sans }}>
       <style>{`
-        .tims-kds-live{width:7px;height:7px;border-radius:50%;background:#2f9e57;box-shadow:0 0 8px #2f9e57;animation:timsKdsBlink 1.6s steps(2) infinite;display:inline-block}
+        .tims-kds-live{width:7px;height:7px;border-radius:50%;background:${T.color.green};box-shadow:0 0 8px ${T.color.green};animation:timsKdsBlink 1.6s steps(2) infinite;display:inline-block}
         @keyframes timsKdsBlink{50%{opacity:.35}}
-        .tims-decode-pip{width:8px;height:8px;border-radius:50%;background:#CF162D;display:inline-block;animation:timsDecPip 2s cubic-bezier(.4,0,.2,1) infinite}
-        @keyframes timsDecPip{0%{box-shadow:0 0 0 0 rgba(207,22,45,.55)}70%{box-shadow:0 0 0 9px rgba(207,22,45,0)}100%{box-shadow:0 0 0 0 rgba(207,22,45,0)}}
+        .tims-decode-pip{width:8px;height:8px;border-radius:50%;background:${T.color.red};display:inline-block;animation:timsDecPip 2s cubic-bezier(.4,0,.2,1) infinite}
+        @keyframes timsDecPip{0%{box-shadow:0 0 0 0 ${T.alpha.gold55}}70%{box-shadow:0 0 0 9px ${T.alpha.red00}}100%{box-shadow:0 0 0 0 ${T.alpha.red00}}}
         .tims-spoken{animation:timsSpokenIn .5s cubic-bezier(.4,0,.2,1)}
         @keyframes timsSpokenIn{from{opacity:0;transform:translateY(8px)}}
-        .tims-tap{display:inline-flex;align-items:center;background:#1a1a1a;border:1px solid rgba(255,255,255,.10);border-radius:11px;padding:.55rem .85rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:rgba(255,255,255,.45);opacity:.32;transform:translateY(5px);transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.16,1,.3,1),background .35s,color .35s,box-shadow .35s,border-color .35s}
-        .tims-tap.tims-tap-lit{opacity:1;transform:none;background:linear-gradient(135deg,#CF162D,#9E0E1F);color:#FFFFFF;border-color:transparent;box-shadow:0 6px 16px -6px rgba(207,22,45,.55)}
-        .tims-tk{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;transition:transform .52s cubic-bezier(.16,1,.3,1),opacity .42s cubic-bezier(.4,0,.2,1),border-color .3s;will-change:transform;--tkc:#7aa84e;border-color:color-mix(in srgb,var(--tkc) 38%,rgba(255,255,255,.07))}
+        .tims-tap{display:inline-flex;align-items:center;background:${T.color.chipBg};border:1px solid ${T.alpha.cream10};border-radius:11px;padding:.55rem .85rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:${T.alpha.cream45};opacity:.32;transform:translateY(5px);transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.16,1,.3,1),background .35s,color .35s,box-shadow .35s,border-color .35s}
+        .tims-tap.tims-tap-lit{opacity:1;transform:none;background:linear-gradient(135deg,${T.color.red},${T.color.redDk});color:${T.color.cream};border-color:transparent;box-shadow:0 6px 16px -6px ${T.alpha.gold55}}
+        .tims-tk{background:${T.color.ticketBg};border:1px solid ${T.alpha.cream08};border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;transition:transform .52s cubic-bezier(.16,1,.3,1),opacity .42s cubic-bezier(.4,0,.2,1),border-color .3s;will-change:transform;--tkc:${T.color.green};border-color:color-mix(in srgb,var(--tkc) 38%,${T.alpha.cream07})}
         .tims-tk-arriving{opacity:0;transform:translateX(54px) scale(.92)}
         .tims-tk-leaving{opacity:0;transform:scale(.9) translateY(-10px);transition:opacity .34s cubic-bezier(.4,0,.2,1),transform .34s cubic-bezier(.4,0,.2,1)}
         .tims-tk-hd{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.5rem .7rem;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,color-mix(in srgb,var(--tkc) 20%,transparent),transparent);color:var(--tkc)}
         .tims-tk-st{font-weight:700;display:flex;align-items:center;gap:.45em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .tims-tk-dot{flex:none;width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 7px currentColor;display:inline-block}
         .tims-tk-tm{font-variant-numeric:tabular-nums;font-weight:700;flex:none}
-        .tims-tk[data-zone="window"]{--tkc:#CF162D;border-color:color-mix(in srgb,var(--tkc) 55%,rgba(255,255,255,.07))}
+        .tims-tk[data-zone="window"]{--tkc:${T.color.red};border-color:color-mix(in srgb,var(--tkc) 55%,${T.alpha.cream07})}
         .tims-tk[data-zone="over"]{animation:timsKdsPulse 1.5s cubic-bezier(.4,0,.2,1) infinite}
         @keyframes timsKdsPulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 0 2px color-mix(in srgb,var(--tkc) 45%,transparent)}}
-        .tims-tk-car{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.1em;color:rgba(255,255,255,.38);padding:0 .7rem .1rem}
+        .tims-tk-car{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.1em;color:${T.alpha.cream38};padding:0 .7rem .1rem}
         .tims-tk-items{padding:.5rem .7rem .8rem;display:flex;flex-direction:column;gap:.55rem}
         .tims-tk-it{display:flex;gap:.5rem;align-items:flex-start}
-        .tims-tk-ic{flex:none;width:18px;height:18px;color:rgba(255,255,255,.65);opacity:.85;margin-top:1px}
-        .tims-tk-nm{font-size:.84rem;color:rgba(255,255,255,.90);line-height:1.25;font-weight:500}
-        .tims-tk-mod{display:block;font-size:.72rem;color:rgba(255,255,255,.50);margin-top:.12rem}
-        .tims-tk-flag{color:#CF162D}
+        .tims-tk-ic{flex:none;width:18px;height:18px;color:${T.alpha.cream65};opacity:.85;margin-top:1px}
+        .tims-tk-nm{font-size:.84rem;color:${T.alpha.cream90};line-height:1.25;font-weight:500}
+        .tims-tk-mod{display:block;font-size:.72rem;color:${T.alpha.cream50};margin-top:.12rem}
+        .tims-tk-flag{color:${T.color.red}}
         .tims-bump-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
         .tims-bump-btn:active{transform:translateY(0)}
         .tims-bump-btn{transition:transform .18s cubic-bezier(.16,1,.3,1),filter .2s}
@@ -358,7 +420,7 @@ export function TimsProblem() {
             8 a.m. The line is eight cars deep.
           </h2>
           <p style={{ fontSize: 'clamp(1.05rem,2.2vw,1.28rem)', color: T.color.inkSoft, maxWidth: '46ch' }}>
-            This is the moment a POS earns its keep — or quietly loses you the timer. The screen below is the one I actually read, order after order.
+            This is the moment a POS earns its keep, or quietly loses you the timer. The screen below is the one I actually read, order after order.
           </p>
         </div>
 
@@ -371,7 +433,7 @@ export function TimsProblem() {
         {/* takeaway cards */}
         <div className="tims-takes-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 'clamp(.9rem,2vw,1.4rem)', marginTop: 'clamp(1rem,2.2vw,1.6rem)' }}>
           {TAKES.map(tk => (
-            <div key={tk.title} style={{ background: '#fffdf9', border: `1px solid ${T.alpha.line}`, borderRadius: 18, padding: 'clamp(1.2rem,2.4vw,1.6rem)' }}>
+            <div key={tk.title} style={{ background: T.color.paperWarm, border: `1px solid ${T.alpha.line}`, borderRadius: 18, padding: 'clamp(1.2rem,2.4vw,1.6rem)' }}>
               <div style={{ width: 38, height: 38, borderRadius: 11, background: T.color.cream2, display: 'grid', placeContent: 'center', color: T.color.ink, marginBottom: '1rem' }}>
                 {tk.icon}
               </div>
@@ -383,8 +445,8 @@ export function TimsProblem() {
         </div>
 
         <p className="tims-animate" style={{ fontFamily: T.font.display, fontWeight: 500, fontSize: 'clamp(1.15rem,2.4vw,1.6rem)', lineHeight: 1.35, color: T.color.ink, maxWidth: '30ch', marginTop: '.4rem' }}>
-          The thing that makes Tims <em style={{ fontStyle: 'normal', color: T.color.red }}>Tims</em> — order it your exact weird way — is the same thing that fought me on the clock.{' '}
-          <strong style={{ color: T.color.red }}>That&apos;s the whole problem.</strong>
+          What makes Tims <em style={{ fontStyle: 'normal', color: T.color.red }}>Tims</em> is ordering it your exact weird way.{' '}
+          <strong style={{ color: T.color.red }}>That same freedom is what fought me on the clock, one car at a time.</strong>
         </p>
       </div>
     </section>

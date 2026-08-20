@@ -6,11 +6,11 @@ import { VitaeKilledScreen } from './KilledScreen/VitaeKilledScreen'
 const PTS = [
   {
     type: 'no' as const,
-    text: <><b style={{ color: V.color.ink, fontWeight: 600 }}>Rejected:</b> an absolute number implies a medical claim and can falsely reassure.</>,
+    text: <>An absolute number implies a medical claim and can falsely reassure, so it was <b style={{ color: V.color.ink, fontWeight: 600 }}>rejected.</b></>,
   },
   {
     type: 'yes' as const,
-    text: <><b style={{ color: V.color.ink, fontWeight: 600 }}>Shipped:</b> the same glance, scored against your own baseline — honest, and defensible.</>,
+    text: <>The same glance, scored against your own baseline, is honest and defensible, so it <b style={{ color: V.color.ink, fontWeight: 600 }}>shipped.</b></>,
   },
 ]
 

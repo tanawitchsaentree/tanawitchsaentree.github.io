@@ -137,6 +137,7 @@ function SceneBuild() {
 
 // ── Main hero ──────────────────────────────────────────────────────────
 export function TimsHero() {
+  const rootRef                = useRef<HTMLElement>(null)
   const [elapsed, setElapsed] = useState(0)
   const [reduced, setReduced] = useState(false)
   const reducedRef            = useRef(false)
@@ -147,11 +148,24 @@ export function TimsHero() {
     setReduced(v)
   }, [])
 
-  // Live 40s loop — drives the heading number colour
+  // Live 40s loop: drives the heading number colour. Only ticks while the
+  // hero is actually in view; pauses once scrolled past.
   useEffect(() => {
     if (reducedRef.current) return
-    const id = setInterval(() => setElapsed(e => e >= 40 ? 0 : e + 1), 1000)
-    return () => clearInterval(id)
+    const root = rootRef.current
+    if (!root) return
+
+    let id: ReturnType<typeof setInterval> | null = null
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        if (!id) id = setInterval(() => setElapsed(e => e >= 40 ? 0 : e + 1), 1000)
+      } else if (id) {
+        clearInterval(id); id = null
+      }
+    }, { threshold: 0 })
+    io.observe(root)
+
+    return () => { if (id) clearInterval(id); io.disconnect() }
   }, [])
 
   const remaining    = 40 - elapsed
@@ -161,6 +175,7 @@ export function TimsHero() {
 
   return (
     <header
+      ref={rootRef}
       id="hero"
       style={{ padding: 'clamp(8rem,17vw,13rem) 0 clamp(3rem,7vw,6rem)', fontFamily: T.font.sans }}
     >
@@ -217,7 +232,7 @@ export function TimsHero() {
             </h1>
           </div>
 
-          {/* ── RIGHT: polaroid deck — no background, floats on page ── */}
+          {/* ── RIGHT: polaroid deck, no background, floats on page ── */}
           <div
             className="tims-reveal"
             style={{
@@ -237,7 +252,7 @@ export function TimsHero() {
         {/* ── BOTTOM: full-width paragraph + meta ──────────────── */}
         <div className="tims-reveal" style={{ marginTop: 'clamp(2rem,4vw,3rem)' }}>
           <p style={{ fontSize: '1.15rem', color: T.color.inkSoft, maxWidth: '60ch', lineHeight: 1.65 }}>
-            Forty seconds is roughly how long a Tims order takes — I know, because I was the one getting timed.
+            Forty seconds is roughly how long a Tims order takes. I know, because I was the one getting timed.
             This is a weekend concept: take everything the drive-thru taught me, and build the point-of-sale terminal I always wished I&apos;d had.
           </p>
 

@@ -6,6 +6,7 @@ import { VitaeNav }     from '@/demos/vitae/VitaeNav'
 import { VitaeHero }    from '@/demos/vitae/VitaeHero'
 import { VitaeRoom }    from '@/demos/vitae/VitaeRoom'
 import { VitaeReframe } from '@/demos/vitae/VitaeReframe'
+import { VitaePhases }  from '@/demos/vitae/VitaePhases'
 import { VitaeLoop }    from '@/demos/vitae/VitaeLoop'
 import { VitaeCalls }   from '@/demos/vitae/VitaeCalls'
 import { VitaeKilled }  from '@/demos/vitae/VitaeKilled'
@@ -48,7 +49,7 @@ export function VitaeClient() {
         .vitae-forks-grid { grid-template-columns:repeat(3,1fr) }
         @media(max-width:820px) { .vitae-forks-grid { grid-template-columns:1fr!important } }
 
-        /* how-it-works grid (old — kept for compat) */
+        /* how-it-works grid (old, kept for compat) */
         .vitae-how-grid { grid-template-columns:1fr 1fr }
         @media(max-width:760px) { .vitae-how-grid { grid-template-columns:1fr!important } }
 
@@ -99,6 +100,7 @@ export function VitaeClient() {
         <VitaeHero />
         <VitaeRoom />
         <VitaeReframe />
+        <VitaePhases />
         <VitaeLoop />
         <VitaeCalls />
         <VitaeKilled />

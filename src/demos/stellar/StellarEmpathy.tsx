@@ -25,7 +25,7 @@ const QUADS = [
     title: 'Hear',
     items: [
       'Food bloggers and influencers everywhere.',
-      'Cookbooks and sites — but none personal.',
+      'Cookbooks and sites everywhere, but none of it personal.',
     ],
   },
   {

@@ -38,25 +38,25 @@ const FLOW = [
     tab:  'Discover',
     tag:  'Step 01 · Discover',
     head: 'Start from a goal, not a ticker',
-    desc: 'We asked users what they wanted their money to do — travel, retirement, a safety net — and built the entry point around that answer. The fund appears after the goal is set.',
+    desc: 'We asked users what they wanted their money to do: travel, retirement, a safety net. We built the entry point around that answer. The fund appears after the goal is set.',
   },
   {
     tab:  'Explore',
     tag:  'Step 02 · Explore',
     head: 'Funds matched to your goal',
-    desc: "The app surfaces 3–5 fund options filtered to the user's timeline and risk tolerance. No overwhelming catalogue — only what's relevant to their stated goal.",
+    desc: "The app surfaces 3–5 fund options filtered to the user's timeline and risk tolerance. Only what matches the stated goal makes the list.",
   },
   {
     tab:  'Compare',
     tag:  'Step 03 · Compare',
     head: 'Side-by-side, plain language',
-    desc: 'Returns, risk rating, and who else invests — explained without financial jargon. Users can tap any term for a plain-language tooltip. No glossary detour.',
+    desc: 'Returns, risk rating, and who else invests are explained without financial jargon. Users can tap any term for a plain-language tooltip. No glossary detour.',
   },
   {
     tab:  'Set amount',
     tag:  'Step 04 · Set amount',
     head: 'One slider, one number',
-    desc: 'A single input: how much per month? The app shows projected value in 5 years instantly. No forms, no nested conditions, no confusion.',
+    desc: 'A single input: how much per month? The app shows the projected value in 5 years instantly, with nothing else to fill out.',
   },
   {
     tab:  'Confirm',
@@ -123,24 +123,34 @@ export function ProfitaFlow() {
       })
     }
 
-    let rafId: number
+    const track = trackRef.current
+    if (!track) return
+
+    let rafId = 0
+    let visible = false
 
     const tick = () => {
-      const track = trackRef.current
-      if (track) {
-        const rect = track.getBoundingClientRect()
-        const vh   = window.innerHeight
-        // t: 0 → 1 across (STEPS × vh) of usable scroll
-        const raw  = -rect.top / (rect.height - vh)
-        const t    = clamp(raw, 0, 1)
-        const step = clamp(Math.floor(t * STEPS), 0, STEPS - 1)
-        applyStep(step)
-      }
+      if (!visible) { rafId = 0; return }
+      const rect = track.getBoundingClientRect()
+      const vh   = window.innerHeight
+      // t: 0 → 1 across (STEPS × vh) of usable scroll
+      const raw  = -rect.top / (rect.height - vh)
+      const t    = clamp(raw, 0, 1)
+      const step = clamp(Math.floor(t * STEPS), 0, STEPS - 1)
+      applyStep(step)
       rafId = requestAnimationFrame(tick)
     }
 
-    rafId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafId)
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      if (visible && !rafId) rafId = requestAnimationFrame(tick)
+    }, { threshold: 0 })
+    io.observe(track)
+
+    return () => {
+      io.disconnect()
+      if (rafId) cancelAnimationFrame(rafId)
+    }
   }, [])
 
   return (

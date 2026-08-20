@@ -6,31 +6,31 @@ const VOICES = [
   {
     who:   'Product',
     said:  '"If they don\'t open it daily, nothing else we do matters."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>engagement</b> — a reason to come back every morning.</>,
+    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>engagement</b>: a reason to come back every morning.</>,
     me:    false,
   },
   {
     who:   'Clinical advisor · MD',
     said:  '"A green score on the day someone\'s getting sick is the one thing we can never ship."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>safety</b> — never falsely reassure.</>,
+    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>safety</b>: never falsely reassuring.</>,
     me:    false,
   },
   {
     who:   'Engineering',
     said:  '"Assume only the sensors already on the wrist. No new hardware, no cloud round-trip."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>constraint</b> — ship inside what exists.</>,
+    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>constraint</b>: shipping inside what exists.</>,
     me:    false,
   },
   {
     who:   'Privacy',
     said:  '"This is the most sensitive data we hold. It does not leave the device."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>trust</b> — on-device or not at all.</>,
+    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>trust</b>: on-device or not at all.</>,
     me:    false,
   },
   {
     who:   'Design · me',
     said:  '"If the first glance needs a tutorial, the glance has already failed."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>clarity</b> — one reading, understood instantly.</>,
+    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>clarity</b>: one reading, understood instantly.</>,
     me:    true,
   },
 ] as const
@@ -62,8 +62,8 @@ export function VitaeRoom() {
             had to agree.
           </h2>
           <p style={{ color: V.color.inkSoft, fontSize: '1.1rem', maxWidth: '56ch', fontFamily: V.font.sans, lineHeight: 1.65 }}>
-            None of them wanted the same app. The project wasn&apos;t drawing the UI — it was
-            finding the one design that didn&apos;t force any of them to back down on what they couldn&apos;t.
+            None of them wanted the same app. The project&apos;s job was finding the one design
+            that didn&apos;t force any of them to back down on what they couldn&apos;t.
           </p>
         </div>
 

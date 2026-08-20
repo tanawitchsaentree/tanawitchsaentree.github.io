@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import { C } from './tokens'
 
 const METRICS = [
-  { n: 47,   u: '',  k: 'components',      p: 'Design-system parts only — no rogue markup.' },
+  { n: 47,   u: '',  k: 'components',      p: 'Design-system parts only, no rogue markup.' },
   { n: 0,    u: '',  k: 'build errors',    p: 'Strict TypeScript, enforced end to end.' },
   { n: 100,  u: '%', k: 'audited',         p: 'A scripted audit suite, run on every change.' },
   { n: 1,    u: '',  k: 'source of truth', p: 'One project doc; a new session onboards in an hour.' },
@@ -65,7 +65,7 @@ export function ClaimsCraft() {
                 {m.u && <span style={{ color: C.color.live, fontSize: '.55em', fontWeight: 600 }}>{m.u}</span>}
               </div>
               <div style={{ fontFamily: C.font.mono, fontSize: '.66rem', letterSpacing: '.08em', textTransform: 'uppercase', color: C.color.txDim, margin: '.6rem 0 .35rem' }}>{m.k}</div>
-              <p style={{ fontSize: '.875rem', color: C.color.txDim, lineHeight: 1.45, margin: 0 }}>{m.p}</p>
+              <p style={{ fontSize: '1rem', color: C.color.txDim, lineHeight: 1.45, margin: 0 }}>{m.p}</p>
             </div>
           ))}
         </div>

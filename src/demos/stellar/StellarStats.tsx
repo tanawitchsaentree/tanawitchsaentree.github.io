@@ -13,7 +13,7 @@ const STATS = [
 const QUOTES = [
   { name: 'Emily', text: 'help me use leftover ingredients, reduce waste' },
   { name: 'Liam',  text: 'make cooking feel like fun, not a chore' },
-  { name: 'Survey',text: '"suggests meals from what\'s in my fridge — a lifesaver!"' },
+  { name: 'Survey',text: '"suggests meals from what\'s in my fridge, an absolute lifesaver!"' },
 ] as const
 
 function CountStat({ target, suffix }: { target: number; suffix: string }) {
@@ -73,7 +73,7 @@ export function StellarStats() {
             Talking to the people in the kitchen
           </span>
           <h3 style={{ fontFamily: S.font.display, fontWeight: 700, color: S.color.paper, fontSize: S.size.title, margin: '.8rem 0 2rem', maxWidth: '24ch', lineHeight: 1.15 }}>
-            I didn&apos;t guess. I asked — then <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', color: S.color.lime }}>counted.</em>
+            Rather than guess, I asked home cooks directly and <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', color: S.color.lime }}>counted</em> what they told me.
           </h3>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1.6rem', position: 'relative', zIndex: 1 }} className="stellar-stats-grid">
@@ -97,6 +97,10 @@ export function StellarStats() {
               </span>
             ))}
           </div>
+
+          <p style={{ fontSize: '.8rem', color: S.alpha.paper45, marginTop: '1.1rem', lineHeight: 1.6, position: 'relative', zIndex: 1, fontFamily: S.font.mono, letterSpacing: '.02em' }}>
+            Figures above come from my own research; names are illustrative composites standing in for real respondents, not verbatim quotes from a named individual.
+          </p>
         </div>
       </div>
     </section>

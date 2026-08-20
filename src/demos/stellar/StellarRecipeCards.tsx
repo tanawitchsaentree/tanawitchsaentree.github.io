@@ -11,39 +11,39 @@ const BOOK  = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" strok
 const ARROW = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`
 
 const RECIPES = [
-  { nm: 'Warming Chicken Noodle Soup', match: 96, rate: '4.4', ing: 10, min: 12, img: '/images/stellareating/recipe card/Warming Chicken Noodle Soup.png' },
-  { nm: 'Grilled Coconut-Curry Tofu',  match: 91, rate: '4.6', ing: 10, min: 20, img: '/images/stellareating/recipe card/Grilled Coconut-Curry Tofu.png'  },
-  { nm: 'One-Pot Tomato Pasta',        match: 88, rate: '4.5', ing:  9, min: 25, img: '/images/stellareating/recipe card/One-Pot Tomato Pasta.png'         },
-  { nm: 'Black Bean & Rice Bowl',      match: 84, rate: '4.3', ing:  8, min: 18, img: '/images/stellareating/recipe card/Black bean.png'                   },
-  { nm: 'Lemon Garlic Salmon',         match: 80, rate: '4.7', ing:  7, min: 22, img: '/images/stellareating/recipe card/lemon garlic salmon.png'          },
+  { nm: 'Warming Chicken Noodle Soup', match: 96, rate: '4.4', ing: 10, min: 12, img: '/images/stellareating/recipe card/Warming Chicken Noodle Soup.jpg' },
+  { nm: 'Grilled Coconut-Curry Tofu',  match: 91, rate: '4.6', ing: 10, min: 20, img: '/images/stellareating/recipe card/Grilled Coconut-Curry Tofu.jpg'  },
+  { nm: 'One-Pot Tomato Pasta',        match: 88, rate: '4.5', ing:  9, min: 25, img: '/images/stellareating/recipe card/One-Pot Tomato Pasta.jpg'         },
+  { nm: 'Black Bean & Rice Bowl',      match: 84, rate: '4.3', ing:  8, min: 18, img: '/images/stellareating/recipe card/Black bean.jpg'                   },
+  { nm: 'Lemon Garlic Salmon',         match: 80, rate: '4.7', ing:  7, min: 22, img: '/images/stellareating/recipe card/lemon garlic salmon.jpg'          },
 ] as const
 
 const C = 2 * Math.PI * 24
 
 const CSS = `
-.rc-scope{color:#16210f;max-width:1180px;margin:0 auto;padding:clamp(4rem,10vw,8rem) clamp(1.2rem,5vw,3rem)}
+.rc-scope{color:var(--stellar-ink-app);max-width:1180px;margin:0 auto;padding:clamp(4rem,10vw,8rem) clamp(1.2rem,5vw,3rem)}
 .rc-head{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;margin-bottom:2.2rem;flex-wrap:wrap}
-.rc-head .l .k{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#2b6e34;display:inline-flex;align-items:center;gap:.6em;margin-bottom:1rem}
-.rc-head .l .k::before{content:"";width:24px;height:1.5px;background:#2b6e34}
-.rc-head .l h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;letter-spacing:-.03em;line-height:1.02;font-size:clamp(2rem,4.6vw,3.4rem);margin:0;color:#16210f}
-.rc-head .l h2 em{font-family:'Fraunces',serif;font-style:italic;font-weight:500;color:#2b6e34}
-.rc-head .l p{color:#4a5a42;margin:.8rem 0 0;max-width:42ch;font-family:'DM Sans',sans-serif}
+.rc-head .l .k{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--stellar-green-deep);display:inline-flex;align-items:center;gap:.6em;margin-bottom:1rem}
+.rc-head .l .k::before{content:"";width:24px;height:1.5px;background:var(--stellar-green-deep)}
+.rc-head .l h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;letter-spacing:-.03em;line-height:1.02;font-size:clamp(2rem,4.6vw,3.4rem);margin:0;color:var(--stellar-ink-app)}
+.rc-head .l h2 em{font-family:'Fraunces',serif;font-style:italic;font-weight:500;color:var(--stellar-green-deep)}
+.rc-head .l p{color:var(--stellar-ink-soft-app);margin:.8rem 0 0;max-width:42ch;font-family:'DM Sans',sans-serif}
 .rc-nav{display:flex;gap:.6rem}
-.rc-nav button{width:48px;height:48px;border-radius:50%;border:1px solid rgba(22,33,15,.10);background:#fff;color:#16210f;
-  display:grid;place-content:center;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s,color .2s,border-color .2s,box-shadow .2s}
-.rc-nav button:hover{background:#14A800;border-color:#14A800;color:#fff;box-shadow:0 10px 24px rgba(20,168,0,.3)}
+.rc-nav button{width:48px;height:48px;border-radius:50%;border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);background:var(--stellar-white);color:var(--stellar-ink-app);
+  display:grid;place-content:center;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s cubic-bezier(.65,0,.35,1),color .2s cubic-bezier(.65,0,.35,1),border-color .2s cubic-bezier(.65,0,.35,1),box-shadow .2s cubic-bezier(.65,0,.35,1)}
+.rc-nav button:hover{background:var(--stellar-lime);border-color:var(--stellar-lime);color:var(--stellar-white);box-shadow:0 10px 24px color-mix(in srgb, var(--stellar-lime) 45%, transparent)}
 .rc-nav button:active{transform:scale(.92)}
-.rc-nav button:disabled{opacity:.3;cursor:default;background:#fff;color:#16210f;border-color:rgba(22,33,15,.10);box-shadow:none}
+.rc-nav button:disabled{opacity:.3;cursor:default;background:var(--stellar-white);color:var(--stellar-ink-app);border-color:color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);box-shadow:none}
 
 .rc-rail{display:flex;gap:1.4rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:1.4rem .4rem 2rem;margin:0 -.4rem;
   scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .rc-rail::-webkit-scrollbar{display:none}
 
 .rc-card{flex:0 0 clamp(290px,30vw,340px);scroll-snap-align:start;position:relative;aspect-ratio:3/4;border-radius:26px;overflow:hidden;
-  cursor:pointer;isolation:isolate;background:#1a2410;
-  box-shadow:0 2px 4px rgba(22,33,15,.05),0 18px 40px -12px rgba(22,33,15,.28);
+  cursor:pointer;isolation:isolate;background:var(--stellar-forest-1);
+  box-shadow:0 2px 4px color-mix(in srgb, var(--stellar-ink-app) 5%, transparent),0 18px 40px -12px color-mix(in srgb, var(--stellar-ink-app) 28%, transparent);
   transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s cubic-bezier(.16,1,.3,1)}
-.rc-card:hover{transform:translateY(-10px);box-shadow:0 30px 60px -16px rgba(20,168,0,.4)}
+.rc-card:hover{transform:translateY(-10px);box-shadow:0 30px 60px -16px color-mix(in srgb, var(--stellar-lime) 55%, transparent)}
 .rc-card .photo{position:absolute;inset:0;z-index:0;overflow:hidden}
 .rc-card .photo img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;
   transition:transform .9s cubic-bezier(.16,1,.3,1);transform:scale(1.02)}
@@ -53,38 +53,38 @@ const CSS = `
 .rc-top{position:absolute;top:14px;left:14px;right:14px;z-index:3;display:flex;align-items:flex-start;justify-content:space-between}
 .rc-match{position:relative;width:54px;height:54px;flex:none}
 .rc-match svg{transform:rotate(-90deg)}
-.rc-match .track{stroke:rgba(255,255,255,.28)}
-.rc-match .bar{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1)}
-.rc-match .pct{position:absolute;inset:0;display:grid;place-content:center;color:#fff;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:14px;line-height:1}
-.rc-match .lbl{position:absolute;top:56px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.85);white-space:nowrap}
-.rc-save{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);
-  display:grid;place-content:center;color:#fff;cursor:pointer;transition:background .2s,transform .2s cubic-bezier(.34,1.56,.64,1)}
-.rc-save:hover{background:rgba(255,255,255,.3)}.rc-save:active{transform:scale(.88)}
-.rc-save.saved{background:#fff;color:#14A800}
+.rc-match .track{stroke:color-mix(in srgb, var(--stellar-white) 28%, transparent)}
+.rc-match .bar{stroke:var(--stellar-white);stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1)}
+.rc-match .pct{position:absolute;inset:0;display:grid;place-content:center;color:var(--stellar-white);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:14px;line-height:1}
+.rc-match .lbl{position:absolute;top:56px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb, var(--stellar-white) 85%, transparent);white-space:nowrap}
+.rc-save{width:38px;height:38px;border-radius:50%;background:color-mix(in srgb, var(--stellar-white) 16%, transparent);backdrop-filter:blur(8px);border:1px solid color-mix(in srgb, var(--stellar-white) 28%, transparent);
+  display:grid;place-content:center;color:var(--stellar-white);cursor:pointer;transition:background .2s cubic-bezier(.65,0,.35,1),transform .2s cubic-bezier(.34,1.56,.64,1)}
+.rc-save:hover{background:color-mix(in srgb, var(--stellar-white) 30%, transparent)}.rc-save:active{transform:scale(.88)}
+.rc-save.saved{background:var(--stellar-white);color:var(--stellar-lime)}
 .rc-chips{position:absolute;top:78px;left:14px;z-index:3;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 .rc-chip{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;
   height:24px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;
-  background:rgba(10,16,6,.52);color:#fff;border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(6px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
-.rc-chip.alt{background:rgba(10,16,6,.42)}
+  background:color-mix(in srgb, var(--stellar-black) 52%, transparent);color:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-white) 25%, transparent);backdrop-filter:blur(6px);box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-black) 12%, transparent)}
+.rc-chip.alt{background:color-mix(in srgb, var(--stellar-black) 42%, transparent)}
 .rc-chip svg{display:block;flex-shrink:0;position:relative;top:-0.5px}
-.rc-info{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:18px 18px 20px;color:#fff}
-.rc-rate{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#fff;margin-bottom:8px;
-  background:rgba(255,255,255,.14);backdrop-filter:blur(6px);padding:4px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.2)}
-.rc-rate svg{color:#ffd34d}
-.rc-info h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;letter-spacing:-.02em;font-size:1.45rem;line-height:1.08;margin:0;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.4)}
-.rc-meta{display:flex;gap:16px;margin-top:10px;font-size:12px;color:rgba(255,255,255,.92)}
+.rc-info{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:18px 18px 20px;color:var(--stellar-white)}
+.rc-rate{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--stellar-white);margin-bottom:8px;
+  background:color-mix(in srgb, var(--stellar-white) 14%, transparent);backdrop-filter:blur(6px);padding:4px 9px;border-radius:999px;border:1px solid color-mix(in srgb, var(--stellar-white) 20%, transparent)}
+.rc-rate svg{color:var(--stellar-star)}
+.rc-info h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;letter-spacing:-.02em;font-size:1.45rem;line-height:1.08;margin:0;color:var(--stellar-white);text-shadow:0 2px 14px color-mix(in srgb, var(--stellar-black) 40%, transparent)}
+.rc-meta{display:flex;gap:16px;margin-top:10px;font-size:12px;color:color-mix(in srgb, var(--stellar-white) 92%, transparent)}
 .rc-meta span{display:inline-flex;align-items:center;gap:6px}
 .rc-cta{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s cubic-bezier(.16,1,.3,1),opacity .4s cubic-bezier(.16,1,.3,1),margin-top .45s cubic-bezier(.16,1,.3,1)}
 .rc-card:hover .rc-cta{max-height:60px;opacity:1;margin-top:14px}
-.rc-cta button{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;color:#16210f;
-  border:0;border-radius:12px;padding:12px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s,color .2s}
-.rc-cta button:hover{background:#14A800;color:#fff}
+.rc-cta button{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--stellar-white);color:var(--stellar-ink-app);
+  border:0;border-radius:12px;padding:12px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s cubic-bezier(.65,0,.35,1),color .2s cubic-bezier(.65,0,.35,1)}
+.rc-cta button:hover{background:var(--stellar-lime);color:var(--stellar-white)}
 .rc-cta button:active{transform:scale(.97)}
 .rc-card::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;
-  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.14) 48%,transparent 60%);transition:opacity .5s}
+  background:linear-gradient(120deg,transparent 30%,color-mix(in srgb, var(--stellar-white) 14%, transparent) 48%,transparent 60%);transition:opacity .5s cubic-bezier(.65,0,.35,1)}
 .rc-card:hover::after{opacity:1}
-.rc-prog{height:3px;background:rgba(22,33,15,.10);border-radius:99px;overflow:hidden;max-width:220px;margin-top:.4rem}
-.rc-prog i{display:block;height:100%;background:#3fa14a;border-radius:99px;width:30%;transition:transform .2s cubic-bezier(.16,1,.3,1),width .2s cubic-bezier(.16,1,.3,1)}
+.rc-prog{height:3px;background:color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:99px;overflow:hidden;max-width:220px;margin-top:.4rem}
+.rc-prog i{display:block;height:100%;background:var(--stellar-green);border-radius:99px;width:30%;transition:transform .2s cubic-bezier(.16,1,.3,1),width .2s cubic-bezier(.16,1,.3,1)}
 @media (prefers-reduced-motion:reduce){.rc-card,.rc-card .photo,.rc-cta{transition:none}}
 `
 
@@ -194,7 +194,7 @@ export function StellarRecipeCards() {
           <div className="l">
             <span className="k">From your kitchen</span>
             <h2>Four matches, <em>ranked for you.</em></h2>
-            <p>Stellar returns a shelf of dishes you can actually make — each scored by how well it fits what you have and like.</p>
+            <p>Stellar returns a shelf of dishes you can actually make. Each one is scored by how well it fits what you have and like.</p>
           </div>
           <nav className="rc-nav" aria-label="Recipe slider">
             <button ref={prevRef} aria-label="previous">

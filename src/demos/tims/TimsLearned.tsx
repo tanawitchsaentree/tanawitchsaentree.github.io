@@ -13,11 +13,11 @@ const PRINCIPLES = [
   },
   {
     title: 'Reversible is what makes fast safe.',
-    body: 'Speed only helps if mistakes cost nothing. Undo, live preview, edit-in-place — these are speed features, not nice-to-haves.',
+    body: 'Speed only helps if mistakes cost nothing. Undo, live preview, and edit-in-place are speed features.',
   },
   {
     title: 'The ticket never hides.',
-    body: "The order is the single source of truth between two people. Don't ever cover it — especially while they're changing their mind.",
+    body: "The order is the single source of truth between two people. Don't ever cover it, especially while they're changing their mind.",
   },
 ] as const
 

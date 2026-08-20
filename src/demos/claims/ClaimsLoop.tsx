@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { C } from './tokens'
 
 const CHECKS = [
-  { label: 'save() — error handling', verified: false, evidence: 'try/finally, no catch' },
-  { label: 'discard — confirm modal',  verified: true,  evidence: 'catch present'         },
-  { label: 'closed claim — locked',    verified: true,  evidence: 'guard verified'         },
+  { label: 'save(): error handling', verified: false, evidence: 'try/finally, no catch' },
+  { label: 'discard: confirm modal',  verified: true,  evidence: 'catch present'         },
+  { label: 'closed claim: locked',    verified: true,  evidence: 'guard verified'         },
 ]
 
 function pad(s: string) { return (s + ' ').padEnd(30, '.') }
@@ -97,7 +97,7 @@ export function ClaimsLoop() {
                 {CHECKS.filter(c => !c.verified).map(c => (
                   <div key={c.label} style={{ color: C.color.fail, background: C.alpha.failSoft, margin: '0 -1.1rem', padding: '0 1.1rem' }}>
                     <span style={{ marginRight: '.7em' }}>✗</span>
-                    {pad(c.label)}FAIL — {c.evidence}
+                    {pad(c.label)}FAIL: {c.evidence}
                   </div>
                 ))}
                 <div style={{ color: C.color.fail, marginTop: '.7rem', borderTop: `1px dashed ${C.color.line}`, paddingTop: '.6rem' }}>
@@ -108,8 +108,8 @@ export function ClaimsLoop() {
           </div>
         </div>
 
-        <p className="claims-animate claims-d2" style={{ fontFamily: C.font.mono, fontSize: '.74rem', color: C.color.txDim, marginTop: '1.2rem', paddingLeft: '.9rem', borderLeft: `2px solid ${C.color.lineBri}`, maxWidth: '58ch', lineHeight: 1.6 }}>
-          <b style={{ color: C.color.live, fontWeight: 500 }}>why it matters —</b> ask one agent to &ldquo;do X and verify X&rdquo; and you get a self-justifying report. once it claimed save-error-handling done with a <em style={{ fontStyle: 'normal', color: C.color.live }}>try/finally and no catch</em>. a separate verifier reads the evidence instead of the builder&apos;s word.
+        <p className="claims-animate claims-d2" style={{ fontFamily: C.font.mono, fontSize: '1rem', color: C.color.txDim, marginTop: '1.2rem', paddingLeft: '.9rem', borderLeft: `2px solid ${C.color.lineBri}`, maxWidth: '58ch', lineHeight: 1.6 }}>
+          Ask one agent to &ldquo;do X and verify X&rdquo; and it hands back a self-justifying report. Once it marked save-error-handling done with a <em style={{ fontStyle: 'normal', color: C.color.live }}>try/finally and no catch</em>. A separate verifier that reads the evidence instead of the builder&apos;s word is what actually catches that.
         </p>
       </div>
     </section>

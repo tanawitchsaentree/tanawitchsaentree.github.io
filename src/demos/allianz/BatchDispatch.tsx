@@ -1,13 +1,13 @@
 'use client'
 
 /**
- * BatchDispatch — "Fallback before happy path. Uncertainty is a handoff."
+ * BatchDispatch: "Fallback before happy path. Uncertainty is a handoff."
  *
- * Process a real incoming batch. Most documents route themselves (ink — the
+ * Process a real incoming batch. Most documents route themselves (ink, the
  * system acted). The ones the AI can't commit to get highlighted (the marker)
- * and wait — tapping one opens the handoff: AI's read, the runner-up, the reason,
- * and the operator's call. The closing line names the whole stance: not an error,
- * a decision. Same colour language as the gate and the prompt editor.
+ * and wait. Tapping one opens the handoff: AI's read, the runner-up, the reason,
+ * and the operator's call. The closing line names the whole stance as a decision,
+ * not an error. Same colour language as the gate and the prompt editor.
  */
 
 import { useState, useCallback } from 'react'
@@ -70,7 +70,7 @@ function DocItem({ doc, phase, index, expanded, onToggle }: {
         <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] w-4 flex-shrink-0 text-center" aria-hidden="true">▭</span>
 
         <div className="min-w-0 flex-1">
-          <p className="font-mono text-[var(--type-sm)] uppercase tracking-[0.06em] text-[var(--fg)]" style={{ fontWeight: 500 }}>{doc.label}</p>
+          <p className="font-mono text-[var(--type-base)] uppercase tracking-[0.06em] text-[var(--fg)]" style={{ fontWeight: 500 }}>{doc.label}</p>
           <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] mt-0.5">{doc.type}</p>
         </div>
 
@@ -162,8 +162,8 @@ export function BatchDispatch() {
               <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg)] mb-1">
                 Tap a marked document
               </p>
-              <p className="font-mono leading-[1.5] text-[var(--fg-muted)]" style={{ fontSize: '1rem' }}>
-                it&apos;s not an error, it&apos;s a decision waiting for you.
+              <p className="font-mono leading-[1.5] text-[var(--fg-muted)]" style={{ fontSize: 'var(--type-base)' }}>
+                it&apos;s a decision waiting for you.
               </p>
             </div>
           </motion.div>

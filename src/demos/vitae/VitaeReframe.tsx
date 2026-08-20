@@ -5,7 +5,7 @@ import { V } from './tokens'
 import { VitaeAppScreen } from './Reframe/VitaeAppScreen'
 
 // Parse a 6-digit CSS hex token (e.g. "#f6f5ef") into [r, g, b] integers.
-// This derives the melt arrays from token values — no magic numbers in the scroll handler.
+// This derives the melt arrays from token values; no magic numbers in the scroll handler.
 function hexToRgb(hex: string): [number, number, number] {
   const h = hex.replace('#', '')
   return [
@@ -23,19 +23,19 @@ const SCENES = [
   {
     tag:   'Concept 01',
     h:     <>The first idea was an absolute <em>0–100.</em></>,
-    p:     'Product loved it. One universal number, simple to grasp, easy to market. We built it.',
+    p:     'Product loved it. One universal number, simple to grasp. We built it.',
     dark:  false,
   },
   {
     tag:   'Clinical review',
     h:     <>It died in <em>ten minutes.</em></>,
-    p:     'An absolute health number implies a medical claim. And a confident "78" on the morning you\'re coming down with something isn\'t simple — it\'s a dangerous lie.',
+    p:     'An absolute health number implies a medical claim. And a confident "78" on the morning you\'re coming down with something isn\'t simple. It\'s a dangerous lie.',
     dark:  true,
   },
   {
     tag:   'The reframe',
     h:     <>Score the day against <em>your own</em> baseline.</>,
-    p:     'Not a population, not a verdict on your health — a read on your momentum versus your last 14 days. Honest, defensible, and still one glanceable number.',
+    p:     'Not a verdict on your health, just a read on your momentum versus your last 14 days, honest and still one glanceable number.',
     dark:  false,
   },
 ] as const
@@ -60,7 +60,7 @@ export function VitaeReframe() {
       return
     }
 
-    // Token-derived — no magic numbers here
+    // Token-derived, no magic numbers here
     const BG = [T_PAPER, T_INK,   T_LIME,  T_PAPER]
     const FG = [T_INK,   T_PAPER, T_INK,   T_INK  ]
     const ST = [0, 0.28, 0.55, 0.90]
@@ -214,7 +214,7 @@ export function VitaeReframe() {
           ))}
         </div>
 
-        {/* phone column — shell + animated app screen */}
+        {/* phone column: shell + animated app screen */}
         <div ref={phoneRef} style={{ justifySelf: 'center', willChange: 'transform' }}>
           <div
             style={{

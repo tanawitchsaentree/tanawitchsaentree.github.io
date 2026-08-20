@@ -13,14 +13,14 @@ const PAINS = [
   {
     icon:  '🗑️',
     title: 'Food guilt',
-    body:  'Buying groceries, forgetting them, tossing them. Wasted food and wasted money — and it stings.',
+    body:  'Buying groceries, forgetting them, tossing them. Wasted food and wasted money, and it stings every time.',
     quote: '"It\'s gone bad before I realize."',
     accent: S.color.citrus,
   },
   {
     icon:  '📚',
     title: 'Recipe chaos',
-    body:  'Recipes scattered across screenshots, tabs, and bookmarks — never the right one when you need it.',
+    body:  'Recipes scattered across screenshots, tabs, and bookmarks. Never the right one when you need it.',
     quote: '"I can never find the one I saved."',
     accent: S.color.lime,
   },
@@ -41,7 +41,7 @@ export function StellarProblem() {
             Three frustrations kept <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>showing up.</em>
           </h2>
           <p style={{ color: S.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            Talking to home cooks, the same complaints surfaced again and again — clustered into three knots that all trace back to one thing: a full kitchen and no plan.
+            Talking to home cooks, the same complaints surfaced again and again. They clustered into three knots that all trace back to one thing: a full kitchen and no plan.
           </p>
         </div>
 

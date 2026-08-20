@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { P } from './tokens'
+import { P, rgbaFrom } from './tokens'
 
 export function ProfitaNav() {
   const router    = useRouter()
@@ -48,8 +48,8 @@ export function ProfitaNav() {
         padding:        '1rem clamp(1.2rem,5vw,7.5rem)',
         backdropFilter: 'blur(14px) saturate(160%)',
         background:     scrolled
-          ? `rgba(12,28,51,.72)`
-          : `rgba(12,28,51,0)`,
+          ? rgbaFrom(P.color.navy900Rgb, .72)
+          : rgbaFrom(P.color.navy900Rgb, 0),
         borderBottom:   scrolled
           ? `1px solid ${P.alpha.line}`
           : '1px solid transparent',

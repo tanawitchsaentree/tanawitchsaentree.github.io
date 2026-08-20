@@ -4,63 +4,63 @@ import { useRef, useEffect } from 'react'
 import { StellarPhone, useBotFinger } from './StellarPhone'
 
 const CSS = `
-.s2-app{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff;font-family:'DM Sans',sans-serif}
+.s2-app{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--stellar-white);font-family:'DM Sans',sans-serif}
 
 /* header */
-.s2-head{display:flex;align-items:center;gap:10px;padding:16px 16px 12px;border-bottom:1px solid rgba(22,33,15,.06);flex-shrink:0}
-.s2-back{color:#4a5a42;display:grid;place-content:center;cursor:pointer;background:none;border:0;padding:0}
-.s2-chef-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#5fd14a,#14A800);display:grid;place-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(20,168,0,.35)}
+.s2-head{display:flex;align-items:center;gap:10px;padding:16px 16px 12px;border-bottom:1px solid color-mix(in srgb, var(--stellar-ink-app) 6%, transparent);flex-shrink:0}
+.s2-back{color:var(--stellar-ink-soft-app);display:grid;place-content:center;cursor:pointer;background:none;border:0;padding:0}
+.s2-chef-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));display:grid;place-content:center;color:var(--stellar-white);flex-shrink:0;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 35%, transparent)}
 .s2-who{flex:1;min-width:0}
-.s2-who .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;color:#16210f;line-height:1.1}
-.s2-who .st{font-size:10.5px;color:#14A800;display:flex;align-items:center;gap:4px}
-.s2-who .st::before{content:"";width:6px;height:6px;border-radius:50%;background:#14A800;display:block}
-.s2-head-acts{display:flex;gap:14px;color:#4a5a42}
+.s2-who .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;color:var(--stellar-ink-app);line-height:1.1}
+.s2-who .st{font-size:10.5px;color:var(--stellar-lime);display:flex;align-items:center;gap:4px}
+.s2-who .st::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--stellar-lime);display:block}
+.s2-head-acts{display:flex;gap:14px;color:var(--stellar-ink-soft-app)}
 
 /* messages */
 .s2-msgs{flex:1;overflow-y:auto;padding:16px 14px 6px;display:flex;flex-direction:column;gap:11px;scrollbar-width:none}
 .s2-msgs::-webkit-scrollbar{display:none}
 .s2-msg{max-width:82%;padding:10px 13px;border-radius:17px;font-size:12.5px;line-height:1.5;opacity:0;transform:translateY(8px);animation:s2in .32s cubic-bezier(.16,1,.3,1) forwards;word-wrap:break-word}
 @keyframes s2in{to{opacity:1;transform:none}}
-.s2-msg.ai{align-self:flex-start;background:#f7faf5;color:#16210f;border:1px solid rgba(22,33,15,.06);border-bottom-left-radius:5px}
-.s2-msg.user{align-self:flex-end;background:#14A800;color:#fff;border-bottom-right-radius:5px}
+.s2-msg.ai{align-self:flex-start;background:var(--stellar-surface-soft);color:var(--stellar-ink-app);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 6%, transparent);border-bottom-left-radius:5px}
+.s2-msg.user{align-self:flex-end;background:var(--stellar-lime);color:var(--stellar-white);border-bottom-right-radius:5px}
 
 /* photo bubble */
-.s2-photo{align-self:flex-end;width:160px;border-radius:17px;border-bottom-right-radius:5px;overflow:hidden;opacity:0;transform:translateY(8px) scale(.96);animation:s2in .4s cubic-bezier(.16,1,.3,1) forwards;box-shadow:0 8px 20px rgba(22,33,15,.16);position:relative}
-.s2-photo-img{height:118px;display:grid;place-content:center;color:rgba(255,255,255,.92);background:radial-gradient(120% 100% at 40% 25%,#e0a94a,#9c5a1e 70%,#6e3d12)}
-.s2-photo-cap{position:absolute;left:8px;bottom:8px;font-size:9px;font-family:'Space Mono',monospace;color:rgba(255,255,255,.85);background:rgba(0,0,0,.35);padding:2px 6px;border-radius:6px}
+.s2-photo{align-self:flex-end;width:160px;border-radius:17px;border-bottom-right-radius:5px;overflow:hidden;opacity:0;transform:translateY(8px) scale(.96);animation:s2in .4s cubic-bezier(.16,1,.3,1) forwards;box-shadow:0 8px 20px color-mix(in srgb, var(--stellar-ink-app) 16%, transparent);position:relative}
+.s2-photo-img{height:118px;display:grid;place-content:center;color:color-mix(in srgb, var(--stellar-white) 92%, transparent);background:radial-gradient(120% 100% at 40% 25%,var(--stellar-photo-amber-a),var(--stellar-photo-amber-b) 70%,var(--stellar-photo-amber-c))}
+.s2-photo-cap{position:absolute;left:8px;bottom:8px;font-size:9px;font-family:'Space Mono',monospace;color:color-mix(in srgb, var(--stellar-white) 85%, transparent);background:color-mix(in srgb, var(--stellar-black) 35%, transparent);padding:2px 6px;border-radius:6px}
 
 /* typing indicator */
-.s2-typing{align-self:flex-start;background:#f7faf5;border:1px solid rgba(22,33,15,.06);border-radius:17px;border-bottom-left-radius:5px;padding:12px 15px;display:flex;gap:4px}
-.s2-typing i{width:6px;height:6px;border-radius:50%;background:#8a9882;animation:s2dot 1.1s infinite;list-style:none}
+.s2-typing{align-self:flex-start;background:var(--stellar-surface-soft);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 6%, transparent);border-radius:17px;border-bottom-left-radius:5px;padding:12px 15px;display:flex;gap:4px}
+.s2-typing i{width:6px;height:6px;border-radius:50%;background:var(--stellar-muted-app);animation:s2dot 1.1s infinite;list-style:none}
 .s2-typing i:nth-child(2){animation-delay:.18s}
 .s2-typing i:nth-child(3){animation-delay:.36s}
 @keyframes s2dot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
 
 /* analysis block */
-.s2-analysis{align-self:flex-start;width:86%;background:#fff;border:1px solid rgba(22,33,15,.10);border-radius:16px;border-bottom-left-radius:5px;padding:12px 13px;box-shadow:0 6px 16px rgba(22,33,15,.07);opacity:0;transform:translateY(8px);animation:s2in .35s cubic-bezier(.16,1,.3,1) forwards}
-.s2-analysis .tag{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;font-family:'Space Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#2b6e34;background:#d6f3cf;padding:3px 8px;border-radius:999px;margin-bottom:8px}
-.s2-analysis .id{font-weight:600;font-size:12.5px;color:#16210f;margin-bottom:8px}
-.s2-analysis .id b{color:#2b6e34}
+.s2-analysis{align-self:flex-start;width:86%;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:16px;border-bottom-left-radius:5px;padding:12px 13px;box-shadow:0 6px 16px color-mix(in srgb, var(--stellar-ink-app) 7%, transparent);opacity:0;transform:translateY(8px);animation:s2in .35s cubic-bezier(.16,1,.3,1) forwards}
+.s2-analysis .tag{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;font-family:'Space Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--stellar-green-deep);background:var(--stellar-cta-bg-strong);padding:3px 8px;border-radius:999px;margin-bottom:8px}
+.s2-analysis .id{font-weight:600;font-size:12.5px;color:var(--stellar-ink-app);margin-bottom:8px}
+.s2-analysis .id b{color:var(--stellar-green-deep)}
 .s2-uses{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-.s2-uses li{font-size:11.5px;color:#4a5a42;padding-left:16px;position:relative}
-.s2-uses li::before{content:"";position:absolute;left:0;top:.5em;width:5px;height:5px;border-radius:50%;background:#5fd14a;display:block}
+.s2-uses li{font-size:11.5px;color:var(--stellar-ink-soft-app);padding-left:16px;position:relative}
+.s2-uses li::before{content:"";position:absolute;left:0;top:.5em;width:5px;height:5px;border-radius:50%;background:var(--stellar-lime-mid);display:block}
 
 /* suggestion card */
-.s2-sugg{align-self:flex-start;width:86%;background:#fff;border:1px solid rgba(22,33,15,.10);border-radius:16px;overflow:hidden;box-shadow:0 8px 20px rgba(22,33,15,.1);opacity:0;transform:translateY(8px);animation:s2in .35s cubic-bezier(.16,1,.3,1) forwards}
-.s2-sugg-pic{height:84px;background:radial-gradient(120% 120% at 40% 30%,#8fc24a,#3f8e2a);position:relative}
-.s2-sugg-badge{position:absolute;top:8px;left:8px;font-size:9px;font-family:'Space Mono',monospace;color:#fff;background:rgba(0,0,0,.32);padding:2px 7px;border-radius:6px}
+.s2-sugg{align-self:flex-start;width:86%;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:16px;overflow:hidden;box-shadow:0 8px 20px color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);opacity:0;transform:translateY(8px);animation:s2in .35s cubic-bezier(.16,1,.3,1) forwards}
+.s2-sugg-pic{height:84px;background:radial-gradient(120% 120% at 40% 30%,var(--stellar-photo-green-light),var(--stellar-photo-green-dark));position:relative}
+.s2-sugg-badge{position:absolute;top:8px;left:8px;font-size:9px;font-family:'Space Mono',monospace;color:var(--stellar-white);background:color-mix(in srgb, var(--stellar-black) 32%, transparent);padding:2px 7px;border-radius:6px}
 .s2-sugg-body{padding:11px 13px}
-.s2-sugg-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13.5px;color:#16210f}
-.s2-sugg-meta{display:flex;gap:12px;font-size:10.5px;color:#8a9882;margin:4px 0 10px;font-family:'DM Sans',sans-serif}
-.s2-sugg-go{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:#14A800;color:#fff;border:0;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:transform .15s}
+.s2-sugg-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13.5px;color:var(--stellar-ink-app)}
+.s2-sugg-meta{display:flex;gap:12px;font-size:10.5px;color:var(--stellar-muted-app);margin:4px 0 10px;font-family:'DM Sans',sans-serif}
+.s2-sugg-go{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--stellar-lime);color:var(--stellar-white);border:0;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:transform .15s}
 .s2-sugg-go:active{transform:scale(.97)}
 
 /* input bar */
-.s2-input{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 14px 16px;border-top:1px solid rgba(22,33,15,.06);background:#fff}
-.s2-input-icon{color:#4a5a42;display:grid;place-content:center;cursor:pointer;background:transparent;border:0;padding:0;border-radius:50%;width:32px;height:32px;transition:background .15s,color .15s;flex-shrink:0}
-.s2-input-icon.cam{color:#14A800}
-.s2-input-field{flex:1;display:flex;align-items:center;background:#f4f8f1;border:1px solid rgba(22,33,15,.10);border-radius:999px;padding:9px 14px;font-size:12.5px;color:#8a9882;font-family:'DM Sans',sans-serif}
-.s2-send-btn{width:34px;height:34px;border-radius:50%;background:#14A800;color:#fff;display:grid;place-content:center;flex-shrink:0;border:0;cursor:pointer;box-shadow:0 4px 12px rgba(20,168,0,.35);transition:transform .15s}
+.s2-input{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 14px 16px;border-top:1px solid color-mix(in srgb, var(--stellar-ink-app) 6%, transparent);background:var(--stellar-white)}
+.s2-input-icon{color:var(--stellar-ink-soft-app);display:grid;place-content:center;cursor:pointer;background:transparent;border:0;padding:0;border-radius:50%;width:32px;height:32px;transition:background .15s cubic-bezier(.65,0,.35,1),color .15s cubic-bezier(.65,0,.35,1);flex-shrink:0}
+.s2-input-icon.cam{color:var(--stellar-lime)}
+.s2-input-field{flex:1;display:flex;align-items:center;background:var(--stellar-surface-tint);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:999px;padding:9px 14px;font-size:12.5px;color:var(--stellar-muted-app);font-family:'DM Sans',sans-serif}
+.s2-send-btn{width:34px;height:34px;border-radius:50%;background:var(--stellar-lime);color:var(--stellar-white);display:grid;place-content:center;flex-shrink:0;border:0;cursor:pointer;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 35%, transparent);transition:transform .15s}
 .s2-send-btn:active{transform:scale(.9)}
 
 /* bot */
@@ -115,7 +115,7 @@ export function StellarScreen2() {
       const d = document.createElement('div')
       d.className = 's2-photo'
       d.innerHTML = `
-        <img src="/images/stellareating/phone%20mockup%20content/ponsu%20query.png" alt="ponzu query" style="width:100%;height:118px;object-fit:cover;display:block"/>
+        <img src="/images/stellareating/phone%20mockup%20content/ponsu%20query.jpg" alt="ponzu query" style="width:100%;height:118px;object-fit:cover;display:block"/>
         <span class="s2-photo-cap">IMG_0421.jpg</span>`
       msgsRef.current.appendChild(d)
       scrollDown()
@@ -140,7 +140,7 @@ export function StellarScreen2() {
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
           identified
         </span>
-        <div class="id">That is a bottle of <b>Marukan Ponzu</b> — citrus soy. Great for:</div>
+        <div class="id">That's a bottle of <b>Marukan Ponzu</b>, a citrus soy sauce. Great for:</div>
         <ul class="s2-uses">
           <li>Marinade for chicken or salmon</li>
           <li>Dipping sauce for dumplings</li>
@@ -156,7 +156,7 @@ export function StellarScreen2() {
       const d = document.createElement('div')
       d.className = 's2-sugg'
       d.innerHTML = `
-        <div class="s2-sugg-pic" style="position:relative"><img src="/images/stellareating/phone%20mockup%20content/ponsu%20glazed%20salmon.png" alt="Ponzu Glazed Salmon Bowl" style="width:100%;height:84px;object-fit:cover;display:block"/><span class="s2-sugg-badge">from your photo</span></div>
+        <div class="s2-sugg-pic" style="position:relative"><img src="/images/stellareating/phone%20mockup%20content/ponsu%20glazed%20salmon.jpg" alt="Ponzu Glazed Salmon Bowl" style="width:100%;height:84px;object-fit:cover;display:block"/><span class="s2-sugg-badge">from your photo</span></div>
         <div class="s2-sugg-body">
           <div class="s2-sugg-name">Ponzu Glazed Salmon Bowl</div>
           <div class="s2-sugg-meta"><span>8 Ingredients</span><span>25 mins</span></div>

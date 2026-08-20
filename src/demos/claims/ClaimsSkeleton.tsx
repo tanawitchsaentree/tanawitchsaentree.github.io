@@ -28,11 +28,12 @@ export function ClaimsSkeleton() {
     resetOld(); resetNew()
   }
 
-  const cap = view === 'old'
+  const capLabel = view === 'old' ? 'old flow' : 'redesigned'
+  const capDetail = view === 'old'
     ? oldConverted
-      ? 'old flow — the view jumped to Policies, the skeleton is gone, and Continue is dead with no reason.'
-      : "old flow — open the skeleton's menu and convert. watch what happens."
-    : 'redesigned — convert keeps the skeleton in view and shows why each policy fits or doesn\'t.'
+      ? 'the view jumped to Policies, the skeleton is gone, and Continue is dead with no reason.'
+      : "open the skeleton's menu and convert. watch what happens."
+    : 'convert keeps the skeleton in view and shows why each policy fits or doesn\'t.'
 
   const SkelRow = () => (
     <div style={{ display: 'flex', alignItems: 'center', gap: '.85rem', padding: '.8rem .9rem', border: `1px dashed ${C.color.line}`, borderRadius: 8, marginBottom: '.55rem', background: C.color.inset }}>
@@ -103,20 +104,20 @@ export function ClaimsSkeleton() {
                 }}
               >
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: v === 'old' ? C.color.fail : C.color.live, display: 'block' }} />
-                {v === 'old' ? 'old flow — what shipped' : 'redesigned'}
+                {v === 'old' ? 'old flow · what shipped' : 'redesigned'}
               </button>
             ))}
           </div>
 
           {/* Caption */}
           <div style={{ fontFamily: C.font.mono, fontSize: '.72rem', color: C.color.txDim, padding: '.6rem .95rem', borderBottom: `1px solid ${C.color.line}`, background: C.color.inset }}>
-            <b style={{ color: C.color.txHi }}>{view === 'old' ? (oldConverted ? 'old flow' : 'old flow') : 'redesigned'}</b> — {cap.split(' — ').slice(1).join(' — ')}
+            <b style={{ color: C.color.txHi }}>{capLabel}</b> · {capDetail}
           </div>
 
           {/* Body */}
           <div style={{ padding: '1rem', minHeight: 280 }}>
             <div style={{ fontFamily: C.font.mono, fontSize: '.68rem', letterSpacing: '.1em', textTransform: 'uppercase', color: C.color.txDim, marginBottom: '.7rem' }}>
-              {view === 'old' && oldConverted ? 'policies — converting (skeleton not shown)' : '1 skeleton awaiting conversion'}
+              {view === 'old' && oldConverted ? 'policies · converting (skeleton not shown)' : '1 skeleton awaiting conversion'}
             </div>
 
             {view === 'old' && !oldConverted && <SkelRow />}
@@ -180,7 +181,7 @@ export function ClaimsSkeleton() {
                 <div style={{ padding: '.95rem 1.1rem', borderBottom: `1px solid ${C.color.line}`, background: C.color.inset, position: 'sticky', top: 0 }}>
                   <div style={{ fontFamily: C.font.mono, fontSize: '.64rem', letterSpacing: '.1em', textTransform: 'uppercase', color: C.color.live, marginBottom: '.6rem', display: 'flex', alignItems: 'center', gap: '.5em' }}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4"/></svg>
-                    converting this skeleton — stays in view
+                    converting this skeleton stays in view
                   </div>
                   <div style={{ display: 'flex', gap: '1.3rem', flexWrap: 'wrap' }}>
                     {[['client','Northwind Logistics'],['cause','Escape of water'],['loss date','12 Mar 2026']].map(([k,v]) => (
@@ -194,7 +195,7 @@ export function ClaimsSkeleton() {
 
                 {/* Policy list */}
                 <div style={{ padding: '1rem 1.1rem' }}>
-                  <div style={{ fontFamily: C.font.mono, fontSize: '.64rem', letterSpacing: '.1em', textTransform: 'uppercase', color: C.color.txDim, marginBottom: '.7rem' }}>eligible policies — pick one</div>
+                  <div style={{ fontFamily: C.font.mono, fontSize: '.64rem', letterSpacing: '.1em', textTransform: 'uppercase', color: C.color.txDim, marginBottom: '.7rem' }}>eligible policies · pick one</div>
                   {POLICIES.map(p => (
                     <div
                       key={p.id}
@@ -268,8 +269,8 @@ export function ClaimsSkeleton() {
           )}
         </div>
 
-        <p className="claims-animate claims-d2" style={{ fontSize: '.95rem', color: C.color.tx, maxWidth: '64ch', marginTop: '1.6rem', lineHeight: 1.6, paddingLeft: '.9rem', borderLeft: `2px solid ${C.color.live}` }}>
-          <b style={{ color: C.color.txHi }}>the detail that only exists in a real build:</b> policy #2 matches the client but its date is out of period. without it, the date rule is never demonstrated — the client check short-circuits first. that decision doesn&apos;t fit in a Figma file.
+        <p className="claims-animate claims-d2" style={{ fontSize: '1rem', color: C.color.tx, maxWidth: '64ch', marginTop: '1.6rem', lineHeight: 1.6, paddingLeft: '.9rem', borderLeft: `2px solid ${C.color.live}` }}>
+          Policy #2 matches the client but its date falls outside the policy period, and that&apos;s the detail only a real build surfaces. Without it, the date rule never gets demonstrated, since the client check short-circuits first. That decision doesn&apos;t fit in a Figma file.
         </p>
       </div>
     </section>

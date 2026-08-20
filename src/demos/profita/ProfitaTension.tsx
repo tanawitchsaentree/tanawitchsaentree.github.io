@@ -6,7 +6,7 @@ import { P } from './tokens'
 const NEWCOMER = [
   '"I don\'t know where to start."',
   '"What if I lose all my money?"',
-  '"I need an expert — this isn\'t for me."',
+  '"I need an expert. This isn\'t for me."',
   '"All these numbers. I don\'t understand."',
 ]
 
@@ -20,7 +20,7 @@ const EXPERIENCED = [
 const PROCESS = [
   'Mapped 34 user journeys across both segments',
   'Tested 3 IA variations with 8 participants each',
-  'Settled on progressive disclosure — simple surface, depth available on demand',
+  'Settled on progressive disclosure: a simple surface with depth available on demand',
 ]
 
 export function ProfitaTension() {
@@ -49,7 +49,7 @@ export function ProfitaTension() {
         </h2>
 
         <p style={{ color: P.color.onMut, maxWidth: '52ch', lineHeight: 1.7, marginBottom: '2.5rem' }}>
-          We were designing for beginners — but the existing LH Bank customers were experienced
+          We were designing for beginners. The existing LH Bank customers were experienced
           investors who needed depth. The tension defined every decision.
         </p>
 
@@ -107,7 +107,7 @@ export function ProfitaTension() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.9rem' }}>
               {EXPERIENCED.map((line, i) => (
                 <p key={i} style={{
-                  fontSize:   '.94rem',
+                  fontSize:   '1rem',
                   color:      P.color.onMut,
                   lineHeight: 1.55,
                   margin:     0,
@@ -117,10 +117,10 @@ export function ProfitaTension() {
           </div>
         </div>
 
-        {/* Italic resolution note */}
+        {/* Resolution note */}
         <p style={{
-          fontFamily:  P.font.disp,
-          fontStyle:   'italic',
+          fontFamily:  P.font.body,
+          fontWeight:  500,
           fontSize:    '1.05rem',
           color:       P.color.onFaint,
           maxWidth:    '50ch',

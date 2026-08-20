@@ -4,7 +4,7 @@ import { V } from './tokens'
 import { VitaeTrendsScreen } from './HowItWorks/VitaeTrendsScreen'
 
 const STEPS = [
-  { n: '01', text: <><b style={{ color: 'inherit', fontWeight: 600 }}>Steps, sleep, water, resting HR</b> — read on the wrist, normalised to your baseline.</> },
+  { n: '01', text: <><b style={{ color: 'inherit', fontWeight: 600 }}>Steps, sleep, water, resting HR</b>, read on the wrist and normalised to your baseline.</> },
   { n: '02', text: <>A weighted sum maps to 0–100 and picks a plain <b style={{ color: 'inherit', fontWeight: 600 }}>verdict word.</b></> },
   { n: '03', text: <>Too few signals? It flags <b style={{ color: 'inherit', fontWeight: 600 }}>low confidence</b> rather than inventing a score.</> },
 ] as const
@@ -76,8 +76,8 @@ export function VitaeHowItWorks() {
               lineHeight: 1.65,
             }}>
               The score reads four on-device signals against your own 14-day baseline.
-              On a normal day it lands a confident number. On a thin-data day — a missed
-              night, a travel morning — it{' '}
+              On a normal day it lands a confident number. On a thin-data day, like a missed
+              night or a travel morning, it{' '}
               <b style={{ color: V.color.ink, fontWeight: 600 }}>shows its uncertainty instead of guessing.</b>{' '}
               That restraint is what let it pass clinical review.
             </p>

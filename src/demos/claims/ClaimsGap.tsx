@@ -15,7 +15,7 @@ export function ClaimsGap() {
             <span style={{ color: C.color.live }}>quietly die.</span>
           </h2>
           <p style={{ fontSize: 'clamp(1rem,1.5vw,1.12rem)', color: C.color.tx, maxWidth: '60ch', marginTop: '1.1rem', lineHeight: 1.66 }}>
-            Designers ship Figma, engineers ship code, and the space between is a lossy re-implementation — intent re-derived from a picture. On a regulated claims product, the flows are dense and the edge cases <b style={{ fontWeight: 600, color: C.color.txHi }}>are</b> the work, so &ldquo;handle that case later&rdquo; means a handler stuck on a million-euro claim with nowhere to go.
+            Designers ship Figma, engineers ship code, and the space between is a lossy re-implementation, intent re-derived from a picture. On a regulated claims product, the flows are dense and the edge cases <b style={{ fontWeight: 600, color: C.color.txHi }}>are</b> the work, so &ldquo;handle that case later&rdquo; means a handler stuck on a million-euro claim with nowhere to go.
           </p>
         </div>
       </div>

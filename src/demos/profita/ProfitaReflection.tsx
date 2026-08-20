@@ -43,7 +43,6 @@ export function ProfitaReflection() {
 
         <blockquote style={{
           fontFamily:    P.font.disp,
-          fontStyle:     'italic',
           fontWeight:    400,
           fontSize:      'clamp(1.6rem,4vw,3rem)',
           lineHeight:    1.25,
@@ -52,10 +51,10 @@ export function ProfitaReflection() {
           maxWidth:      '28ch',
           margin:        '0 auto 2.5rem',
         }}>
-          Getting someone to start investing isn&rsquo;t a feature problem.{' '}
-          <em style={{ color: P.color.gold }}>
-            It&rsquo;s a fear problem.
-          </em>
+          Getting someone to start investing is,{' '}
+          <span style={{ color: P.color.gold }}>
+            at its core, a fear problem.
+          </span>
         </blockquote>
 
         <p style={{
@@ -66,8 +65,8 @@ export function ProfitaReflection() {
           lineHeight: 1.72,
         }}>
           Profita was the project where I understood that UX design and emotional design
-          are the same thing. Every decision — from the onboarding copy to the colour of
-          a number — was a decision about how someone would feel about money.
+          are the same thing. Every decision, from the onboarding copy to the colour of
+          a number, was a decision about how someone would feel about money.
         </p>
 
         <p style={{
@@ -77,9 +76,9 @@ export function ProfitaReflection() {
           margin:     '0 auto',
           lineHeight: 1.72,
         }}>
-          The award was a nice signal. But the real proof was watching users in testing
-          go from &ldquo;I could never do this&rdquo; to &ldquo;Wait, I already did it?&rdquo;
-          in four minutes.
+          The award mattered less than the number underneath it. In testing, new users
+          reached their first confirmed investment in under five minutes, with zero
+          jargon required to get there.
         </p>
       </div>
 
@@ -95,7 +94,7 @@ export function ProfitaReflection() {
         textTransform: 'uppercase',
         color:         P.color.onFaint,
       }}>
-        Profita · LH Bank · 2020 — case study
+        Profita · LH Bank · 2020 · Case study
       </footer>
     </section>
   )

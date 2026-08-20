@@ -45,7 +45,7 @@ export function TimsiPadMockup() {
       <iframe
         ref={iframeRef}
         src="/demos/tims-pos.html"
-        title="Tims POS — iPad terminal prototype"
+        title="Tims POS: iPad terminal prototype"
         tabIndex={-1}
         style={{
           width:      '100%',

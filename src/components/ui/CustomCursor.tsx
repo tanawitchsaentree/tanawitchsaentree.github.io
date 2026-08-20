@@ -67,13 +67,17 @@ export function CustomCursor() {
       posRef.current = { x: e.clientX, y: e.clientY }
     }
 
+    // Single DOM walk instead of three — closest() with a combined selector,
+    // then branch on which part matched.
     function onOver(e: MouseEvent) {
       const t = e.target as Element
-      if      (t.closest('[data-cursor="diagram"]'))                         setState('diagram')
-      else if (t.closest('[data-cursor="button"]') ||
-               t.closest('button, a, [role="button"]'))                     setState('button')
-      else if (t.closest('[data-cursor="text"]') || t.closest('h1,h2,h3')) setState('text')
-      else                                                                   setState('default')
+      const match = t.closest(
+        '[data-cursor="diagram"], [data-cursor="button"], button, a, [role="button"], [data-cursor="text"], h1, h2, h3'
+      )
+      if (!match)                                             { setState('default'); return }
+      if (match.matches('[data-cursor="diagram"]'))            setState('diagram')
+      else if (match.matches('[data-cursor="button"], button, a, [role="button"]')) setState('button')
+      else                                                      setState('text')
     }
 
     window.addEventListener('mousemove', onMove, { passive: true })

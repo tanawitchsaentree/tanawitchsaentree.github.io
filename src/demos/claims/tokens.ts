@@ -1,4 +1,4 @@
-// Claims Platform case study tokens — Onest + IBM Plex Mono
+// Claims Platform case study tokens: Onest + IBM Plex Mono
 // Scoped to the demo surface. NOT portfolio shell tokens.
 
 export const C = {
@@ -12,19 +12,18 @@ export const C = {
     txHi:     '#0e1320',
     txDim:    '#697280',
     txFaint:  '#a6adb8',
-    live:     '#0c9c68',
-    fail:     '#d92d20',
-    warn:     '#b3790c',
-    info:     '#2563eb',
+    live:     'var(--signal-ok)',
+    fail:     'var(--signal-danger)',
+    warn:     'var(--signal-warn)',
     line:     '#e3e7ec',
     line2:    '#d2d8e1',
     lineBri:  '#bac1cc',
     txOnLive: '#04150e',   // text on green fills
-    overlay:  'rgba(11,17,30,.42)', // modal scrim — warm-dark, not blue-navy
+    overlay:  'rgba(11,17,30,.42)', // modal scrim, warm-dark, not blue-navy
   },
   alpha: {
-    liveSoft: 'color-mix(in srgb,#0c9c68 10%,transparent)',
-    failSoft: 'color-mix(in srgb,#d92d20  8%,transparent)',
+    liveSoft: 'color-mix(in srgb,var(--signal-ok) 10%,transparent)',
+    failSoft: 'color-mix(in srgb,var(--signal-danger) 8%,transparent)',
     bg78:     'color-mix(in srgb,#f6f7f9 78%,transparent)',
   },
   font: {

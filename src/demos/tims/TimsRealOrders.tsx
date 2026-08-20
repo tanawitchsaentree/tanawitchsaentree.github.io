@@ -40,7 +40,7 @@ export function TimsRealOrders() {
             I didn&apos;t invent these 20 people. I served them.
           </h2>
           <p style={{ color: T.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            The &ldquo;personas&rdquo; are just regulars I remember — the 5 a.m. commuter, the hockey parent ordering for the whole bench, the guy who changes his mind every time. I ran the build past all twenty, then was honest about what it could and couldn&apos;t do.
+            The &ldquo;personas&rdquo; are just regulars I remember: the 5 a.m. commuter, the hockey parent ordering for the whole bench, the guy who changes his mind every time. I ran the build past all twenty, then was honest about what it could and couldn&apos;t do.
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export function TimsRealOrders() {
 
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginTop: '1.4rem', marginBottom: '1.2rem', lineHeight: 1.65 }}>
           Running through them surfaced the gaps that matter:{' '}
-          <strong style={{ color: T.color.ink, fontWeight: 600 }}>fractions weren&apos;t supported, blends weren&apos;t possible, customers who change their mind got lost, and &ldquo;fast&rdquo; was only a feeling — never measured.</strong>{' '}
+          <strong style={{ color: T.color.ink, fontWeight: 600 }}>fractions weren&apos;t supported, blends weren&apos;t possible, customers who change their mind got lost, and &ldquo;fast&rdquo; was only a feeling, never measured.</strong>{' '}
           The patterns in red are the ones a first build quietly fails.
         </p>
 

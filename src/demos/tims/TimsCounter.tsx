@@ -17,13 +17,13 @@ export function TimsCounter() {
         </div>
 
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
-          After two years taking orders at Tim Hortons, I realized something: the POS wasn&apos;t broken, but there were plenty of opportunities to make it better. Working through busy morning rushes gave me a front-row seat to the small inefficiencies that add up when every second matters.
+          After two years taking orders at Tim Hortons, I knew exactly how broken the POS was. A Double-Double took 12 taps to ring in, and the eight-car line outside never once cared.
         </p>
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
-          So years later, as a designer, I revisited the experience and redesigned the system from scratch. No access to internal systems — just memory, a public menu, and firsthand experience using the product every day.
+          So years later, as a designer, I revisited the experience and redesigned the system from scratch. No access to internal systems. Just memory, a public menu, and firsthand experience using the product every day.
         </p>
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
-          My challenge was simple: create a faster, clearer ordering experience for the people behind the counter. Because when the queue is growing and the drive-thru timer is running, great design isn&apos;t a nice-to-have — it&apos;s operational efficiency.
+          My challenge was simple: create a faster, clearer ordering experience for the people behind the counter. When the queue is growing and the drive-thru timer is running, good design is operational efficiency.
         </p>
       </div>
     </section>

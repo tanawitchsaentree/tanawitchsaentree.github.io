@@ -1,16 +1,16 @@
 'use client'
 
 /**
- * PromptEditor — "Governance is a UI, not a doc."
+ * PromptEditor: "Governance is a UI, not a doc."
  *
  * A prompt is a policy. Editing the classification rule visibly re-routes live
  * documents, so the configurator sees the consequence of a wording change before
  * committing. Then the governance moment is real: draft → submit → published,
  * with the publish button only live once something actually changed. No dead
- * controls — the approval flow is the point of the case.
+ * controls: the approval flow is the point of the case.
  *
  * Routed = ink (the system acted). Fallback = highlighter (a line flagged for a
- * human) — same language as the confidence gate, never a red error.
+ * human), same language as the confidence gate, never a red error.
  */
 
 import { useState } from 'react'
@@ -62,7 +62,7 @@ function DocResult({ doc, variant, prevVariant }: { doc: Doc; variant: RuleVaria
       <span className="relative z-10 font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] w-4 flex-shrink-0 text-center" aria-hidden="true">▭</span>
 
       <div className="relative z-10 min-w-0 flex-1">
-        <p className="font-mono text-[var(--type-sm)] uppercase tracking-[0.06em] text-[var(--fg)]" style={{ fontWeight: 500 }}>{doc.label}</p>
+        <p className="font-mono text-[var(--type-base)] uppercase tracking-[0.06em] text-[var(--fg)]" style={{ fontWeight: 500 }}>{doc.label}</p>
         <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] mt-0.5">{doc.type}</p>
       </div>
 
@@ -181,7 +181,7 @@ export function PromptEditor() {
               {v.label}
             </button>
           ))}
-          <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">— {variant.description}</span>
+          <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">· {variant.description}</span>
         </div>
       </div>
 
@@ -190,7 +190,7 @@ export function PromptEditor() {
         {DOCS.map(doc => <DocResult key={doc.id} doc={doc} variant={active} prevVariant={prev} />)}
       </div>
 
-      {/* governance footer — real publish flow */}
+      {/* governance footer: real publish flow */}
       <div className="flex items-center justify-between gap-4 px-5 py-3.5 border-t" style={{ borderColor: 'var(--border)' }}>
         <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] min-w-0">
           <AnimatePresence mode="wait">

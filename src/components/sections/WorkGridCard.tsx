@@ -23,15 +23,15 @@ const VitaeCover = lazy(() =>
 
 // ── Layout knobs ───────────────────────────────────────────────
 const CARD_H       = 420   // px
-const TEXT_H       = 160   // px — bottom text zone height (split variant)
+const TEXT_H       = 160   // px: bottom text zone height (split variant)
 const PREVIEW_H    = CARD_H - TEXT_H   // 260px visible preview zone
-const FADE_BLEED   = 32    // px — how far the fade overlaps the preview zone
-const OVERLAY_INSET_TOP = 24  // px — breathing room above phone in overlay variant
+const FADE_BLEED   = 32    // px: how far the fade overlaps the preview zone
+const OVERLAY_INSET_TOP = 24  // px: breathing room above phone in overlay variant
 
-// ── Cover registry — add new slugs here ───────────────────────
+// ── Cover registry, add new slugs here ───────────────────────
 // variant 'split'   → component top portion, text zone on solid bg below
 // variant 'overlay' → component full-bleed, dark gradient scrim, white text over
-// Both Invitrace slugs share the same cover intentionally — same design system, different case.
+// Both Invitrace slugs share the same cover intentionally: same design system, different case.
 type CoverDef = {
   Component:   React.ComponentType<Record<string, unknown>>
   zoom:        number
@@ -117,7 +117,7 @@ export function WorkGridCard({ project, index, locked, hideText, onOpen, onNavig
       {cover?.variant === 'overlay' ? (
         /* ── Overlay variant: full-bleed component + dark scrim + white text ── */
         <>
-          {/* Component fills entire card — centered, crops sides, inset from top */}
+          {/* Component fills entire card, centered, crops sides, inset from top */}
           {/* onClick stopPropagation: bot.tap() calls el.click() which bubbles even through pointerEvents:none */}
           <div aria-hidden="true" data-demo onClick={e => e.stopPropagation()} style={{
             position:       'absolute',
@@ -141,7 +141,7 @@ export function WorkGridCard({ project, index, locked, hideText, onOpen, onNavig
             </div>
           </div>
 
-          {/* Scrim — only covers bottom text zone, leaves phone clear */}
+          {/* Scrim: only covers bottom text zone, leaves phone clear */}
           <div aria-hidden="true" style={{
             position:      'absolute',
             inset:         0,
@@ -149,7 +149,7 @@ export function WorkGridCard({ project, index, locked, hideText, onOpen, onNavig
             pointerEvents: 'none',
           }} />
 
-          {/* White text — bottom-left */}
+          {/* White text, bottom-left */}
           {!hideText && (
           <div style={{
             position:      'absolute',

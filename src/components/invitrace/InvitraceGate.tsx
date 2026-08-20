@@ -228,7 +228,7 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                       className="text-[var(--type-xs)] text-[var(--signal-danger)] leading-[1.5]"
                     >
                       {attempts >= 3
-                        ? 'Still no luck — make sure you have the right password.'
+                        ? 'Still no luck. Make sure you have the right password.'
                         : "That password didn't work. Try again."}
                     </motion.p>
                   )}
@@ -241,7 +241,7 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                       transition={{ duration: 0.18 }}
                       className="text-[var(--type-xs)] text-[var(--fg-muted)] leading-[1.5]"
                     >
-                      Access granted — opening case study…
+                      Access granted. Opening case study…
                     </motion.p>
                   )}
                   {state !== 'error' && state !== 'success' && (

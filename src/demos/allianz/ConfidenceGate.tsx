@@ -1,17 +1,17 @@
 'use client'
 
 /**
- * ConfidenceGate — the project's thesis, made tactile.
+ * ConfidenceGate: the project's thesis, made tactile.
  *
  * "Good AI and bad AI looked identical at the point of decision."
  *
- * Gate OFF: every document reads the same — a calm column of "✓ routed" ink.
+ * Gate OFF: every document reads the same, a calm column of "✓ routed" ink.
  * The operator has no way to know which results were guesses.
  *
- * Gate ON: the documents the AI wasn't sure about get HIGHLIGHTED — literally
+ * Gate ON: the documents the AI wasn't sure about get HIGHLIGHTED, literally
  * marked with the highlighter, the way you'd flag a line on paper you need to
  * come back to. Not red, not an error: a decision waiting for a human. That
- * colour choice IS the argument — uncertainty is a state to act on, not a fault
+ * colour choice is the argument. Uncertainty is a state to act on, not a fault
  * to fix. Each flagged doc opens an inline handoff: the AI's read, the runner-up,
  * and the operator's call.
  */
@@ -59,7 +59,7 @@ function ConfBar({ score, on }: { score: number; on: boolean }) {
         className="font-mono tabular-nums text-[var(--type-xs)] w-9 text-right transition-colors duration-[var(--duration-base)] ease-[var(--ease-out-quick)]"
         style={{ color: on ? (low ? 'var(--accent-text)' : 'var(--fg)') : 'var(--fg-subtle)' }}
       >
-        {on ? `${pct}%` : '—'}
+        {on ? `${pct}%` : '–'}
       </span>
     </div>
   )
@@ -74,7 +74,7 @@ function DocRow({ doc, on, expanded, onToggle }: {
 
   return (
     <div className="relative">
-      {/* highlighter mark — sweeps in behind a flagged row */}
+      {/* highlighter mark: sweeps in behind a flagged row */}
       <AnimatePresence>
         {flagged && (
           <motion.div
@@ -107,7 +107,7 @@ function DocRow({ doc, on, expanded, onToggle }: {
 
         {/* identity */}
         <div className="min-w-0 flex-1">
-          <p className="font-mono text-[var(--type-sm)] uppercase tracking-[0.06em] text-[var(--fg)]" style={{ fontWeight: 500 }}>
+          <p className="font-mono text-[var(--type-base)] uppercase tracking-[0.06em] text-[var(--fg)]" style={{ fontWeight: 500 }}>
             {doc.label}
           </p>
           <p className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] truncate mt-0.5">
@@ -135,7 +135,7 @@ function DocRow({ doc, on, expanded, onToggle }: {
         </span>
       </div>
 
-      {/* inline handoff — the decision, not an error dialog */}
+      {/* inline handoff: the decision, not an error dialog */}
       <AnimatePresence initial={false}>
         {flagged && expanded && (
           <motion.div
@@ -227,9 +227,9 @@ export function ConfidenceGate() {
             className="px-5 py-3.5 border-t"
             style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--accent) 8%, transparent)' }}
           >
-            <p className="font-mono leading-[1.6] text-[var(--fg)]" style={{ fontSize: '1rem' }}>
-              <span style={{ color: 'var(--accent-text)', fontWeight: 500 }}>{reviewCount} of {DOCS.length}</span> were guesses, not answers
-              <span className="text-[var(--fg-muted)]"> — and looked identical to the rest until the gate marked them.</span>
+            <p className="font-mono leading-[1.6] text-[var(--fg)]" style={{ fontSize: 'var(--type-base)' }}>
+              <span style={{ color: 'var(--accent-text)', fontWeight: 500 }}>{reviewCount} of {DOCS.length}</span> were guesses the system treated as answers.
+              <span className="text-[var(--fg-muted)]"> The gate is what told them apart from the rest.</span>
             </p>
           </motion.div>
         )}

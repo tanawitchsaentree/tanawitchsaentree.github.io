@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { V } from '../tokens'
 
 export interface FingerBotRefs {
   fingerRef:  React.RefObject<HTMLDivElement | null>
@@ -90,7 +91,7 @@ export function useFingerBot(refs: FingerBotRefs) {
       const finger = fingerRef.current!
       const c = centerOf(el, screen)
       finger.style.transform = `translate(${c.x - FINGER_W}px, ${c.y - FINGER_W}px)`
-      await wait(820)
+      await wait(V.motion.fingerMoveMs)
       return c
     }
 
@@ -102,28 +103,28 @@ export function useFingerBot(refs: FingerBotRefs) {
       finger.style.setProperty('--fy', `${c.y - FINGER_W}px`)
       finger.classList.add('va-finger--press')
       rip(c)
-      await wait(165)
+      await wait(V.motion.fingerPressMs)
       finger.classList.remove('va-finger--press')
       cb?.()
-      await wait(430)
+      await wait(V.motion.fingerSettleMs)
     }
 
     async function loop() {
       while (!stopRef.current) {
         reset()
-        await wait(reduce ? 2600 : 1100)
+        await wait(reduce ? V.motion.appLoopIdleReduceMs : V.motion.appLoopIdleMs)
         if (stopRef.current) break
 
         if (reduce) {
           inputsRef.current?.classList.add('va-inputs--open')
-          await wait(3000)
+          await wait(V.motion.appReducedExpandMs)
           continue
         }
 
         fingerRef.current?.classList.add('va-finger--show')
-        await wait(500)
+        await wait(V.motion.fingerAppearMs)
 
-        // 1) tap "do" — score ticks up
+        // 1) tap "do", score ticks up
         await tap(doBtnRef.current, () => {
           moveRef.current?.classList.add('va-move--done')
           if (doBtnRef.current) { doBtnRef.current.classList.add('va-do--done'); doBtnRef.current.innerHTML = CHECK_SVG }
@@ -131,7 +132,7 @@ export function useFingerBot(refs: FingerBotRefs) {
           if (bandRef.current) (bandRef.current as HTMLElement).style.width = '88%'
           if (numRef.current) countTo(numRef.current, 88)
         })
-        await wait(700)
+        await wait(V.motion.appDoneDwellMs)
         if (stopRef.current) break
 
         // 2) expand 4 inputs
@@ -139,7 +140,7 @@ export function useFingerBot(refs: FingerBotRefs) {
           inputsRef.current?.classList.add('va-inputs--open')
           toggleRef.current?.classList.add('va-toggle--open')
         })
-        await wait(900)
+        await wait(V.motion.appExpandDwellMs)
         if (stopRef.current) break
 
         // 3) collapse + switch tab
@@ -152,11 +153,11 @@ export function useFingerBot(refs: FingerBotRefs) {
           tabsRef.current?.forEach(t => t?.classList.remove('va-tab--on'))
           tabsRef.current?.[1]?.classList.add('va-tab--on')
         })
-        await wait(900)
+        await wait(V.motion.appExpandDwellMs)
         if (stopRef.current) break
 
         fingerRef.current?.classList.remove('va-finger--show')
-        await wait(800)
+        await wait(V.motion.fingerExitMs)
       }
     }
 

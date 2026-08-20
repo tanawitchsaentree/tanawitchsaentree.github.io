@@ -4,8 +4,8 @@ import { ClaimsClient } from './ClaimsClient'
 export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
-  title: 'Designer as Builder — Claims Platform · Tanawitch Saentree',
-  description: 'I stopped shipping Figma and started shipping working software — verified against acceptance criteria. Eight moments where designing in code changed what the product could be.',
+  title: 'Designer as Builder · Claims Platform · Tanawitch Saentree',
+  description: 'A commercial claims platform where I designed by building: fifteen production features shipped straight from ticket to live app, with an audit-build-verify loop that caught what static mockups couldn\'t.',
 }
 
 export default function ClaimsPage() {

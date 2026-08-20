@@ -168,7 +168,7 @@ export function ProfitaHero() {
             <strong style={{ color:P.color.gold, fontWeight:600 }}>
               Best App for Customer Experience
             </strong>
-            {' '}— Retail Banker International Asia Trailblazer Awards, 2023.
+            {' '}at the Retail Banker International Asia Trailblazer Awards, 2023.
           </p>
 
           {/* Lead */}
@@ -180,8 +180,8 @@ export function ProfitaHero() {
             marginBottom: '3rem',
           }}>
             Profita is the mutual fund investment app I designed for Robowealth and LH Bank.
-            Starting with 0 → 1, we built a product that made first-time investing feel safe,
-            clear, and — eventually — natural.
+            Starting with 0 → 1, we built a product that made first-time investing feel safe
+            and clear. Over time, it started to feel natural.
           </p>
 
           {/* Phone trio */}
@@ -258,7 +258,7 @@ export function ProfitaHero() {
                 <p style={{
                   fontFamily: P.font.body,
                   fontWeight: 600,
-                  fontSize:   '.88rem',
+                  fontSize:   '1rem',
                   color:      P.color.on,
                   margin:     0,
                   lineHeight: 1.3,

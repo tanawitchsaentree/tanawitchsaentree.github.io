@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { Github } from 'lucide-react'
 import { FieldCanvas } from '@/components/home/FieldCanvas'
 import styles from '@/components/home/HomeDocument.module.css'
 
@@ -28,12 +29,12 @@ interface WorkRow {
 const WORK_HISTORY: WorkRow[] = [
   {
     year: '2025 →', company: 'Allianz Technology', role: 'Senior Designer',
-    outcome: 'Validation now takes hours',
+    outcome: 'Now hours, once weeks',
     slug: 'allianz-doc-classification',
   },
   {
     year: '2024–25', company: 'Invitrace Health', role: 'Lead Product Designer',
-    outcome: 'Three archetypes, one engine',
+    outcome: 'Three archetypes, one core',
     slug: 'invitrace-design-system',
   },
   {
@@ -58,9 +59,14 @@ interface KitRow {
 
 const KIT: KitRow[] = [
   {
-    kind: 'skill', name: '/human-tone', role: 'made it, free to grab',
-    outcome: 'catches AI phrasing pre-publish',
+    kind: 'skill', name: '/human-tone', role: 'catches AI-sounding phrasing',
+    outcome: 'built it myself, free to use',
     href: 'https://github.com/tanawitchsaentree/Human-tone',
+  },
+  {
+    kind: 'skill', name: '/kiln', role: 'builds design systems, skips the generic AI look',
+    outcome: 'built it myself, free to use',
+    href: 'https://github.com/tanawitchsaentree/Kiln',
   },
 ]
 
@@ -133,7 +139,10 @@ function KitRowItem({ entry }: { entry: KitRow }) {
       onBlur={() => setShow(false)}
     >
       <span className={styles.yr}>{entry.kind}</span>
-      <span className={styles.nm}>{entry.name}</span>
+      <span className={styles.nm}>
+        {entry.name}
+        <Github size={13} strokeWidth={1.75} className={styles.kitIcon} aria-hidden="true" />
+      </span>
       {' · '}
       <span className={styles.dt}>{show ? entry.outcome : entry.role}</span>
     </a>
@@ -171,16 +180,31 @@ export function HomeClient() {
 
         <div
           className="m-auto px-6"
-          style={{ width: 'min(62ch, 100%)', padding: 'clamp(3rem, 8vw, 5rem) 1.5rem' }}
+          style={{
+            width: 'min(62ch, 100%)',
+            padding: 'clamp(3rem, 8vw, 5rem) 1.5rem',
+            fontSize: '15px',
+            ['--type-xs' as string]: '0.6875rem',
+          }}
         >
           {/* ── Bio ─────────────────────────────────── */}
           <div className="mb-1">
             <span className="text-[var(--fg)]">tanawitch saentree</span>{' '}
-            <span className="text-[var(--fg-muted)]">· senior product designer at allianz technology</span>
+            <span
+              className="inline-flex items-center gap-1 rounded-[var(--radius-sm)] border border-[var(--border)] px-1.5 py-0.5 align-middle text-[10px] uppercase tracking-[0.08em] text-[var(--fg-subtle)]"
+              title="claude usage to date"
+            >
+              <span className="text-[var(--accent-text)]">14b</span> tokens burned
+            </span>
+            <br />
+            <span className="text-[var(--fg-muted)]">senior product designer at allianz technology</span>
           </div>
-          <p className="text-[var(--fg-muted)] leading-[1.9] mt-3 mb-4 max-w-[46ch]">
+          <p className="text-[var(--fg-muted)] leading-[1.9] mt-3 max-w-[46ch]">
             i design AI workflows for regulated industries like insurance, banks, and hospitals,
-            and ship the production code that proves they work. bangkok, open to relocating.
+            and ship the production code that proves they work.
+          </p>
+          <p className="text-[var(--fg-muted)] leading-[1.9] mt-2 mb-4 max-w-[46ch]">
+            bangkok, open to relocating.
           </p>
           <a href="mailto:tanawitch.saentree@gmail.com" className="text-[var(--fg-muted)]">
             tanawitch.saentree@gmail.com

@@ -23,12 +23,15 @@ const VEGS = [
 ]
 
 export function StellarHero() {
+  const rootRef  = useRef<HTMLElement>(null)
   const vegRefs  = useRef<(HTMLSpanElement | null)[]>([])
   const h1Ref    = useRef<HTMLHeadingElement>(null)
   const lightRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const root = rootRef.current
+    if (!root) return
 
     let mx = 0.5, my = 0.5, sy = 0
 
@@ -43,9 +46,11 @@ export function StellarHero() {
     window.addEventListener('mousemove', onMove,   { passive: true })
     window.addEventListener('scroll',    onScroll, { passive: true })
 
-    let raf: number
+    let raf = 0
+    let visible = false
 
     const frame = (t: number) => {
+      if (!visible) { raf = 0; return }
       const nmx = mx - 0.5   // –0.5 → 0.5
       const nmy = my - 0.5
 
@@ -87,27 +92,33 @@ export function StellarHero() {
           `perspective(1100px) rotateY(${htx * 0.006}deg) rotateX(${-hty * 0.004}deg)`
       }
 
-      // Ambient bloom — soft radial light follows cursor
+      // Ambient bloom — soft radial light follows cursor. Gradient itself is a
+      // static CSS string (set once below); only the two position vars move.
       if (lightRef.current) {
-        lightRef.current.style.background =
-          `radial-gradient(ellipse 65% 55% at ${mx * 100}% ${my * 100}%,` +
-          `rgba(154,216,78,.11) 0%, rgba(63,161,74,.04) 42%, transparent 68%)`
+        lightRef.current.style.setProperty('--bloom-x', `${mx * 100}%`)
+        lightRef.current.style.setProperty('--bloom-y', `${my * 100}%`)
       }
 
       raf = requestAnimationFrame(frame)
     }
 
-    raf = requestAnimationFrame(frame)
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      if (visible && !raf) raf = requestAnimationFrame(frame)
+    }, { threshold: 0 })
+    io.observe(root)
 
     return () => {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('scroll',    onScroll)
-      cancelAnimationFrame(raf)
+      io.disconnect()
+      if (raf) cancelAnimationFrame(raf)
     }
   }, [])
 
   return (
     <header
+      ref={rootRef}
       className="stellar-hero"
       style={{
         minHeight:    '100vh',
@@ -118,7 +129,7 @@ export function StellarHero() {
         overflow:     'hidden',
       }}
     >
-      {/* Ambient cursor bloom */}
+      {/* Ambient cursor bloom — position driven by --bloom-x/--bloom-y vars set in the RAF loop */}
       <div
         ref={lightRef}
         aria-hidden
@@ -127,7 +138,7 @@ export function StellarHero() {
           inset:       0,
           zIndex:      0,
           pointerEvents: 'none',
-          background:  'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(154,216,78,.11) 0%, transparent 68%)',
+          background:  'radial-gradient(ellipse 65% 55% at var(--bloom-x, 50%) var(--bloom-y, 50%), rgba(154,216,78,.11) 0%, rgba(63,161,74,.04) 42%, transparent 68%)',
         }}
       />
 

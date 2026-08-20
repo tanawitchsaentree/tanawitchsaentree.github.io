@@ -3,7 +3,7 @@
 import React from 'react'
 import { V } from '../tokens'
 
-/** Outer phone chassis — notch style (no dynamic island) */
+/** Outer phone chassis: notch style, no dynamic island */
 export function PhoneShell({
   children,
   offset = false,
@@ -30,7 +30,7 @@ export function PhoneShell({
         userSelect:   'none',
       }}
     >
-      {/* Notch — centred pill */}
+      {/* Notch: centred pill */}
       <div
         style={{
           position:     'absolute',

@@ -15,7 +15,7 @@ export function StellarFooter() {
           Less waste. More <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', color: S.color.lime }}>&ldquo;oh, I&apos;ll make that.&rdquo;</em>
         </h2>
         <p style={{ color: S.alpha.paper60, maxWidth: '52ch', marginTop: '1rem', lineHeight: 1.65 }}>
-          A mobile cooking companion designed end-to-end around one human truth — cook what you already have — and grounded in what real home cooks actually told me.
+          A mobile cooking companion designed end-to-end around one human truth: cook what you already have. It&apos;s grounded in what real home cooks actually told me.
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', marginTop: '3rem', paddingTop: '2rem', borderTop: `1px solid ${S.alpha.paper14}` }}>

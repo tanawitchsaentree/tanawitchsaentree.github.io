@@ -38,7 +38,7 @@ export function HeroPolaroids() {
 
     const departingIdx = order[0]
 
-    // 1. Mark the top card as arcCard — keyframe takes over immediately.
+    // 1. Mark the top card as arcCard. The keyframe takes over immediately.
     //    At the same moment, all other cards get their new slot offset via
     //    CSS transition (they shift forward by one slot).
     setArcIdx(departingIdx)
@@ -52,7 +52,7 @@ export function HeroPolaroids() {
       return next
     })
 
-    // 3. After the keyframe finishes (850ms), clear arcIdx — the card
+    // 3. After the keyframe finishes (850ms), clear arcIdx. The card
     //    is now visually sitting at its final OFFSETS[N-1] position
     //    (keyframe end matches OFFSETS[5] exactly), so removing arcCard
     //    and handing back to CSS transform is seamless.
@@ -68,7 +68,7 @@ export function HeroPolaroids() {
       onClick={shuffle}
       role="button"
       tabIndex={0}
-      aria-label="Browse photos — click to cycle"
+      aria-label="Browse photos, click to cycle"
       onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && shuffle()}
     >
       <div className={`${styles.deck}${arcIdx !== null ? ` ${styles.busy}` : ''}`}>

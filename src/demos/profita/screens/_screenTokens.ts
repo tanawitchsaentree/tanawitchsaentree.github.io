@@ -16,9 +16,14 @@ export const SC = {
   ink:     '#2b3d4f',
   grey:    '#8b94a0',
   greyL:   '#c4cad2',
-  green:   '#37a86a',
-  red:     '#df5750',
+  green:   'var(--signal-ok)',
+  red:     'var(--signal-danger)',
   pink:    '#e6c9cd',
+
+  // Portfolio allocation series — shared by the donut chart and its legend/list
+  allocDiy:        '#5cb37f',
+  allocRetirement: '#8a6fc0',
+  allocTravel:     '#d3ac57',
 
   // Fonts
   ui:   "'Plus Jakarta Sans', system-ui, sans-serif",

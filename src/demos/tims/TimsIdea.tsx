@@ -12,7 +12,7 @@ export function TimsIdea() {
         <div style={{ marginBottom: 'clamp(2.4rem,6vw,4rem)' }}>
           <span className="tims-label-section">The one decision everything hangs on</span>
           <h2 style={{ fontFamily: T.font.display, fontWeight: 600, fontSize: T.size.display, letterSpacing: '-.015em', lineHeight: 1.03, margin: '.7rem 0 1.1rem', color: T.color.ink }}>
-            Let people order anything — but make the usual nearly free.
+            Let people order anything, but make the usual nearly free.
           </h2>
         </div>
 
@@ -22,7 +22,7 @@ export function TimsIdea() {
         </blockquote>
 
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
-          I tried three layouts and judged each against the forty-second test in my head — because I knew exactly what forty seconds felt like. What won wasn&apos;t about pixels, it was about <strong style={{ color: T.color.ink, fontWeight: 600 }}>distribution</strong>. I rang the same handful of orders all day: large double-double, medium steeped tea, French Vanilla. The weird blends were real, but rare — maybe one in fifty.
+          I tried three layouts and judged each against the forty-second test in my head. I knew exactly what forty seconds felt like. What won came down to <strong style={{ color: T.color.ink, fontWeight: 600 }}>distribution</strong>. I rang the same handful of orders all day: large double-double, medium steeped tea, French Vanilla. The weird blends were real, but rare, maybe one in fifty.
         </p>
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
           So the whole thing rests on one move:{' '}
@@ -30,7 +30,7 @@ export function TimsIdea() {
         </p>
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
           Two things followed. The layout puts the{' '}
-          <strong style={{ color: T.color.ink, fontWeight: 600 }}>order ticket where it never disappears</strong> — so a customer changing their mind four times never costs me my place. And I gave myself a rule I&apos;d have killed for behind the counter:{' '}
+          <strong style={{ color: T.color.ink, fontWeight: 600 }}>order ticket where it never disappears</strong>, so a customer changing their mind four times never costs me my place. And I gave myself a rule I&apos;d have killed for behind the counter:{' '}
           <strong style={{ color: T.color.ink, fontWeight: 600 }}>fix the three things that actually hurt, then stop fiddling and ship.</strong>
         </p>
       </div>

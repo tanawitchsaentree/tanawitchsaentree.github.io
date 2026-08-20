@@ -53,7 +53,7 @@ export function ClaimsRipple() {
             <span style={{ color: C.color.live }}>the contract.</span>
           </h2>
           <p style={{ fontSize: 'clamp(1rem,1.5vw,1.12rem)', color: C.color.tx, maxWidth: '60ch', marginTop: '1.1rem', lineHeight: 1.66 }}>
-            Once it existed, everything downstream pointed at it. Backend designed API schemas from what the prototype showed. Expand a blocker on the left — watch the schema on the right reshape to match.
+            Once it existed, everything downstream pointed at it. Backend designed API schemas from what the prototype showed. Expand a blocker on the left, then watch the schema on the right reshape to match.
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export function ClaimsRipple() {
                   {line.includes('"') ? (
                     line.split(/"([^"]+)"/).map((part, j) =>
                       j % 2 === 1
-                        ? <span key={j} style={{ color: line.trim().startsWith('"domain"') || line.trim().startsWith('"count"') ? C.color.info : C.color.live }}>&quot;{part}&quot;</span>
+                        ? <span key={j} style={{ color: line.trim().startsWith('"domain"') || line.trim().startsWith('"count"') ? C.color.txHi : C.color.live }}>&quot;{part}&quot;</span>
                         : <span key={j}>{part}</span>
                     )
                   ) : line}

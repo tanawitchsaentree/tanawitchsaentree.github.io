@@ -3,7 +3,8 @@
 
 export const P = {
   color: {
-    navy900:  '#0c1c33',
+    navy900:    '#0c1c33',
+    navy900Rgb: '12,28,51',
     navy800:  '#112443',
     navy700:  '#182f52',
     navy600:  '#213a5e',
@@ -16,6 +17,14 @@ export const P = {
     on:       'rgba(255,255,255,.92)',
     onMut:    'rgba(255,255,255,.60)',
     onFaint:  'rgba(255,255,255,.38)',
+    // Light-surface variants — used by the paper-white "Behind this" modals,
+    // which read as a distinct light reading surface against the dark shell.
+    paperInk:    '#1f2733', // primary text on paper surfaces
+    paperMuted:  '#8a93a0', // meta / caption text on paper surfaces
+    paperIcon:   '#55606e', // icon-weight text on paper surfaces (e.g. close button)
+    paperSurface: '#faf9f6', // warm card/callout background on paper
+    paperLine:    '#eef0f3', // hairline border on paper
+    paperLineHi:  '#d7dbe0', // slightly stronger hairline (scrollbar thumb)
   },
   alpha: {
     gold35: 'rgba(211,172,87,.35)',
@@ -28,12 +37,15 @@ export const P = {
     white07: 'rgba(255,255,255,.07)',
     white06: 'rgba(255,255,255,.06)',
     white15: 'rgba(255,255,255,.15)',
+    white94: 'rgba(255,255,255,.94)',
     line:    'rgba(255,255,255,.10)',
     lineHi:  'rgba(255,255,255,.16)',
     dark12:      'rgba(0,0,0,.12)',
     dark30:      'rgba(0,0,0,.30)',
     dark45:      'rgba(0,0,0,.45)',
+    dark55:      'rgba(0,0,0,.55)',
     navy700_70:  'rgba(24,47,82,.70)',
+    navyScrim82: 'rgba(6,13,26,.82)', // dark modal backdrop, one step darker than navy900
   },
   font: {
     disp: "'Instrument Serif', serif",
@@ -47,3 +59,10 @@ export const P = {
     smooth: 'cubic-bezier(.65,0,.35,1)',
   },
 } as const
+
+// Alpha-tint helper — derives an rgba() string from a stored "r,g,b" tuple
+// (e.g. P.color.navy900Rgb) instead of hand-decoding hex to decimal at the
+// call site. Keeps every tint traceable back to its base token.
+export function rgbaFrom(rgbTuple: string, alpha: number) {
+  return `rgba(${rgbTuple},${alpha})`
+}
