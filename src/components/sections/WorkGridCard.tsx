@@ -7,7 +7,7 @@ import { LockGlyph, Tags } from './WorkGridAtoms'
 
 // Lazy demo covers
 const InvitraceCoverLazy = lazy(() =>
-  import('@/demos/allianz/InvitraceCover').then(m => ({ default: m.InvitraceCover }))
+  import('@/demos/invitrace/InvitraceCover').then(m => ({ default: m.InvitraceCover }))
 )
 const ProfitaCoverLazy = lazy(() =>
   import('@/demos/profita/ProfitaCover').then(m => ({ default: m.ProfitaCover }))

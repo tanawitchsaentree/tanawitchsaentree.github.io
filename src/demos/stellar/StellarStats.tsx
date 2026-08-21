@@ -10,10 +10,12 @@ const STATS = [
   { value: 60, suffix: '%', label: 'would reach for it at least once a week for inspiration' },
 ] as const
 
+// Unnamed survey-verbatim style throughout — these are illustrative composites,
+// not quotes from a named individual, so no name is attached to any of them.
 const QUOTES = [
-  { name: 'Emily', text: 'help me use leftover ingredients, reduce waste' },
-  { name: 'Liam',  text: 'make cooking feel like fun, not a chore' },
-  { name: 'Survey',text: '"suggests meals from what\'s in my fridge, an absolute lifesaver!"' },
+  'help me use leftover ingredients, reduce waste',
+  'make cooking feel like fun, not a chore',
+  "suggests meals from what's in my fridge, an absolute lifesaver!",
 ] as const
 
 function CountStat({ target, suffix }: { target: number; suffix: string }) {
@@ -90,16 +92,16 @@ export function StellarStats() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem', marginTop: '2.2rem', position: 'relative', zIndex: 1 }}>
             {QUOTES.map(q => (
               <span
-                key={q.name}
+                key={q}
                 style={{ fontSize: '1rem', background: S.alpha.paper08, border: `1px solid ${S.alpha.paper14}`, padding: '.55rem .95rem', borderRadius: 999, color: S.alpha.paper82 }}
               >
-                💬 <b style={{ color: S.color.lime, fontWeight: 600, fontFamily: S.font.display }}>{q.name}:</b> {q.text}
+                💬 &ldquo;{q}&rdquo;
               </span>
             ))}
           </div>
 
-          <p style={{ fontSize: '.8rem', color: S.alpha.paper45, marginTop: '1.1rem', lineHeight: 1.6, position: 'relative', zIndex: 1, fontFamily: S.font.mono, letterSpacing: '.02em' }}>
-            Figures above come from my own research; names are illustrative composites standing in for real respondents, not verbatim quotes from a named individual.
+          <p style={{ fontSize: '1rem', fontWeight: 500, color: S.alpha.paper68, marginTop: '1.1rem', lineHeight: 1.6, position: 'relative', zIndex: 1, fontFamily: S.font.mono, letterSpacing: '.02em' }}>
+            Figures and quotes above come from my own research; they are illustrative composites standing in for real respondents, not verbatim quotes from a named individual.
           </p>
         </div>
       </div>

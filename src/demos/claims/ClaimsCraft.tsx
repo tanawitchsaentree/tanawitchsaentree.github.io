@@ -6,7 +6,7 @@ import { C } from './tokens'
 const METRICS = [
   { n: 47,   u: '',  k: 'components',      p: 'Design-system parts only, no rogue markup.' },
   { n: 0,    u: '',  k: 'build errors',    p: 'Strict TypeScript, enforced end to end.' },
-  { n: 100,  u: '%', k: 'audited',         p: 'A scripted audit suite, run on every change.' },
+  { n: 100,  u: '%', k: 'self-audited',    p: 'My own scripted audit suite, run on every change to this build — not a third-party review.' },
   { n: 1,    u: '',  k: 'source of truth', p: 'One project doc; a new session onboards in an hour.' },
 ]
 

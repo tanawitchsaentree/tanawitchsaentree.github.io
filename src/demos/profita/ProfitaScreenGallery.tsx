@@ -15,7 +15,8 @@ const GALLERY: { label: string; caption: string; screen: ScreenName }[] = [
 export function ProfitaScreenGallery() {
   const scrollRef = useRef<HTMLDivElement>(null)
   const vw = useContainerWidth()
-  const galleryW = vw > 0 && vw < 640 ? Math.round(vw * 0.56) : 200
+  // Floor at 150px (scale 0.5) so mockup text stays legible on narrow phones.
+  const galleryW = vw > 0 && vw < 640 ? Math.max(150, Math.round(vw * 0.56)) : 200
 
   return (
     <section

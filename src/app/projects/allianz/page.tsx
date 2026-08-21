@@ -75,7 +75,7 @@ const PRINCIPLES = [
   },
   {
     name: 'Governance is a UI, not a doc',
-    body: 'If the approval workflow needs a wiki to explain it, the design failed. The draft → test → approve → publish sequence has to be self-evident from the interface. A prompt is a policy document, and it should behave like one, with states, reviewers, and a publish moment, rather than a config file someone edits and hopes for the best.',
+    body: 'If the publish workflow needs a wiki to explain it, the design failed. The draft → submit → publish sequence has to be self-evident from the interface. A prompt is a policy document, and it should behave like one, with states and a publish moment, rather than a config file someone edits and hopes for the best. What shipped auto-publishes on submit; a real reviewer gate is the obvious next layer, not something the UI should pretend already exists.',
   },
   {
     name: 'Design systems are now read by AI agents',

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { StellarPhone, useBotFinger } from './StellarPhone'
 
 /* ── data ─────────────────────────────────────────────────── */
@@ -46,29 +46,28 @@ const CSS = `
 
 .s1-tabs-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
 .s1-tabs-row::-webkit-scrollbar{display:none}
-.s1-tab-btn{font-size:13px;font-weight:600;color:var(--stellar-ink-soft-app);white-space:nowrap;cursor:pointer;padding-bottom:4px;border:0;border-bottom:2px solid transparent;background:none;font-family:'DM Sans',sans-serif;transition:color .15s}
+.s1-tab-btn{font-size:13px;font-weight:600;color:var(--stellar-ink-soft-app);white-space:nowrap;cursor:default;padding-bottom:4px;border:0;border-bottom:2px solid transparent;background:none;font-family:'DM Sans',sans-serif;transition:color .15s}
 .s1-tab-btn.on{color:var(--stellar-lime);font-weight:700;border-bottom-color:var(--stellar-lime)}
 
 .s1-thumbs-row{display:flex;gap:9px;overflow-x:auto;padding-bottom:16px;scrollbar-width:none}
 .s1-thumbs-row::-webkit-scrollbar{display:none}
-.s1-thumb{flex:0 0 64px;height:54px;border-radius:14px;display:grid;place-content:center;cursor:pointer;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);transition:transform .15s cubic-bezier(.65,0,.35,1),background .15s cubic-bezier(.65,0,.35,1),border-color .15s cubic-bezier(.65,0,.35,1)}
+.s1-thumb{flex:0 0 64px;height:54px;border-radius:14px;display:grid;place-content:center;cursor:default;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent)}
 .s1-thumb svg{width:24px;height:24px;color:var(--stellar-lime)}
 .s1-thumb.on{background:var(--stellar-lime);border-color:var(--stellar-lime)}
 .s1-thumb.on svg{color:var(--stellar-white)}
 
 .s1-section-head{display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px}
 .s1-section-head .t{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:17px;color:var(--stellar-ink-app)}
-.s1-chatbtn{display:inline-flex;align-items:center;gap:5px;background:var(--stellar-lime);color:var(--stellar-white);font-size:12px;font-weight:700;padding:6px 12px;border-radius:9px;border:0;font-family:'DM Sans',sans-serif;cursor:pointer;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 28%, transparent);transition:transform .15s}
-.s1-chatbtn:active{transform:scale(.94)}
+.s1-chatbtn{display:inline-flex;align-items:center;gap:5px;background:var(--stellar-lime);color:var(--stellar-white);font-size:12px;font-weight:700;padding:6px 12px;border-radius:9px;border:0;font-family:'DM Sans',sans-serif;cursor:default;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 28%, transparent)}
 
 .s1-prompts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:22px}
-.s1-prompt{background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:14px;padding:13px;text-align:left;cursor:pointer;transition:transform .15s cubic-bezier(.65,0,.35,1),border-color .15s cubic-bezier(.65,0,.35,1),box-shadow .15s cubic-bezier(.65,0,.35,1);position:relative;min-height:78px;display:flex;align-items:flex-start;box-shadow:0 2px 8px color-mix(in srgb, var(--stellar-ink-app) 4%, transparent);font-family:'DM Sans',sans-serif}
+.s1-prompt{background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:14px;padding:13px;text-align:left;cursor:default;position:relative;min-height:78px;display:flex;align-items:flex-start;box-shadow:0 2px 8px color-mix(in srgb, var(--stellar-ink-app) 4%, transparent);font-family:'DM Sans',sans-serif}
 .s1-prompt span{font-size:12px;color:var(--stellar-ink-app);line-height:1.35;max-width:80%;font-weight:500}
 .s1-prompt .em{position:absolute;right:11px;top:11px;font-size:13px}
 
 .s1-meal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .s1-meal-head .t{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:17px;color:var(--stellar-ink-app)}
-.s1-view-plan{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--stellar-green-deep);font-weight:600;cursor:pointer;background:none;border:0;font-family:'DM Sans',sans-serif}
+.s1-view-plan{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--stellar-green-deep);font-weight:600;cursor:default;background:none;border:0;font-family:'DM Sans',sans-serif}
 .s1-group-label{font-size:11px;color:var(--stellar-muted-app);margin:4px 0 8px;font-weight:600;font-family:'DM Sans',sans-serif}
 .s1-count-badge{display:none;font-family:'Space Mono',monospace;font-weight:400;font-size:.62rem;letter-spacing:.04em;color:var(--stellar-green-deep);background:var(--stellar-cta-bg-strong);padding:.16em .5em;border-radius:999px;margin-left:.5em}
 .s1-count-badge.show{display:inline-block}
@@ -84,13 +83,13 @@ const CSS = `
 .s1-recipes-list{opacity:0;transform:translateY(8px);transition:opacity .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1)}
 .s1-recipes-list.in{opacity:1;transform:none}
 
-.s1-addmore{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--stellar-ink-app);margin-top:6px;cursor:pointer;font-family:'DM Sans',sans-serif;background:none;border:0}
+.s1-addmore{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--stellar-ink-app);margin-top:6px;cursor:default;font-family:'DM Sans',sans-serif;background:none;border:0}
 .s1-addmore-ic{width:24px;height:24px;border-radius:7px;background:var(--stellar-lime);color:var(--stellar-white);display:grid;place-content:center;font-size:15px}
 
 /* bottom bar */
 .s1-bottom-bar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;padding:12px 18px 16px;background:linear-gradient(180deg,transparent,var(--stellar-white) 38%);z-index:10}
-.s1-filter-btn{width:42px;height:42px;display:grid;place-content:center;color:var(--stellar-ink-soft-app);cursor:pointer;background:transparent;border:0;border-radius:50%;padding:0;transition:background .15s;flex-shrink:0}
-.s1-new-recipes-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-white);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;padding:15px;border-radius:999px;border:0;cursor:pointer;box-shadow:0 8px 22px color-mix(in srgb, var(--stellar-lime) 40%, transparent);transition:transform .15s}
+.s1-filter-btn{width:42px;height:42px;display:grid;place-content:center;color:var(--stellar-ink-soft-app);cursor:default;background:transparent;border:0;border-radius:50%;padding:0;flex-shrink:0}
+.s1-new-recipes-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-white);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;padding:15px;border-radius:999px;border:0;cursor:default;box-shadow:0 8px 22px color-mix(in srgb, var(--stellar-lime) 40%, transparent)}
 
 /* chat sheet */
 .s1-chatsheet{position:absolute;left:0;right:0;bottom:0;height:86%;z-index:40;background:var(--stellar-surface-tint);border-radius:26px 26px 0 0;box-shadow:0 -20px 50px color-mix(in srgb, var(--stellar-ink-app) 20%, transparent);transform:translateY(102%);transition:transform .5s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;overflow:hidden}
@@ -132,7 +131,7 @@ const CSS = `
 .s1-sugg-body{padding:10px 12px}
 .s1-sugg-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13px;color:var(--stellar-ink-app)}
 .s1-sugg-meta{display:flex;gap:12px;font-size:10.5px;color:var(--stellar-muted-app);margin:3px 0 9px;font-family:'DM Sans',sans-serif}
-.s1-sugg-go{display:block;width:100%;text-align:center;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-white);border:0;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:pointer;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 30%, transparent)}
+.s1-sugg-go{display:block;width:100%;text-align:center;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-white);border:0;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:default;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 30%, transparent)}
 
 /* skeleton */
 .s1-sugg-skel{align-self:flex-start;width:90%;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 7%, transparent);border-radius:16px;overflow:hidden}
@@ -156,7 +155,7 @@ const CSS = `
 .s1-keyboard.show{display:block}
 .s1-kb-row{display:flex;gap:5px;margin-bottom:10px;justify-content:center}
 .s1-kb-row:last-child{margin-bottom:0}
-.s1-kb-key{height:42px;border-radius:5px;background:var(--stellar-white);box-shadow:0 1px 0 var(--stellar-kb-key-shadow);display:flex;align-items:center;justify-content:center;font-family:-apple-system,'DM Sans',sans-serif;font-size:16px;color:var(--stellar-black);font-weight:400;flex:1;max-width:30px;cursor:pointer;user-select:none;transition:background .08s}
+.s1-kb-key{height:42px;border-radius:5px;background:var(--stellar-white);box-shadow:0 1px 0 var(--stellar-kb-key-shadow);display:flex;align-items:center;justify-content:center;font-family:-apple-system,'DM Sans',sans-serif;font-size:16px;color:var(--stellar-black);font-weight:400;flex:1;max-width:30px;cursor:default;user-select:none;transition:background .08s}
 .s1-kb-key.wide{max-width:44px;font-size:13px;font-weight:500;background:var(--stellar-kb-key-alt);color:var(--stellar-black)}
 .s1-kb-key.space{max-width:none;flex:4}
 .s1-kb-key.send-key{max-width:44px;background:var(--stellar-lime);color:var(--stellar-white);font-size:12px;font-weight:700}
@@ -194,6 +193,12 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const { fingerEl, rippleEl, bot } = useBotFinger(screenRef)
+
+  /* WCAG 2.2.2 — auto-playing bot demo runs indefinitely, so it needs a
+     user-operable pause control independent of prefers-reduced-motion. */
+  const [paused, setPaused] = useState(false)
+  const pausedRef = useRef(false)
+  useEffect(() => { pausedRef.current = paused }, [paused])
 
   /* ── render recipes helper ───────────────────────────────── */
   function renderRecipes(tab: string) {
@@ -245,7 +250,18 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
     /* preview = card cover — always run full animation regardless of OS setting */
     const reduced = preview ? false : matchMedia('(prefers-reduced-motion: reduce)').matches
     let cancelled = false
-    const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
+    /* pauseable wait — polls the paused flag so the loop can be halted between steps */
+    const wait = (ms: number) => new Promise<void>(resolve => {
+      let remaining = ms
+      const tick = () => {
+        if (cancelled) { resolve(); return }
+        if (pausedRef.current) { setTimeout(tick, 150); return }
+        if (remaining <= 0) { resolve(); return }
+        const step = Math.min(100, remaining)
+        setTimeout(() => { remaining -= step; tick() }, step)
+      }
+      tick()
+    })
     const sc = screen
 
     async function typeText(el: HTMLElement, text: string, scrollEl: HTMLElement) {
@@ -436,6 +452,33 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview])
 
+  /* pause/play control — WCAG 2.2.2, independent of prefers-reduced-motion.
+     Rendered via StellarPhone's `controls` slot so it floats above the case,
+     never overlapping in-app UI. */
+  const pauseButton = !preview && (
+    <button
+      type="button"
+      onClick={() => setPaused(p => !p)}
+      aria-label={paused ? 'Play demo animation' : 'Pause demo animation'}
+      aria-pressed={paused}
+      style={{
+        position: 'absolute', top: -20, right: -6, zIndex: 96,
+        width: 34, height: 34, borderRadius: '50%',
+        display: 'grid', placeContent: 'center',
+        background: 'color-mix(in srgb, var(--stellar-black) 65%, transparent)',
+        border: '1px solid color-mix(in srgb, var(--stellar-white) 30%, transparent)',
+        color: 'var(--stellar-white)', cursor: 'pointer', padding: 0,
+        backdropFilter: 'blur(4px)',
+      }}
+    >
+      {paused ? (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+      ) : (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
+      )}
+    </button>
+  )
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
@@ -443,7 +486,7 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
       {preview && (
         <style dangerouslySetInnerHTML={{ __html: `.sbot-finger,.sbot-ripple{display:block!important}` }} />
       )}
-      <StellarPhone>
+      <StellarPhone controls={pauseButton}>
         <div ref={screenRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
           <div ref={scrollRef} className="s1-scroll">
 

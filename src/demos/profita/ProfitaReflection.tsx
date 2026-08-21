@@ -73,12 +73,31 @@ export function ProfitaReflection() {
           fontSize:   '1rem',
           color:      P.color.onMut,
           maxWidth:   '52ch',
-          margin:     '0 auto',
+          margin:     '0 auto 1.2rem',
           lineHeight: 1.72,
         }}>
           The award mattered less than the number underneath it. In testing, new users
           reached their first confirmed investment in under five minutes, with zero
           jargon required to get there.
+        </p>
+
+        <p style={{
+          fontFamily:    P.font.mono,
+          fontSize:      '.78rem',
+          letterSpacing: '.06em',
+          color:         P.color.onFaint,
+          maxWidth:      '52ch',
+          margin:        '0 auto',
+          lineHeight:    1.6,
+        }}>
+          <strong style={{ color: P.color.gold, fontWeight: 600 }}>
+            Best App for Customer Experience
+          </strong>
+          {' '}— Retail Banker International Asia Trailblazer Awards, 2023
+          <br />
+          <span style={{ opacity: .8 }}>
+            (awarded three years after launch, following several redesign iterations)
+          </span>
         </p>
       </div>
 

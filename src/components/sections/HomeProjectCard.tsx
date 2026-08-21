@@ -17,7 +17,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import type { ProjectFrontmatter } from '@/types/project'
 
 const TimsiPad     = lazy(() => import('@/demos/tims/TimsiPadMockup').then(m => ({ default: m.TimsiPadMockup })))
-const InvitraceCov = lazy(() => import('@/demos/allianz/InvitraceCover').then(m => ({ default: m.InvitraceCover })))
+const InvitraceCov = lazy(() => import('@/demos/invitrace/InvitraceCover').then(m => ({ default: m.InvitraceCover })))
 const ProfitaCov   = lazy(() => import('@/demos/profita/ProfitaCover').then(m => ({ default: m.ProfitaCover })))
 const StellarCov   = lazy(() => import('@/demos/stellar/ui/StellarScreen1').then(m => ({
   default: function StellarPreview() { return m.StellarScreen1({ preview: true }) },

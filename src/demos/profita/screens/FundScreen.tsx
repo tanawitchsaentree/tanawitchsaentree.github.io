@@ -21,8 +21,12 @@ export function FundScreen() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '6px 14px 10px' }}>
           <span style={{ color: '#fff', fontWeight: 800, fontSize: 15 }}>Fund</span>
           <div style={{ position: 'absolute', right: 14, display: 'flex', gap: 10 }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M4 7h11M4 12h7M4 17h4M17 5v11m0 0l-3-3m3 3l3-3"/></svg>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+            <button type="button" aria-label="Sort" style={{ background: 'none', border: 'none', padding: 0, display: 'flex', cursor: 'pointer' }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M4 7h11M4 12h7M4 17h4M17 5v11m0 0l-3-3m3 3l3-3"/></svg>
+            </button>
+            <button type="button" aria-label="Search" style={{ background: 'none', border: 'none', padding: 0, display: 'flex', cursor: 'pointer' }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+            </button>
           </div>
         </div>
         {/* Tabs */}
@@ -37,7 +41,8 @@ export function FundScreen() {
         <div style={{ display: 'flex', gap: 6, padding: '8px 14px 10px', overflowX: 'auto' }}>
           {['👍 Recommended', '🌱 Dividend', 'Morningstar'].map(c => (
             <div key={c} style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4, border: `1px solid ${SC.gold}`, color: SC.goldL, borderRadius: 20, padding: '4px 8px', fontSize: 9, fontWeight: 600 }}>
-              {c} <span style={{ opacity: .7 }}>✕</span>
+              {c}
+              <button type="button" aria-label={`Remove ${c} filter`} style={{ opacity: .7, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', lineHeight: 1 }}>✕</button>
             </div>
           ))}
         </div>

@@ -48,7 +48,6 @@ function HeroPhone({ screen, scale, tilt }: {
 }
 
 const STATS = [
-  { label: 'Award',  value: 'Best App for CX 2023' },
   { label: 'Role',   value: 'Senior UX / UI Designer' },
   { label: 'Client', value: 'Robowealth × LH Bank' },
   { label: 'Year',   value: '2020' },
@@ -154,23 +153,6 @@ export function ProfitaHero() {
             </em>
           </h1>
 
-          {/* Award line */}
-          <p style={{
-            fontFamily:    P.font.mono,
-            fontSize:      '.78rem',
-            letterSpacing: '.08em',
-            color:         P.color.goldSoft,
-            maxWidth:      '54ch',
-            lineHeight:    1.6,
-            marginBottom:  '1.4rem',
-          }}>
-            Recognised as{' '}
-            <strong style={{ color:P.color.gold, fontWeight:600 }}>
-              Best App for Customer Experience
-            </strong>
-            {' '}at the Retail Banker International Asia Trailblazer Awards, 2023.
-          </p>
-
           {/* Lead */}
           <p style={{
             fontSize:     '1.08rem',
@@ -233,10 +215,12 @@ export function ProfitaHero() {
             </div>
           </div>
 
-          {/* Stats grid */}
-          <div className="prof-grid-4" style={{
+          {/* Stats grid — award lives in the Reflection section, with the
+              timeline context it needs, instead of sitting here with the
+              same visual weight as Role/Client/Year. */}
+          <div className="prof-grid-3" style={{
             display:             'grid',
-            gridTemplateColumns: 'repeat(4,1fr)',
+            gridTemplateColumns: 'repeat(3,1fr)',
             gap:                 '1px',
             background:          P.alpha.line,
             border:              `1px solid ${P.alpha.line}`,

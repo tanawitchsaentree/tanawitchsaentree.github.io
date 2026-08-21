@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { StellarPhone, useBotFinger } from './StellarPhone'
 
 const CSS = `
@@ -8,7 +8,7 @@ const CSS = `
 
 /* top */
 .s3-top{flex:none;padding:18px 18px 10px;position:relative}
-.s3-close{position:absolute;top:16px;right:16px;color:var(--stellar-ink-soft-app);cursor:pointer;background:none;border:0;padding:0;display:grid;place-content:center}
+.s3-close{position:absolute;top:16px;right:16px;color:var(--stellar-ink-soft-app);cursor:default;background:none;border:0;padding:0;display:grid;place-content:center}
 .s3-top h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:19px;color:var(--stellar-ink-app);margin:0;line-height:1.15}
 .s3-top p{font-size:11.5px;color:var(--stellar-muted-app);margin:3px 0 0}
 .s3-search{display:flex;align-items:center;gap:8px;background:var(--stellar-surface-soft);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:12px;padding:10px 13px;margin-top:12px}
@@ -28,9 +28,8 @@ const CSS = `
 
 /* bottom bar */
 .s3-bottom{flex:none;display:flex;align-items:center;gap:12px;padding:12px 16px 16px;border-top:1px solid color-mix(in srgb, var(--stellar-ink-app) 6%, transparent);background:var(--stellar-white)}
-.s3-mini{width:38px;height:38px;display:grid;place-content:center;color:var(--stellar-ink-soft-app);cursor:pointer;background:transparent;border:0;border-radius:50%;flex:none}
-.s3-feed{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-white);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;padding:14px;border-radius:999px;border:0;cursor:pointer;box-shadow:0 8px 22px color-mix(in srgb, var(--stellar-lime) 40%, transparent);transition:transform .15s}
-.s3-feed:active{transform:scale(.97)}
+.s3-mini{width:38px;height:38px;display:grid;place-content:center;color:var(--stellar-ink-soft-app);cursor:default;background:transparent;border:0;border-radius:50%;flex:none}
+.s3-feed{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-white);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;padding:14px;border-radius:999px;border:0;cursor:default;box-shadow:0 8px 22px color-mix(in srgb, var(--stellar-lime) 40%, transparent)}
 .s3-feed .cnt{font-family:'Space Mono',monospace;font-size:11px;background:color-mix(in srgb, var(--stellar-white) 25%, transparent);padding:1px 7px;border-radius:999px;font-weight:400}
 
 /* cooking overlay */
@@ -45,7 +44,7 @@ const CSS = `
 .s3-result{position:absolute;inset:0;z-index:31;background:var(--stellar-white);display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:translateY(18px);transition:opacity .4s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.34,1.56,.64,1),visibility 0s linear .45s}
 .s3-result.show{opacity:1;visibility:visible;transform:none;transition:opacity .4s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.34,1.56,.64,1)}
 .s3-rhead{position:relative;height:160px;background:radial-gradient(120% 120% at 40% 30%,var(--stellar-photo-green-light),var(--stellar-photo-green-dark));display:flex;align-items:flex-end;padding:14px 16px;flex:none}
-.s3-rback{position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;background:color-mix(in srgb, var(--stellar-white) 90%, transparent);display:grid;place-content:center;color:var(--stellar-ink-app);cursor:pointer;border:0}
+.s3-rback{position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;background:color-mix(in srgb, var(--stellar-white) 90%, transparent);display:grid;place-content:center;color:var(--stellar-ink-app);cursor:default;border:0}
 .s3-rhead .rt{color:var(--stellar-white)}
 .s3-rhead .rt .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:19px;text-shadow:0 1px 8px color-mix(in srgb, var(--stellar-black) 30%, transparent)}
 .s3-rhead .rt .rm{display:flex;gap:14px;font-size:11px;margin-top:3px;opacity:.95}
@@ -94,6 +93,12 @@ export function StellarScreen3() {
 
   const { fingerEl, rippleEl, bot } = useBotFinger(screenRef)
 
+  /* WCAG 2.2.2 — auto-playing bot demo runs indefinitely, so it needs a
+     user-operable pause control independent of prefers-reduced-motion. */
+  const [paused, setPaused] = useState(false)
+  const pausedRef = useRef(false)
+  useEffect(() => { pausedRef.current = paused }, [paused])
+
   useEffect(() => {
     const screen = screenRef.current
     const bodyEl = bodyRef.current
@@ -102,7 +107,18 @@ export function StellarScreen3() {
     const bd = bodyEl
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     let cancelled = false
-    const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
+    /* pauseable wait — polls the paused flag so the loop can be halted between steps */
+    const wait = (ms: number) => new Promise<void>(resolve => {
+      let remaining = ms
+      const tick = () => {
+        if (cancelled) { resolve(); return }
+        if (pausedRef.current) { setTimeout(tick, 150); return }
+        if (remaining <= 0) { resolve(); return }
+        const step = Math.min(100, remaining)
+        setTimeout(() => { remaining -= step; tick() }, step)
+      }
+      tick()
+    })
 
     /* ---- build ingredient chips ---- */
     let selected = 0
@@ -241,10 +257,37 @@ export function StellarScreen3() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  /* pause/play control — WCAG 2.2.2, independent of prefers-reduced-motion.
+     Rendered via StellarPhone's `controls` slot so it floats above the case,
+     never overlapping in-app UI. */
+  const pauseButton = (
+    <button
+      type="button"
+      onClick={() => setPaused(p => !p)}
+      aria-label={paused ? 'Play demo animation' : 'Pause demo animation'}
+      aria-pressed={paused}
+      style={{
+        position: 'absolute', top: -20, right: -6, zIndex: 96,
+        width: 34, height: 34, borderRadius: '50%',
+        display: 'grid', placeContent: 'center',
+        background: 'color-mix(in srgb, var(--stellar-black) 65%, transparent)',
+        border: '1px solid color-mix(in srgb, var(--stellar-white) 30%, transparent)',
+        color: 'var(--stellar-white)', cursor: 'pointer', padding: 0,
+        backdropFilter: 'blur(4px)',
+      }}
+    >
+      {paused ? (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+      ) : (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
+      )}
+    </button>
+  )
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
-      <StellarPhone>
+      <StellarPhone controls={pauseButton}>
         <div ref={screenRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
           <div className="s3-app">
 

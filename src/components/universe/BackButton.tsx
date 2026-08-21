@@ -8,8 +8,11 @@ export function BackButton({ className }: { className?: string }) {
   const router = useRouter()
 
   const handleBack = useCallback(() => {
-    // router.back() restores the SPA state (view=work) from bfcache.
-    // Fallback: navigate to /?view=work so HomeClient opens WorkGrid directly.
+    // router.back() restores the SPA state (fold open) from bfcache.
+    // Fallback (no history, cross-browser nav, some mobile browsers):
+    // navigate to /?view=work — HomeClient reads that param on mount
+    // and opens the work fold directly, so this never lands on a
+    // dead-end collapsed bio.
     if (window.history.length > 1) {
       router.back()
     } else {

@@ -15,7 +15,7 @@ export function BuyAccountScreen() {
       {/* Header */}
       <div style={{ background: SC.navy, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', color: '#fff', padding: '6px 14px 10px' }}>
-          <span style={{ fontSize: 16, width: 20 }}>←</span>
+          <button type="button" aria-label="Back" style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', textAlign: 'left', lineHeight: 1 }}>←</button>
           <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, marginRight: 20 }}>Select account</span>
         </div>
       </div>

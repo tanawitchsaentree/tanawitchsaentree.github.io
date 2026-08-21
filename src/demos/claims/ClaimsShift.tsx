@@ -129,7 +129,7 @@ export function ClaimsShift() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.55rem .8rem', borderBottom: `1px solid ${C.color.line}`, fontFamily: C.font.mono, fontSize: '.7rem', color: C.color.txDim, background: C.color.inset }}>
               <span style={{ display: 'flex', gap: '.3rem' }}>{['','',''].map((_,i) => <i key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: C.color.line2, display: 'block' }} />)}</span>
               claim · NW-4471
-              <span style={{ marginLeft: 'auto', fontFamily: C.font.mono, fontSize: '.62rem', padding: '.22em .55em', borderRadius: 5, border: `1px solid color-mix(in srgb,${C.color.live} 38%,transparent)`, color: C.color.live, background: C.alpha.liveSoft }}>● live</span>
+              <span style={{ marginLeft: 'auto', fontFamily: C.font.mono, fontSize: '.62rem', padding: '.22em .55em', borderRadius: 5, border: `1px solid ${C.color.line2}`, color: C.color.txDim, background: C.color.inset }}>sample</span>
             </div>
             <div style={{ padding: '.95rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '.7rem' }}>
               <button
@@ -147,7 +147,7 @@ export function ClaimsShift() {
               >
                 {done ? '↻ reset' : running ? 'processing event…' : '▶ Final payment received'}
               </button>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
+              <div aria-live="polite" role="status" style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
                 {(['s1','s2','cl','ret'] as StepKey[]).map(key => {
                   const labels: Record<StepKey,string> = { s1: 'Section · Property loss', s2: 'Section · Liability', cl: 'Claim NW-4471', ret: 'Retention date' }
                   const isDone = steps[key].cls === 'closed' || steps[key].cls === 'auto-closed' || steps[key].cls === 'date'
@@ -165,12 +165,12 @@ export function ClaimsShift() {
                   )
                 })}
               </div>
-              <div style={{
+              <div aria-live="polite" style={{
                 fontFamily: C.font.mono, fontSize: '.72rem', color: C.color.live,
                 opacity: done ? 1 : 0, transition: `opacity .4s ${EASE}`,
                 textAlign: 'center',
               }}>
-                ✓ matches both acceptance criteria
+                {done ? '✓ matches both acceptance criteria' : ''}
               </div>
             </div>
           </div>

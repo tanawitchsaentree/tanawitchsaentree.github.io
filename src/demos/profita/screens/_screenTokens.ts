@@ -14,7 +14,8 @@ export const SC = {
   paper:   '#f3f4f6',
   white:   '#ffffff',
   ink:     '#2b3d4f',
-  grey:    '#8b94a0',
+  // Darkened from #8b94a0 (2.79:1 on paper, fails WCAG AA) to ~5.4:1 on paper / ~6:1 on white.
+  grey:    '#5c6470',
   greyL:   '#c4cad2',
   green:   'var(--signal-ok)',
   red:     'var(--signal-danger)',

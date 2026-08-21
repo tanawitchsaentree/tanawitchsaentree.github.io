@@ -61,6 +61,10 @@ export const S = {
     paper82:    'color-mix(in srgb, var(--stellar-paper) 82%, transparent)',
     paper38:    'color-mix(in srgb, var(--stellar-paper) 38%, transparent)',
     paper45:    'color-mix(in srgb, var(--stellar-paper) 45%, transparent)',
+    // AA-safe caption/disclosure tone — resolves to ~6.7:1 against --stellar-ink,
+    // clearing WCAG 2.2 SC 1.4.3's 4.5:1 minimum. Use for any disclosure/fine-print
+    // copy on the ink panel; paper45 measures ~4:1 and is too low for body-size text.
+    paper68:    'color-mix(in srgb, var(--stellar-paper) 68%, transparent)',
     ink31:      'color-mix(in srgb, var(--stellar-forest-1) 31%, transparent)',
     inkDark10:  'color-mix(in srgb, var(--stellar-ink) 10%, transparent)',
     onFill40:   'color-mix(in srgb, var(--stellar-on-fill) 40%, transparent)',

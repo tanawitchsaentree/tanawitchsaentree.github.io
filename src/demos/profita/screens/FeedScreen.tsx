@@ -38,7 +38,9 @@ export function FeedScreen() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10 }}>
           <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg,#7d6b58,#4a3e33)', flexShrink: 0, boxShadow: '0 0 0 2px rgba(255,255,255,.15)' }} />
           <span style={{ color: '#fff', fontSize: 15, fontWeight: 700, flex: 1 }}>Hi there, Tony</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeOpacity=".9"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <button type="button" aria-label="Search" style={{ background: 'none', border: 'none', padding: 0, display: 'flex', cursor: 'pointer' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeOpacity=".9"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          </button>
         </div>
         {/* Ticker */}
         <div style={{ marginTop: 10, background: 'rgba(255,255,255,.10)', borderRadius: 9, display: 'flex', alignItems: 'center', gap: 7, padding: '7px 10px', color: '#fff' }}>

@@ -42,12 +42,12 @@ nav .lk a.active::after{content:"";position:absolute;left:0;right:0;bottom:-4px;
 .lens-switch{display:flex;align-items:center;gap:.3rem;background:var(--paper-2);border:1px solid var(--line);border-radius:99px;padding:.28rem .3rem}
 .lens-switch .ls-lab{font-family:var(--m);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 .5rem 0 .55rem}
 .lens-switch button{display:inline-flex;align-items:center;gap:.4em;border:0;background:transparent;color:var(--ink-soft);font-family:var(--b);font-size:.76rem;font-weight:600;padding:.42rem .8rem;border-radius:99px;cursor:pointer;transition:all .22s var(--e);white-space:nowrap}
-.lens-switch button i{width:8px;height:8px;border-radius:99px;display:inline-block;transition:transform .22s}
+.lens-switch button i{width:8px;height:8px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;transition:transform .22s,width .22s,height .22s;font-family:var(--m);font-weight:700;color:#fff;line-height:1;font-size:0;overflow:hidden}
 .lens-switch button:hover{color:var(--ink)}
 .lens-switch button.on{background:#fff;color:var(--ink);box-shadow:0 4px 12px -6px rgba(22,15,36,.3)}
 .lens-switch button.on i{transform:scale(1.3)}
 @media(max-width:880px){.lens-switch .ls-lab{display:none}.lens-switch button{padding:.42rem .62rem;font-size:.72rem}}
-@media(max-width:560px){.lens-switch .ls-lab{display:none}.lens-switch button{padding:.4rem .55rem}.lens-switch button span.t{display:none}.lens-switch button i{width:11px;height:11px}}
+@media(max-width:560px){.lens-switch .ls-lab{display:none}.lens-switch button{padding:.4rem .55rem}.lens-switch button span.t{display:none}.lens-switch button i{width:16px;height:16px;font-size:7px}}
 /* ===== role-variant content swap ===== */
 :root{--accent:var(--violet);--accent-soft:var(--lilac-soft)}
 body[data-lens="recruiter"]{--accent:var(--lens-recruiter);--accent-soft:#fbeed6}
@@ -447,10 +447,10 @@ section{overflow:hidden}
   <span class="br"><span class="dot"></span>Invitrace DS</span>
   <div class="lens-switch" id="lensSwitch">
     <span class="ls-lab">Read as</span>
-    <button class="on" data-lens="all"><span class="t">All</span></button>
-    <button data-lens="recruiter"><i style="background:var(--lens-recruiter)"></i><span class="t">Recruiter</span></button>
-    <button data-lens="designer"><i style="background:var(--lens-designer)"></i><span class="t">Designer</span></button>
-    <button data-lens="developer"><i style="background:var(--lens-developer)"></i><span class="t">Developer</span></button>
+    <button class="on" data-lens="all" aria-label="All views"><i style="background:var(--ink-soft)">A</i><span class="t">All</span></button>
+    <button data-lens="recruiter" aria-label="Recruiter view"><i style="background:var(--lens-recruiter)">R</i><span class="t">Recruiter</span></button>
+    <button data-lens="designer" aria-label="Designer view"><i style="background:var(--lens-designer)">D</i><span class="t">Designer</span></button>
+    <button data-lens="developer" aria-label="Developer view"><i style="background:var(--lens-developer)">C</i><span class="t">Developer</span></button>
   </div>
 </nav>
 
@@ -473,7 +473,7 @@ section{overflow:hidden}
         <span class="rchip"><i></i>The bet &amp; the payoff</span>
         <p>I led the design system that turned a one-month, hand-built UI per hospital into a <b>three-day reskin</b>, onboarding clients faster while accessibility stopped regressing. The decision, the trade-offs, and the numbers are what this page is really about.</p>
         <div class="meta"><b>My role</b><span>Design systems lead</span></div>
-        <div class="meta"><b>Impact</b><span>12 wks → 3 days · ~85% component reuse</span></div>
+        <div class="meta"><b>Impact</b><span>4 wks → 3 days · ~85% component reuse</span></div>
       </div>
       <div class="role-v" data-role="designer">
         <span class="rchip"><i></i>The system &amp; the craft</span>
@@ -521,11 +521,11 @@ section{overflow:hidden}
     <div class="rv-set rv d1">
       <div class="role-v" data-role="all"><div class="cost-row">
         <div class="cost"><div class="n" data-count="3">0</div><div class="k">hospitals onboarded</div><p>One platform, three bespoke front-ends, none sharing a token.</p></div>
-        <div class="cost"><div class="n">~12<small>wks</small></div><div class="k">per hospital UI</div><p>Mostly re-drawing what already existed, slightly differently each time.</p></div>
+        <div class="cost"><div class="n">~4<small>wks</small></div><div class="k">per hospital UI</div><p>Mostly re-drawing what already existed, slightly differently each time.</p></div>
         <div class="cost"><div class="n" data-count="3">0</div><div class="k">a11y audits failed</div><p>Re-built screens kept slipping below contrast, caught late, in review.</p></div>
       </div></div>
       <div class="role-v" data-role="recruiter"><div class="cost-row">
-        <div class="cost"><div class="n">~12<small>wks</small></div><div class="k">senior time / hospital</div><p>Three months spent rebuilding what already existed elsewhere.</p></div>
+        <div class="cost"><div class="n">~4<small>wks</small></div><div class="k">senior time / hospital</div><p>A month spent rebuilding what already existed elsewhere.</p></div>
         <div class="cost"><div class="n">3+</div><div class="k">deals waiting on UI</div><p>Sales closed in a day; delivery dragged the revenue by months.</p></div>
         <div class="cost"><div class="n">3</div><div class="k">compliance audits failed</div><p>Contrast slipping below AA: a regulatory risk, not a nitpick.</p></div>
       </div></div>
@@ -558,7 +558,7 @@ section{overflow:hidden}
   <div class="wrap">
     <div class="shift rv"><div class="in2 rv-set">
       <div class="role-v" data-role="all"><blockquote>What if onboarding a hospital was a <em>theme</em>, made of colour, density, and accessibility, not a rebuild?</blockquote><div class="by">the reframe the whole system is built on</div></div>
-      <div class="role-v" data-role="recruiter"><blockquote>What if every new hospital was a <em>three-day reskin</em>, not a three-month rebuild?</blockquote><div class="by">the bet that changed how fast we could deliver</div></div>
+      <div class="role-v" data-role="recruiter"><blockquote>What if every new hospital was a <em>three-day reskin</em>, not a month-long rebuild?</blockquote><div class="by">the bet that changed how fast we could deliver</div></div>
       <div class="role-v" data-role="designer"><blockquote>The moment we separated what each hospital <em>controls</em> from what the contract <em>enforces</em>, onboarding stopped being a project.</blockquote><div class="by">design principle · Invitrace · 2025</div></div>
       <div class="role-v" data-role="developer"><blockquote>What if a new hospital was a <em>theme file</em> the build consumes, not another codebase to maintain?</blockquote><div class="by">configuration over rebuild, all the way down</div></div>
     </div></div>

@@ -27,12 +27,16 @@ const SCREEN_CSS = `
 .vt-trend{font-family:'Space Mono',monospace;font-size:9px;color:${V.color.limeDeep};margin-left:auto;display:flex;align-items:center;gap:3px}
 /* chart */
 .vt-chart{display:flex;align-items:flex-end;justify-content:space-between;gap:5px;height:120px;margin:14px 0 6px;padding-top:6px}
-.vhb{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;cursor:pointer;height:100%}
+.vhb{flex:1;position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;cursor:pointer;height:100%}
 .vhb .col{width:100%;border-radius:6px 6px 3px 3px;background:${V.color.paper2};position:relative;transition:transform .25s ${V.ease.spring}}
 .vhb .col i{position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,${V.color.lime},${V.color.limeDeep})}
 .vhb--sparse .col{background:repeating-linear-gradient(45deg,${V.color.paper2},${V.color.paper2} 3px,${V.color.white} 3px,${V.color.white} 6px);border:1px dashed ${V.color.muted}}
 .vhb--sparse .col i{display:none}
 .vhb .dl{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.04em;text-transform:uppercase;color:${V.color.muted}}
+/* static low-confidence flag: rendered from the bar's own data (b.low), not from the
+   ghost-finger bot's animation state — so it's visible whenever the screen is on-page,
+   not only during the seconds the autoplay happens to be tapping this bar. */
+.vhb-flag{position:absolute;top:-15px;left:50%;transform:translateX(-50%);display:flex;align-items:center;font-family:'Space Mono',monospace;font-size:6.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${V.color.white};background:${V.color.amber};padding:2px 5px;border-radius:99px;white-space:nowrap}
 .vhb--on .col{transform:scaleY(1.04)}
 .vhb--on .dl{color:${V.color.ink}}
 .vhb--on .col::after{content:"";position:absolute;left:50%;top:-9px;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:${V.color.ink}}
@@ -102,6 +106,11 @@ export function VitaeTrendsScreen() {
               ref={el => { barEls.current[i] = el }}
               className={`vhb${i === 2 ? ' vhb--on' : ''}${b.low ? ' vhb--sparse' : ''}`}
             >
+              {b.low && (
+                <span className="vhb-flag" aria-label="Low confidence — not enough signal data">
+                  Low conf
+                </span>
+              )}
               <span
                 className="col"
                 style={{ height: b.low ? '46%' : `${b.score}%` }}

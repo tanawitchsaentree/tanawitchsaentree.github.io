@@ -54,13 +54,15 @@ export const V = {
     paper2:     '#efeee6',
     ink:        '#16201a',
     inkSoft:    '#3a4640',
-    muted:      '#838b81',
+    // darkened from #838b81 (~3.43:1 on screenBg — failed AA) to ~5.5:1 on screenBg / ~5.2:1 on paper
+    muted:      '#62695d',
     white:      '#ffffff',
     lime:       '#aede3d',
     limeBright: '#b9e64a',
     limeSoft:   '#d6ee8f',
     limeCard:   '#c9e873',
-    limeDeep:   '#6f9a26',
+    // darkened from #6f9a26 (~3.24:1 on screenBg — failed AA) to ~5.4:1 on screenBg / ~5.1:1 on paper
+    limeDeep:   '#4f7318',
     limeText:   '#243010',
     coral:      '#ff6b4a',
     blue:       '#3aa0e8',

@@ -5,6 +5,7 @@ const LIMITS = [
   { title: 'verification is on me',           body: 'The agent builds what I describe; it can\'t tell me a hierarchy is wrong. Describe poorly and it builds poorly. That\'s a different skill, and I\'m still mapping its failure modes.' },
   { title: '"autonomous" oversells it',       body: 'What I run is a manual loop: draft prompts, paste outputs, verify, repeat. It beats the old hand-off, but it isn\'t walk-away. The trust calibration isn\'t there yet.' },
   { title: 'a prototype looks like a product',body: 'Great for demos, risky for expectations. The data is fake, routes are placeholders, persistence is throwaway. I say that out loud in every demo now.' },
+  { title: 'no test suite, no security review',body: 'What I ship has no automated test coverage and no security sign-off, because I\'m not qualified to write either and nobody on the team has done it for these features yet. An engineer has to add both before this touches real policyholder data. That\'s real rework, not a rounding error.' },
 ]
 
 export function ClaimsLimits() {
@@ -18,27 +19,33 @@ export function ClaimsLimits() {
             <span style={{ fontFamily: C.font.mono, fontSize: '.74rem', letterSpacing: '.2em', textTransform: 'uppercase', color: C.color.txDim, marginLeft: '.4rem' }}>Known limitations</span>
           </div>
           <h2 style={{ fontFamily: C.font.display, fontWeight: 700, fontSize: 'clamp(1.7rem,3.8vw,2.8rem)', lineHeight: 1.08, letterSpacing: '-.02em', color: C.color.txHi, maxWidth: '20ch', margin: 0 }}>
-            Four places this approach{' '}
+            Five places this approach{' '}
             <span style={{ color: C.color.live }}>still breaks.</span>
           </h2>
         </div>
 
         <div className="claims-animate claims-d1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: `1px solid ${C.color.line}`, borderRadius: 8, overflow: 'hidden' }}>
-          {LIMITS.map((l, i) => (
-            <div
-              key={l.title}
-              style={{
-                padding: '1.2rem 1.3rem',
-                borderBottom: i < 2 ? `1px solid ${C.color.line}` : 'none',
-                borderRight: i % 2 === 0 ? `1px solid ${C.color.line}` : 'none',
-              }}
-            >
-              <h4 style={{ fontFamily: C.font.mono, fontSize: '.8rem', color: C.color.warn, marginBottom: '.5rem', letterSpacing: '.02em' }}>
-                ! {l.title}
-              </h4>
-              <p style={{ fontSize: '1rem', color: C.color.tx, lineHeight: 1.55, margin: 0 }}>{l.body}</p>
-            </div>
-          ))}
+          {LIMITS.map((l, i) => {
+            const totalRows = Math.ceil(LIMITS.length / 2)
+            const row = Math.floor(i / 2)
+            const spansFull = i === LIMITS.length - 1 && LIMITS.length % 2 === 1
+            return (
+              <div
+                key={l.title}
+                style={{
+                  padding: '1.2rem 1.3rem',
+                  gridColumn: spansFull ? '1 / -1' : 'auto',
+                  borderBottom: row < totalRows - 1 ? `1px solid ${C.color.line}` : 'none',
+                  borderRight: !spansFull && i % 2 === 0 && i + 1 < LIMITS.length ? `1px solid ${C.color.line}` : 'none',
+                }}
+              >
+                <h4 style={{ fontFamily: C.font.mono, fontSize: '.8rem', color: C.color.warn, marginBottom: '.5rem', letterSpacing: '.02em' }}>
+                  ! {l.title}
+                </h4>
+                <p style={{ fontSize: '1rem', color: C.color.tx, lineHeight: 1.55, margin: 0 }}>{l.body}</p>
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>

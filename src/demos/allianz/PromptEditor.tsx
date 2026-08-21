@@ -5,9 +5,10 @@
  *
  * A prompt is a policy. Editing the classification rule visibly re-routes live
  * documents, so the configurator sees the consequence of a wording change before
- * committing. Then the governance moment is real: draft → submit → published,
- * with the publish button only live once something actually changed. No dead
- * controls: the approval flow is the point of the case.
+ * committing. Then the governance moment is real: draft → submit → auto-publish
+ * after a short delay, with the publish button only live once something actually
+ * changed. This demo does not model a separate reviewer step — that's a real gap
+ * called out in the case study, not something faked here for effect.
  *
  * Routed = ink (the system acted). Fallback = highlighter (a line flagged for a
  * human), same language as the confidence gate, never a red error.
@@ -221,7 +222,7 @@ export function PromptEditor() {
             opacity: pub === 'clean' || pub === 'published' ? 0.5 : 1,
           }}
         >
-          {pub === 'submitting' ? 'Submitting…' : pub === 'published' ? '✓ Published' : 'Submit for approval →'}
+          {pub === 'submitting' ? 'Submitting…' : pub === 'published' ? '✓ Published' : 'Submit to publish →'}
         </button>
       </div>
     </div>

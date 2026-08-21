@@ -110,12 +110,12 @@ export function ClaimsSkeleton() {
           </div>
 
           {/* Caption */}
-          <div style={{ fontFamily: C.font.mono, fontSize: '.72rem', color: C.color.txDim, padding: '.6rem .95rem', borderBottom: `1px solid ${C.color.line}`, background: C.color.inset }}>
+          <div aria-live="polite" style={{ fontFamily: C.font.mono, fontSize: '.72rem', color: C.color.txDim, padding: '.6rem .95rem', borderBottom: `1px solid ${C.color.line}`, background: C.color.inset }}>
             <b style={{ color: C.color.txHi }}>{capLabel}</b> · {capDetail}
           </div>
 
           {/* Body */}
-          <div style={{ padding: '1rem', minHeight: 280 }}>
+          <div aria-live="polite" style={{ padding: '1rem', minHeight: 280 }}>
             <div style={{ fontFamily: C.font.mono, fontSize: '.68rem', letterSpacing: '.1em', textTransform: 'uppercase', color: C.color.txDim, marginBottom: '.7rem' }}>
               {view === 'old' && oldConverted ? 'policies · converting (skeleton not shown)' : '1 skeleton awaiting conversion'}
             </div>
@@ -128,9 +128,9 @@ export function ClaimsSkeleton() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginTop: '1rem', flexWrap: 'wrap' }}>
                   <span
                     role="button"
-                    tabIndex={-1}
+                    tabIndex={0}
                     onClick={() => setWhyVisible(true)}
-                    onKeyDown={e => e.key === 'Enter' && setWhyVisible(true)}
+                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setWhyVisible(true) }}
                     style={{ fontFamily: C.font.mono, fontSize: '.7rem', color: C.color.fail, opacity: whyVisible ? 1 : 0, transition: `opacity .3s ${C.ease.std}`, marginRight: 'auto', cursor: 'default', maxWidth: '60%' }}
                   >
                     why disabled? you can&apos;t even see the skeleton you&apos;re matching against
@@ -196,11 +196,15 @@ export function ClaimsSkeleton() {
                 {/* Policy list */}
                 <div style={{ padding: '1rem 1.1rem' }}>
                   <div style={{ fontFamily: C.font.mono, fontSize: '.64rem', letterSpacing: '.1em', textTransform: 'uppercase', color: C.color.txDim, marginBottom: '.7rem' }}>eligible policies · pick one</div>
-                  {POLICIES.map(p => (
+                  {POLICIES.map(p => {
+                    const reasonId = `policy-reason-${p.id}`
+                    return (
                     <div
                       key={p.id}
                       role="button"
                       tabIndex={0}
+                      aria-disabled={!p.ok}
+                      aria-describedby={!p.ok && p.reason ? reasonId : undefined}
                       onClick={() => {
                         if (!p.ok) { setPeeked(peeked === p.id ? null : p.id); return }
                         setSelected(p.id); setPeeked(null)
@@ -231,7 +235,7 @@ export function ClaimsSkeleton() {
                         <div style={{ fontSize: '.74rem', color: C.color.txDim, fontFamily: C.font.mono }}>{p.meta}</div>
                       </div>
                       {!p.ok && p.reason && (
-                        <span style={{
+                        <span id={reasonId} style={{
                           fontFamily: C.font.mono, fontSize: '.62rem', color: C.color.fail,
                           background: C.alpha.failSoft,
                           border: `1px solid color-mix(in srgb,${C.color.fail} 30%,transparent)`,
@@ -243,7 +247,8 @@ export function ClaimsSkeleton() {
                         </span>
                       )}
                     </div>
-                  ))}
+                    )
+                  })}
                 </div>
 
                 {/* Modal footer */}

@@ -11,7 +11,56 @@ const VITALS = [
 export function VitaeOutcome() {
   return (
     <>
-      {/* ── WHAT MOVED ── */}
+      {/* ── REFLECTION ──
+          Sits before the shipped-impact stats (not after) so the piece closes on the
+          shipped result, per the Peak-End rule: pride in the killed feature shouldn't be
+          the last/most-dominant beat a reader carries away — the shipped numbers should. */}
+      <section style={{ padding: 'clamp(4.5rem,10vw,8rem) 0' }}>
+        <div className="vitae-wrap">
+          <div className="vitae-animate" style={{ maxWidth: 760 }}>
+            <span style={{ fontFamily: V.font.mono, fontSize: V.size.eyebrow, letterSpacing: '.26em', textTransform: 'uppercase', color: V.color.limeDeep, display: 'inline-flex', alignItems: 'center', gap: '.7em', marginBottom: '1.6rem' }}>
+              <span style={{ display: 'inline-block', width: 26, height: 1.5, background: V.color.limeDeep }} />
+              The trade-off
+            </span>
+            <blockquote
+              style={{
+                fontFamily:    V.font.serif,
+                fontWeight:    300,
+                fontStyle:     'italic',
+                fontSize:      'clamp(1.8rem,4.4vw,3.2rem)',
+                lineHeight:    1.18,
+                letterSpacing: '-.02em',
+                margin:        0,
+                maxWidth:      '22ch',
+                color:         V.color.ink,
+              }}
+            >
+              The best thing I designed never shipped. It was{' '}
+              <b style={{ fontStyle: 'normal', fontWeight: 600, color: V.color.limeDeep }}>the absolute score we killed.</b>
+            </blockquote>
+            <p
+              style={{
+                marginTop:  '2.4rem',
+                fontSize:   V.size.cap,
+                color:      V.color.muted,
+                maxWidth:   '64ch',
+                lineHeight: 1.6,
+                borderTop:  `1px solid ${V.color.line}`,
+                paddingTop: '1.4rem',
+                fontFamily: V.font.sans,
+              }}
+            >
+              Case-study presentation of a product-design project. The score logic, stakeholder tensions,
+              and decisions reflect the real work; figures (3s, review outcomes) come from the project&apos;s
+              own usability testing and review notes and are shown as directional, not published metrics.
+              Vitae is not a medical device and does not provide medical advice. That framing itself
+              drove the relative-score decision above.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHAT MOVED ── closes the section on shipped impact, not on the killed feature */}
       <section id="moved" style={{ padding: 'clamp(4.5rem,10vw,8rem) 0' }}>
         <div className="vitae-wrap">
 
@@ -75,48 +124,6 @@ export function VitaeOutcome() {
             ))}
           </div>
 
-        </div>
-      </section>
-
-      {/* ── REFLECTION ── */}
-      <section style={{ padding: 'clamp(4.5rem,10vw,8rem) 0' }}>
-        <div className="vitae-wrap">
-          <div className="vitae-animate" style={{ maxWidth: 760 }}>
-            <blockquote
-              style={{
-                fontFamily:    V.font.serif,
-                fontWeight:    300,
-                fontStyle:     'italic',
-                fontSize:      'clamp(1.8rem,4.4vw,3.2rem)',
-                lineHeight:    1.18,
-                letterSpacing: '-.02em',
-                margin:        0,
-                maxWidth:      '22ch',
-                color:         V.color.ink,
-              }}
-            >
-              The best thing I designed never shipped. It was{' '}
-              <b style={{ fontStyle: 'normal', fontWeight: 600, color: V.color.limeDeep }}>the absolute score we killed.</b>
-            </blockquote>
-            <p
-              style={{
-                marginTop:  '2.4rem',
-                fontSize:   V.size.cap,
-                color:      V.color.muted,
-                maxWidth:   '64ch',
-                lineHeight: 1.6,
-                borderTop:  `1px solid ${V.color.line}`,
-                paddingTop: '1.4rem',
-                fontFamily: V.font.sans,
-              }}
-            >
-              Case-study presentation of a product-design project. The score logic, stakeholder tensions,
-              and decisions reflect the real work; figures (3s, review outcomes) come from the project&apos;s
-              own usability testing and review notes and are shown as directional, not published metrics.
-              Vitae is not a medical device and does not provide medical advice. That framing itself
-              drove the relative-score decision above.
-            </p>
-          </div>
         </div>
       </section>
 

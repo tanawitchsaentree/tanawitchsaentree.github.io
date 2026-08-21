@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { StellarPhone, useBotFinger } from './StellarPhone'
 
 const CSS = `
@@ -8,7 +8,7 @@ const CSS = `
 
 /* header */
 .s2-head{display:flex;align-items:center;gap:10px;padding:16px 16px 12px;border-bottom:1px solid color-mix(in srgb, var(--stellar-ink-app) 6%, transparent);flex-shrink:0}
-.s2-back{color:var(--stellar-ink-soft-app);display:grid;place-content:center;cursor:pointer;background:none;border:0;padding:0}
+.s2-back{color:var(--stellar-ink-soft-app);display:grid;place-content:center;cursor:default;background:none;border:0;padding:0}
 .s2-chef-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));display:grid;place-content:center;color:var(--stellar-white);flex-shrink:0;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 35%, transparent)}
 .s2-who{flex:1;min-width:0}
 .s2-who .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;color:var(--stellar-ink-app);line-height:1.1}
@@ -52,16 +52,14 @@ const CSS = `
 .s2-sugg-body{padding:11px 13px}
 .s2-sugg-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13.5px;color:var(--stellar-ink-app)}
 .s2-sugg-meta{display:flex;gap:12px;font-size:10.5px;color:var(--stellar-muted-app);margin:4px 0 10px;font-family:'DM Sans',sans-serif}
-.s2-sugg-go{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--stellar-lime);color:var(--stellar-white);border:0;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:transform .15s}
-.s2-sugg-go:active{transform:scale(.97)}
+.s2-sugg-go{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--stellar-lime);color:var(--stellar-white);border:0;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:default}
 
 /* input bar */
 .s2-input{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:10px 14px 16px;border-top:1px solid color-mix(in srgb, var(--stellar-ink-app) 6%, transparent);background:var(--stellar-white)}
-.s2-input-icon{color:var(--stellar-ink-soft-app);display:grid;place-content:center;cursor:pointer;background:transparent;border:0;padding:0;border-radius:50%;width:32px;height:32px;transition:background .15s cubic-bezier(.65,0,.35,1),color .15s cubic-bezier(.65,0,.35,1);flex-shrink:0}
+.s2-input-icon{color:var(--stellar-ink-soft-app);display:grid;place-content:center;cursor:default;background:transparent;border:0;padding:0;border-radius:50%;width:32px;height:32px;flex-shrink:0}
 .s2-input-icon.cam{color:var(--stellar-lime)}
 .s2-input-field{flex:1;display:flex;align-items:center;background:var(--stellar-surface-tint);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:999px;padding:9px 14px;font-size:12.5px;color:var(--stellar-muted-app);font-family:'DM Sans',sans-serif}
-.s2-send-btn{width:34px;height:34px;border-radius:50%;background:var(--stellar-lime);color:var(--stellar-white);display:grid;place-content:center;flex-shrink:0;border:0;cursor:pointer;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 35%, transparent);transition:transform .15s}
-.s2-send-btn:active{transform:scale(.9)}
+.s2-send-btn{width:34px;height:34px;border-radius:50%;background:var(--stellar-lime);color:var(--stellar-white);display:grid;place-content:center;flex-shrink:0;border:0;cursor:default;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 35%, transparent)}
 
 /* bot */
 .sbot-finger{opacity:0;transition:opacity 300ms}
@@ -80,13 +78,30 @@ export function StellarScreen2() {
 
   const { fingerEl, rippleEl, bot } = useBotFinger(screenRef)
 
+  /* WCAG 2.2.2 — auto-playing bot demo runs indefinitely, so it needs a
+     user-operable pause control independent of prefers-reduced-motion. */
+  const [paused, setPaused] = useState(false)
+  const pausedRef = useRef(false)
+  useEffect(() => { pausedRef.current = paused }, [paused])
+
   useEffect(() => {
     const screen = screenRef.current
     if (!screen) return
     const sc = screen
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     let cancelled = false
-    const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
+    /* pauseable wait — polls the paused flag so the loop can be halted between steps */
+    const wait = (ms: number) => new Promise<void>(resolve => {
+      let remaining = ms
+      const tick = () => {
+        if (cancelled) { resolve(); return }
+        if (pausedRef.current) { setTimeout(tick, 150); return }
+        if (remaining <= 0) { resolve(); return }
+        const step = Math.min(100, remaining)
+        setTimeout(() => { remaining -= step; tick() }, step)
+      }
+      tick()
+    })
 
     function scrollDown() {
       if (msgsRef.current) msgsRef.current.scrollTop = msgsRef.current.scrollHeight
@@ -232,10 +247,37 @@ export function StellarScreen2() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  /* pause/play control — WCAG 2.2.2, independent of prefers-reduced-motion.
+     Rendered via StellarPhone's `controls` slot so it floats above the case,
+     never overlapping in-app UI. */
+  const pauseButton = (
+    <button
+      type="button"
+      onClick={() => setPaused(p => !p)}
+      aria-label={paused ? 'Play demo animation' : 'Pause demo animation'}
+      aria-pressed={paused}
+      style={{
+        position: 'absolute', top: -20, right: -6, zIndex: 96,
+        width: 34, height: 34, borderRadius: '50%',
+        display: 'grid', placeContent: 'center',
+        background: 'color-mix(in srgb, var(--stellar-black) 65%, transparent)',
+        border: '1px solid color-mix(in srgb, var(--stellar-white) 30%, transparent)',
+        color: 'var(--stellar-white)', cursor: 'pointer', padding: 0,
+        backdropFilter: 'blur(4px)',
+      }}
+    >
+      {paused ? (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+      ) : (
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
+      )}
+    </button>
+  )
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
-      <StellarPhone>
+      <StellarPhone controls={pauseButton}>
         <div ref={screenRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
           <div className="s2-app">
 

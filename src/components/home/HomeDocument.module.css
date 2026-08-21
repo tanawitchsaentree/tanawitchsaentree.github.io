@@ -46,8 +46,11 @@
   display: block;
   width: 100%;
   text-align: left;
-  padding: 2px 4px;
-  margin: -2px -4px;
+  /* Padding-box grows the tap target to ~24-44px (WCAG 2.5.8) while the
+     matched negative margin cancels the added flow height, so the
+     dense document rhythm between rows stays visually unchanged. */
+  padding: 10px 4px;
+  margin: -10px -4px;
   color: var(--fg-muted);
   text-decoration: none;
   white-space: nowrap;
@@ -75,6 +78,53 @@
 .row:hover .dt,
 .row.show .dt {
   color: var(--accent-text);
+}
+
+/* ── contact row — social links + token-usage note ─────────────── */
+.socialLink {
+  display: inline-block;
+  /* Same pad-the-hit-area trick as .row, sized for a single-word link. */
+  padding: 10px 6px;
+  margin: -10px -6px;
+  color: var(--fg-muted);
+  text-decoration: none;
+  transition: color 0.25s var(--ease-out-quick);
+}
+.socialLink:hover,
+.socialLink:focus-visible {
+  color: var(--accent-text);
+}
+
+.socialMeta {
+  color: var(--fg-subtle);
+}
+
+/* ── kit — footnote tier, intentionally smaller and plainer than
+   the work-history .row grammar above ─────────────────────────── */
+.kitNote {
+  color: var(--fg-subtle);
+  font-size: var(--type-xs);
+  line-height: 1.6;
+  max-width: 46ch;
+  margin-bottom: var(--space-2);
+}
+
+.kitRow {
+  display: block;
+  padding: 9px 4px;
+  margin: -9px -4px;
+  color: var(--fg-subtle);
+  font-size: var(--type-xs);
+  text-decoration: none;
+  transition: color 0.25s var(--ease-out-quick);
+}
+.kitRow:hover,
+.kitRow:focus-visible {
+  color: var(--accent-text);
+}
+
+.kitName {
+  color: var(--fg-muted);
 }
 
 .toggle {

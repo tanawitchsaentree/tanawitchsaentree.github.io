@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Github } from 'lucide-react'
 import { FieldCanvas } from '@/components/home/FieldCanvas'
 import styles from '@/components/home/HomeDocument.module.css'
@@ -88,7 +88,9 @@ function WorkRowItem({ entry, onNavigate }: { entry: WorkRow; onNavigate: (href:
       <span className={styles.yr}>{entry.year}</span>
       <span className={styles.nm}>{entry.company.toLowerCase()}</span>
       {' · '}
-      <span className={styles.dt}>{show ? entry.outcome : entry.role}</span>
+      {/* Result shows by default — it's the selling point and mobile has
+          no hover. Role is the secondary reveal on hover/focus. */}
+      <span className={styles.dt}>{show ? entry.role : entry.outcome}</span>
     </>
   )
 
@@ -124,27 +126,23 @@ function WorkRowItem({ entry, onNavigate }: { entry: WorkRow; onNavigate: (href:
   )
 }
 
-function KitRowItem({ entry }: { entry: KitRow }) {
-  const [show, setShow] = useState(false)
-
+// Footnote-style row — deliberately NOT the .row/.yr/.nm/.dt grammar used
+// by real work history, so it doesn't read as the same category of content
+// (Gestalt similarity) as an actual case study.
+function KitFootnoteItem({ entry }: { entry: KitRow }) {
   return (
     <a
       href={entry.href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`${styles.row} ${styles.ln} ${show ? styles.show : ''}`}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
-      onFocus={() => setShow(true)}
-      onBlur={() => setShow(false)}
+      className={`${styles.kitRow} ${styles.ln}`}
     >
-      <span className={styles.yr}>{entry.kind}</span>
-      <span className={styles.nm}>
+      <span className={styles.kitName}>
         {entry.name}
-        <Github size={13} strokeWidth={1.75} className={styles.kitIcon} aria-hidden="true" />
+        <Github size={12} strokeWidth={1.75} className={styles.kitIcon} aria-hidden="true" />
       </span>
-      {' · '}
-      <span className={styles.dt}>{show ? entry.outcome : entry.role}</span>
+      {' — '}
+      {entry.role}
     </a>
   )
 }
@@ -153,7 +151,12 @@ function KitRowItem({ entry }: { entry: KitRow }) {
 
 export function HomeClient() {
   const router = useRouter()
-  const [open, setOpen]         = useState(false)
+  const searchParams = useSearchParams()
+  // BackButton falls back to /?view=work when bfcache can't restore the
+  // fold state (cross-browser back-nav, new tab, some mobile browsers).
+  // Open the fold immediately on mount in that case so back-nav never
+  // lands on a dead-end collapsed bio.
+  const [open, setOpen]         = useState(() => searchParams.get('view') === 'work')
   const [fieldOn, setFieldOn]   = useState(false)
   const [pulseSignal, setPulseSignal] = useState(0)
 
@@ -189,13 +192,7 @@ export function HomeClient() {
         >
           {/* ── Bio ─────────────────────────────────── */}
           <div className="mb-1">
-            <span className="text-[var(--fg)]">tanawitch saentree</span>{' '}
-            <span
-              className="inline-flex items-center gap-1 rounded-[var(--radius-sm)] border border-[var(--border)] px-1.5 py-0.5 align-middle text-[10px] uppercase tracking-[0.08em] text-[var(--fg-subtle)]"
-              title="claude usage to date"
-            >
-              <span className="text-[var(--accent-text)]">14b</span> tokens burned
-            </span>
+            <span className="text-[var(--fg)]">tanawitch saentree</span>
             <br />
             <span className="text-[var(--fg-muted)]">senior product designer at allianz technology</span>
           </div>
@@ -218,21 +215,24 @@ export function HomeClient() {
                 <WorkRowItem key={entry.company} entry={entry} onNavigate={navigateWithTransition} />
               ))}
 
-              <div className={`${styles.h} ${styles.ln} mt-6 mb-1`}>kit</div>
-              {KIT.map(entry => (
-                <KitRowItem key={entry.name} entry={entry} />
-              ))}
-
               <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>contact</div>
               <div className={styles.ln}>
-                {SOCIAL.map((link, i) => (
+                {SOCIAL.map(link => (
                   <span key={link.label}>
-                    <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" className="text-[var(--fg-muted)]">
+                    <a
+                      href={link.href}
+                      target={link.href.startsWith('http') ? '_blank' : undefined}
+                      rel="noopener noreferrer"
+                      className={styles.socialLink}
+                    >
                       {link.label}
                     </a>
-                    {i < SOCIAL.length - 1 && ' · '}
+                    {' · '}
                   </span>
                 ))}
+                <span className={styles.socialMeta} title="claude usage to date">
+                  <span className="text-[var(--accent-text)]">14b</span> tokens burned
+                </span>
               </div>
               <button
                 type="button"
@@ -245,6 +245,18 @@ export function HomeClient() {
                 {' · '}
                 <span className={styles.dt}>the 4,500 points behind this page</span>
               </button>
+
+              {/* ── kit ── footnote-tier, kept below the sale-closing
+                  content on purpose. Smaller type, plain link row —
+                  deliberately not the case-study row component. */}
+              <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>kit</div>
+              <p className={`${styles.kitNote} ${styles.ln}`}>
+                a couple of tools I built and open-sourced on the side. same habit as the
+                work above — find the annoying part of a workflow, fix it, ship it.
+              </p>
+              {KIT.map(entry => (
+                <KitFootnoteItem key={entry.name} entry={entry} />
+              ))}
             </div>
           </div>
 
@@ -255,7 +267,7 @@ export function HomeClient() {
             aria-controls="home-fold"
             onClick={() => setOpen(o => !o)}
           >
-            ( {open ? 'less' : 'more'} )<span className={styles.cursor}>_</span>
+            ( {open ? 'close' : 'see the work'} )<span className={styles.cursor}>_</span>
           </button>
         </div>
       </main>

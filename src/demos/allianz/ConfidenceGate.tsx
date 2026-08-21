@@ -179,10 +179,10 @@ export function ConfidenceGate() {
           className="flex items-center gap-2.5 cursor-pointer rounded-full pl-3 pr-1.5 py-1.5 border transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)] focus-visible:outline-2 focus-visible:outline-[var(--fg)] focus-visible:outline-offset-2"
           style={{ background: on ? 'var(--fg)' : 'var(--bg)', borderColor: 'var(--fg)' }}
           aria-pressed={on}
-          aria-label="Toggle confidence gate"
+          aria-label="Show or hide confidence score"
         >
           <span className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em]" style={{ color: on ? 'var(--bg)' : 'var(--fg)', fontWeight: 500, whiteSpace: 'nowrap' }}>
-            Confidence gate {on ? 'on' : 'off'}
+            Show confidence score
           </span>
           <span className="w-7 h-3.5 rounded-full relative flex-shrink-0" style={{ background: on ? 'var(--bg)' : 'var(--border)' }} aria-hidden="true">
             <motion.span
@@ -202,6 +202,24 @@ export function ConfidenceGate() {
         <span className="w-[116px] flex-shrink-0 font-mono text-[var(--type-xs)] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">Confidence</span>
         <span className="w-[120px] flex-shrink-0 text-right font-mono text-[var(--type-xs)] uppercase tracking-[0.14em] text-[var(--fg-subtle)]">Routing</span>
       </div>
+
+      {/* threshold caption: this is a heuristic, not a calibrated per-type number */}
+      <AnimatePresence>
+        {on && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-b"
+            style={{ borderColor: 'var(--border)' }}
+          >
+            <p className="px-3 py-2 font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">
+              Threshold <span style={{ color: 'var(--fg-muted)' }}>0.80</span> — a starting point, not yet calibrated per document type.
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* rows */}
       <div className="px-2 divide-y divide-[var(--border)]">

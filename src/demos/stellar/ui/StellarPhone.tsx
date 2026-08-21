@@ -2,13 +2,18 @@
 
 import React, { useRef, useEffect, useCallback } from 'react'
 
-/** Shared iPhone-style shell. Children = screen content. */
+/** Shared iPhone-style shell. Children = screen content.
+ *  `controls`, if given, renders as a sibling of the screen — outside the
+ *  screen's overflow:hidden bounds — so overlay chrome (e.g. a pause button
+ *  for an auto-playing demo) never collides with in-app UI. */
 export function StellarPhone({
   children,
+  controls,
   width = 340,
   height = 720,
 }: {
   children: React.ReactNode
+  controls?: React.ReactNode
   width?: number
   height?: number
 }) {
@@ -56,6 +61,7 @@ export function StellarPhone({
       >
         {children}
       </div>
+      {controls}
     </div>
   )
 }

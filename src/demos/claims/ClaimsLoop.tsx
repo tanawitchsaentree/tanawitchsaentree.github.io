@@ -42,7 +42,7 @@ export function ClaimsLoop() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.62rem .9rem', borderBottom: `1px solid ${C.color.line}`, background: C.color.inset, fontFamily: C.font.mono, fontSize: '.74rem', color: C.color.txDim }}>
             <span style={{ display: 'flex', gap: '.34rem' }}>{['','',''].map((_,i) => <i key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: C.color.line2, display: 'block' }} />)}</span>
             <span style={{ color: C.color.txHi }}>verify.log</span>
-            <span style={{ marginLeft: 'auto', fontFamily: C.font.mono, fontSize: '.62rem', padding: '.22em .55em', borderRadius: 5, border: `1px solid ${C.color.line2}`, color: mode === 'verify' ? C.color.fail : C.color.txDim }}>
+            <span aria-live="polite" style={{ marginLeft: 'auto', fontFamily: C.font.mono, fontSize: '.62rem', padding: '.22em .55em', borderRadius: 5, border: `1px solid ${C.color.line2}`, color: mode === 'verify' ? C.color.fail : C.color.txDim }}>
               {mode === 'verify' ? '1 false done' : '3/3 reported'}
             </span>
           </div>
@@ -68,7 +68,7 @@ export function ClaimsLoop() {
           </div>
 
           {/* Terminal */}
-          <div style={{ fontFamily: C.font.mono, fontSize: '.82rem', lineHeight: 1.9, padding: '1rem 1.1rem', background: C.color.inset, minHeight: 236 }}>
+          <div aria-live="polite" role="status" style={{ fontFamily: C.font.mono, fontSize: '.82rem', lineHeight: 1.9, padding: '1rem 1.1rem', background: C.color.inset, minHeight: 236 }}>
             <div style={{ color: C.color.txHi }}>
               <span style={{ color: C.color.live, marginRight: '.55em' }}>$</span>
               {mode === 'build' ? 'agent build claim-edit --report' : 'agent verify claim-edit --evidence'}

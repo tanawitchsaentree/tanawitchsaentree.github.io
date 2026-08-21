@@ -73,7 +73,7 @@ function SceneProblem() {
     { action: 'Order a Double-Double', old: '12 taps',       fix: '1 tap'   },
     { action: 'Add oat milk',          old: '4 sub-menus',   fix: '1 chip'  },
     { action: 'Fix a wrong item',      old: 'void + restart',fix: 'qty −'   },
-    { action: 'Custom blend coffee',   old: 'not possible',  fix: '3 taps'  },
+    { action: 'Custom blend coffee',   old: 'not possible',  fix: '4 taps'  },
   ]
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '.85rem', flex: 1 }}>
@@ -106,8 +106,8 @@ function SceneProblem() {
 function SceneBuild() {
   const stats = [
     { num: '1',   unit: 'tap',     desc: 'add any food item'          },
-    { num: '3',   unit: 'taps',    desc: 'fully customise a coffee'   },
-    { num: '0',   unit: 'lookups', desc: 'all items visible at once'  },
+    { num: '4',   unit: 'taps',    desc: 'fully customise a coffee'   },
+    { num: '0',   unit: 'lookups', desc: 'frequently-ordered items always visible' },
     { num: '40s', unit: 'target',  desc: 'order · customise · pay'    },
   ]
   return (

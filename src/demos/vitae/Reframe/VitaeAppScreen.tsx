@@ -26,11 +26,13 @@ const APP_CSS = `
 .va-score{display:flex;align-items:baseline;justify-content:center;gap:4px;line-height:1}
 .va-num{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:62px;letter-spacing:-.03em;color:${V.color.ink}}
 .va-den{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:16px;color:${V.color.muted}}
-.va-verdict{font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:${V.color.limeDeep};margin:1px 0 12px}
+/* .va-conf sits directly under the score number so the "relative, not absolute" framing
+   reads together with the number itself, not as a footnote after the verdict/scale. */
+.va-conf{font-family:'Space Mono',monospace;font-weight:500;font-size:10.5px;letter-spacing:.03em;color:${V.color.muted};margin:5px 0 10px}
+.va-verdict{font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:${V.color.limeDeep};margin:0 0 12px}
 .va-band{height:7px;border-radius:99px;background:${V.color.paper2};overflow:hidden;margin:0 6px}
 .va-band-fill{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,${V.color.lime},${V.color.limeDeep});transition:width .9s cubic-bezier(.16,1,.3,1)}
 .va-scale{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:7.5px;color:${V.color.muted};margin:5px 6px 0}
-.va-conf{font-family:'Space Mono',monospace;font-size:8.5px;color:${V.color.muted};margin-top:9px}
 .va-move{display:flex;align-items:center;gap:9px;background:${V.color.paper2};border-radius:13px;padding:10px 11px;margin-bottom:9px;transition:background .3s}
 .va-move--done{background:${V.alpha.lime28}}
 .va-mic{width:26px;height:26px;border-radius:8px;background:${V.color.lime};display:grid;place-content:center;flex:none;color:${V.color.ink}}
@@ -100,6 +102,7 @@ export function VitaeAppScreen() {
             <span className="va-num" ref={numRef}>82</span>
             <span className="va-den">/100</span>
           </div>
+          <div className="va-conf">vs your 14-day baseline</div>
           <div className="va-verdict" ref={verdictRef}>On track today</div>
           <div className="va-band">
             <i className="va-band-fill" ref={bandRef as React.RefObject<HTMLElement>} style={{ width: '82%' }} />
@@ -107,7 +110,6 @@ export function VitaeAppScreen() {
           <div className="va-scale">
             <span>Rest</span><span>Balanced</span><span>Pushing</span>
           </div>
-          <div className="va-conf">vs your 14-day baseline</div>
         </div>
 
         {/* one move */}

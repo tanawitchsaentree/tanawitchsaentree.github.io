@@ -9,6 +9,17 @@ export function ClaimsHero() {
       position: 'relative',
     }}>
       <div className="claims-wrap">
+        <div className="claims-animate" style={{
+          display: 'flex', alignItems: 'flex-start', gap: '.6rem',
+          fontFamily: C.font.mono, fontSize: '.7rem', lineHeight: 1.55,
+          color: C.color.txDim, border: `1px solid ${C.color.line2}`,
+          borderRadius: 7, padding: '.6rem .85rem', marginBottom: '1.7rem', maxWidth: '48rem',
+          background: C.color.inset,
+        }}>
+          <span style={{ color: C.color.warn, flexShrink: 0 }}>!</span>
+          <span>This is a recreation, not the live production system: mock data, placeholder routes, an interactive demonstration built to show the work. The role, the platform, and the loop below are real.</span>
+        </div>
+
         <div className="claims-animate" style={{ fontFamily: C.font.mono, fontSize: '.78rem', color: C.color.txDim, display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '2rem' }}>
           <span style={{ color: C.color.live }}>#</span>
           an engineering record of one design role, read top to bottom
@@ -55,7 +66,7 @@ export function ClaimsHero() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.62rem .9rem', borderBottom: `1px solid ${C.color.line}`, background: C.color.inset, fontFamily: C.font.mono, fontSize: '.74rem', color: C.color.txDim }}>
               <span style={{ display: 'flex', gap: '.34rem' }}>{['','',''].map((_,i) => <i key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: C.color.line2, display: 'block' }} />)}</span>
               <span style={{ color: C.color.txHi }}>edit-claim.component</span>
-              <span style={{ marginLeft: 'auto', fontFamily: C.font.mono, fontSize: '.62rem', padding: '.22em .55em', borderRadius: 5, border: `1px solid color-mix(in srgb,${C.color.live} 38%,transparent)`, color: C.color.live, background: C.alpha.liveSoft }}>● live</span>
+              <span style={{ marginLeft: 'auto', fontFamily: C.font.mono, fontSize: '.62rem', padding: '.22em .55em', borderRadius: 5, border: `1px solid ${C.color.line2}`, color: C.color.txDim, background: C.color.inset }}>sample</span>
             </div>
             <div style={{ padding: '.95rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.7rem' }}>

@@ -151,12 +151,13 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                     'text-[var(--fg)] mb-2'
                   )}
                 >
-                  Protected work
+                  Curated preview
                 </h1>
                 <p className="text-[var(--type-base)] text-[var(--fg-muted)] leading-[1.65] mb-8">
-                  This case study contains real clinical system architecture
-                  from a live healthcare product.
-                  Enter the password to continue.
+                  This case study is gated to keep it out of search and scraping,
+                  not because the content is secret — hospital names and figures
+                  are stand-ins, as the page itself discloses. Enter the password
+                  to continue.
                 </p>
               </motion.div>
 
@@ -255,7 +256,7 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                     >
                       {attempts > 0
                         ? `${attempts} failed attempt${attempts > 1 ? 's' : ''}. Password needed to proceed.`
-                        : 'Password provided to recruiter or interviewer.'}
+                        : "Password provided to recruiter or interviewer — don't have one? See below."}
                     </motion.p>
                   )}
                 </AnimatePresence>
@@ -264,8 +265,35 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
+                transition={{ delay: 0.45, duration: 0.4 }}
                 className="mt-8 pt-6 border-t border-[var(--border)]"
+              >
+                <p className="text-[var(--type-xs)] text-[var(--fg-subtle)] leading-[1.6] mb-3">
+                  Don&rsquo;t have a password? Email me at{' '}
+                  <a
+                    href="mailto:tanawitch.saentree@gmail.com"
+                    className="text-[var(--fg-muted)] underline underline-offset-2 hover:text-[var(--fg)] transition-colors duration-[var(--duration-fast)]"
+                  >
+                    tanawitch.saentree@gmail.com
+                  </a>{' '}
+                  or message me on{' '}
+                  <a
+                    href="https://linkedin.com/in/tanawitchsaentree"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[var(--fg-muted)] underline underline-offset-2 hover:text-[var(--fg)] transition-colors duration-[var(--duration-fast)]"
+                  >
+                    LinkedIn
+                  </a>{' '}
+                  and I&rsquo;ll send it over.
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+                className="mt-4"
               >
                 <Link
                   href="/"

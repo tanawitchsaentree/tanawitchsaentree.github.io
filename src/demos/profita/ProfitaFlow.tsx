@@ -83,7 +83,9 @@ export function ProfitaFlow() {
   const dotRefs     = useRef<(HTMLDivElement | null)[]>([])
   const prevStep    = useRef(-1)
   const vw = useContainerWidth()
-  const flowTargetW = vw > 0 && vw < 768 ? Math.round(vw * 0.42) : 220
+  // Floor at 150px (scale 0.5) so mockup text — including the tap-to-reveal
+  // glossary in the Compare step — stays legible on narrow phones.
+  const flowTargetW = vw > 0 && vw < 768 ? Math.max(150, Math.round(vw * 0.42)) : 220
 
   useEffect(() => {
     const STEPS = FLOW.length
