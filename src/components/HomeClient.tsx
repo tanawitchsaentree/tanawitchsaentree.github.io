@@ -141,8 +141,7 @@ function KitFootnoteItem({ entry }: { entry: KitRow }) {
         {entry.name}
         <Github size={12} strokeWidth={1.75} className={styles.kitIcon} aria-hidden="true" />
       </span>
-      {' — '}
-      {entry.role}
+      <span>{'— '}{entry.role}</span>
     </a>
   )
 }
@@ -240,20 +239,17 @@ export function HomeClient() {
                 onClick={() => { setFieldOn(true); setPulseSignal(s => s + 1) }}
                 aria-label="Reveal the point field behind this page"
               >
-                <span className={styles.yr}>live</span>
+                <span className={styles.liveTag}>live</span>{' '}
                 <span className={styles.nm}>field</span>
                 {' · '}
                 <span className={styles.dt}>the 4,500 points behind this page</span>
               </button>
 
               {/* ── kit ── footnote-tier, kept below the sale-closing
-                  content on purpose. Smaller type, plain link row —
-                  deliberately not the case-study row component. */}
+                  content on purpose. Plain link row, same body type
+                  size as the rest — deliberately not the case-study
+                  row component, but never shrunk under the size floor. */}
               <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>kit</div>
-              <p className={`${styles.kitNote} ${styles.ln}`}>
-                a couple of tools I built and open-sourced on the side. same habit as the
-                work above — find the annoying part of a workflow, fix it, ship it.
-              </p>
               {KIT.map(entry => (
                 <KitFootnoteItem key={entry.name} entry={entry} />
               ))}

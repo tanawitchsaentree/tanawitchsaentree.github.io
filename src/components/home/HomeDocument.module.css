@@ -66,6 +66,9 @@
 .row .nm {
   color: var(--fg);
 }
+.liveTag {
+  color: var(--fg-subtle);
+}
 .kitIcon {
   display: inline-block;
   margin-left: 0.4em;
@@ -99,23 +102,17 @@
   color: var(--fg-subtle);
 }
 
-/* ── kit — footnote tier, intentionally smaller and plainer than
-   the work-history .row grammar above ─────────────────────────── */
-.kitNote {
-  color: var(--fg-subtle);
-  font-size: var(--type-xs);
-  line-height: 1.6;
-  max-width: 46ch;
-  margin-bottom: var(--space-2);
-}
-
+/* ── kit — footnote tier, plainer than the work-history .row
+   grammar above, differentiated by color only (never size — body
+   text can't drop below 16px per the design system's size floor) */
 .kitRow {
-  display: block;
+  display: flex;
+  align-items: baseline;
   padding: 9px 4px;
   margin: -9px -4px;
   color: var(--fg-subtle);
-  font-size: var(--type-xs);
   text-decoration: none;
+  white-space: nowrap;
   transition: color 0.25s var(--ease-out-quick);
 }
 .kitRow:hover,
@@ -123,8 +120,36 @@
   color: var(--accent-text);
 }
 
+/* Fixed-width first column — same grammar as .row .yr above, so every
+   description starts at the same x regardless of name length. The
+   description column truncates instead of wrapping, same as .row .dt,
+   so a long line never spills to a second row. */
 .kitName {
+  display: inline-block;
+  width: 12ch;
+  flex-shrink: 0;
   color: var(--fg-muted);
+}
+.kitRow > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 620px) {
+  .kitRow {
+    flex-direction: column;
+    align-items: flex-start;
+    white-space: normal;
+  }
+  .kitName {
+    width: auto;
+  }
+  .kitRow > span:last-child {
+    overflow: visible;
+    text-overflow: initial;
+    padding-left: 0;
+  }
 }
 
 .toggle {
