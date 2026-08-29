@@ -10,6 +10,14 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-6);
+}
+
+/* Separate node from .dialog (not an ancestor) so the click-to-close
+   handler lives on a genuinely non-interactive, aria-hidden element —
+   satisfies jsx-a11y without stopPropagation gymnastics on the dialog. */
+.backdrop {
+  position: absolute;
+  inset: 0;
   background: color-mix(in srgb, var(--color-black) 65%, transparent);
 }
 

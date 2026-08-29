@@ -93,14 +93,14 @@ export function ManabiModal({ open, onClose }: ManabiModalProps) {
   if (!open) return null
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div className={styles.overlay}>
+      <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
       <div
         ref={dialogRef}
         className={styles.dialog}
         role="dialog"
         aria-modal="true"
         aria-labelledby="manabi-modal-title"
-        onClick={e => e.stopPropagation()}
       >
         <div className={styles.coverWrap}>
           <Image
