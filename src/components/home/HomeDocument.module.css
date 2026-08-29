@@ -152,6 +152,100 @@
   }
 }
 
+/* ── banner — floating corner card, independent of the fold/scroll
+   position. Image top half / copy bottom half — amber stays confined
+   to the CTA, per the one-mark rule. */
+.banner {
+  position: fixed;
+  right: var(--space-6);
+  bottom: var(--space-6);
+  z-index: 40;
+  width: min(350px, calc(100vw - var(--space-6)));
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-modal);
+  animation: bannerIn 0.6s var(--ease-out-standard) 0.5s both;
+}
+
+@keyframes bannerIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Card is a single click target that opens the Manabi modal — the dismiss
+   (×) button lives outside it as a sibling so its click doesn't bubble in. */
+.bannerTrigger {
+  display: block;
+  width: 100%;
+  text-align: left;
+  transition: filter 0.2s var(--ease-out-quick);
+}
+.bannerTrigger:hover,
+.bannerTrigger:focus-visible {
+  filter: brightness(1.08);
+}
+
+.bannerImageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 7 / 3;
+  background: var(--bg-muted);
+}
+
+.bannerImage {
+  object-fit: cover;
+}
+
+.bannerClose {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  z-index: 1;
+  /* Padding-box grows the ~12px icon to a ~24px tap target (WCAG 2.5.8),
+     matching the .row hit-area technique above. */
+  padding: var(--space-2);
+  border-radius: 999px;
+  color: var(--fg-on-cover);
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: background-color 0.2s var(--ease-out-quick);
+}
+.bannerClose:hover,
+.bannerClose:focus-visible {
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+}
+
+.bannerBody {
+  /* Scaled down from the page's 15px base to fit this compact card —
+     the banner sits outside the homepage's scoped font context anyway,
+     so this is set explicitly. Hierarchy comes from weight/color only. */
+  font-size: 13px;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+
+.bannerTitle {
+  color: var(--fg);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.bannerText {
+  color: var(--fg-muted);
+  line-height: 1.4;
+}
+
+@media (max-width: 620px) {
+  .banner {
+    right: var(--space-4);
+    bottom: var(--space-4);
+  }
+}
+
 .toggle {
   color: var(--fg-subtle);
   transition: color 0.3s var(--ease-out-quick);
@@ -184,7 +278,12 @@
   .ln,
   .row .dt,
   .toggle,
-  .cursor {
+  .cursor,
+  .banner,
+  .bannerTrigger,
+  .bannerClose,
+  .socialLink,
+  .kitRow {
     transition-duration: 0.01ms !important;
     animation: none !important;
   }

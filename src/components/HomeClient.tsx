@@ -2,8 +2,10 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Github } from 'lucide-react'
+import Image from 'next/image'
+import { Github, X } from 'lucide-react'
 import { FieldCanvas } from '@/components/home/FieldCanvas'
+import { ManabiModal } from '@/components/home/ManabiModal'
 import styles from '@/components/home/HomeDocument.module.css'
 
 // ── routing / data ────────────────────────────────────────────
@@ -158,6 +160,8 @@ export function HomeClient() {
   const [open, setOpen]         = useState(() => searchParams.get('view') === 'work')
   const [fieldOn, setFieldOn]   = useState(false)
   const [pulseSignal, setPulseSignal] = useState(0)
+  const [bannerOpen, setBannerOpen] = useState(true)
+  const [manabiOpen, setManabiOpen] = useState(false)
 
   const navigateWithTransition = useCallback((href: string) => {
     if (typeof document !== 'undefined' && 'startViewTransition' in document) {
@@ -214,6 +218,15 @@ export function HomeClient() {
                 <WorkRowItem key={entry.company} entry={entry} onNavigate={navigateWithTransition} />
               ))}
 
+              {/* ── kit ── footnote-tier, kept right after work on purpose.
+                  Plain link row, same body type size as the rest —
+                  deliberately not the case-study row component, but
+                  never shrunk under the size floor. */}
+              <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>kit</div>
+              {KIT.map(entry => (
+                <KitFootnoteItem key={entry.name} entry={entry} />
+              ))}
+
               <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>contact</div>
               <div className={styles.ln}>
                 {SOCIAL.map(link => (
@@ -244,15 +257,6 @@ export function HomeClient() {
                 {' · '}
                 <span className={styles.dt}>the 4,500 points behind this page</span>
               </button>
-
-              {/* ── kit ── footnote-tier, kept below the sale-closing
-                  content on purpose. Plain link row, same body type
-                  size as the rest — deliberately not the case-study
-                  row component, but never shrunk under the size floor. */}
-              <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>kit</div>
-              {KIT.map(entry => (
-                <KitFootnoteItem key={entry.name} entry={entry} />
-              ))}
             </div>
           </div>
 
@@ -267,6 +271,45 @@ export function HomeClient() {
           </button>
         </div>
       </main>
+
+      {bannerOpen && !manabiOpen && (
+        <div className={styles.banner}>
+          <button
+            type="button"
+            className={styles.bannerTrigger}
+            onClick={() => setManabiOpen(true)}
+            aria-haspopup="dialog"
+            aria-label="Open manabi project details"
+          >
+            <div className={styles.bannerImageWrap}>
+              <Image
+                src="/images/manabi-cover.png"
+                alt=""
+                fill
+                sizes="350px"
+                className={styles.bannerImage}
+              />
+            </div>
+            <div className={styles.bannerBody}>
+              <div className={styles.bannerTitle}>manabi — the whole thing, one person</div>
+              <p className={styles.bannerText}>
+                a school-finder platform for thai parents. next.js, supabase, live
+                with real users. design, code, and ship, one person.
+              </p>
+            </div>
+          </button>
+          <button
+            type="button"
+            className={styles.bannerClose}
+            onClick={e => { e.stopPropagation(); setBannerOpen(false) }}
+            aria-label="Dismiss announcement"
+          >
+            <X size={12} />
+          </button>
+        </div>
+      )}
+
+      <ManabiModal open={manabiOpen} onClose={() => setManabiOpen(false)} />
     </>
   )
 }
