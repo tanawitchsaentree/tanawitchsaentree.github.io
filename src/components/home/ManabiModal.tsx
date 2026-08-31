@@ -10,23 +10,23 @@ const MANABI_URL = 'https://manabischools.com'
 const SECTIONS = [
   {
     label: 'the stack',
-    body: "Next.js on the front, Supabase behind it. The framework isn't the interesting part. What's underneath is. There are 46 database migrations, 44 custom Postgres functions, geospatial search running on PostGIS, and full-text search tuned for Thai. The real logic lives in the database instead of being bolted on after the fact.",
+    body: "Next.js on the front, Supabase behind it. What matters more is what's underneath. There are 46 database migrations, 44 custom Postgres functions, geospatial search running on PostGIS, and full-text search tuned for Thai. The real logic lives in the database instead of being bolted on after the fact.",
   },
   {
     label: 'why that matters',
-    body: 'Most people who say they built the whole thing mean they designed the screens and someone else wired the backend. I mean I wrote the schema myself. When a parent searches "schools within 5km that teach in English," that query does real geospatial work. It isn\'t filtering a list in the browser. That line is where a demo becomes a product.',
+    body: 'Most people who say they built the whole thing mean they designed the screens and someone else wired the backend. I wrote the schema myself. When a parent searches "schools within 5km that teach in English," that\'s real geospatial work, not a filtered list running in the browser. That\'s the line where a demo turns into a product.',
   },
   {
     label: 'how long',
-    body: "Eighteen days. 502 commits. Git doesn't let me round up. Two of those days ran past 60 commits each, which is faster than I'd recommend to anyone, myself included. I share the number because it answers the question people actually have. Can this person ship, or just talk about shipping.",
+    body: "Eighteen days. 502 commits. Git doesn't let me round up. Two of those days ran past 60 commits each, which is faster than I'd recommend to anyone, myself included. I share the number for a reason. It answers the one question people want answered, which is whether I can ship.",
   },
   {
     label: 'where ai fits',
-    body: 'Claude Code wrote most of the migrations and SQL functions. I made the calls that matter. What belongs in the database versus the interface. How the two-sided flow splits between parents and schools. Where the geo-search complexity was worth paying for. The AI moved fast. The judgment was mine. That split is the whole point of how I work now.',
+    body: 'Claude Code wrote most of the migrations and SQL functions. I made the calls that matter, like what belongs in the database versus the interface, how the two-sided flow splits between parents and schools, and where the geo-search complexity was worth paying for. The AI moved fast, but the judgment on where things belonged was mine, and that split is how I work now.',
   },
   {
     label: "what's not done",
-    body: "Almost no tests yet. It's live but early, not a product with a user base I can brag about. A couple of the late-night security migrations deserve a proper review before I'd trust them at scale. I'd rather you hear that from me than find it yourself. If you want to see how the parts actually fit, the code is open.",
+    body: "Almost no tests yet. It's live, but it's early, without a user base worth bragging about yet. A couple of the late-night security migrations deserve a proper review before I'd trust them at scale. I'd rather you hear that from me than find it yourself. If you want to see how the parts fit together, the code is open.",
   },
 ]
 
