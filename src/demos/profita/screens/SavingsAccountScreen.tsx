@@ -4,7 +4,7 @@ import { SC, SW, SH } from './_screenTokens'
 
 const ACCOUNTS = [
   {
-    name: 'Irregular savings', active: false, no: '221-1-12345-1',
+    name: 'Savings account', active: false, no: '221-1-12345-1',
     meta: 'Interest 1.10% · Accumulated interest 100.00',
     avail: '40,000.00', current: '50,000.00',
     txs: [

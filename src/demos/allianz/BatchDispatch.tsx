@@ -120,7 +120,7 @@ export function BatchDispatch() {
             <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] text-[var(--accent-text)]" style={{ fontWeight: 500 }}>
               Fallback queue
             </p>
-            <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">SLA · {FALLBACK_SLA}</span>
+            <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)]">Example target · {FALLBACK_SLA}</span>
           </div>
 
           <AnimatePresence>
@@ -163,7 +163,7 @@ export function BatchDispatch() {
             <div className="px-5 py-3.5 border-t" style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--accent) 8%, transparent)' }}>
               <p className="font-mono leading-[1.6] text-[var(--fg)]" style={{ fontSize: 'var(--type-base)' }}>
                 <span style={{ color: 'var(--accent-text)', fontWeight: 500 }}>~{addedMinutes} min</span> of review time this batch adds to the fallback queue, at an illustrative ~{AVG_REVIEW_MINUTES} min per document held.
-                <span className="text-[var(--fg-muted)]"> That cost is invisible until the queue is measured on its own SLA, separate from the standard flow.</span>
+                <span className="text-[var(--fg-muted)]"> This estimate illustrates the workload; it is not a measured handling time.</span>
               </p>
             </div>
           </motion.div>

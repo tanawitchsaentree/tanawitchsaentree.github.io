@@ -51,9 +51,9 @@ export function ProfitaReflection() {
           maxWidth:      '28ch',
           margin:        '0 auto 2.5rem',
         }}>
-          Getting someone to start investing is,{' '}
+          Helping first-time investors{' '}
           <span style={{ color: P.color.gold }}>
-            at its core, a fear problem.
+            understand the next step.
           </span>
         </blockquote>
 
@@ -64,9 +64,9 @@ export function ProfitaReflection() {
           margin:     '0 auto 1.2rem',
           lineHeight: 1.72,
         }}>
-          Profita was the project where I understood that UX design and emotional design
-          are the same thing. Every decision, from the onboarding copy to the colour of
-          a number, was a decision about how someone would feel about money.
+          Research shifted our attention from adding features to explaining choices.
+          I worked on language, information hierarchy and the purchase flow so people
+          could make decisions with less financial jargon.
         </p>
 
         <p style={{
@@ -76,9 +76,8 @@ export function ProfitaReflection() {
           margin:     '0 auto 1.2rem',
           lineHeight: 1.72,
         }}>
-          The award mattered less than the number underneath it. In testing, new users
-          reached their first confirmed investment in under five minutes, with zero
-          jargon required to get there.
+          My work on Profita was in 2020. The app continued to evolve before
+          LH Bank received recognition for customer experience in 2023.
         </p>
 
         <p style={{
@@ -91,12 +90,14 @@ export function ProfitaReflection() {
           lineHeight:    1.6,
         }}>
           <strong style={{ color: P.color.gold, fontWeight: 600 }}>
-            Best App for Customer Experience
+            Highly Commended · Best App for Customer Experience
           </strong>
           {' '}— Retail Banker International Asia Trailblazer Awards, 2023
           <br />
           <span style={{ opacity: .8 }}>
-            (awarded three years after launch, following several redesign iterations)
+            <a href="https://hs.meed.com/hubfs/MEED/MEED%20Events/Special%20Reports/RBI/RBI%20Special%20Report%202023-1.pdf#page=14" target="_blank" rel="noopener noreferrer">
+              Award organizer’s report, page 14 (PDF)
+            </a>
           </span>
         </p>
       </div>

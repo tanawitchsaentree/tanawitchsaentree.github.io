@@ -4,30 +4,12 @@ import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { X, ArrowUpRight } from 'lucide-react'
 import styles from './ManabiModal.module.css'
-
-const MANABI_URL = 'https://manabischools.com'
+import { PERSONAL_PROJECT } from '@/data/home'
 
 const SECTIONS = [
-  {
-    label: 'the stack',
-    body: "Next.js on the front, Supabase behind it. What matters more is what's underneath. There are 46 database migrations, 44 custom Postgres functions, geospatial search running on PostGIS, and full-text search tuned for Thai. The real logic lives in the database instead of being bolted on after the fact.",
-  },
-  {
-    label: 'why that matters',
-    body: 'Most people who say they built the whole thing mean they designed the screens and someone else wired the backend. I wrote the schema myself. When a parent searches "schools within 5km that teach in English," that\'s real geospatial work, not a filtered list running in the browser. That\'s the line where a demo turns into a product.',
-  },
-  {
-    label: 'how long',
-    body: "Eighteen days. 502 commits. Git doesn't let me round up. Two of those days ran past 60 commits each, which is faster than I'd recommend to anyone, myself included. I share the number for a reason. It answers the one question people want answered, which is whether I can ship.",
-  },
-  {
-    label: 'where ai fits',
-    body: 'Claude Code wrote most of the migrations and SQL functions. I made the calls that matter, like what belongs in the database versus the interface, how the two-sided flow splits between parents and schools, and where the geo-search complexity was worth paying for. The AI moved fast, but the judgment on where things belonged was mine, and that split is how I work now.',
-  },
-  {
-    label: "what's not done",
-    body: "Almost no tests yet. It's live, but it's early, without a user base worth bragging about yet. A couple of the late-night security migrations deserve a proper review before I'd trust them at scale. I'd rather you hear that from me than find it yourself. If you want to see how the parts fit together, the code is open.",
-  },
+  { label: 'From a long list to a few real options', body: 'I connected search, school profiles, comparison, and saved schools around the same family preferences. Parents can narrow their options and return to a shortlist without piecing the information together again.' },
+  { label: 'Reasons parents can check', body: 'I replaced a weighted match percentage with the priorities a school meets. That decision shaped both the interface and the matching logic: show why an option appears, and leave room for what the data cannot answer.' },
+  { label: 'The work behind the school pages', body: 'I also built school and admin tools for updating records and reviewing changes, with access rules that keep unpublished records out of public search. Keeping the information usable became part of the product work.' },
 ]
 
 interface ManabiModalProps {
@@ -46,13 +28,16 @@ export function ManabiModal({ open, onClose }: ManabiModalProps) {
     previouslyFocused.current = document.activeElement as HTMLElement
     const dialog = dialogRef.current
     const tabbable = dialog?.querySelectorAll<HTMLElement>(
-      'a[href]:not([tabindex="-1"]), button:not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])'
+      'a[href]:not([tabindex="-1"]), button:not([tabindex="-1"]), summary, [tabindex]:not([tabindex="-1"])'
     )
     // Title is the initial focus target (SR should announce it, not
     // "Close, button") but it's not part of the real tab order and isn't
     // guaranteed to sit first in DOM order — so it's handled as a special
     // case below rather than folded into the first/last boundary directly.
     titleRef.current?.focus()
+    const main = document.getElementById('main-content')
+    const wasInert = main?.hasAttribute('inert') ?? false
+    main?.setAttribute('inert', '')
 
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -86,6 +71,7 @@ export function ManabiModal({ open, onClose }: ManabiModalProps) {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = previousOverflow
+      if (!wasInert) main?.removeAttribute('inert')
       previouslyFocused.current?.focus()
     }
   }, [open, onClose])
@@ -114,43 +100,50 @@ export function ManabiModal({ open, onClose }: ManabiModalProps) {
             type="button"
             className={styles.close}
             onClick={onClose}
-            aria-label="Close"
+            aria-label="Close Manabi project notes"
           >
             <X size={16} />
           </button>
         </div>
 
         <div className={styles.content} data-lenis-prevent>
+          <p className={styles.eyebrow}>Manabi · Independent side project</p>
           <h2
             ref={titleRef}
             id="manabi-modal-title"
             className={styles.title}
             tabIndex={-1}
           >
-            manabi, the whole thing, one person
+            Helping parents make a school shortlist
           </h2>
           <p className={styles.intro}>
-            Thai parents choosing a school work blind. Reviews are thin, data
-            is scattered, and the stakes are their kid. Manabi puts search,
-            comparison and a saved shortlist in one place. I designed it and
-            then I built it end to end. No team, no dev handoff, no page
-            builder. Design all the way down to the database.
+            Manabi is my independent school-search project for families in Thailand. I took it from product direction and design through development and launch, including the school data and tools behind the public site.
           </p>
 
           {SECTIONS.map(section => (
             <section key={section.label} className={styles.section}>
-              <div className={styles.sectionLabel}>{section.label}</div>
+              <h3 className={styles.sectionLabel}>{section.label}</h3>
               <p className={styles.sectionBody}>{section.body}</p>
             </section>
           ))}
 
+          <details className={styles.technical}>
+            <summary>How I built it</summary>
+            <p className={styles.sectionBody}>
+              Built with Next.js, TypeScript and Supabase/PostgreSQL, with AI assistance
+              during development. Search uses PostGIS for location and PostgreSQL
+              full-text search for Thai queries.
+            </p>
+          </details>
+
           <a
-            href={MANABI_URL}
+            href={PERSONAL_PROJECT.url}
             className={styles.link}
             target="_blank"
             rel="noopener noreferrer"
           >
-            see it live <ArrowUpRight size={14} />
+            Visit Manabi <ArrowUpRight size={14} aria-hidden="true" />
+            <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </div>
       </div>

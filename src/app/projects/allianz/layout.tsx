@@ -4,7 +4,7 @@ import { AllianzGate } from '@/components/universe/AllianzGate'
 export const metadata: Metadata = {
   title: 'AI Document Intelligence Suite · Allianz Technology',
   description:
-    'Three interconnected systems for configuration, confidence display, and graceful fallback. Solo designer, 6 months.',
+    'Designing document classification, human review and fallback workflows at Allianz Technology. Senior Designer and sole designer on the project.',
 }
 
 export default function AllianzLayout({ children }: { children: React.ReactNode }) {

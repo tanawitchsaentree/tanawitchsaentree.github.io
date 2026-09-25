@@ -28,10 +28,10 @@ export function ClaimsSkeleton() {
     resetOld(); resetNew()
   }
 
-  const capLabel = view === 'old' ? 'old flow' : 'redesigned'
+  const capLabel = view === 'old' ? 'Earlier flow' : 'Revised flow'
   const capDetail = view === 'old'
     ? oldConverted
-      ? 'the view jumped to Policies, the skeleton is gone, and Continue is dead with no reason.'
+      ? 'the view jumped to Policies, the skeleton is gone, and Continue is disabled without an explanation.'
       : "open the skeleton's menu and convert. watch what happens."
     : 'convert keeps the skeleton in view and shows why each policy fits or doesn\'t.'
 
@@ -70,7 +70,7 @@ export function ClaimsSkeleton() {
   )
 
   return (
-    <section id="skeleton" style={{ padding: 'clamp(3.4rem,8vw,6.5rem) 0', borderTop: `1px solid ${C.color.line}` }}>
+    <section id="skeleton" style={{ padding: '32px 0', borderTop: `1px solid ${C.color.line}` }}>
       <div className="claims-wrap">
         <div className="claims-animate" style={{ marginBottom: '2.4rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', marginBottom: '1.1rem' }}>
@@ -79,11 +79,10 @@ export function ClaimsSkeleton() {
             <span style={{ fontFamily: C.font.mono, fontSize: '.74rem', letterSpacing: '.2em', textTransform: 'uppercase', color: C.color.txDim, marginLeft: '.4rem' }}>Skeleton conversion</span>
           </div>
           <h2 style={{ fontFamily: C.font.display, fontWeight: 700, fontSize: 'clamp(1.7rem,3.8vw,2.8rem)', lineHeight: 1.08, letterSpacing: '-.02em', color: C.color.txHi, maxWidth: '20ch', margin: 0 }}>
-            The wrong primitive{' '}
-            <span style={{ color: C.color.live }}>hid the decision.</span>
+            Choosing a policy for a claim
           </h2>
           <p style={{ fontSize: 'clamp(1rem,1.5vw,1.12rem)', color: C.color.tx, maxWidth: '60ch', marginTop: '1.1rem', lineHeight: 1.66 }}>
-            A handler converts a <b style={{ fontWeight: 600, color: C.color.txHi }}>skeleton</b> claim into a real one. The old flow switched tabs and the skeleton vanished; the confirm button sat disabled with no reason. Toggle the two flows:
+            A handler converts a <b style={{ fontWeight: 600, color: C.color.txHi }}>skeleton</b> claim into a real one. I kept the draft in view and added reasons for unavailable policies. Compare the two flows:
           </p>
         </div>
 
@@ -104,7 +103,7 @@ export function ClaimsSkeleton() {
                 }}
               >
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: v === 'old' ? C.color.fail : C.color.live, display: 'block' }} />
-                {v === 'old' ? 'old flow · what shipped' : 'redesigned'}
+                {v === 'old' ? 'Earlier flow' : 'Revised flow'}
               </button>
             ))}
           </div>
@@ -275,7 +274,7 @@ export function ClaimsSkeleton() {
         </div>
 
         <p className="claims-animate claims-d2" style={{ fontSize: '1rem', color: C.color.tx, maxWidth: '64ch', marginTop: '1.6rem', lineHeight: 1.6, paddingLeft: '.9rem', borderLeft: `2px solid ${C.color.live}` }}>
-          Policy #2 matches the client but its date falls outside the policy period, and that&apos;s the detail only a real build surfaces. Without it, the date rule never gets demonstrated, since the client check short-circuits first. That decision doesn&apos;t fit in a Figma file.
+          The second policy matches the client but excludes the loss date. Showing that reason helps the handler understand why it cannot be selected.
         </p>
       </div>
     </section>

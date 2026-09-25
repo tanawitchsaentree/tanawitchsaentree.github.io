@@ -3,6 +3,7 @@
    surface, three neutral text tones, amber confined to the one link. */
 
 .overlay {
+  font-family: var(--font-home);
   position: fixed;
   inset: 0;
   z-index: 60;
@@ -86,9 +87,8 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: var(--space-6);
-  /* Same base size as the mini card (.bannerBody) — opening the modal
-     shouldn't jump the type scale, only the amount of content. */
-  font-size: 13px;
+  /* The same quiet sans scale as the homepage feature. */
+  font-size: var(--type-home-note);
   /* Subtle themed scrollbar instead of the browser default. */
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
@@ -106,10 +106,9 @@
 
 .title {
   color: var(--fg);
-  /* 600 isn't a loaded face (shell only ships 400/500) — size and case
-     carry the extra hierarchy instead, per the system's own principle. */
+  font-family: inherit;
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--type-home-body);
   letter-spacing: -0.01em;
   line-height: 1.3;
   margin: 0 0 var(--space-3);
@@ -128,6 +127,8 @@
 }
 
 .sectionLabel {
+  font-weight: 500;
+  font-family: inherit;
   /* fg-subtle is only AA-calibrated against --bg, not --bg-elevated —
      fg-muted is the correct neutral tone on this card surface. */
   color: var(--fg-muted);
@@ -176,3 +177,24 @@
     animation: none !important;
   }
 }
+
+.technical { margin-top: var(--space-6); border-top: 1px solid var(--border); padding-top: var(--space-4); }
+.technical summary { color: var(--fg-muted); padding-block: var(--space-2); }
+.technical p { margin-top: var(--space-3); }
+
+/* Project notes share the case-study palette and compact type scale. */
+.dialog {
+  --bg:#f5f5f3; --bg-elevated:#f5f5f3; --bg-muted:#e9ebe7;
+  --fg:#252a2c; --fg-muted:#596166; --fg-subtle:#687176;
+  --border:#d9ddda; --accent-text:#425e50;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+.content { font-size:14px; padding:24px; }
+.title { font-size:20px; line-height:1.25; }
+.sectionLabel { font-size:13px; text-transform:none; letter-spacing:0; color:#252a2c; }
+.section + .section { margin-top:20px; }
+
+.eyebrow { margin:0 0 10px; font-size:12px; line-height:1.5; color:#687176; }
+.coverWrap { aspect-ratio:3.2 / 1; }
+.sectionLabel { margin-bottom:7px; line-height:1.4; }
+.intro { margin-bottom:24px; }

@@ -72,11 +72,11 @@ export function CustomCursor() {
     function onOver(e: MouseEvent) {
       const t = e.target as Element
       const match = t.closest(
-        '[data-cursor="diagram"], [data-cursor="button"], button, a, [role="button"], [data-cursor="text"], h1, h2, h3'
+        '[data-cursor="diagram"], [data-cursor="button"], button, a, summary, [role="button"], [data-cursor="text"], h1, h2, h3'
       )
       if (!match)                                             { setState('default'); return }
       if (match.matches('[data-cursor="diagram"]'))            setState('diagram')
-      else if (match.matches('[data-cursor="button"], button, a, [role="button"]')) setState('button')
+      else if (match.matches('[data-cursor="button"], button, a, summary, [role="button"]')) setState('button')
       else                                                      setState('text')
     }
 

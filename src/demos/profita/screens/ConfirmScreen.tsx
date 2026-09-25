@@ -13,7 +13,7 @@ export function ConfirmScreen() {
       </div>
       {/* Warning */}
       <div style={{ background: '#faf1dc', color: '#9a7b2e', fontSize: 9, padding: '7px 14px', display: 'flex', gap: 5, alignItems: 'center', flexShrink: 0 }}>
-        ⚠ Closing time for orders is 3:30 p.m. (every business day)
+        Check the fund’s order cutoff before confirming.
       </div>
 
       {/* Body */}
@@ -34,16 +34,16 @@ export function ConfirmScreen() {
         {/* Account block */}
         <div style={{ background: '#fff', borderRadius: 10, padding: '2px 12px', boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
           <div style={{ padding: '9px 0' }}>
-            <div style={{ fontSize: 8, color: SC.grey }}>Debited account</div>
+            <div style={{ fontSize: 8, color: SC.grey }}>Payment account</div>
             <div style={{ fontSize: 11, fontWeight: 800, color: SC.ink, marginTop: 2 }}>221-1-12345-1</div>
-            <div style={{ fontSize: 9, color: SC.grey, marginTop: 1 }}>Irregular savings · John Doe</div>
+            <div style={{ fontSize: 9, color: SC.grey, marginTop: 1 }}>Savings account · John Doe</div>
           </div>
         </div>
 
         {/* Amount block */}
         <div style={{ background: '#fff', borderRadius: 10, padding: '2px 12px', boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
           {[
-            { k: 'Amount (Baht)',    v: '5,000.00', big: true  },
+            { k: 'Amount (THB)',    v: '5,000.00', big: true  },
             { k: 'Transaction date', v: '31 Oct. 2020' },
             { k: 'Effective date',   v: '01 Nov. 2020' },
           ].map((row, i) => (

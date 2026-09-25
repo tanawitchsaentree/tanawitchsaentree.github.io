@@ -172,14 +172,13 @@ export function StellarHero() {
           className="stellar-hero-h1"
           style={{ transformOrigin: 'left center', willChange: 'transform' }}
         >
-          <span className="stellar-l1"><span>Your fridge is</span></span>
-          <span className="stellar-l1"><span><em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>full.</em> Dinner</span></span>
-          <span className="stellar-l1"><span>still feels</span></span>
-          <span className="stellar-l1"><span>impossible.</span></span>
+          <span className="stellar-l1"><span>Meal ideas</span></span>
+          <span className="stellar-l1"><span>from ingredients</span></span>
+          <span className="stellar-l1"><span><em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>at home.</em></span></span>
         </h1>
 
         <p className="stellar-hero-lead">
-          Stellar is an AI cooking companion built around one stubborn truth: people waste food they own and still don&apos;t know what to make. So I designed an app that cooks from what&apos;s already in your kitchen.
+          For Stellareat, I designed a cooking app around the ingredients people already have. I connected ingredient entry, meal suggestions, and saved recipes into a prototype the team could use to explore how someone gets from looking in the fridge to choosing dinner.
         </p>
 
         <div className="stellar-meta">

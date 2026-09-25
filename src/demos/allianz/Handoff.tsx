@@ -59,17 +59,17 @@ export function Handoff({ doc }: { doc: HandoffDoc }) {
       >
         <div className="flex items-start justify-between gap-6 mb-4">
           <div className="min-w-0">
-            <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg-subtle)] mb-1">AI reads it as</p>
+            <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg-subtle)] mb-1">Suggested route</p>
             <p className="font-mono text-[var(--type-base)] text-[var(--fg)]" style={{ fontWeight: 500 }}>{doc.aiChoice}</p>
           </div>
           <div className="text-right flex-shrink-0">
-            <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg-subtle)] mb-1">but only</p>
+            <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg-subtle)] mb-1">Confidence</p>
             <p className="font-mono text-[var(--type-base)] text-[var(--accent-text)]" style={{ fontWeight: 500 }}>{Math.round(doc.score * 100)}% sure</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 mb-4">
-          <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] uppercase tracking-[0.06em]">runner-up</span>
+          <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] uppercase tracking-[0.06em]">Alternative</span>
           <span className="font-mono text-[var(--type-xs)] text-[var(--fg-muted)] px-2 py-1 rounded-[var(--radius-sm)] border" style={{ borderColor: 'var(--border)' }}>{doc.alternative}</span>
         </div>
 
@@ -92,7 +92,7 @@ export function Handoff({ doc }: { doc: HandoffDoc }) {
             <motion.div key="done" initial={reduced ? { opacity: 0 } : { opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
               className="flex flex-wrap items-center gap-3">
               <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em]" style={{ color: 'var(--fg)' }}>
-                {done === 'confirm' ? `✓ routed to ${doc.aiChoice}, operator's call` : `↻ reassigned to ${doc.alternative}, operator's call`}
+                {done === 'confirm' ? `✓ routed to ${doc.aiChoice}` : `↻ reassigned to ${doc.alternative}`}
               </p>
               <AnimatePresence>
                 {!locked && (

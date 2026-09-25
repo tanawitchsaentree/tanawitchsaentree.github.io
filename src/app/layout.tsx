@@ -8,7 +8,7 @@ import { CustomCursor } from '@/components/ui/CustomCursor'
 
 const SITE_TITLE = 'Tanawitch Saentree — Senior Product Designer'
 const SITE_DESC =
-  'Designing AI document tools, internal platforms, and operator-facing systems. 7 years across Allianz Technology, Invitrace Health, Stellareat, and Robowealth.'
+  'Senior Product Designer working across insurance, banking and healthcare. Selected work in AI document workflows, hospital design systems and investment products.'
 
 export const metadata: Metadata = {
   title: SITE_TITLE,

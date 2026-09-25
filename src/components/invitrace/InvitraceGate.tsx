@@ -151,13 +151,10 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                     'text-[var(--fg)] mb-2'
                   )}
                 >
-                  Curated preview
+                  A shared hospital interface
                 </h1>
                 <p className="text-[var(--type-base)] text-[var(--fg-muted)] leading-[1.65] mb-8">
-                  This case study is gated to keep it out of search and scraping,
-                  not because the content is secret — hospital names and figures
-                  are stand-ins, as the page itself discloses. Enter the password
-                  to continue.
+                  I led a design system that lets designers and engineers adapt a shared clinical interface for different hospitals. Enter the shared password to see how the components and hospital settings fit together.
                 </p>
               </motion.div>
 
@@ -256,7 +253,7 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                     >
                       {attempts > 0
                         ? `${attempts} failed attempt${attempts > 1 ? 's' : ''}. Password needed to proceed.`
-                        : "Password provided to recruiter or interviewer — don't have one? See below."}
+                        : "Use the password shared with you, or request access below."}
                     </motion.p>
                   )}
                 </AnimatePresence>
@@ -278,7 +275,7 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                   </a>{' '}
                   or message me on{' '}
                   <a
-                    href="https://linkedin.com/in/tanawitchsaentree"
+                    href="https://linkedin.com/in/tanawitch-saentree"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[var(--fg-muted)] underline underline-offset-2 hover:text-[var(--fg)] transition-colors duration-[var(--duration-fast)]"
@@ -296,14 +293,14 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
                 className="mt-4"
               >
                 <Link
-                  href="/"
+                  href="/#work"
                   className={cn(
                     'font-mono text-[var(--type-xs)] tracking-[0.08em] uppercase',
                     'text-[var(--fg-subtle)] no-underline',
                     'hover:text-[var(--fg-muted)] transition-colors duration-[var(--duration-fast)]'
                   )}
                 >
-                  ← Back to portfolio
+                  ← Selected work
                 </Link>
               </motion.div>
             </motion.div>

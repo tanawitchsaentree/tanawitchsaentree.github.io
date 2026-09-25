@@ -5,8 +5,7 @@ export const profitaMeta = {
   year: '2020',
   timeline: 'TBD',
   team: 'TBD',
-  summary:
-    'Designing financial confidence for users who started with anxiety. Three sub-cases inside Profita — a wealth management app for LH Bank\'s retail customers.',
+  summary: 'Fund browsing, trading information and purchase screens from my 2020 work at Robowealth for LH Bank.',
   coverColor: '#6B6B6B',
   subCaseSlugs: ['behavioral-insight', 'data-viz-pivot', 'stakeholder-negotiation'],
 } as const

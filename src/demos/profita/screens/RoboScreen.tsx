@@ -19,7 +19,7 @@ export function RoboScreen() {
       <div style={{ background: SC.navy, padding: '6px 14px 0', borderRadius: '0 0 18px 18px', flexShrink: 0, position: 'relative', zIndex: 3 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#fff', padding: '4px 2px 2px' }}>
           <button type="button" aria-label="Back" style={{ fontSize: 16, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', lineHeight: 1 }}>←</button>
-          <span style={{ fontSize: 13, fontWeight: 700 }}>Robo - Advisor</span>
+          <span style={{ fontSize: 13, fontWeight: 700 }}>Robo Advisor</span>
           <button type="button" aria-label="Add plan" style={{ fontSize: 16, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', lineHeight: 1 }}>+</button>
         </div>
         <div style={{ textAlign: 'center', marginTop: 2, paddingBottom: 5, padding: '0 24px 5px' }}>

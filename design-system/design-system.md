@@ -50,6 +50,16 @@ This is the source of truth for all aesthetic decisions in Tanawitch's portfolio
 - Alpha tints: use `color-mix(in srgb, var(--token) N%, transparent)`, never `${hex}NN`
   string concatenation (breaks the moment the color is a CSS var).
 
+## Homepage typography override — 2026-09-24
+
+The user rejected the mono homepage and its large type on Mac. The homepage and
+Manabi dialog now use `--font-home` (native system sans: San Francisco on macOS),
+`--type-home-body` (15px), and `--type-home-note` (14px). Name weight is 500 and body
+is 400. This explicitly overrides the mono-only and 16px-minimum rules below for
+these two surfaces. Keep existing project/case-study typography unchanged.
+Homepage width is 42rem and prose is 29rem; use rem for layout columns so changing
+from monospace does not collapse the composition through narrower ch units.
+
 ## Typography
 
 > **Direction: one monospace document.** The portfolio shell is set in one face —

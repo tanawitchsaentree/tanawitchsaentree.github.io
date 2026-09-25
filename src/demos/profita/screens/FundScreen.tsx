@@ -75,7 +75,7 @@ export function FundScreen() {
                 <div style={{ textAlign: 'right', flexShrink: 0 }}>
                   <div style={{ color: SC.navyL, fontSize: 8, fontWeight: 700 }}>{f.tag}</div>
                   <div style={{ fontWeight: 800, fontSize: 14, color: f.up ? SC.green : SC.red, marginTop: 2 }}>{f.pct}</div>
-                  <div style={{ color: SC.grey, fontSize: 7 }}>Past 1-year return</div>
+                  <div style={{ color: SC.grey, fontSize: 7 }}>Past-year return</div>
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 8 }}>

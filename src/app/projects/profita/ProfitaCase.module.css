@@ -1,0 +1,29 @@
+.page { background:#f5f5f3; color:#252a2c; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:14px; line-height:1.65; min-height:100svh; padding:0 max(24px,calc((100% - 1040px)/2)); }
+.page * { box-sizing:border-box; }
+.page a { color:inherit; text-underline-offset:5px; }
+.page a:focus-visible,.page button:focus-visible { outline:2px solid #536e60; outline-offset:5px; }
+.nav { display:flex; justify-content:space-between; gap:20px; padding:24px 0; border-bottom:1px solid #d9ddda; font-size:13px; color:#596166; }
+.nav a { text-decoration:none; }
+.header { padding:40px 0 32px; max-width:700px; }
+.eyebrow { color:#536e60; font-size:13px; margin:0 0 20px; }
+.header h1 { font-size:clamp(28px,3.2vw,38px); line-height:1.12; font-weight:500; letter-spacing:-.035em; margin:0 0 28px; }
+.intro { max-width:62ch; color:#596166; margin:0 0 14px; font-size:14px; }
+.meta { display:flex; flex-wrap:wrap; gap:20px 48px; margin:24px 0 0; font-size:13px; }
+.meta dt { color:#687176; margin-bottom:4px; }.meta dd { margin:0; }
+.section { border-top:1px solid #d9ddda; padding:32px 0 40px; scroll-margin-top:24px; }
+.sectionHead { display:grid; grid-template-columns:1fr 1fr; gap:20px 32px; align-items:start; margin-bottom:32px; }
+.page h2 { font-size:clamp(20px,2.4vw,24px); line-height:1.25; font-weight:500; letter-spacing:-.025em; margin:0; }
+.sectionHead p { margin:0; max-width:55ch; color:#596166; }
+.note { font-size:12px; color:#687176; margin:0 0 32px; max-width:78ch; }
+.overview,.supporting { display:grid; gap:40px 28px; }.overview { grid-template-columns:repeat(3,minmax(0,1fr)); }.supporting { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.page figure { margin:0; min-width:0; }.page figcaption { margin-top:24px; }.page h3 { margin:0 0 6px; font-size:14px; font-weight:500; }.page figcaption p { margin:0; color:#596166; font-size:14px; max-width:34ch; }
+.phone { --scale:.75; width:240px; height:502.5px; margin:0 auto; position:relative; }.phone > div { width:320px; height:670px; transform:scale(var(--scale)); transform-origin:top left; }
+.supporting .phone { --scale:.65; width:208px; height:435.5px; }
+.walkthrough { display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center; }.steps { display:grid; gap:10px; }
+.steps button { display:flex; gap:18px; text-align:left; font:inherit; color:#596166; background:transparent; border:1px solid transparent; border-radius:12px; padding:20px; cursor:pointer; }.steps button:hover { background:#eef0ec; }.steps button.active { border-color:#536e6065; background:#e9ede7; }.steps strong { display:block; color:#252a2c; font-size:14px; font-weight:500; margin-bottom:6px; }.steps button span span { display:block; font-size:14px; }.number { color:#536e60; font-size:12px; padding-top:3px; }.example { padding:28px; border-radius:20px; background:#eceeea; }.example .phone { --scale:.9; width:288px; height:603px; }.example figcaption { font-size:12px; text-align:center; color:#596166; }
+.footer { border-top:1px solid #d9ddda; padding:48px 0 40px; }.footer p { max-width:65ch; color:#596166; margin:20px 0 16px; }.footer a { font-size:13px; }.back { display:block; margin-top:48px; }
+@media(max-width:1050px) { .supporting { grid-template-columns:repeat(2,minmax(0,1fr)); }.supporting figure { max-width:320px; justify-self:center; }.overview { gap:22px; }.overview .phone { --scale:.65; width:208px; height:435.5px; } }
+@media(max-width:760px) { .sectionHead,.walkthrough { grid-template-columns:1fr; gap:20px; }.overview { grid-template-columns:1fr; gap:40px; }.overview figure { display:grid; grid-template-columns:auto 1fr; gap:24px; align-items:center; }.overview figcaption { margin:0; }.nav > span { display:none; }.section { padding:36px 0 44px; }.steps button { padding:14px; }.example { padding:24px 12px; }.supporting { gap:36px 20px; }.supporting .phone { --scale:.55; width:176px; height:368.5px; } }
+@media(max-width:440px) { .overview figure { display:block; }.overview figcaption { margin-top:24px; }.overview .phone { --scale:.8; width:256px; height:536px; }.supporting { grid-template-columns:1fr; }.supporting .phone { --scale:.8; width:256px; height:536px; }.example .phone { --scale:.8; width:256px; height:536px; }.desktopBreak { display:none; } }
+
+@media(max-width:360px) { .example .phone { --scale:.7; width:224px; height:469px; } }

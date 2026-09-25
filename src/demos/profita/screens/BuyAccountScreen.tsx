@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { SC, SW, SH } from './_screenTokens'
 
 const ACCOUNTS = [
-  { id: 0, name: 'Irregular savings', no: '221-1-12345-1', bal: '40,000.00' },
+  { id: 0, name: 'Savings account', no: '221-1-12345-1', bal: '40,000.00' },
   { id: 1, name: 'e-Saving',          no: '221-1-12345-1', bal: '40,000.00' },
 ]
 
@@ -22,7 +22,7 @@ export function BuyAccountScreen() {
 
       {/* Body */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px 8px' }}>
-        <div style={{ fontSize: 10, fontWeight: 800, color: SC.ink, marginBottom: 10 }}>Debited account</div>
+        <div style={{ fontSize: 10, fontWeight: 800, color: SC.ink, marginBottom: 10 }}>Payment account</div>
 
         {ACCOUNTS.map(acct => (
           <button

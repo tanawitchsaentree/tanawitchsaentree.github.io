@@ -1,293 +1,86 @@
-/* the fold — grid-rows so the SAME container simply grows */
-.fold {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.9s var(--ease-in-out-natural);
-}
-.fold.open {
-  grid-template-rows: 1fr;
-}
-.foldInner {
-  overflow: hidden;
-}
-
-/* lines inside the fold appear in writing order */
-.ln {
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.5s var(--ease-out-quick), transform 0.5s var(--ease-out-quick);
-}
-.open .ln {
-  opacity: 1;
-  transform: none;
-}
-.open .ln:nth-child(1)  { transition-delay: 0.15s; }
-.open .ln:nth-child(2)  { transition-delay: 0.21s; }
-.open .ln:nth-child(3)  { transition-delay: 0.27s; }
-.open .ln:nth-child(4)  { transition-delay: 0.33s; }
-.open .ln:nth-child(5)  { transition-delay: 0.39s; }
-.open .ln:nth-child(6)  { transition-delay: 0.45s; }
-.open .ln:nth-child(7)  { transition-delay: 0.51s; }
-.open .ln:nth-child(8)  { transition-delay: 0.57s; }
-.open .ln:nth-child(9)  { transition-delay: 0.63s; }
-.open .ln:nth-child(10) { transition-delay: 0.69s; }
-.open .ln:nth-child(11) { transition-delay: 0.75s; }
-.open .ln:nth-child(12) { transition-delay: 0.81s; }
-
-.h {
-  color: var(--fg-subtle);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: var(--type-xs);
-  line-height: 1.2;
-}
-
-.row {
-  display: block;
-  width: 100%;
-  text-align: left;
-  /* Padding-box grows the tap target to ~24-44px (WCAG 2.5.8) while the
-     matched negative margin cancels the added flow height, so the
-     dense document rhythm between rows stays visually unchanged. */
-  padding: 10px 4px;
-  margin: -10px -4px;
-  color: var(--fg-muted);
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.row .yr {
-  display: inline-block;
-  width: 9ch;
-  color: var(--fg-subtle);
-  flex-shrink: 0;
-}
-.row .nm {
-  color: var(--fg);
-}
-.liveTag {
-  color: var(--fg-subtle);
-}
-.kitIcon {
-  display: inline-block;
-  margin-left: 0.4em;
-  vertical-align: -1px;
-  color: var(--fg-subtle);
-}
-.row .dt {
-  transition: color 0.25s var(--ease-out-quick);
-}
-.row:hover .dt,
-.row.show .dt {
-  color: var(--accent-text);
-}
-
-/* ── contact row — social links + token-usage note ─────────────── */
-.socialLink {
-  display: inline-block;
-  /* Same pad-the-hit-area trick as .row, sized for a single-word link. */
-  padding: 10px 6px;
-  margin: -10px -6px;
-  color: var(--fg-muted);
-  text-decoration: none;
-  transition: color 0.25s var(--ease-out-quick);
-}
-.socialLink:hover,
-.socialLink:focus-visible {
-  color: var(--accent-text);
-}
-
-.socialMeta {
-  color: var(--fg-subtle);
-}
-
-/* ── kit — footnote tier, plainer than the work-history .row
-   grammar above, differentiated by color only (never size — body
-   text can't drop below 16px per the design system's size floor) */
-.kitRow {
-  display: flex;
-  align-items: baseline;
-  padding: 9px 4px;
-  margin: -9px -4px;
-  color: var(--fg-subtle);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.25s var(--ease-out-quick);
-}
-.kitRow:hover,
-.kitRow:focus-visible {
-  color: var(--accent-text);
-}
-
-/* Fixed-width first column — same grammar as .row .yr above, so every
-   description starts at the same x regardless of name length. The
-   description column truncates instead of wrapping, same as .row .dt,
-   so a long line never spills to a second row. */
-.kitName {
-  display: inline-block;
-  width: 12ch;
-  flex-shrink: 0;
-  color: var(--fg-muted);
-}
-.kitRow > span:last-child {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-@media (max-width: 620px) {
-  .kitRow {
-    flex-direction: column;
-    align-items: flex-start;
-    white-space: normal;
-  }
-  .kitName {
-    width: auto;
-  }
-  .kitRow > span:last-child {
-    overflow: visible;
-    text-overflow: initial;
-    padding-left: 0;
-  }
-}
-
-/* ── banner — floating corner card, independent of the fold/scroll
-   position. Image top half / copy bottom half — amber stays confined
-   to the CTA, per the one-mark rule. */
-.banner {
-  position: fixed;
-  right: var(--space-6);
-  bottom: var(--space-6);
-  z-index: 40;
-  width: min(350px, calc(100vw - var(--space-6)));
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--bg-elevated);
-  box-shadow: var(--shadow-modal);
-  animation: bannerIn 0.6s var(--ease-out-standard) 0.5s both;
-}
-
-@keyframes bannerIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* Card is a single click target that opens the Manabi modal — the dismiss
-   (×) button lives outside it as a sibling so its click doesn't bubble in. */
-.bannerTrigger {
-  display: block;
-  width: 100%;
-  text-align: left;
-  transition: filter 0.2s var(--ease-out-quick);
-}
-.bannerTrigger:hover,
-.bannerTrigger:focus-visible {
-  filter: brightness(1.08);
-}
-
-.bannerImageWrap {
+/* A quiet reading column. Work is visible; only supplementary material collapses. */
+.page {
+  --home-width: 42rem;
+  --home-prose: 30rem;
+  --home-thumb: 6rem;
+  --home-leading: 1.7;
+  --home-inset: clamp(var(--space-6), 5vw, var(--space-16));
+  --home-top: clamp(var(--space-16), 12svh, var(--space-24));
+  --home-section: var(--space-12);
   position: relative;
-  width: 100%;
-  aspect-ratio: 7 / 3;
-  background: var(--bg-muted);
+  isolation: isolate;
+  min-height: 100svh;
+  padding: var(--home-top) var(--home-inset) var(--space-12);
+  font-family: var(--font-home);
+  font-size: var(--type-home-body);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: var(--home-leading);
 }
-
-.bannerImage {
-  object-fit: cover;
+.document { width: 100%; max-width: var(--home-width); margin-inline: auto; }
+.background {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: var(--bg);
+  background-image: radial-gradient(ellipse at 100% 20%, var(--bg-elevated), transparent 48%), radial-gradient(ellipse at 0% 90%, var(--bg-elevated), transparent 40%);
 }
-
-.bannerClose {
-  position: absolute;
-  top: var(--space-2);
-  right: var(--space-2);
-  z-index: 1;
-  /* Padding-box grows the ~12px icon to a ~24px tap target (WCAG 2.5.8),
-     matching the .row hit-area technique above. */
-  padding: var(--space-2);
-  border-radius: 999px;
-  color: var(--fg-on-cover);
-  background: color-mix(in srgb, var(--bg) 55%, transparent);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  transition: background-color 0.2s var(--ease-out-quick);
+.graphite { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity var(--duration-reveal) var(--ease-out-quick); }
+.graphite[data-ready='true'] { opacity: 1; }
+.name, .workTitle, .projectTitle, .sectionHeading { font-family: inherit; font-size: inherit; line-height: 1.5; letter-spacing: 0; }
+.name, .workTitle, .projectTitle { font-weight: 500; }
+.role { color: var(--fg-muted); margin-top: var(--space-1); }
+.bio { max-width: var(--home-prose); color: var(--fg-muted); margin-top: var(--space-5); }
+.location { display: flex; flex-wrap: wrap; column-gap: var(--space-2); color: var(--fg-subtle); font-size: var(--type-home-note); margin-top: var(--space-4); }
+.contactLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin-top: var(--space-3); }
+.contactLinks a, .projectLinks a, .projectLinks button { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--space-8); text-decoration: none; }
+.contactLinks a { color: var(--fg); }
+.contactLinks a:hover, .projectLinks a:hover, .projectLinks button:hover { color: var(--accent-text); }
+.section { margin-top: var(--home-section); }
+.sectionHeading { font-size: var(--type-xs); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-subtle); margin-bottom: var(--space-5); }
+.workList, .toolList { list-style: none; padding: 0; margin: 0; }
+.workList { display: grid; gap: var(--space-8); }
+.workLink { display: block; text-decoration: none; border-radius: var(--radius-sm); }
+.workTopline { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2) var(--space-4); margin-bottom: var(--space-1); }
+.company, .period, .workRole { font-size: var(--type-xs); color: var(--fg-subtle); }
+.period { flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.workTitle { color: var(--fg); transition: color var(--duration-base) var(--ease-out-quick); }
+.workLink:hover .workTitle, .workLink:focus-visible .workTitle { color: var(--accent-text); }
+.workRole { margin-top: var(--space-1); }
+.workDescription { margin-top: var(--space-2); color: var(--fg-muted); max-width: 36rem; }
+.workAction { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); margin-top: var(--space-2); font-size: var(--type-home-note); color: var(--fg); }
+.accessNote { display: inline-flex; align-items: center; gap: var(--space-1); margin-left: var(--space-3); color: var(--fg-subtle); font-size: var(--type-xs); }
+.project { display: grid; grid-template-columns: var(--home-thumb) minmax(0, 1fr); gap: var(--space-6); align-items: start; }
+.projectImage { position: relative; width: var(--home-thumb); aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-sm); background: var(--bg-elevated); }
+.projectImage img { object-fit: cover; }
+.projectDescription { color: var(--fg-muted); margin-top: var(--space-2); }
+.projectLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-top: var(--space-2); font-size: var(--type-home-note); }
+.projectLinks button { text-align: left; }
+.more { margin-top: var(--home-section); border-top: 1px solid var(--border); padding-top: var(--space-4); }
+.more summary { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); min-height: var(--space-10); color: var(--fg-muted); font-size: var(--type-home-note); list-style: none; border-radius: var(--radius-sm); }
+.more summary::-webkit-details-marker { display: none; }
+.more summary:hover { color: var(--fg); }
+.more summary svg { transition: transform var(--duration-base) var(--ease-out-quick); }
+.more[open] summary svg { transform: rotate(180deg); }
+.moreContent { padding-top: var(--space-4); }
+.moreIntro { color: var(--fg-muted); margin-bottom: var(--space-4); font-size: var(--type-home-note); }
+.toolList { display: grid; gap: var(--space-4); }
+.toolList a { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: var(--space-4); text-decoration: none; font-size: var(--type-home-note); }
+.toolName { display: inline-flex; align-items: baseline; gap: var(--space-1); color: var(--fg); }
+.toolDescription { color: var(--fg-muted); }
+.toolList a:hover .toolName { color: var(--accent-text); }
+.profileLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin-top: var(--space-5); font-size: var(--type-home-note); color: var(--fg-muted); }
+.profileLinks a { padding-block: var(--space-1); }
+.footer { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: baseline; gap: var(--space-3) var(--space-6); margin-top: var(--space-10); }
+.email { font-size: var(--type-home-note); color: var(--fg-muted); overflow-wrap: anywhere; }
+.lightControl { padding-block: var(--space-2); color: var(--fg-subtle); font-size: var(--type-xs); }
+.lightControl:hover { color: var(--fg); }
+@media (max-width: 480px) {
+  .page { --home-top: var(--space-12); --home-thumb: 4rem; --home-inset: var(--space-6); }
+  .workTopline { flex-wrap: wrap; }
+  .project { gap: var(--space-4); }
+  .projectLinks { align-items: flex-start; flex-direction: column; gap: var(--space-1); }
+  .toolList a { grid-template-columns: 1fr; gap: var(--space-1); }
 }
-.bannerClose:hover,
-.bannerClose:focus-visible {
-  background: color-mix(in srgb, var(--bg) 80%, transparent);
-}
-
-.bannerBody {
-  /* Scaled down from the page's 15px base to fit this compact card —
-     the banner sits outside the homepage's scoped font context anyway,
-     so this is set explicitly. Hierarchy comes from weight/color only. */
-  font-size: 13px;
-  padding: var(--space-3) var(--space-4) var(--space-4);
-}
-
-.bannerTitle {
-  color: var(--fg);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-  margin-bottom: 2px;
-}
-
-.bannerText {
-  color: var(--fg-muted);
-  line-height: 1.4;
-}
-
-@media (max-width: 620px) {
-  .banner {
-    right: var(--space-4);
-    bottom: var(--space-4);
-  }
-}
-
-.toggle {
-  color: var(--fg-subtle);
-  transition: color 0.3s var(--ease-out-quick);
-  display: inline-block;
-}
-.toggle:hover {
-  color: var(--accent-text);
-}
-
-.cursor {
-  animation: blink 1.2s steps(1) infinite;
-  color: var(--fg-muted);
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-@media (max-width: 620px) {
-  .row .dt {
-    display: block;
-    padding-left: 9ch;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fold,
-  .ln,
-  .row .dt,
-  .toggle,
-  .cursor,
-  .banner,
-  .bannerTrigger,
-  .bannerClose,
-  .socialLink,
-  .kitRow {
-    transition-duration: 0.01ms !important;
-    animation: none !important;
-  }
-  .open .ln {
-    transition-delay: 0s !important;
-  }
-}
+@media (prefers-reduced-motion: reduce), (pointer: coarse) { .lightControl { display: none; } }
+@media (prefers-reduced-motion: reduce) { .graphite, .workTitle, .more summary svg { transition: none; } }

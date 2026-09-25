@@ -4,9 +4,9 @@ import { SC, SW, SH } from './_screenTokens'
 import { TabBar } from './_TabBar'
 
 const FUND_CARDS = [
-  { code: 'LHTPROP', pct: '5.60%', sub: 'Past 1-year return', cat: 'Property',      bg: SC.navy,     fg: '#fff' },
-  { code: 'LHFL',    pct: '10.60%',sub: 'Past 1-year return', cat: 'Foreign funds', bg: SC.goldCard, fg: '#3a3220' },
-  { code: 'LHMSFL-A',pct: '5.60%', sub: 'Past 1-year return', cat: 'Fixed Income',  bg: '#fff',      fg: SC.ink },
+  { code: 'LHTPROP', pct: '5.60%', sub: 'Past-year return', cat: 'Property',      bg: SC.navy,     fg: '#fff' },
+  { code: 'LHFL',    pct: '10.60%',sub: 'Past-year return', cat: 'Foreign funds', bg: SC.goldCard, fg: '#3a3220' },
+  { code: 'LHMSFL-A',pct: '5.60%', sub: 'Past-year return', cat: 'Fixed Income',  bg: '#fff',      fg: SC.ink },
 ]
 
 const REC_CARDS = [
@@ -66,7 +66,7 @@ export function FeedScreen() {
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 0 4px' }}>
         {/* Section: Highest return */}
         <div style={{ padding: '0 14px', marginBottom: 7, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: SC.ink, fontWeight: 800, fontSize: 11 }}>Highest return fund</span>
+          <span style={{ color: SC.ink, fontWeight: 800, fontSize: 11 }}>Top-performing funds</span>
           <span style={{ color: SC.navyL, fontSize: 10, fontWeight: 600 }}>See more ›</span>
         </div>
         <div style={{ display: 'flex', gap: 8, padding: '2px 14px', overflowX: 'auto' }}>
@@ -99,7 +99,7 @@ export function FeedScreen() {
           {REC_CARDS.map(rc => (
             <div key={rc.code} style={{ flexShrink: 0, width: 160, borderRadius: 10, padding: '11px 12px', background: rc.bg, color: rc.fg }}>
               <div style={{ fontWeight: 800, fontSize: 11 }}>{rc.code} <span style={{ float: 'right', fontSize: 12 }}>{rc.pct}</span></div>
-              <div style={{ fontSize: 9, opacity: .8 }}>{rc.cat} <span style={{ float: 'right', fontWeight: 500 }}>Past 1-year return</span></div>
+              <div style={{ fontSize: 9, opacity: .8 }}>{rc.cat} <span style={{ float: 'right', fontWeight: 500 }}>Past-year return</span></div>
             </div>
           ))}
         </div>

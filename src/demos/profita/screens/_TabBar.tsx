@@ -42,10 +42,10 @@ const ICONS: Record<TabName, JSX.Element> = {
 
 const TABS: { key: TabName; label: string }[] = [
   { key: 'feed',      label: 'Feed'  },
-  { key: 'portfolio', label: 'Port.' },
-  { key: 'fund',      label: 'Fund'  },
-  { key: 'robo',      label: 'ROBO'  },
-  { key: 'notif',     label: 'Notif.'},
+  { key: 'portfolio', label: 'Portfolio' },
+  { key: 'fund',      label: 'Funds'  },
+  { key: 'robo',      label: 'Robo'  },
+  { key: 'notif',     label: 'Alerts'},
 ]
 
 export function TabBar({ active }: { active: TabName }) {

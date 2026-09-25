@@ -1,18 +1,10 @@
 'use client'
 
+import { VitaeStory } from '@/components/case-study/CompactStories'
+
+
 import { useEffect } from 'react'
 import { V } from '@/demos/vitae/tokens'
-import { VitaeNav }     from '@/demos/vitae/VitaeNav'
-import { VitaeHero }    from '@/demos/vitae/VitaeHero'
-import { VitaeRoom }    from '@/demos/vitae/VitaeRoom'
-import { VitaeReframe } from '@/demos/vitae/VitaeReframe'
-import { VitaePhases }  from '@/demos/vitae/VitaePhases'
-import { VitaeLoop }    from '@/demos/vitae/VitaeLoop'
-import { VitaeCalls }   from '@/demos/vitae/VitaeCalls'
-import { VitaeKilled }  from '@/demos/vitae/VitaeKilled'
-import { VitaeHowItWorks } from '@/demos/vitae/VitaeHowItWorks'
-import { VitaeDevices } from '@/demos/vitae/VitaeDevices'
-import { VitaeOutcome } from '@/demos/vitae/VitaeOutcome'
 
 export function VitaeClient() {
   return (
@@ -96,17 +88,7 @@ export function VitaeClient() {
           minHeight: '100vh',
         }}
       >
-        <VitaeNav />
-        <VitaeHero />
-        <VitaeRoom />
-        <VitaeReframe />
-        <VitaePhases />
-        <VitaeLoop />
-        <VitaeCalls />
-        <VitaeKilled />
-        <VitaeHowItWorks />
-        <VitaeDevices />
-        <VitaeOutcome />
+        <VitaeStory />
       </div>
 
       <VitaeRevealScript />

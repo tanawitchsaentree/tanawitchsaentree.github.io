@@ -154,7 +154,7 @@ function DocRow({ doc, on, expanded, onToggle }: {
 }
 
 export function ConfidenceGate() {
-  const [on, setOn] = useState(false)
+  const [on, setOn] = useState(true)
   const [expanded, setExpanded] = useState<number | null>(null)
   const reviewCount = DOCS.filter(d => d.score < THRESHOLD).length
 
@@ -246,8 +246,8 @@ export function ConfidenceGate() {
             style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--accent) 8%, transparent)' }}
           >
             <p className="font-mono leading-[1.6] text-[var(--fg)]" style={{ fontSize: 'var(--type-base)' }}>
-              <span style={{ color: 'var(--accent-text)', fontWeight: 500 }}>{reviewCount} of {DOCS.length}</span> were guesses the system treated as answers.
-              <span className="text-[var(--fg-muted)]"> The gate is what told them apart from the rest.</span>
+              <span style={{ color: 'var(--accent-text)', fontWeight: 500 }}>{reviewCount} of {DOCS.length}</span> need review under this threshold.
+              <span className="text-[var(--fg-muted)]"> Open a highlighted row to check the suggested route.</span>
             </p>
           </motion.div>
         )}

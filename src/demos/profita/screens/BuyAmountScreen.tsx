@@ -48,7 +48,7 @@ export function BuyAmountScreen() {
             <span style={{ fontSize: 13, color: SC.grey, fontWeight: 600 }}>THB</span>
             <span style={{ display: 'inline-block', width: 2, height: 28, background: SC.gold, marginLeft: 2, animation: 'prof-blink 1s step-end infinite' }} />
           </div>
-          <div style={{ fontSize: 9, color: SC.grey, marginTop: 6 }}>Minimum first buy 5,000.00 THB</div>
+          <div style={{ fontSize: 9, color: SC.grey, marginTop: 6 }}>Minimum first purchase 5,000.00 THB</div>
         </div>
 
         {/* Quick amounts */}
@@ -65,7 +65,7 @@ export function BuyAmountScreen() {
         <div style={{ margin: '0 14px 10px', background: '#fff', borderRadius: 10, padding: '9px 12px', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
           <div style={{ width: 26, height: 26, borderRadius: 6, background: 'rgba(33,58,94,.1)', flexShrink: 0 }} />
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: SC.ink }}>Irregular savings</div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: SC.ink }}>Savings account</div>
             <div style={{ fontSize: 8, color: SC.grey }}>221-1-12345-1 · 40,000.00 THB</div>
           </div>
           <span style={{ fontSize: 10, color: SC.navyL, fontWeight: 600 }}>Change ›</span>

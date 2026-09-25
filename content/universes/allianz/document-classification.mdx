@@ -1,44 +1,20 @@
 ---
-title: "Document Classification"
+title: "Reviewing a classification"
 slug: "document-classification"
-tagline: "Making AI uncertainty legible to the people who act on it"
+tagline: "Show the suggested route and the information needed to check it"
 year: "2025"
-tags: ["AI Tooling", "Enterprise UX"]
+tags: ["Document workflows"]
 order: 1
 ---
 
 ## The problem
 
-The platform processed thousands of incoming documents daily — claims, invoices, legal notices. The AI classified each one and routed it to a team. When it was wrong, no one found out until something downstream broke: a claim misrouted to legal, an invoice sitting in the wrong queue for days.
-
-When it was right, handlers still double-checked everything. Not because they distrusted the system — because the system gave them no signal about when *not* to.
-
-The cost wasn't bad AI. It was that good AI and bad AI looked identical at the point of decision.
-
-## What I considered
-
-- **Option A:** Show a single confidence percentage on each classification — cut because a raw number (e.g. "78%") has no context for what 78% means in practice. One team's acceptable threshold is another team's review-everything zone. A number without calibration teaches nothing.
-
-- **Option B:** Color-code results (green / yellow / red) based on a fixed threshold — cut because a fixed threshold treats all document types the same. A claim mis-classified at 0.65 confidence is a different risk than an invoice at 0.65. Color became noise fast.
-
-- **Option C (chosen):** A tiered display that de-emphasizes confidence on high-confidence routes — score present but visually recessive, not the lead element. Below threshold, a focused review card takes over: the category the AI chose, the closest alternative it considered, and a one-line explanation of why it was uncertain. The question it answered wasn't "what's the score?" — it was "do I need to check this?"
+I put the suggested route, an alternative, and the reason for uncertainty in one review card. Operators can check a document and choose its route without leaving the list.
 
 ## The decision
 
-Confidence information is a cost, not a feature. Every time a handler reads a number, interprets it, and decides it's fine — that's wasted attention for a case that didn't need review.
-
-The interface de-emphasized confidence on high-confidence routes — score present, but visually recessive, not the lead element. Below threshold, a review card replaced the standard result: classification chosen, closest alternative, brief reasoning. Two actions: *confirm route* or *reclassify*. The score moved to the background. The decision moved to the front.
-
-The underlying rule: surface uncertainty only when it requires a decision. Everything else should be invisible.
-
-## What changed
-
-The review card became the only place uncertainty existed. Everywhere else, the system either ran or stayed silent.
-
-Configurators started asking "why did this hit uncertain?" instead of "why was this wrong" — the framing shifted from blame to diagnosis, which changed how they used the prompt management tool downstream.
+Open a highlighted row to review the suggested route.
 
 ## Trade-off ที่ยังอยู่
 
-**Confidence thresholds are static.** Every document type uses the same review threshold. A legal notice and an invoice carry different downstream costs when misclassified — the threshold should reflect that, but calibrating per-type requires historical volume by document category that didn't exist at launch.
-
-**No audit trail for the confidence state.** The display optimises for the handler in the moment. Someone reviewing a routing decision six months later has no record of what confidence score triggered which route. That's a gap that will matter if a classification is ever challenged in a compliance context.
+The sample uses a fixed threshold. High-confidence mistakes can still pass through.

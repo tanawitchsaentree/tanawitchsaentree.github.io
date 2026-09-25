@@ -5,7 +5,7 @@ export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
   title: 'Designer as Builder · Claims Platform · Tanawitch Saentree',
-  description: 'A commercial claims platform where I designed by building: nine production features shipped straight from ticket to live app, with an audit-build-verify loop that caught what static mockups couldn\'t.',
+  description: 'Working interface prototypes for reviewing commercial claims workflows with the product team, from editing a claim to handling missing information.',
 }
 
 export default function ClaimsPage() {

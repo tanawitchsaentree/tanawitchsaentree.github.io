@@ -1,20 +1,10 @@
 'use client'
 
+import { StellarStory } from '@/components/case-study/CompactStories'
+
+
 import { useEffect } from 'react'
 import { S } from '@/demos/stellar/tokens'
-import { StellarNav }      from '@/demos/stellar/StellarNav'
-import { StellarHero }     from '@/demos/stellar/StellarHero'
-import { StellarMarquee }  from '@/demos/stellar/StellarMarquee'
-import { StellarProblem }  from '@/demos/stellar/StellarProblem'
-import { StellarStats }    from '@/demos/stellar/StellarStats'
-import { StellarEmpathy }  from '@/demos/stellar/StellarEmpathy'
-import { StellarJTBD }     from '@/demos/stellar/StellarJTBD'
-import { StellarHMW }      from '@/demos/stellar/StellarHMW'
-import { StellarFeatures } from '@/demos/stellar/StellarFeatures'
-import { StellarBuild }        from '@/demos/stellar/StellarBuild'
-import { StellarRecipeCards }  from '@/demos/stellar/StellarRecipeCards'
-import { StellarLearned }  from '@/demos/stellar/StellarLearned'
-import { StellarFooter }   from '@/demos/stellar/StellarFooter'
 
 
 export function StellareatClient() {
@@ -192,19 +182,7 @@ export function StellareatClient() {
         {/* grain + mesh */}
         <div aria-hidden style={{ position: 'fixed', inset: 0, zIndex: -2, background: `radial-gradient(900px 600px at 12% -5%,${S.alpha.lime40},transparent 55%),radial-gradient(800px 600px at 95% 8%,${S.alpha.green18},transparent 55%),radial-gradient(700px 500px at 60% 100%,${S.alpha.citrus10},transparent 60%)`, pointerEvents: 'none' }} />
 
-        <StellarNav />
-        <StellarHero />
-        <StellarMarquee />
-        <StellarProblem />
-        <StellarStats />
-        <StellarEmpathy />
-        <StellarJTBD />
-        <StellarHMW />
-        <StellarFeatures />
-        <StellarBuild />
-        <StellarRecipeCards />
-        <StellarLearned />
-        <StellarFooter />
+        <StellarStory />
       </div>
     </>
   )

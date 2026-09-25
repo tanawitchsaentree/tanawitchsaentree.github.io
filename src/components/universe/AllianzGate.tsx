@@ -156,11 +156,10 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
                     'text-[var(--fg)] mb-2'
                   )}
                 >
-                  Protected work
+                  AI document workflows
                 </h1>
                 <p className="text-[var(--type-sm)] text-[var(--fg-muted)] leading-[1.65] mb-8">
-                  This case study contains real product screens.
-                  Enter the password to continue.
+                  I designed tools that bring rule changes and document review into the same workflow, so business teams can inspect routing and operators can take over unresolved cases. Enter the shared password to view the examples.
                 </p>
               </motion.div>
 
@@ -241,7 +240,7 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
                       className="text-[var(--type-xs)] text-red-500 leading-[1.5]"
                     >
                       {attempts >= 3
-                        ? "Still no luck — make sure you have the right password."
+                        ? "The password is incorrect. You can request access below."
                         : "That password didn't work. Try again."}
                     </motion.p>
                   )}
@@ -268,7 +267,7 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
                     >
                       {attempts > 0
                         ? `${attempts} failed attempt${attempts > 1 ? 's' : ''}. Password needed to proceed.`
-                        : "Password provided to recruiter or interviewer."}
+                        : "Use the password shared with you, or request access below."}
                     </motion.p>
                   )}
                 </AnimatePresence>
@@ -281,15 +280,21 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
                 transition={{ delay: 0.5, duration: 0.4 }}
                 className="mt-8 pt-6 border-t border-[var(--border)]"
               >
+                <p className="text-[var(--type-sm)] text-[var(--fg-muted)] leading-[1.6] mb-4">
+                  Need access?{' '}
+                  <a href="mailto:tanawitch.saentree@gmail.com?subject=Allianz%20case%20study" className="underline underline-offset-2">
+                    Email me for a walkthrough.
+                  </a>
+                </p>
                 <Link
-                  href="/"
+                  href="/#work"
                   className={cn(
                     'font-mono text-[var(--type-xs)] tracking-[0.08em] uppercase',
                     'text-[var(--fg-subtle)] no-underline',
                     'hover:text-[var(--fg-muted)] transition-colors duration-[var(--duration-fast)]'
                   )}
                 >
-                  ← Back to portfolio
+                  ← Selected work
                 </Link>
               </motion.div>
             </motion.div>

@@ -5,21 +5,21 @@ import { SC, SW, SH } from './_screenTokens'
 type Row = { k: string; v: string; help?: string }
 
 const ROWS: { group: string; items: Row[] }[] = [
-  { group: 'Minimum Trade', items: [
-    { k: 'Minimum first time buy (THB)', v: '5,000.00', help: 'The smallest amount you can invest the first time you buy into this fund.' },
-    { k: 'Minimum buy after (THB)',      v: '5,000.00' },
+  { group: 'Minimum purchase', items: [
+    { k: 'First purchase (THB)', v: '5,000.00', help: 'The smallest amount you can invest the first time you buy into this fund.' },
+    { k: 'Later purchases (THB)',      v: '5,000.00' },
   ]},
-  { group: 'Open for trade', items: [
+  { group: 'Order times', items: [
     { k: 'Order cut-off time',        v: '3:00 pm' },
-    { k: 'Sales order closing time',  v: '3:00 pm', help: "Orders placed after this time use tomorrow's price, not today's." },
+    { k: 'Sell order cutoff',  v: '3:00 pm', help: "The deadline for submitting an order for the current dealing day." },
   ]},
-  { group: 'Trade Fee', items: [
-    { k: 'Fee buy',   v: '1.07%', help: 'What you pay to place the order. It comes out of your investment automatically — no separate bill.' },
-    { k: 'Fee Sales', v: '0.00%' },
+  { group: 'Trading fees', items: [
+    { k: 'Purchase fee',   v: '1.07%', help: 'The fee charged when buying this fund.' },
+    { k: 'Sale fee', v: '0.00%' },
   ]},
-  { group: 'Fund Fee', items: [
-    { k: 'Fee buy',   v: '0.75%' },
-    { k: 'Fee Sales', v: '0.00%' },
+  { group: 'Fund fees', items: [
+    { k: 'Purchase fee',   v: '0.75%' },
+    { k: 'Sale fee', v: '0.00%' },
   ]},
 ]
 

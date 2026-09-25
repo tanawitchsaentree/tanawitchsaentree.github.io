@@ -1,18 +1,10 @@
 'use client'
 
+import { ClaimsStory } from '@/components/case-study/CompactStories'
+
+
 import { useEffect } from 'react'
 import { C } from '@/demos/claims/tokens'
-import { ClaimsNav }      from '@/demos/claims/ClaimsNav'
-import { ClaimsHero }     from '@/demos/claims/ClaimsHero'
-import { ClaimsGap }      from '@/demos/claims/ClaimsGap'
-import { ClaimsShift }    from '@/demos/claims/ClaimsShift'
-import { ClaimsLoop }     from '@/demos/claims/ClaimsLoop'
-import { ClaimsSkeleton } from '@/demos/claims/ClaimsSkeleton'
-import { ClaimsBroke }    from '@/demos/claims/ClaimsBroke'
-import { ClaimsRipple }   from '@/demos/claims/ClaimsRipple'
-import { ClaimsLimits }   from '@/demos/claims/ClaimsLimits'
-import { ClaimsCraft }    from '@/demos/claims/ClaimsCraft'
-import { ClaimsReflect }  from '@/demos/claims/ClaimsReflect'
 
 const FONTS_URL =
   'https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap'
@@ -113,17 +105,7 @@ export function ClaimsClient() {
   return (
     <div data-demo="claims" style={rootVars}>
       <style dangerouslySetInnerHTML={{ __html: GLOBAL_CSS }} />
-      <ClaimsNav />
-      <ClaimsHero />
-      <ClaimsGap />
-      <ClaimsShift />
-      <ClaimsLoop />
-      <ClaimsSkeleton />
-      <ClaimsBroke />
-      <ClaimsRipple />
-      <ClaimsLimits />
-      <ClaimsCraft />
-      <ClaimsReflect />
+        <ClaimsStory />
     </div>
   )
 }

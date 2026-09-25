@@ -5,11 +5,10 @@ import { cn } from '@/lib/cn'
 import { DecodeText } from '@/components/ui/DecodeText'
 
 const EMAIL        = 'tanawitch.saentree@gmail.com'
-const AVAILABILITY = 'Open to Senior / Staff roles · Q3 2026'
-const RESUME_PATH  = '/tanawitch-saentree-resume.pdf'
+const AVAILABILITY = 'Senior Product Designer · Open to relocation'
 
 const SOCIAL = [
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/tanawitchsaentree' },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/tanawitch-saentree' },
   { label: 'Behance',  href: 'https://behance.net/tanawitchsaentree' },
   { label: 'GitHub',   href: 'https://github.com/tanawitchsaentree' },
 ] as const
@@ -71,11 +70,10 @@ export function Contact() {
         <ul className="flex items-center justify-center flex-wrap gap-6 list-none m-0 p-0">
           <li>
             <a
-              href={RESUME_PATH}
-              download="tanawitch-saentree-resume.pdf"
+              href={`mailto:${EMAIL}?subject=Resume%20request`}
               className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] text-[var(--fg)] border-b border-[var(--accent)] no-underline hover:text-[var(--fg-muted)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-out-quick)]"
             >
-              Resume ↓
+              Request résumé
             </a>
           </li>
           {SOCIAL.map(link => (

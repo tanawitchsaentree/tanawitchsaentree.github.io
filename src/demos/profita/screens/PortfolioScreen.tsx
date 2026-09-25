@@ -93,7 +93,7 @@ export function PortfolioScreen() {
         {/* Holdings */}
         <div style={{ marginTop: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: SC.ink, fontWeight: 700, fontSize: 10, marginBottom: 7, paddingBottom: 7, borderBottom: '1px solid #e6e8ec' }}>
-            <span>DIY port</span><a style={{ color: SC.navyL, fontWeight: 600, fontSize: 9, textDecoration: 'none' }}>More detail ›</a>
+            <span>DIY port</span><a style={{ color: SC.navyL, fontWeight: 600, fontSize: 9, textDecoration: 'none' }}>View details ›</a>
           </div>
           {ITEMS.map(item => (
             <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
@@ -113,12 +113,12 @@ export function PortfolioScreen() {
           ))}
         </div>
 
-        {/* Saving account */}
+        {/* Savings account */}
         <div style={{ background: '#fff', borderRadius: 10, padding: '10px 12px', boxShadow: '0 2px 10px -7px rgba(0,0,0,.25)', marginTop: 4 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', color: SC.ink, fontWeight: 700, fontSize: 10, marginBottom: 6 }}>
-            <span>Saving Account</span><a style={{ color: SC.navyL, fontWeight: 600, fontSize: 9, textDecoration: 'none' }}>See all ›</a>
+            <span>Savings account</span><a style={{ color: SC.navyL, fontWeight: 600, fontSize: 9, textDecoration: 'none' }}>See all ›</a>
           </div>
-          <div style={{ fontSize: 9, color: SC.grey }}>221-1-12345-1 · Saving Account</div>
+          <div style={{ fontSize: 9, color: SC.grey }}>221-1-12345-1 · Savings account</div>
           <div style={{ color: SC.ink, fontWeight: 800, fontSize: 12, marginTop: 4, textAlign: 'right' }}>1,000,000.00 THB</div>
         </div>
       </div>

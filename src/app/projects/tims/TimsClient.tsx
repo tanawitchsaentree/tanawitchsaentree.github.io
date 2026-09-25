@@ -1,18 +1,10 @@
 'use client'
 
+import { TimsStory } from '@/components/case-study/CompactStories'
+
+
 import { useEffect } from 'react'
 import { T } from '@/demos/tims/tokens'
-import { TimsNav }        from '@/demos/tims/TimsNav'
-import { TimsHero }       from '@/demos/tims/TimsHero'
-import { TimsStatStrip }  from '@/demos/tims/TimsStatStrip'
-import { TimsCounter }    from '@/demos/tims/TimsCounter'
-import { TimsProblem }    from '@/demos/tims/TimsProblem'
-import { TimsIdea }       from '@/demos/tims/TimsIdea'
-import { TimsDemo }       from '@/demos/tims/TimsDemo'
-import { TimsRealOrders } from '@/demos/tims/TimsRealOrders'
-import { TimsFixed }      from '@/demos/tims/TimsFixed'
-import { TimsLearned }    from '@/demos/tims/TimsLearned'
-import { TimsFooter }     from '@/demos/tims/TimsFooter'
 
 
 export function TimsClient() {
@@ -130,17 +122,7 @@ export function TimsClient() {
           minHeight:       '100vh',
         }}
       >
-        <TimsNav />
-        <TimsHero />
-        <TimsStatStrip />
-        <TimsCounter />
-        <TimsProblem />
-        <TimsIdea />
-        <TimsDemo />
-        <TimsRealOrders />
-        <TimsFixed />
-        <TimsLearned />
-        <TimsFooter />
+        <TimsStory />
       </div>
     </>
   )

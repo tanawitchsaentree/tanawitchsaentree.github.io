@@ -17,12 +17,12 @@ export function ClaimsHero() {
           background: C.color.inset,
         }}>
           <span style={{ color: C.color.warn, flexShrink: 0 }}>!</span>
-          <span>This is a recreation, not the live production system: mock data, placeholder routes, an interactive demonstration built to show the work. The role, the platform, and the loop below are real.</span>
+          <span>Recreated interface with sample data. The examples show the design and review workflow.</span>
         </div>
 
         <div className="claims-animate" style={{ fontFamily: C.font.mono, fontSize: '.78rem', color: C.color.txDim, display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '2rem' }}>
           <span style={{ color: C.color.live }}>#</span>
-          an engineering record of one design role, read top to bottom
+          Commercial claims · product design and prototyping
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'clamp(280px,55%,640px) 1fr', gap: 'clamp(1.6rem,4vw,3.4rem)', alignItems: 'center' }} className="claims-hero-grid">
@@ -33,20 +33,20 @@ export function ClaimsHero() {
               lineHeight: 1.02, letterSpacing: '-.03em',
               color: C.color.txHi,
             }} className="claims-animate claims-d1">
-              I stopped <span style={{ color: C.color.txDim, textDecoration: 'line-through', textDecorationColor: C.color.txDim }}>handing off</span> designs.{' '}
-              I started <span style={{ color: C.color.live }}>handing over software.</span>
+              Working through claims<br />
+              <span style={{ color: C.color.live }}>with the team.</span>
             </h1>
 
             <p style={{ fontSize: 'clamp(1rem,1.6vw,1.18rem)', color: C.color.tx, maxWidth: '48ch', marginTop: '1.6rem', lineHeight: 1.6 }} className="claims-animate claims-d2">
-              I lead design on a commercial claims platform. The job changed shape. I still own the design, but I stopped shipping Figma and started shipping working software, verified against the acceptance criteria.
+              I lead design on a commercial claims platform and build working interfaces for the workflows we review. This gives the team a shared example of how a claim behaves when someone edits it, encounters missing information, or needs to recover from an error, before the remaining engineering work is complete.
             </p>
 
             <div style={{ marginTop: '2.2rem', border: `1px solid ${C.color.line}`, borderRadius: 8, overflow: 'hidden', maxWidth: '30rem' }} className="claims-animate claims-d2">
               {[
                 ['role',       'design systems lead'],
-                ['deliverable','working software, not Figma'],
+                ['deliverable','working interface prototypes'],
                 ['method',     'audit → build → verify loop'],
-                ['status',     '● shipping · phase 1'],
+                ['status',     'design and development'],
               ].map(([k, v]) => (
                 <div key={k} style={{ display: 'grid', gridTemplateColumns: '9.5rem 1fr', fontFamily: C.font.mono, fontSize: '.72rem', letterSpacing: '.04em', borderBottom: `1px solid ${C.color.line}` }}>
                   <span style={{ padding: '.55rem .9rem', color: C.color.txDim, background: C.color.inset, borderRight: `1px solid ${C.color.line}` }}>{k}</span>
@@ -57,7 +57,7 @@ export function ClaimsHero() {
 
             <div style={{ marginTop: '3.2rem', fontFamily: C.font.mono, fontSize: '.72rem', color: C.color.txDim, display: 'flex', alignItems: 'center', gap: '.6rem' }} className="claims-animate claims-d3">
               <span style={{ width: 34, height: 1, background: C.color.lineBri, display: 'block' }} />
-              00–08 · scroll to read the record
+              Explore the workflow below
             </div>
           </div>
 

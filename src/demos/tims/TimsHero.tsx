@@ -202,34 +202,15 @@ export function TimsHero() {
               marginBottom:  0,
               color:         T.color.ink,
             }}>
-              {/* The number IS the live countdown */}
-              <em
-                style={{
-                  fontStyle:          'normal',
-                  color:              headingColor,
-                  fontVariantNumeric: 'tabular-nums',
-                  display:            'inline-block',
-                  minWidth:           '2.1ch',
-                  transition:         `color .5s cubic-bezier(.65,0,.35,1)`,
-                }}
-                aria-live="polite"
-                aria-label={`${remaining} seconds`}
-              >
-                {reduced ? '40' : remaining}
-              </em>
-              <span style={{ color: T.color.ink }}> seconds.</span>
-              <span style={{
-                display:       'block',
-                fontSize:      'clamp(1.1rem,2.4vw,1.7rem)',
-                fontWeight:    500,
-                color:         T.color.inkSoft,
-                letterSpacing: '-.01em',
-                marginTop:     '1.1rem',
-                maxWidth:      '28ch',
-              }}>
-                I spent two years behind a Tim Hortons counter. Then I redesigned the POS I had to use at 5&nbsp;a.m.
-              </span>
+              A POS for the orders I remember.
             </h1>
+            <p style={{ color: T.color.inkSoft, fontSize: '1.05rem', lineHeight: 1.65, marginTop: '1.4rem', maxWidth: '48ch' }}>
+              After two years at Tim Hortons, I made a POS concept for the orders and changes I used to handle. I turned common combinations into presets and kept custom orders available, creating a working prototype to try against remembered counter situations.
+            </p>
+            <p style={{ color: headingColor, fontSize: '.8rem', marginTop: '1rem', fontVariantNumeric: 'tabular-nums' }}>
+              Practice timer: {reduced ? '40' : remaining} seconds · personal concept
+            </p>
+
           </div>
 
           {/* ── RIGHT: polaroid deck, no background, floats on page ── */}

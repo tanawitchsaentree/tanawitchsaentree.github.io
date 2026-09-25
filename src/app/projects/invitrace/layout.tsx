@@ -4,7 +4,7 @@ import { InvitraceGate } from '@/components/invitrace/InvitraceGate'
 export const metadata: Metadata = {
   title: 'Variant Tree · Federated Design System · Invitrace Health',
   description:
-    'One component engine. Three hospital archetypes. How I built a design system that adapts to every hospital without rebuilding for each one.',
+    'I led a shared design system so designers and engineers could adapt a clinical interface using hospital themes and reusable components.',
 }
 
 export default function InvitraceLayout({ children }: { children: React.ReactNode }) {

@@ -1,315 +1,128 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useCallback, useState } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
-import { Github, X } from 'lucide-react'
-import { FieldCanvas } from '@/components/home/FieldCanvas'
+import { ArrowRight, ArrowUpRight, ChevronDown, LockKeyhole } from 'lucide-react'
+import { GraphiteBackground } from '@/components/home/GraphiteBackground'
 import { ManabiModal } from '@/components/home/ManabiModal'
+import { PERSONAL_PROJECT, PROFILE, SELECTED_WORK, TOOLS } from '@/data/home'
 import styles from '@/components/home/HomeDocument.module.css'
 
-// ── routing / data ────────────────────────────────────────────
-
-const UNIVERSE_SLUGS: Record<string, string> = {
-  'allianz-doc-classification': '/projects/allianz',
-  'invitrace-design-system':    '/projects/invitrace',
-  'profita-mutual-fund':        '/projects/profita',
-  'stellareat':                 '/projects/stellareat',
-  'vitae':                      '/projects/vitae',
-  'tims-pos':                   '/projects/tims',
-  'claims':                     '/projects/claims',
-}
-
-interface WorkRow {
-  year:      string
-  company:   string
-  role:      string
-  outcome:   string
-  slug?:     string
-}
-
-const WORK_HISTORY: WorkRow[] = [
-  {
-    year: '2025 →', company: 'Allianz Technology', role: 'Senior Designer',
-    outcome: 'Now hours, once weeks',
-    slug: 'allianz-doc-classification',
-  },
-  {
-    year: '2024–25', company: 'Invitrace Health', role: 'Lead Product Designer',
-    outcome: 'Three archetypes, one core',
-    slug: 'invitrace-design-system',
-  },
-  {
-    year: '2024', company: 'Stellareat', role: 'Product Designer',
-    outcome: 'Personalisation flow for recipes',
-    slug: 'stellareat',
-  },
-  {
-    year: '2020', company: 'Robowealth · LH Bank', role: 'Senior UX/UI Designer',
-    outcome: 'Best App for CX (2023)',
-    slug: 'profita-mutual-fund',
-  },
-]
-
-interface KitRow {
-  kind:      string
-  name:      string
-  role:      string
-  outcome:   string
-  href:      string
-}
-
-const KIT: KitRow[] = [
-  {
-    kind: 'skill', name: '/human-tone', role: 'catches AI-sounding phrasing',
-    outcome: 'built it myself, free to use',
-    href: 'https://github.com/tanawitchsaentree/Human-tone',
-  },
-  {
-    kind: 'skill', name: '/kiln', role: 'builds design systems, skips the generic AI look',
-    outcome: 'built it myself, free to use',
-    href: 'https://github.com/tanawitchsaentree/Kiln',
-  },
-]
-
-const SOCIAL = [
-  { label: 'mail',     href: 'mailto:tanawitch.saentree@gmail.com' },
-  { label: 'github',   href: 'https://github.com/tanawitchsaentree' },
-  { label: 'medium',   href: 'https://medium.com/@tanawitchsaentree' },
-  { label: 'behance',  href: 'https://www.behance.net/tanawitchsaentree' },
-] as const
-
-// ── WorkRow ───────────────────────────────────────────────────
-
-function WorkRowItem({ entry, onNavigate }: { entry: WorkRow; onNavigate: (href: string) => void }) {
-  const [show, setShow] = useState(false)
-  const path = entry.slug ? UNIVERSE_SLUGS[entry.slug] : undefined
-
-  const body = (
-    <>
-      <span className={styles.yr}>{entry.year}</span>
-      <span className={styles.nm}>{entry.company.toLowerCase()}</span>
-      {' · '}
-      {/* Result shows by default — it's the selling point and mobile has
-          no hover. Role is the secondary reveal on hover/focus. */}
-      <span className={styles.dt}>{show ? entry.role : entry.outcome}</span>
-    </>
-  )
-
-  const handlers = {
-    onMouseEnter: () => setShow(true),
-    onMouseLeave: () => setShow(false),
-    onFocus: () => setShow(true),
-    onBlur:  () => setShow(false),
-  }
-
-  if (path) {
-    return (
-      <button
-        type="button"
-        className={`${styles.row} ${styles.ln} ${show ? styles.show : ''}`}
-        {...handlers}
-        onClick={() => onNavigate(path)}
-      >
-        {body}
-      </button>
-    )
-  }
-
-  return (
-    <button
-      type="button"
-      className={`${styles.row} ${styles.ln} ${show ? styles.show : ''}`}
-      {...handlers}
-      onClick={() => setShow(s => !s)}
-    >
-      {body}
-    </button>
-  )
-}
-
-// Footnote-style row — deliberately NOT the .row/.yr/.nm/.dt grammar used
-// by real work history, so it doesn't read as the same category of content
-// (Gestalt similarity) as an actual case study.
-function KitFootnoteItem({ entry }: { entry: KitRow }) {
-  return (
-    <a
-      href={entry.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`${styles.kitRow} ${styles.ln}`}
-    >
-      <span className={styles.kitName}>
-        {entry.name}
-        <Github size={12} strokeWidth={1.75} className={styles.kitIcon} aria-hidden="true" />
-      </span>
-      <span>{'— '}{entry.role}</span>
-    </a>
-  )
-}
-
-// ── HomeClient ────────────────────────────────────────────────
-
 export function HomeClient() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  // BackButton falls back to /?view=work when bfcache can't restore the
-  // fold state (cross-browser back-nav, new tab, some mobile browsers).
-  // Open the fold immediately on mount in that case so back-nav never
-  // lands on a dead-end collapsed bio.
-  const [open, setOpen]         = useState(() => searchParams.get('view') === 'work')
-  const [fieldOn, setFieldOn]   = useState(false)
-  const [pulseSignal, setPulseSignal] = useState(0)
-  const [bannerOpen, setBannerOpen] = useState(true)
+  const [lightPaused, setLightPaused] = useState(false)
   const [manabiOpen, setManabiOpen] = useState(false)
-
-  const navigateWithTransition = useCallback((href: string) => {
-    if (typeof document !== 'undefined' && 'startViewTransition' in document) {
-      (document as Document & { startViewTransition: (cb: () => void) => void })
-        .startViewTransition(() => router.push(href))
-    } else {
-      router.push(href)
-    }
-  }, [router])
+  const closeManabi = useCallback(() => setManabiOpen(false), [])
 
   return (
     <>
-      <FieldCanvas
-        active={fieldOn}
-        pulseSignal={pulseSignal}
-        className="fixed inset-0 -z-10 pointer-events-none transition-opacity duration-[1.1s] ease-[var(--ease-in-out-natural)]"
-        style={{ opacity: fieldOn ? 1 : 0 }}
-      />
+      <GraphiteBackground paused={lightPaused || manabiOpen} />
+      <main id="main-content" tabIndex={-1} className={styles.page}>
+        <div className={styles.document}>
+          <header className={styles.intro}>
+            <h1 className={styles.name}>{PROFILE.name}</h1>
+            <p className={styles.role}>{PROFILE.title}</p>
+            <p className={styles.bio}>{PROFILE.introduction}</p>
+            <p className={styles.location}>
+              <span>{PROFILE.location}</span>
+              <span aria-hidden="true">·</span>
+              <span>{PROFILE.availability}</span>
+            </p>
+            <nav className={styles.contactLinks} aria-label="Contact and profiles">
+              <a href={`mailto:${PROFILE.email}`}>Email me</a>
+              <a href={PROFILE.linkedIn} target="_blank" rel="noopener noreferrer">
+                LinkedIn <ArrowUpRight size={12} aria-hidden="true" />
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+              <a href={PROFILE.github} target="_blank" rel="noopener noreferrer">
+                GitHub <ArrowUpRight size={12} aria-hidden="true" />
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </nav>
+          </header>
 
-      <main id="main-content" tabIndex={-1} className="flex" style={{ minHeight: '100svh' }}>
-        <h1 className="sr-only">Tanawitch Saentree — Senior Product Designer</h1>
-
-        <div
-          className="m-auto px-6"
-          style={{
-            width: 'min(62ch, 100%)',
-            padding: 'clamp(3rem, 8vw, 5rem) 1.5rem',
-            fontSize: '15px',
-            ['--type-xs' as string]: '0.6875rem',
-          }}
-        >
-          {/* ── Bio ─────────────────────────────────── */}
-          <div className="mb-1">
-            <span className="text-[var(--fg)]">tanawitch saentree</span>
-            <br />
-            <span className="text-[var(--fg-muted)]">senior product designer at allianz technology</span>
-          </div>
-          <p className="text-[var(--fg-muted)] leading-[1.9] mt-3 max-w-[46ch]">
-            i design AI workflows for regulated industries like insurance, banks, and hospitals,
-            and ship the production code that proves they work.
-          </p>
-          <p className="text-[var(--fg-muted)] leading-[1.9] mt-2 mb-4 max-w-[46ch]">
-            bangkok, open to relocating.
-          </p>
-          <a href="mailto:tanawitch.saentree@gmail.com" className="text-[var(--fg-muted)]">
-            tanawitch.saentree@gmail.com
-          </a>
-
-          {/* ── the fold ────────────────────────────── */}
-          <div id="home-fold" className={`${styles.fold} ${open ? styles.open : ''}`}>
-            <div className={styles.foldInner}>
-              <div className={`${styles.h} ${styles.ln} mt-6 mb-1`}>work</div>
-              {WORK_HISTORY.map(entry => (
-                <WorkRowItem key={entry.company} entry={entry} onNavigate={navigateWithTransition} />
+          <section id="work" className={styles.section} aria-labelledby="work-heading">
+            <h2 id="work-heading" className={styles.sectionHeading}>Selected work</h2>
+            <ul className={styles.workList}>
+              {SELECTED_WORK.map(work => (
+                <li key={work.href}>
+                  <Link href={work.href} className={styles.workLink}>
+                    <div className={styles.workTopline}>
+                      <span className={styles.company}>{work.company}</span>
+                      <span className={styles.period}>{work.period}</span>
+                    </div>
+                    <h3 className={styles.workTitle}>{work.title}</h3>
+                    <p className={styles.workRole}>{work.role}</p>
+                    <p className={styles.workDescription}>{work.description}</p>
+                    <span className={styles.workAction}>
+                      View case study <ArrowRight size={14} aria-hidden="true" />
+                      {work.protected && (
+                        <span className={styles.accessNote}>
+                          <LockKeyhole size={11} aria-hidden="true" /> Password required
+                        </span>
+                      )}
+                    </span>
+                  </Link>
+                </li>
               ))}
+            </ul>
+          </section>
 
-              {/* ── kit ── footnote-tier, kept right after work on purpose.
-                  Plain link row, same body type size as the rest —
-                  deliberately not the case-study row component, but
-                  never shrunk under the size floor. */}
-              <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>kit</div>
-              {KIT.map(entry => (
-                <KitFootnoteItem key={entry.name} entry={entry} />
-              ))}
-
-              <div className={`${styles.h} ${styles.ln} mt-6 mb-1 text-[var(--fg-subtle)]`}>contact</div>
-              <div className={styles.ln}>
-                {SOCIAL.map(link => (
-                  <span key={link.label}>
-                    <a
-                      href={link.href}
-                      target={link.href.startsWith('http') ? '_blank' : undefined}
-                      rel="noopener noreferrer"
-                      className={styles.socialLink}
-                    >
-                      {link.label}
-                    </a>
-                    {' · '}
-                  </span>
-                ))}
-                <span className={styles.socialMeta} title="claude usage to date">
-                  <span className="text-[var(--accent-text)]">14b</span> tokens burned
-                </span>
+          <section className={styles.section} aria-labelledby="independent-heading">
+            <h2 id="independent-heading" className={styles.sectionHeading}>Independent project</h2>
+            <div className={styles.project}>
+              <div className={styles.projectImage}>
+                <Image src="/images/manabi-cover.png" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
               </div>
-              <button
-                type="button"
-                className={`${styles.row} ${styles.ln} mt-1`}
-                onClick={() => { setFieldOn(true); setPulseSignal(s => s + 1) }}
-                aria-label="Reveal the point field behind this page"
-              >
-                <span className={styles.liveTag}>live</span>{' '}
-                <span className={styles.nm}>field</span>
-                {' · '}
-                <span className={styles.dt}>the 4,500 points behind this page</span>
-              </button>
+              <div>
+                <h3 className={styles.projectTitle}>{PERSONAL_PROJECT.title}</h3>
+                <p className={styles.projectDescription}>{PERSONAL_PROJECT.description}</p>
+                <div className={styles.projectLinks}>
+                  <button type="button" onClick={() => setManabiOpen(true)} aria-haspopup="dialog">
+                    {PERSONAL_PROJECT.details} <ArrowRight size={14} aria-hidden="true" />
+                  </button>
+                  <a href={PERSONAL_PROJECT.url} target="_blank" rel="noopener noreferrer">
+                    Visit Manabi <ArrowUpRight size={12} aria-hidden="true" />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </div>
+              </div>
             </div>
-          </div>
+          </section>
 
-          <button
-            type="button"
-            className={`${styles.toggle} mt-6`}
-            aria-expanded={open}
-            aria-controls="home-fold"
-            onClick={() => setOpen(o => !o)}
-          >
-            ( {open ? 'close' : 'see the work'} )<span className={styles.cursor}>_</span>
-          </button>
+          <details className={styles.more}>
+            <summary>Writing &amp; tools <ChevronDown size={14} aria-hidden="true" /></summary>
+            <div className={styles.moreContent}>
+              <p className={styles.moreIntro}>A few things I make and share alongside product work.</p>
+              <ul className={styles.toolList}>
+                {TOOLS.map(tool => (
+                  <li key={tool.name}>
+                    <a href={tool.href} target="_blank" rel="noopener noreferrer">
+                      <span className={styles.toolName}>
+                        {tool.name} <ArrowUpRight size={12} aria-hidden="true" />
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </span>
+                      <span className={styles.toolDescription}>{tool.description}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <div className={styles.profileLinks}>
+                <a href="https://medium.com/@tanawitchsaentree" target="_blank" rel="noopener noreferrer">Writing on Medium <span className="sr-only">(opens in a new tab)</span></a>
+                <a href="https://www.behance.net/tanawitchsaentree" target="_blank" rel="noopener noreferrer">More work on Behance <span className="sr-only">(opens in a new tab)</span></a>
+              </div>
+            </div>
+          </details>
+
+          <footer className={styles.footer}>
+            <a href={`mailto:${PROFILE.email}`} className={styles.email}>{PROFILE.email}</a>
+            <button type="button" className={styles.lightControl} aria-pressed={lightPaused} onClick={() => setLightPaused(value => !value)}>
+              {lightPaused ? 'Resume background motion' : 'Pause background motion'}
+            </button>
+          </footer>
         </div>
       </main>
-
-      {bannerOpen && !manabiOpen && (
-        <div className={styles.banner}>
-          <button
-            type="button"
-            className={styles.bannerTrigger}
-            onClick={() => setManabiOpen(true)}
-            aria-haspopup="dialog"
-            aria-label="Open manabi project details"
-          >
-            <div className={styles.bannerImageWrap}>
-              <Image
-                src="/images/manabi-cover.png"
-                alt=""
-                fill
-                sizes="350px"
-                className={styles.bannerImage}
-              />
-            </div>
-            <div className={styles.bannerBody}>
-              <div className={styles.bannerTitle}>manabi — the whole thing, one person</div>
-              <p className={styles.bannerText}>
-                a school-finder platform for thai parents. next.js, supabase, live
-                with real users. design, code, and ship, one person.
-              </p>
-            </div>
-          </button>
-          <button
-            type="button"
-            className={styles.bannerClose}
-            onClick={e => { e.stopPropagation(); setBannerOpen(false) }}
-            aria-label="Dismiss announcement"
-          >
-            <X size={12} />
-          </button>
-        </div>
-      )}
-
-      <ManabiModal open={manabiOpen} onClose={() => setManabiOpen(false)} />
+      <ManabiModal open={manabiOpen} onClose={closeManabi} />
     </>
   )
 }

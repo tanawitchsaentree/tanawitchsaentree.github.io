@@ -21,9 +21,9 @@ import { cn } from '@/lib/cn'
 type RuleVariant = 'narrow' | 'medium' | 'broad'
 
 const RULE_VARIANTS: Record<RuleVariant, { label: string; phrase: string; description: string }> = {
-  narrow: { label: 'Narrow',   phrase: 'only if every field matches exactly', description: 'High precision · more goes to review' },
-  medium: { label: 'Balanced', phrase: 'if the document type and sender match', description: 'Current production rule' },
-  broad:  { label: 'Broad',    phrase: 'if the document type matches',         description: 'Fewer reviews · higher misroute risk' },
+  narrow: { label: 'Narrow',   phrase: 'only if every field matches exactly', description: 'More sample documents need review' },
+  medium: { label: 'Balanced', phrase: 'if the document type and sender match', description: 'Starting rule in this example' },
+  broad:  { label: 'Broad',    phrase: 'if the document type matches',         description: 'More sample documents route automatically' },
 }
 
 interface Doc { id: number; label: string; type: string; routed: RuleVariant[] }
@@ -125,20 +125,20 @@ export function PromptEditor() {
       {/* header with version state */}
       <div className="flex items-center justify-between gap-4 px-5 py-3.5 border-b" style={{ borderColor: 'var(--border)' }}>
         <p className="font-mono text-[var(--type-xs)] uppercase tracking-[0.1em] text-[var(--fg-subtle)]">
-          Classification rule · claims
+          Sample classification rule
         </p>
         <span
           className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em]"
           style={{ color: pub === 'clean' ? 'var(--fg-subtle)' : 'var(--accent-text)' }}
         >
-          {pub === 'clean' ? 'published' : pub === 'published' ? '✓ live' : 'draft · unsaved'}
+          {pub === 'clean' ? 'published' : pub === 'published' ? '✓ applied' : 'draft · unsaved'}
         </span>
       </div>
 
       {/* the prompt as policy text */}
       <div className="px-5 py-6 border-b" style={{ borderColor: 'var(--border)' }}>
         <p className="font-mono text-[var(--type-base)] text-[var(--fg-muted)] leading-[1.9]">
-          Route this document to the claims team{' '}
+          Route this document automatically{' '}
           <button
             type="button"
             className="relative font-mono rounded-[var(--radius-sm)] px-1.5 py-0.5 border cursor-pointer transition-[color,background,border-color] duration-[var(--duration-fast)] ease-[var(--ease-out-quick)]"
@@ -204,7 +204,7 @@ export function PromptEditor() {
               className="inline-block"
             >
               {changedCount > 0 && active !== prev
-                ? <><span className="text-[var(--accent-text)]" style={{ fontWeight: 500 }}>{changedCount} document{changedCount > 1 ? 's' : ''} re-routed</span> · {reviewCount} now to review</>
+                ? <><span className="text-[var(--accent-text)]" style={{ fontWeight: 500 }}>{changedCount} document{changedCount > 1 ? 's' : ''} changed in preview</span> · {reviewCount} now to review</>
                 : <>{reviewCount} of {DOCS.length} defer to review under this rule</>}
             </motion.span>
           </AnimatePresence>
@@ -222,7 +222,7 @@ export function PromptEditor() {
             opacity: pub === 'clean' || pub === 'published' ? 0.5 : 1,
           }}
         >
-          {pub === 'submitting' ? 'Submitting…' : pub === 'published' ? '✓ Published' : 'Submit to publish →'}
+          {pub === 'submitting' ? 'Submitting…' : pub === 'published' ? '✓ Published' : 'Apply sample rule →'}
         </button>
       </div>
     </div>
