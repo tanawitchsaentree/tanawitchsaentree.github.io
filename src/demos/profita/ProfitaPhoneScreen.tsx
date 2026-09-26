@@ -23,6 +23,20 @@ export type ScreenName =
   | 'fund' | 'funddetail' | 'buyamount' | 'confirm'
   | 'ordersuccess' | 'switchfund' | 'savings' | 'buyaccount'
 
+export type PurchaseAccount = {
+  name: string
+  number: string
+  balance: number
+}
+
+export type PurchaseDemoProps = {
+  amount: string
+  account: PurchaseAccount
+  onAmountChange: (amount: string) => void
+  onNavigate: (screen: ScreenName) => void
+  onAccountChange?: (account: PurchaseAccount) => void
+}
+
 const PAD = 10
 export const PROFITA_PHONE_W = SW + PAD * 2   // 320
 export const PROFITA_PHONE_H = SH + PAD * 2   // 670
@@ -41,7 +55,7 @@ const SCREEN_MAP: Record<ScreenName, React.ComponentType> = {
   buyaccount:   BuyAccountScreen,
 }
 
-export function ProfitaPhoneScreen({ screen }: { screen: ScreenName }) {
+export function ProfitaPhoneScreen({ screen, purchase }: { screen: ScreenName; purchase?: PurchaseDemoProps }) {
   const Screen = SCREEN_MAP[screen]
 
   return (
@@ -79,7 +93,13 @@ export function ProfitaPhoneScreen({ screen }: { screen: ScreenName }) {
         overflow:     'hidden',
         background:   SC.paper,
       }}>
-        <Screen />
+        {screen === 'fund' && purchase ? <FundScreen onOpenFund={() => purchase.onNavigate('funddetail')} />
+          : screen === 'funddetail' && purchase ? <FundDetailScreen onBack={() => purchase.onNavigate('fund')} onBuy={() => purchase.onNavigate('buyamount')} />
+          : screen === 'buyamount' && purchase ? <BuyAmountScreen amount={purchase.amount} account={purchase.account} onAmountChange={purchase.onAmountChange} onBack={() => purchase.onNavigate('funddetail')} onNext={() => purchase.onNavigate('confirm')} onChangeAccount={() => purchase.onNavigate('buyaccount')} />
+          : screen === 'buyaccount' && purchase ? <BuyAccountScreen account={purchase.account} onBack={() => purchase.onNavigate('buyamount')} onConfirm={(account) => { purchase.onAccountChange?.(account); purchase.onNavigate('buyamount') }} />
+          : screen === 'confirm' && purchase ? <ConfirmScreen amount={purchase.amount} account={purchase.account} onBack={() => purchase.onNavigate('buyamount')} onConfirm={() => purchase.onNavigate('ordersuccess')} />
+          : screen === 'ordersuccess' && purchase ? <OrderSuccessScreen amount={purchase.amount} account={purchase.account} onDone={() => purchase.onNavigate('fund')} />
+          : <Screen />}
       </div>
 
       {/* Glass sheen */}

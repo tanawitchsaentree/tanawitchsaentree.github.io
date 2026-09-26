@@ -257,7 +257,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
         <!-- Full customizer (escape hatch) -->
         <div class="cust" id="cust">
           <div class="cust-head">
-            <button class="back" onclick="showMenu()">←</button>
+            <button class="back" onclick="showMenu()" aria-label="Discard pending changes and return to menu">←</button>
             <div class="ttl">
               <div class="kick" id="cKick">Customize</div>
               <h3 id="cName">Item</h3>
@@ -277,7 +277,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
           <div class="tk-row1">
             <div class="ord">Order <span id="ordNo">#1042</span><small>Counter · Cashier 03</small></div>
             <div class="tk-row1-r">
-              <div class="cnt-badge"><span id="itemCnt">0</span> items</div>
+              <div class="cnt-badge"><span id="itemCnt">0</span> <span id="itemLabel">items</span></div>
               <div class="timer-pill" id="timerM" style="display:none"><span id="timerV">0s</span></div>
             </div>
           </div>
@@ -787,7 +787,7 @@ function showMenu(){
   document.getElementById('cust').classList.remove('show');
   document.getElementById('cFoot').style.display = 'none';
   document.getElementById('grid').style.display = '';
-  clearPreview(); editing = null;
+  clearPreview(); editing = null; draft = null; dItem = null;
 }
 
 function showCustView(){
@@ -1081,8 +1081,10 @@ function removeLine(uid){
   const i=cart.findIndex(x=>x.uid===uid); if(i<0) return;
   lastRm={line:cart[i],idx:i};
   const el=document.getElementById('li-'+uid);
-  if(el){ el.classList.add('removing'); setTimeout(()=>{cart.splice(i,1);renderCart();},220); }
-  showToast(`${lastRm.line.name} removed`,doUndo);
+  cart.splice(i,1);
+  if(el){ el.classList.add('removing'); setTimeout(renderCart,220); }
+  else renderCart();
+  showToast(`${lastRm.line.name} removed`);
 }
 
 // ── Toast ──
@@ -1103,6 +1105,7 @@ function updateTotals(){
   const tax=(sub-disc)*TAX;
   const tot=sub-disc+tax;
   document.getElementById('itemCnt').textContent=cnt;
+  document.getElementById('itemLabel').textContent=cnt===1?'item':'items';
   document.getElementById('tSub').textContent=fmt(sub);
   document.getElementById('tTax').textContent=fmt(tax);
   document.getElementById('tTotal').textContent=fmt(tot);
@@ -1117,6 +1120,12 @@ function clearOrder(){ if(!cart.length) return; cart=[]; dealOn=false; resetTime
 
 function pay(){
   if(!cart.length) return;
+  if(draft || editing || document.getElementById('prevLine')){
+    showToast(editing?'Update or discard the item changes before payment':'Add or discard the new item before payment');
+    const action=document.getElementById('cAdd');
+    if(action) action.focus();
+    return;
+  }
   stopTimer();
   const total=document.getElementById('tTotal').textContent;
   const v=elapsed<60?elapsed+'s':Math.floor(elapsed/60)+':'+String(elapsed%60).padStart(2,'0');

@@ -65,12 +65,21 @@ function ConfBar({ score, on }: { score: number; on: boolean }) {
   )
 }
 
-function DocRow({ doc, on, expanded, onToggle }: {
-  doc: Doc; on: boolean; expanded: boolean; onToggle: () => void
+type Decision = 'confirm' | 'reclass'
+
+function DocRow({ doc, on, expanded, decision, onToggle, onDecision }: {
+  doc: Doc
+  on: boolean
+  expanded: boolean
+  decision?: Decision
+  onToggle: () => void
+  onDecision: (decision: Decision | null) => void
 }) {
   const reduced = useReducedMotion()
   const low = doc.score < THRESHOLD
-  const flagged = on && low
+  const reviewable = on && low
+  const flagged = reviewable && !decision
+  const finalRoute = decision === 'reclass' ? doc.alternative : doc.aiChoice
 
   return (
     <div className="relative">
@@ -92,13 +101,13 @@ function DocRow({ doc, on, expanded, onToggle }: {
       <div
         className={cn(
           'relative z-10 flex items-center gap-4 py-3.5 px-3',
-          flagged && 'cursor-pointer'
+          reviewable && 'cursor-pointer'
         )}
-        role={flagged ? 'button' : undefined}
-        tabIndex={flagged ? 0 : undefined}
-        aria-expanded={flagged ? expanded : undefined}
-        onClick={flagged ? onToggle : undefined}
-        onKeyDown={flagged ? e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle() } } : undefined}
+        role={reviewable ? 'button' : undefined}
+        tabIndex={reviewable ? 0 : undefined}
+        aria-expanded={reviewable ? expanded : undefined}
+        onClick={reviewable ? onToggle : undefined}
+        onKeyDown={reviewable ? e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle() } } : undefined}
       >
         {/* file glyph */}
         <span className="font-mono text-[var(--type-xs)] text-[var(--fg-subtle)] w-4 flex-shrink-0 text-center" aria-hidden="true">
@@ -123,6 +132,10 @@ function DocRow({ doc, on, expanded, onToggle }: {
             <span className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg-subtle)]">
               ✓ routed
             </span>
+          ) : decision ? (
+            <span className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--fg-muted)]">
+              → {finalRoute}
+            </span>
           ) : flagged ? (
             <span className="font-mono text-[var(--type-xs)] uppercase tracking-[0.08em] text-[var(--accent-text)] inline-flex items-center gap-1.5">
               decide {expanded ? '↑' : '↓'}
@@ -137,7 +150,7 @@ function DocRow({ doc, on, expanded, onToggle }: {
 
       {/* inline handoff: the decision, not an error dialog */}
       <AnimatePresence initial={false}>
-        {flagged && expanded && (
+        {reviewable && expanded && (
           <motion.div
             initial={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}
             animate={reduced ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
@@ -145,7 +158,7 @@ function DocRow({ doc, on, expanded, onToggle }: {
             transition={{ duration: reduced ? 0.15 : 0.32, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden relative z-10"
           >
-            <Handoff doc={doc} />
+            <Handoff doc={doc} initialDecision={decision} onDecision={onDecision} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -156,7 +169,9 @@ function DocRow({ doc, on, expanded, onToggle }: {
 export function ConfidenceGate() {
   const [on, setOn] = useState(true)
   const [expanded, setExpanded] = useState<number | null>(null)
-  const reviewCount = DOCS.filter(d => d.score < THRESHOLD).length
+  const [decisions, setDecisions] = useState<Record<number, Decision>>({})
+  const initialReviewCount = DOCS.filter(d => d.score < THRESHOLD).length
+  const remainingReviewCount = DOCS.filter(d => d.score < THRESHOLD && !decisions[d.id]).length
 
   return (
     <div
@@ -229,7 +244,14 @@ export function ConfidenceGate() {
             doc={doc}
             on={on}
             expanded={expanded === doc.id}
+            decision={decisions[doc.id]}
             onToggle={() => setExpanded(prev => prev === doc.id ? null : doc.id)}
+            onDecision={decision => setDecisions(current => {
+              const next = { ...current }
+              if (decision) next[doc.id] = decision
+              else delete next[doc.id]
+              return next
+            })}
           />
         ))}
       </div>
@@ -246,8 +268,8 @@ export function ConfidenceGate() {
             style={{ borderColor: 'var(--border)', background: 'color-mix(in srgb, var(--accent) 8%, transparent)' }}
           >
             <p className="font-mono leading-[1.6] text-[var(--fg)]" style={{ fontSize: 'var(--type-base)' }}>
-              <span style={{ color: 'var(--accent-text)', fontWeight: 500 }}>{reviewCount} of {DOCS.length}</span> need review under this threshold.
-              <span className="text-[var(--fg-muted)]"> Open a highlighted row to check the suggested route.</span>
+              <span style={{ color: 'var(--accent-text)', fontWeight: 500 }}>{remainingReviewCount} unresolved</span>
+              <span className="text-[var(--fg-muted)]"> from {initialReviewCount} initially below the threshold. {remainingReviewCount ? 'Open a highlighted row to decide its route.' : 'All flagged documents have a route.'}</span>
             </p>
           </motion.div>
         )}

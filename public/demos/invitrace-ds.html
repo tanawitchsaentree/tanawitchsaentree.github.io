@@ -595,7 +595,7 @@ section { padding-top:48px; padding-bottom:48px; }
           <div class="ctrl-hint">Pick any colour, and the phone updates live</div>
           <div class="ctrl"><label>Radius</label><input type="range" id="radius" min="4" max="28" value="20"><span class="rngval" id="radVal">20</span></div>
           <div class="ctrl-hint">Drag to see corner radius cascade to every component</div>
-          <div class="ctrl"><label>High contrast</label><div class="tog" id="hcTog"><i></i></div></div>
+          <div class="ctrl"><label for="hcTog">High contrast</label><button type="button" class="tog" id="hcTog" role="switch" aria-checked="false" aria-label="Use high contrast preview"><i aria-hidden="true"></i></button></div>
           <div class="ctrl-hint">Higher-contrast preview; full accessibility needs separate testing.</div>
           <div class="ctrl"><label>Edge case</label><div class="edges" id="edges"><button class="on" data-edge="none">Default</button><button data-edge="empty">No admissions</button><button data-edge="long">Long name</button></div></div>
         </div>
@@ -986,6 +986,12 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   const xRawSw=document.getElementById('xRawSw'),xRawHex=document.getElementById('xRawHex'),xRawRad=document.getElementById('xRawRad'),xTheme=document.getElementById('xTheme');
   if(!lab) return;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let userOwned=false;
+
+  function takeOwnership(){
+    userOwned=true;
+    if(window.__lab){ clearInterval(window.__lab); window.__lab=null; }
+  }
 
   const CLINICS={
     district:{name:'District',primary:'#0d9488',rad:6,density:'compact',contrast:'Default',why:'<b>200-bed general hospital</b>: compact density, high-throughput ward tracking.',alt:['#0d9488','#0e7490','#14b8a6','#1f7a6e']},
@@ -1032,14 +1038,15 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
     lab.classList.toggle('hc',state.hc);
     radius.value=state.rad; radVal.textContent=state.rad;
     hcTog.classList.toggle('on',state.hc);
+    hcTog.setAttribute('aria-checked',String(state.hc));
     xRawSw.style.background=state.primary; xRawHex.textContent=state.primary;
     xRawRad.textContent='radius '+state.rad; xTheme.textContent=CLINICS[state.client].name;
     renderSwatches(); renderCode();
   }
   function renderSwatches(){
     const c=CLINICS[state.client];
-    swHost.innerHTML=c.alt.map(hex=>`<button data-hex="${hex}" style="background:${hex}" class="${hex===state.primary?'on':''}"></button>`).join('');
-    swHost.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ state.primary=b.dataset.hex; if(colorPick) colorPick.value=state.primary; paintVars(); lightXray(); }));
+    swHost.innerHTML=c.alt.map((hex,index)=>`<button type="button" data-hex="${hex}" style="background:${hex}" class="${hex===state.primary?'on':''}" aria-label="Use ${c.name} colour ${index+1}, ${hex}" aria-pressed="${hex===state.primary}"></button>`).join('');
+    swHost.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ takeOwnership(); state.primary=b.dataset.hex; if(colorPick) colorPick.value=state.primary; paintVars(); lightXray(); }));
     if(colorPick) colorPick.value=state.primary;
   }
   function renderCode(){
@@ -1056,18 +1063,20 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
     state.client=key;
     if(reset!==false){ state.primary=c.primary; state.rad=c.rad; }
     cliTabs.forEach(b=>b.classList.toggle('on',b.dataset.client===key));
+    cliTabs.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.client===key)));
     cliWhy.innerHTML=c.why;
     flip(()=>{ lab.dataset.client=key; paintVars(); });
     lightXray();
   }
-  cliTabs.forEach(b=>b.addEventListener('click',()=>applyClient(b.dataset.client,true)));
-  radius.addEventListener('input',()=>{ state.rad=+radius.value; paintVars(); });
+  cliTabs.forEach(b=>b.addEventListener('click',()=>{ takeOwnership(); applyClient(b.dataset.client,true); }));
+  radius.addEventListener('input',()=>{ takeOwnership(); state.rad=+radius.value; paintVars(); });
   radius.addEventListener('change',lightXray);
-  hcTog.addEventListener('click',()=>{ state.hc=!state.hc; paintVars(); lightXray(); });
-  if(colorPick) colorPick.addEventListener('input',()=>{ state.primary=colorPick.value; swHost.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.hex===state.primary)); paintVars(); lightXray(); });
+  hcTog.addEventListener('click',()=>{ takeOwnership(); state.hc=!state.hc; paintVars(); lightXray(); });
+  if(colorPick) colorPick.addEventListener('input',()=>{ takeOwnership(); state.primary=colorPick.value; swHost.querySelectorAll('button').forEach(b=>{ const on=b.dataset.hex===state.primary; b.classList.toggle('on',on); b.setAttribute('aria-pressed',String(on)); }); paintVars(); lightXray(); });
 
   // create a new hospital from the current console settings (a theme is just a config)
   function createClinic(){
+    takeOwnership();
     CLINICS.custom={name:'Custom',primary:state.primary,rad:state.rad,density:'custom',contrast:state.hc?'High contrast':'Default',
       why:'<b>Your hospital</b>: authored live from the console, saved as a config.',alt:[state.primary,'#10b981','#3b82f6','#6d5ef0']};
     let tab=document.querySelector('#cliTabs .cli-tab[data-client="custom"]');
@@ -1087,7 +1096,9 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   const apptA=lab.querySelector('.ph-appt .di .a');
   const origName=apptA?apptA.textContent:'';
   edges.forEach(b=>b.addEventListener('click',()=>{
+    takeOwnership();
     edges.forEach(x=>x.classList.toggle('on',x===b));
+    edges.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
     const e=b.dataset.edge;
     flip(()=>{
       lab.dataset.edge = (e==='none'?'':e);
@@ -1130,6 +1141,8 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   }
   views.forEach(v=>v.addEventListener('click',()=>switchView(v)));
 
+  cliTabs.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.client==='district')));
+  edges.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.edge==='none')));
   lab.dataset.client='district'; paintVars();
 
   // gentle auto-tour when in view, pause on hover anywhere in the stage
@@ -1138,7 +1151,7 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
   const order=['district','teaching','specialty']; let i=0;
   if(!reduce){
     const io2=new IntersectionObserver(es=>es.forEach(e=>{
-      if(e.isIntersecting){ if(!window.__lab){ window.__lab=setInterval(()=>{ if(hovering)return; i=(i+1)%order.length; applyClient(order[i],true); },4600); } }
+      if(e.isIntersecting){ if(!userOwned&&!window.__lab){ window.__lab=setInterval(()=>{ if(hovering||userOwned)return; i=(i+1)%order.length; applyClient(order[i],true); },4600); } }
       else { clearInterval(window.__lab); window.__lab=null; }
     }),{threshold:.3});
     io2.observe(lab);

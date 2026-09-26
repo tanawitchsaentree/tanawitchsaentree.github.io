@@ -13,7 +13,7 @@ function Stars({ n }: { n: number }) {
   return <span style={{ letterSpacing: -1, fontSize: 7 }}>{Array.from({ length: 5 }, (_, i) => i < n ? '★' : '☆').join('')}</span>
 }
 
-export function FundScreen() {
+export function FundScreen({ onOpenFund }: { onOpenFund?: () => void } = {}) {
   return (
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, overflow: 'hidden', background: SC.paper }}>
       {/* Header */}
@@ -21,12 +21,12 @@ export function FundScreen() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '6px 14px 10px' }}>
           <span style={{ color: '#fff', fontWeight: 800, fontSize: 15 }}>Fund</span>
           <div style={{ position: 'absolute', right: 14, display: 'flex', gap: 10 }}>
-            <button type="button" aria-label="Sort" style={{ background: 'none', border: 'none', padding: 0, display: 'flex', cursor: 'pointer' }}>
+            <span aria-hidden="true" title="Sort shown in the original interface" style={{ display: 'flex', opacity: .72 }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M4 7h11M4 12h7M4 17h4M17 5v11m0 0l-3-3m3 3l3-3"/></svg>
-            </button>
-            <button type="button" aria-label="Search" style={{ background: 'none', border: 'none', padding: 0, display: 'flex', cursor: 'pointer' }}>
+            </span>
+            <span aria-hidden="true" title="Search shown in the original interface" style={{ display: 'flex', opacity: .72 }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-            </button>
+            </span>
           </div>
         </div>
         {/* Tabs */}
@@ -42,7 +42,7 @@ export function FundScreen() {
           {['👍 Recommended', '🌱 Dividend', 'Morningstar'].map(c => (
             <div key={c} style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4, border: `1px solid ${SC.gold}`, color: SC.goldL, borderRadius: 20, padding: '4px 8px', fontSize: 9, fontWeight: 600 }}>
               {c}
-              <button type="button" aria-label={`Remove ${c} filter`} style={{ opacity: .7, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', lineHeight: 1 }}>✕</button>
+              <span aria-hidden="true" style={{ opacity: .7 }}>✕</span>
             </div>
           ))}
         </div>
@@ -92,6 +92,7 @@ export function FundScreen() {
                   <span style={{ width: 13, height: 13, borderRadius: 4, background: SC.navy, display: 'inline-block' }} />LH Fund
                 </div>
               </div>
+              {f.code === 'LHIP-D' && onOpenFund && <button type="button" onClick={onOpenFund} style={{ width: '100%', marginTop: 8, padding: '6px 8px', border: `1px solid ${SC.navy}`, borderRadius: 7, background: '#fff', color: SC.navy, font: `700 9px ${SC.ui}`, cursor: 'pointer' }}>View fund details</button>}
             </div>
           ))}
         </div>

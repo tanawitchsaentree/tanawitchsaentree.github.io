@@ -1,13 +1,18 @@
 'use client'
 import { SC, SW, SH } from './_screenTokens'
+import type { PurchaseAccount } from '../ProfitaPhoneScreen'
 
-export function ConfirmScreen() {
+type Props = { amount?: string; account?: PurchaseAccount; onBack?: () => void; onConfirm?: () => void }
+const DEFAULT_ACCOUNT = { name: 'Savings account', number: '221-1-12345-1', balance: 40000 }
+
+export function ConfirmScreen({ amount = '5000', account = DEFAULT_ACCOUNT, onBack, onConfirm }: Props = {}) {
+  const formattedAmount = Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })
   return (
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, overflow: 'hidden', background: SC.paper }}>
       {/* Header */}
       <div style={{ background: SC.navy, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', color: '#fff', padding: '6px 14px 10px' }}>
-          <button type="button" aria-label="Back" style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', textAlign: 'left', lineHeight: 1 }}>←</button>
+          <button type="button" aria-label="Back to amount" onClick={onBack} style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: onBack ? 'pointer' : 'default', textAlign: 'left', lineHeight: 1 }}>←</button>
           <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, marginRight: 20 }}>Confirm purchase</span>
         </div>
       </div>
@@ -35,15 +40,15 @@ export function ConfirmScreen() {
         <div style={{ background: '#fff', borderRadius: 10, padding: '2px 12px', boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
           <div style={{ padding: '9px 0' }}>
             <div style={{ fontSize: 8, color: SC.grey }}>Payment account</div>
-            <div style={{ fontSize: 11, fontWeight: 800, color: SC.ink, marginTop: 2 }}>221-1-12345-1</div>
-            <div style={{ fontSize: 9, color: SC.grey, marginTop: 1 }}>Savings account · John Doe</div>
+            <div style={{ fontSize: 11, fontWeight: 800, color: SC.ink, marginTop: 2 }}>{account.number}</div>
+            <div style={{ fontSize: 9, color: SC.grey, marginTop: 1 }}>{account.name} · Sample customer</div>
           </div>
         </div>
 
         {/* Amount block */}
         <div style={{ background: '#fff', borderRadius: 10, padding: '2px 12px', boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
           {[
-            { k: 'Amount (THB)',    v: '5,000.00', big: true  },
+            { k: 'Amount (THB)',    v: formattedAmount, big: true  },
             { k: 'Transaction date', v: '31 Oct. 2020' },
             { k: 'Effective date',   v: '01 Nov. 2020' },
           ].map((row, i) => (
@@ -61,7 +66,7 @@ export function ConfirmScreen() {
 
       {/* Footer */}
       <div style={{ flexShrink: 0, padding: '10px 14px 14px', background: '#fff', borderTop: '1px solid #eef0f3' }}>
-        <button style={{ width: '100%', background: SC.navy, color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: 'pointer' }}>
+        <button type="button" onClick={onConfirm} style={{ width: '100%', background: SC.navy, color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: 'pointer' }}>
           Confirm
         </button>
       </div>

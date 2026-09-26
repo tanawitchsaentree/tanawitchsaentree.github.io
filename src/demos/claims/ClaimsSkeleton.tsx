@@ -19,9 +19,10 @@ export function ClaimsSkeleton() {
   const [selected, setSelected] = useState<number | null>(null)
   const [peeked, setPeeked] = useState<number | null>(null)
   const [converted, setConverted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   const resetOld = useCallback(() => { setOldConverted(false); setWhyVisible(false) }, [])
-  const resetNew = useCallback(() => { setModalOpen(false); setSelected(null); setPeeked(null); setConverted(false) }, [])
+  const resetNew = useCallback(() => { setModalOpen(false); setSelected(null); setPeeked(null); setConverted(false); setSubmitting(false) }, [])
 
   const switchView = (v: 'old' | 'new') => {
     setView(v)
@@ -116,7 +117,11 @@ export function ClaimsSkeleton() {
           {/* Body */}
           <div aria-live="polite" style={{ padding: '1rem', minHeight: 280 }}>
             <div style={{ fontFamily: C.font.mono, fontSize: '.68rem', letterSpacing: '.1em', textTransform: 'uppercase', color: C.color.txDim, marginBottom: '.7rem' }}>
-              {view === 'old' && oldConverted ? 'policies · converting (skeleton not shown)' : '1 skeleton awaiting conversion'}
+              {view === 'old' && oldConverted
+                ? 'policies · converting (skeleton not shown)'
+                : view === 'new' && converted
+                  ? '0 skeletons awaiting conversion'
+                  : '1 skeleton awaiting conversion'}
             </div>
 
             {view === 'old' && !oldConverted && <SkelRow />}
@@ -151,6 +156,10 @@ export function ClaimsSkeleton() {
             {view === 'new' && converted && (
               <div style={{ textAlign: 'center', padding: '2rem', fontFamily: C.font.mono, fontSize: '.82rem', color: C.color.live }}>
                 ✓ Conversion complete
+                <div style={{ color: C.color.tx, marginTop: '.7rem', lineHeight: 1.6 }}>
+                  Northwind Logistics<br />
+                  <span style={{ color: C.color.txDim }}>Marine Cargo · NW-4471</span>
+                </div>
                 <br />
                 <button onClick={resetNew} style={{ marginTop: '.8rem', fontFamily: C.font.mono, fontSize: '.74rem', color: C.color.txDim, background: 'none', border: `1px solid ${C.color.line2}`, padding: '.4rem .8rem', borderRadius: 6, cursor: 'pointer' }}>reset</button>
               </div>
@@ -254,18 +263,26 @@ export function ClaimsSkeleton() {
                 <div style={{ padding: '.85rem 1.1rem', borderTop: `1px solid ${C.color.line}`, display: 'flex', gap: '.6rem', justifyContent: 'flex-end', position: 'sticky', bottom: 0, background: C.color.inset }}>
                   <button onClick={() => setModalOpen(false)} style={{ fontFamily: C.font.mono, fontSize: '.78rem', color: C.color.tx, background: C.color.bg2, border: `1px solid ${C.color.line2}`, padding: '.5rem .9rem', borderRadius: 6, cursor: 'pointer' }}>Cancel</button>
                   <button
-                    disabled={!selected}
-                    onClick={() => { if (!selected) return; setConverted(true); setTimeout(() => setModalOpen(false), 700) }}
+                    disabled={!selected || submitting}
+                    onClick={() => {
+                      if (!selected || submitting) return
+                      setSubmitting(true)
+                      setTimeout(() => {
+                        setConverted(true)
+                        setModalOpen(false)
+                        setSubmitting(false)
+                      }, 700)
+                    }}
                     style={{
                       fontFamily: C.font.mono, fontSize: '.78rem', fontWeight: 700,
-                      color: selected ? C.color.txOnLive : C.color.txFaint,
-                      background: selected ? C.color.live : C.color.bg2,
+                      color: selected && !submitting ? C.color.txOnLive : C.color.txFaint,
+                      background: selected && !submitting ? C.color.live : C.color.bg2,
                       border: `1px solid ${selected ? 'transparent' : C.color.line}`,
-                      padding: '.5rem .9rem', borderRadius: 6, cursor: selected ? 'pointer' : 'not-allowed',
+                      padding: '.5rem .9rem', borderRadius: 6, cursor: selected && !submitting ? 'pointer' : 'not-allowed',
                       transition: `color .18s ${C.ease.std}, background .18s ${C.ease.std}, border-color .18s ${C.ease.std}`,
                     }}
                   >
-                    Continue conversion
+                    {submitting ? 'Converting…' : 'Continue conversion'}
                   </button>
                 </div>
               </div>

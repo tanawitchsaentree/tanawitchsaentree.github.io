@@ -23,7 +23,7 @@ const ROWS: { group: string; items: Row[] }[] = [
   ]},
 ]
 
-export function FundDetailScreen() {
+export function FundDetailScreen({ onBack, onBuy }: { onBack?: () => void; onBuy?: () => void } = {}) {
   const [openId, setOpenId] = useState<string | null>(null)
 
   return (
@@ -31,8 +31,8 @@ export function FundDetailScreen() {
       {/* Header */}
       <div style={{ background: SC.navy, padding: '6px 14px 0', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#fff', padding: '4px 0 10px' }}>
-          <button type="button" aria-label="Back" style={{ fontSize: 16, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', lineHeight: 1 }}>←</button>
-          <span style={{ fontSize: 13, fontWeight: 800 }}>LHFUND-01</span>
+          <button type="button" aria-label="Back to funds" onClick={onBack} style={{ fontSize: 16, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: onBack ? 'pointer' : 'default', lineHeight: 1 }}>←</button>
+          <span style={{ fontSize: 13, fontWeight: 800 }}>LHIP-D</span>
           <span style={{ fontSize: 8, border: '1px solid rgba(255,255,255,.4)', borderRadius: 20, padding: '3px 7px', display: 'flex', gap: 3, alignItems: 'center', color: 'rgba(255,255,255,.9)' }}>⊕ Compare</span>
           <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 600, color: SC.goldL }}>Save</span>
         </div>
@@ -100,9 +100,8 @@ export function FundDetailScreen() {
 
       {/* Actions */}
       <div style={{ flexShrink: 0, display: 'flex', gap: 7, padding: '10px 14px 14px', background: '#fff', borderTop: '1px solid #eef0f3' }}>
-        <button style={{ flex: 1, border: 'none', borderRadius: 10, padding: '11px', fontFamily: SC.ui, fontWeight: 800, fontSize: 11, background: SC.navy, color: '#fff', cursor: 'pointer' }}>Buy</button>
-        <button style={{ flex: 1, border: `1.5px solid ${SC.navy}`, borderRadius: 10, padding: '11px', fontFamily: SC.ui, fontWeight: 800, fontSize: 11, background: '#fff', color: SC.navy, cursor: 'pointer' }}>Sell</button>
-        <button style={{ flex: 1, border: 'none', borderRadius: 10, padding: '11px', fontFamily: SC.ui, fontWeight: 800, fontSize: 11, background: SC.gold, color: '#3a3018', cursor: 'pointer' }}>Switch</button>
+        <button type="button" onClick={onBuy} style={{ flex: 1, border: 'none', borderRadius: 10, padding: '11px', fontFamily: SC.ui, fontWeight: 800, fontSize: 11, background: SC.navy, color: '#fff', cursor: onBuy ? 'pointer' : 'default' }}>Buy</button>
+        <span style={{ flex: 2, display: 'flex', alignItems: 'center', color: SC.grey, fontSize: 9, lineHeight: 1.35 }}>Sell and switch are shown elsewhere as separate examples.</span>
       </div>
     </div>
   )

@@ -54,8 +54,8 @@ function Donut({ size = 72 }: { size?: number }) {
 
 const ITEMS = [
   { color: SC.allocDiy,        label: 'DIY',            value: '37,375.31', pct: '60%', chg: '+5,005.55 (+15.10%)', up: true },
-  { color: SC.allocRetirement, label: 'Retirement Plan', value: '9,248.00',  pct: '30%', chg: '-10.2 (-8.10%)',       up: false },
-  { color: SC.allocTravel,     label: 'Travel Plan',     value: '1,248.00',  pct: '10%', chg: '0 (0%)',               up: null },
+  { color: SC.allocRetirement, label: 'Retirement Plan', value: '18,687.65', pct: '30%', chg: '-10.20 (-0.05%)',      up: false },
+  { color: SC.allocTravel,     label: 'Travel Plan',     value: '6,229.22',  pct: '10%', chg: '0.00 (0%)',            up: null },
 ]
 
 export function PortfolioScreen() {
@@ -65,8 +65,8 @@ export function PortfolioScreen() {
       <div style={{ background: SC.navy, padding: '6px 14px 16px', borderRadius: '0 0 18px 18px', flexShrink: 0, textAlign: 'center', color: '#fff' }}>
         <div style={{ fontSize: 13, fontWeight: 700, padding: '4px 0 8px' }}>Portfolio</div>
         <div style={{ color: 'rgba(255,255,255,.6)', fontSize: 9 }}>Latest total value (baht)</div>
-        <div style={{ fontSize: 21, fontWeight: 800, letterSpacing: '-.02em', marginTop: 2 }}>263,476.00</div>
-        <div style={{ color: '#5fd39a', fontSize: 10, fontWeight: 700, marginTop: 2 }}>+31,342.21 (+12%)</div>
+        <div style={{ fontSize: 21, fontWeight: 800, letterSpacing: '-.02em', marginTop: 2 }}>62,292.18</div>
+        <div style={{ color: '#5fd39a', fontSize: 10, fontWeight: 700, marginTop: 2 }}>+4,995.35 (+8.72%)</div>
         <div style={{ color: 'rgba(255,255,255,.4)', fontSize: 8, marginTop: 3 }}>As of 31 Oct. 2020</div>
       </div>
 

@@ -25,9 +25,13 @@ export interface HandoffDoc {
 
 const UNDO_WINDOW_MS = 4000
 
-export function Handoff({ doc }: { doc: HandoffDoc }) {
-  const [done, setDone]     = useState<'confirm' | 'reclass' | null>(null)
-  const [locked, setLocked] = useState(false)
+export function Handoff({ doc, initialDecision = null, onDecision }: {
+  doc: HandoffDoc
+  initialDecision?: 'confirm' | 'reclass' | null
+  onDecision?: (decision: 'confirm' | 'reclass' | null) => void
+}) {
+  const [done, setDone]     = useState<'confirm' | 'reclass' | null>(initialDecision)
+  const [locked, setLocked] = useState(Boolean(initialDecision))
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const reduced = useReducedMotion()
 
@@ -35,6 +39,7 @@ export function Handoff({ doc }: { doc: HandoffDoc }) {
 
   function act(kind: 'confirm' | 'reclass') {
     setDone(kind)
+    onDecision?.(kind)
     setLocked(false)
     if (timerRef.current) clearTimeout(timerRef.current)
     timerRef.current = setTimeout(() => setLocked(true), reduced ? 300 : UNDO_WINDOW_MS)
@@ -43,6 +48,7 @@ export function Handoff({ doc }: { doc: HandoffDoc }) {
   function undo() {
     if (timerRef.current) clearTimeout(timerRef.current)
     setDone(null)
+    onDecision?.(null)
     setLocked(false)
   }
 

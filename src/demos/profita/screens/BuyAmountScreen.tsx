@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { SC, SW, SH } from './_screenTokens'
+import type { PurchaseAccount } from '../ProfitaPhoneScreen'
 
 const KEYS = ['1','2','3','4','5','6','7','8','9','000','0','⌫']
 const QUICK = ['5,000','10,000','50,000']
@@ -10,27 +11,47 @@ function fmt(n: string) {
   return num === 0 ? '0' : num.toLocaleString()
 }
 
-export function BuyAmountScreen() {
-  const [digits, setDigits] = useState('5000')
+type Props = {
+  amount?: string
+  account?: PurchaseAccount
+  onAmountChange?: (amount: string) => void
+  onBack?: () => void
+  onNext?: () => void
+  onChangeAccount?: () => void
+}
+
+const DEFAULT_ACCOUNT = { name: 'Savings account', number: '221-1-12345-1', balance: 40000 }
+
+export function BuyAmountScreen({ amount: controlledAmount, account = DEFAULT_ACCOUNT, onAmountChange, onBack, onNext, onChangeAccount }: Props = {}) {
+  const [localAmount, setLocalAmount] = useState('5000')
+  const digits = controlledAmount ?? localAmount
+  const setDigits = (update: string | ((previous: string) => string)) => {
+    const next = typeof update === 'function' ? update(digits) : update
+    if (onAmountChange) onAmountChange(next)
+    else setLocalAmount(next)
+  }
 
   function tap(k: string) {
     setDigits(prev => {
       if (k === '⌫') return prev.slice(0, -1)
-      if (k === '000') return prev === '' || prev === '0' ? '' : prev + '000'
-      const next = (prev === '0' ? '' : prev) + k
+      const next = k === '000'
+        ? (prev === '' || prev === '0' ? '' : prev + '000')
+        : (prev === '0' ? '' : prev) + k
       return next.length > 9 ? prev : next
     })
   }
 
   const amount = parseInt(digits || '0', 10)
-  const valid = amount >= 5000
+  const belowMinimum = amount > 0 && amount < 5000
+  const overBalance = amount > account.balance
+  const valid = amount >= 5000 && !overBalance
 
   return (
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, overflow: 'hidden', background: SC.paper }}>
       {/* Header */}
       <div style={{ background: SC.navy, flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', color: '#fff', padding: '6px 14px 10px' }}>
-          <button type="button" aria-label="Back" style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', textAlign: 'left', lineHeight: 1 }}>←</button>
+          <button type="button" aria-label="Back to fund details" onClick={onBack} style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: onBack ? 'pointer' : 'default', textAlign: 'left', lineHeight: 1 }}>←</button>
           <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, marginRight: 20 }}>Buy</span>
         </div>
         <div style={{ color: '#fff', padding: '0 14px 14px', textAlign: 'center' }}>
@@ -49,6 +70,9 @@ export function BuyAmountScreen() {
             <span style={{ display: 'inline-block', width: 2, height: 28, background: SC.gold, marginLeft: 2, animation: 'prof-blink 1s step-end infinite' }} />
           </div>
           <div style={{ fontSize: 9, color: SC.grey, marginTop: 6 }}>Minimum first purchase 5,000.00 THB</div>
+          {(belowMinimum || overBalance) && <div role="alert" style={{ fontSize: 9, color: '#a33a3a', marginTop: 5, fontWeight: 700 }}>
+            {overBalance ? `Available balance is ${account.balance.toLocaleString()}.00 THB` : 'Enter at least 5,000.00 THB'}
+          </div>}
         </div>
 
         {/* Quick amounts */}
@@ -65,10 +89,10 @@ export function BuyAmountScreen() {
         <div style={{ margin: '0 14px 10px', background: '#fff', borderRadius: 10, padding: '9px 12px', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
           <div style={{ width: 26, height: 26, borderRadius: 6, background: 'rgba(33,58,94,.1)', flexShrink: 0 }} />
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: SC.ink }}>Savings account</div>
-            <div style={{ fontSize: 8, color: SC.grey }}>221-1-12345-1 · 40,000.00 THB</div>
+            <div style={{ fontSize: 10, fontWeight: 700, color: SC.ink }}>{account.name}</div>
+            <div style={{ fontSize: 8, color: SC.grey }}>{account.number} · {account.balance.toLocaleString()}.00 THB</div>
           </div>
-          <span style={{ fontSize: 10, color: SC.navyL, fontWeight: 600 }}>Change ›</span>
+          {onChangeAccount ? <button type="button" onClick={onChangeAccount} style={{ border: 0, padding: 2, background: 'none', color: SC.navyL, font: `700 9px ${SC.ui}`, cursor: 'pointer' }}>Change ›</button> : <span style={{ fontSize: 9, color: SC.grey, fontWeight: 600 }}>Selected</span>}
         </div>
 
         {/* Keypad */}
@@ -84,7 +108,7 @@ export function BuyAmountScreen() {
 
       {/* Footer */}
       <div style={{ flexShrink: 0, padding: '10px 14px 14px', background: '#fff' }}>
-        <button style={{ width: '100%', background: valid ? SC.navy : SC.greyL, color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: valid ? 'pointer' : 'not-allowed' }}>
+        <button type="button" disabled={!valid} onClick={onNext} style={{ width: '100%', background: valid ? SC.navy : SC.greyL, color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: valid ? 'pointer' : 'not-allowed' }}>
           Next
         </button>
       </div>

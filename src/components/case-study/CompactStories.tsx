@@ -15,7 +15,7 @@ function Story({ company, period, contribution, scope, title, intro, children }:
 }
 export function StellarStory() {
  return <Story company="Stellareat" period="2024" contribution="Product Designer" scope="Meal discovery prototype" title="Meal ideas from ingredients at home" intro="I designed a cooking app for Stellareat that connects ingredients, meal suggestions, and saved recipes. The prototype gave the team a way to explore how someone moves from checking the fridge to choosing dinner.">
- <section><h2>Choosing what to cook</h2><p>People can describe what they have, browse ideas, or select ingredients. I kept these routes together so they could change approach without starting over.</p><p className={s.note}>Recreated screens with scripted suggestions.</p><div className={s.gallery}>
+ <section><h2>Choosing what to cook</h2><p>People can describe what they have, browse ideas, or select ingredients. I kept these routes together so they could change approach without starting over.</p><p className={s.note}>Three independent sample screens. The first two replay scripted suggestions; the ingredient picker starts paused and can be used directly.</p><div className={s.gallery}>
  {[{ Screen:StellarScreen1,caption:'Describe ingredients and review a suggestion.' },{Screen:StellarScreen2,caption:'Explore meal ideas.'},{Screen:StellarScreen3,caption:'Select ingredients for a recipe.'}].map(({Screen,caption})=><figure key={caption}><div className={s.phone}><div><Screen /></div></div><figcaption>{caption}</figcaption></figure>)}
  </div></section><section><h2>What still needs testing</h2><p>The prototype explores choosing a meal. It does not establish whether people cook the recipes, keep their pantry updated, or waste less food.</p></section></Story>
 }

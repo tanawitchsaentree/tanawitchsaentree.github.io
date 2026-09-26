@@ -34,7 +34,7 @@ export function RoboScreen() {
         }}>
           <div style={{ color: SC.grey, fontSize: 9 }}>Latest total value (baht)</div>
           <div style={{ color: SC.ink, fontSize: 22, fontWeight: 800, letterSpacing: '-.02em', marginTop: 2 }}>21,248.00</div>
-          <div style={{ color: SC.green, fontSize: 10, fontWeight: 700, marginTop: 2 }}>+42.1 (+10%)</div>
+          <div style={{ color: SC.green, fontSize: 10, fontWeight: 700, marginTop: 2 }}>+2,380.78 (+12.6%)</div>
         </div>
       </div>
 

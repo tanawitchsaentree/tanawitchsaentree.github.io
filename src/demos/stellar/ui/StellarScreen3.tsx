@@ -29,8 +29,11 @@ const CSS = `
 /* bottom bar */
 .s3-bottom{flex:none;display:flex;align-items:center;gap:12px;padding:12px 16px 16px;border-top:1px solid color-mix(in srgb, var(--stellar-ink-app) 6%, transparent);background:var(--stellar-white)}
 .s3-mini{width:38px;height:38px;display:grid;place-content:center;color:var(--stellar-ink-soft-app);cursor:default;background:transparent;border:0;border-radius:50%;flex:none}
+.s3-mini:disabled,.s3-close:disabled{opacity:.38;cursor:default}
 .s3-feed{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-white);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;padding:14px;border-radius:999px;border:0;cursor:default;box-shadow:0 8px 22px color-mix(in srgb, var(--stellar-lime) 40%, transparent)}
+.s3-feed:disabled{background:var(--stellar-surface-soft);color:var(--stellar-muted-app);box-shadow:none;cursor:not-allowed}
 .s3-feed .cnt{font-family:'Space Mono',monospace;font-size:11px;background:color-mix(in srgb, var(--stellar-white) 25%, transparent);padding:1px 7px;border-radius:999px;font-weight:400}
+.s3-status{position:absolute;left:18px;right:18px;bottom:70px;text-align:center;font-size:10px;color:var(--stellar-muted-app);pointer-events:none}
 
 /* cooking overlay */
 .s3-cook{position:absolute;inset:0;z-index:30;background:color-mix(in srgb, var(--stellar-white) 96%, transparent);backdrop-filter:blur(4px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:30px;text-align:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s cubic-bezier(.16,1,.3,1),visibility 0s linear .35s}
@@ -90,13 +93,14 @@ export function StellarScreen3() {
   const cookMsgRef = useRef<HTMLDivElement>(null)
   const resultRef  = useRef<HTMLDivElement>(null)
   const backRef    = useRef<HTMLButtonElement>(null)
+  const statusRef  = useRef<HTMLDivElement>(null)
 
   const { fingerEl, rippleEl, bot } = useBotFinger(screenRef)
 
   /* WCAG 2.2.2 — auto-playing bot demo runs indefinitely, so it needs a
      user-operable pause control independent of prefers-reduced-motion. */
-  const [paused, setPaused] = useState(false)
-  const pausedRef = useRef(false)
+  const [paused, setPaused] = useState(true)
+  const pausedRef = useRef(true)
   useEffect(() => { pausedRef.current = paused }, [paused])
 
   useEffect(() => {
@@ -125,8 +129,11 @@ export function StellarScreen3() {
 
     function toggleChip(el: HTMLElement) {
       el.classList.toggle('sel')
+      el.setAttribute('aria-pressed', String(el.classList.contains('sel')))
       selected = sc.querySelectorAll('.s3-chip.sel').length
       if (cntRef.current) cntRef.current.textContent = String(selected)
+      if (feedRef.current) feedRef.current.disabled = selected === 0
+      if (statusRef.current) statusRef.current.textContent = selected ? `${selected} ingredient${selected === 1 ? '' : 's'} selected` : 'Choose at least one ingredient'
     }
 
     function buildChips() {
@@ -134,11 +141,13 @@ export function StellarScreen3() {
         const wrap = bd.querySelector<HTMLDivElement>(`.s3-chips[data-cat="${cat}"]`)
         if (!wrap) return
         items.forEach(name => {
-          const b = document.createElement('div')
+          const b = document.createElement('button')
+          b.type = 'button'
           b.className = 's3-chip'
           b.dataset.name = name
+          b.setAttribute('aria-pressed', 'false')
           b.innerHTML = `<span class="pl">${ICON_PLUS}</span><span>${name}</span>`
-          b.addEventListener('click', () => toggleChip(b))
+          b.addEventListener('click', () => { setPaused(true); toggleChip(b) })
           wrap.appendChild(b)
         })
       })
@@ -189,10 +198,28 @@ export function StellarScreen3() {
       sc.querySelectorAll('.s3-chip.sel').forEach(c => c.classList.remove('sel'))
       selected = 0
       if (cntRef.current) cntRef.current.textContent = '0'
+      if (feedRef.current) feedRef.current.disabled = true
+      if (statusRef.current) statusRef.current.textContent = 'Choose at least one ingredient'
       bd.scrollTop = 0
       resultRef.current?.classList.remove('show')
       cookRef.current?.classList.remove('show')
     }
+
+    function showManualResult() {
+      if (!selected || !cookRef.current || !resultRef.current) return
+      setPaused(true)
+      if (cookMsgRef.current) cookMsgRef.current.textContent = `Reading your ${selected} ingredient${selected === 1 ? '' : 's'}`
+      cookRef.current.classList.add('show')
+      window.setTimeout(() => {
+        cookRef.current?.classList.remove('show')
+        resultRef.current?.classList.add('show')
+      }, reduced ? 50 : 700)
+    }
+    const feedEl = feedRef.current
+    const backEl = backRef.current
+    feedEl?.addEventListener('click', showManualResult)
+    const closeResult = () => { setPaused(true); resultRef.current?.classList.remove('show') }
+    backEl?.addEventListener('click', closeResult)
 
     /* ---- loop ---- */
     async function loop() {
@@ -253,7 +280,12 @@ export function StellarScreen3() {
       if (entries[0].isIntersecting) { io.disconnect(); setTimeout(loop, 700) }
     }, { threshold: 0.4 })
     io.observe(sc)
-    return () => { cancelled = true; io.disconnect() }
+    return () => {
+      cancelled = true
+      io.disconnect()
+      feedEl?.removeEventListener('click', showManualResult)
+      backEl?.removeEventListener('click', closeResult)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -293,7 +325,7 @@ export function StellarScreen3() {
 
             {/* top */}
             <div className="s3-top">
-              <button className="s3-close" aria-label="Close">
+              <button type="button" className="s3-close" aria-label="Close unavailable in this sample" disabled>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
               </button>
               <h3>What&apos;s in Your Kitchen?</h3>
@@ -320,16 +352,17 @@ export function StellarScreen3() {
 
             {/* bottom bar */}
             <div className="s3-bottom">
-              <button className="s3-mini" aria-label="Filter">
+              <button type="button" className="s3-mini" aria-label="Filter unavailable in this sample" disabled>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
               </button>
-              <button className="s3-mini" aria-label="Edit">
+              <button type="button" className="s3-mini" aria-label="Edit unavailable in this sample" disabled>
                 <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
               </button>
-              <button ref={feedRef} className="s3-feed" aria-label="Feed me">
+              <button ref={feedRef} type="button" className="s3-feed" aria-label="Find a recipe from selected ingredients" disabled>
                 Feed me! <span ref={cntRef} className="cnt">0</span>
               </button>
             </div>
+            <div ref={statusRef} className="s3-status" role="status">Choose at least one ingredient</div>
 
             {/* cooking overlay */}
             <div ref={cookRef} className="s3-cook">

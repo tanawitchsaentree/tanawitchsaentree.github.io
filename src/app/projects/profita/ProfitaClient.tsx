@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ProfitaPhoneScreen, type ScreenName } from '@/demos/profita/ProfitaPhoneScreen'
+import { ProfitaPhoneScreen, type PurchaseAccount, type PurchaseDemoProps, type ScreenName } from '@/demos/profita/ProfitaPhoneScreen'
 import styles from './ProfitaCase.module.css'
 import { ProjectHero } from '@/components/case-study/ProjectHero'
 
@@ -23,12 +23,24 @@ const supporting: { title: string; text: string; screen: ScreenName }[] = [
   { title: 'Savings account', text: 'View the account balance and transaction history.', screen: 'savings' },
   { title: 'Payment account', text: 'Choose the account to use for a purchase.', screen: 'buyaccount' },
 ]
-function Phone({ screen }: { screen: ScreenName }) {
-  return <div className={styles.phone}><div><ProfitaPhoneScreen screen={screen} /></div></div>
+function Phone({ screen, purchase }: { screen: ScreenName; purchase?: PurchaseDemoProps }) {
+  return <div className={styles.phone}><div><ProfitaPhoneScreen screen={screen} purchase={purchase} /></div></div>
 }
 
+const SAMPLE_ACCOUNT: PurchaseAccount = { name: 'Savings account', number: '221-1-12345-1', balance: 40000 }
+
 export function ProfitaClient() {
-  const [step, setStep] = useState(0)
+  const [purchaseScreen, setPurchaseScreen] = useState<ScreenName>('fund')
+  const [amount, setAmount] = useState('5000')
+  const [account, setAccount] = useState<PurchaseAccount>(SAMPLE_ACCOUNT)
+  const step = steps.findIndex(item => item.screen === purchaseScreen)
+  const purchase: PurchaseDemoProps = {
+    amount,
+    account,
+    onAmountChange: setAmount,
+    onNavigate: setPurchaseScreen,
+    onAccountChange: setAccount,
+  }
   return (
     <main className={styles.page} data-demo="profita">
       <nav className={styles.nav} aria-label="Project navigation"><Link href="/">← Portfolio</Link><span>Profita · LH Bank</span><a href="#purchase">Purchase screens</a></nav>
@@ -37,14 +49,14 @@ export function ProfitaClient() {
         details={[["Role", "Senior UX/UI Designer"], ["Company", "Robowealth"], ["Scope", "Fund discovery and purchase"]]} />
       <section className={styles.section} aria-labelledby="overview-title">
         <div className={styles.sectionHead}><h2 id="overview-title">Finding your way around</h2><p>Fund browsing, Robo Advisor plans, and portfolio tracking each have a place in the navigation.</p></div>
-        <p className={styles.note}>Screens recreated for this portfolio with sample data and edited interface text. These are individual examples, not a connected transaction.</p>
+        <p className={styles.note}>Screens recreated for this portfolio with sample data and edited interface text. The purchase walkthrough below is connected; the overview and supporting screens remain individual examples.</p>
         <div className={styles.overview}>{overview.map(item => <figure key={item.screen}><Phone screen={item.screen} /><figcaption><h3>{item.title}</h3><p>{item.text}</p></figcaption></figure>)}</div>
       </section>
       <section id="purchase" className={styles.section} aria-labelledby="purchase-title">
         <div className={styles.sectionHead}><h2 id="purchase-title">From a fund to an order</h2><p>Choose a step to see the fund information, amount, and order review.</p></div>
         <div className={styles.walkthrough}>
-          <div className={styles.steps}>{steps.map((item, i) => <button type="button" key={item.screen} aria-pressed={step === i} aria-controls="purchase-example" onClick={() => setStep(i)} className={step === i ? styles.active : undefined}><span className={styles.number}>0{i + 1}</span><span><strong>{item.title}</strong><span>{item.text}</span></span></button>)}</div>
-          <figure id="purchase-example" className={styles.example} aria-label={steps[step].title}><Phone key={steps[step].screen} screen={steps[step].screen} /><figcaption>{step + 1} / {steps.length} · {steps[step].title}</figcaption></figure>
+          <div className={styles.steps}>{steps.map((item, i) => <button type="button" key={item.screen} aria-pressed={step === i} aria-controls="purchase-example" onClick={() => setPurchaseScreen(item.screen)} className={step === i ? styles.active : undefined}><span className={styles.number}>0{i + 1}</span><span><strong>{item.title}</strong><span>{item.text}</span></span></button>)}</div>
+          <figure id="purchase-example" className={styles.example} aria-label={step >= 0 ? steps[step].title : 'Sample order received'}><Phone screen={purchaseScreen} purchase={purchase} /><figcaption>{step >= 0 ? `${step + 1} / ${steps.length} · ${steps[step].title}` : 'Sample order received · pending processing'}</figcaption></figure>
         </div>
       </section>
       <section className={styles.section} aria-labelledby="accounts-title">
