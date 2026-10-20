@@ -53,6 +53,8 @@
 .project { display: grid; grid-template-columns: var(--home-thumb) minmax(0, 1fr); gap: var(--space-6); align-items: start; }
 .projectImage { position: relative; width: var(--home-thumb); aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-sm); background: var(--bg-elevated); }
 .projectImage img { object-fit: cover; }
+.projects { display: grid; gap: var(--space-8); }
+.projectGlyph { display: grid; place-items: center; height: 100%; color: var(--fg-subtle); font-size: var(--type-home-body); }
 .projectDescription { color: var(--fg-muted); margin-top: var(--space-2); }
 .projectLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-top: var(--space-2); font-size: var(--type-home-note); }
 .projectLinks button { text-align: left; }

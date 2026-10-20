@@ -56,6 +56,13 @@ export const PERSONAL_PROJECT = {
   url: 'https://manabischools.com',
 } as const
 
+export const BREWCODEX_PROJECT = {
+  title: 'Brewcodex',
+  description: 'My independent deck finder for new Magic: The Gathering Arena players, from the deck engine to plain-language explanations of why a deck works.',
+  details: 'Inside the project',
+  url: 'https://brewcodex.app',
+} as const
+
 export const TOOLS = [
   { name: 'Human Tone', description: 'Editing guidance for clearer, more natural writing.', href: 'https://github.com/tanawitchsaentree/Human-tone' },
   { name: 'Kiln', description: 'A toolkit for creating design systems with AI coding tools.', href: 'https://github.com/tanawitchsaentree/Kiln' },

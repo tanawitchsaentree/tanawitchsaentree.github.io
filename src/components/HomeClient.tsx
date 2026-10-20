@@ -6,17 +6,20 @@ import Image from 'next/image'
 import { ArrowRight, ArrowUpRight, ChevronDown, LockKeyhole } from 'lucide-react'
 import { GraphiteBackground } from '@/components/home/GraphiteBackground'
 import { ManabiModal } from '@/components/home/ManabiModal'
-import { PERSONAL_PROJECT, PROFILE, SELECTED_WORK, TOOLS } from '@/data/home'
+import { BrewcodexModal } from '@/components/home/BrewcodexModal'
+import { BREWCODEX_PROJECT, PERSONAL_PROJECT, PROFILE, SELECTED_WORK, TOOLS } from '@/data/home'
 import styles from '@/components/home/HomeDocument.module.css'
 
 export function HomeClient() {
   const [lightPaused, setLightPaused] = useState(false)
   const [manabiOpen, setManabiOpen] = useState(false)
   const closeManabi = useCallback(() => setManabiOpen(false), [])
+  const [brewcodexOpen, setBrewcodexOpen] = useState(false)
+  const closeBrewcodex = useCallback(() => setBrewcodexOpen(false), [])
 
   return (
     <>
-      <GraphiteBackground paused={lightPaused || manabiOpen} />
+      <GraphiteBackground paused={lightPaused || manabiOpen || brewcodexOpen} />
       <main id="main-content" tabIndex={-1} className={styles.page}>
         <div className={styles.document}>
           <header className={styles.intro}>
@@ -69,22 +72,42 @@ export function HomeClient() {
           </section>
 
           <section className={styles.section} aria-labelledby="independent-heading">
-            <h2 id="independent-heading" className={styles.sectionHeading}>Independent project</h2>
-            <div className={styles.project}>
-              <div className={styles.projectImage}>
-                <Image src="/images/manabi-cover.png" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
+            <h2 id="independent-heading" className={styles.sectionHeading}>Independent projects</h2>
+            <div className={styles.projects}>
+              <div className={styles.project}>
+                <div className={styles.projectImage}>
+                  <Image src="/images/manabi-cover.png" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
+                </div>
+                <div>
+                  <h3 className={styles.projectTitle}>{PERSONAL_PROJECT.title}</h3>
+                  <p className={styles.projectDescription}>{PERSONAL_PROJECT.description}</p>
+                  <div className={styles.projectLinks}>
+                    <button type="button" onClick={() => setManabiOpen(true)} aria-haspopup="dialog">
+                      {PERSONAL_PROJECT.details} <ArrowRight size={14} aria-hidden="true" />
+                    </button>
+                    <a href={PERSONAL_PROJECT.url} target="_blank" rel="noopener noreferrer">
+                      Visit Manabi <ArrowUpRight size={12} aria-hidden="true" />
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h3 className={styles.projectTitle}>{PERSONAL_PROJECT.title}</h3>
-                <p className={styles.projectDescription}>{PERSONAL_PROJECT.description}</p>
-                <div className={styles.projectLinks}>
-                  <button type="button" onClick={() => setManabiOpen(true)} aria-haspopup="dialog">
-                    {PERSONAL_PROJECT.details} <ArrowRight size={14} aria-hidden="true" />
-                  </button>
-                  <a href={PERSONAL_PROJECT.url} target="_blank" rel="noopener noreferrer">
-                    Visit Manabi <ArrowUpRight size={12} aria-hidden="true" />
-                    <span className="sr-only"> (opens in a new tab)</span>
-                  </a>
+              <div className={styles.project}>
+                <div className={styles.projectImage} aria-hidden="true">
+                  <span className={styles.projectGlyph}><s>%</s></span>
+                </div>
+                <div>
+                  <h3 className={styles.projectTitle}>{BREWCODEX_PROJECT.title}</h3>
+                  <p className={styles.projectDescription}>{BREWCODEX_PROJECT.description}</p>
+                  <div className={styles.projectLinks}>
+                    <button type="button" onClick={() => setBrewcodexOpen(true)} aria-haspopup="dialog">
+                      {BREWCODEX_PROJECT.details} <ArrowRight size={14} aria-hidden="true" />
+                    </button>
+                    <a href={BREWCODEX_PROJECT.url} target="_blank" rel="noopener noreferrer">
+                      Visit Brewcodex <ArrowUpRight size={12} aria-hidden="true" />
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -123,6 +146,7 @@ export function HomeClient() {
         </div>
       </main>
       <ManabiModal open={manabiOpen} onClose={closeManabi} />
+      <BrewcodexModal open={brewcodexOpen} onClose={closeBrewcodex} />
     </>
   )
 }

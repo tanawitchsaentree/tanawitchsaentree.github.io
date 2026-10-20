@@ -1,4 +1,4 @@
-/* Manabi notes inherit the homepage palette; copy scrolls below the cover. */
+/* Independent-project notes inherit the homepage palette; copy scrolls below the cover. */
 
 .overlay {
   font-family: var(--font-home);
@@ -68,6 +68,10 @@
 .close:hover,
 .close:focus-visible {
   background: color-mix(in srgb, var(--bg) 80%, transparent);
+}
+.close:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
 }
 
 .content {
@@ -189,3 +193,10 @@
 .coverWrap { aspect-ratio:3.2 / 1; }
 .sectionLabel { margin-bottom:7px; line-height:1.4; }
 .intro { margin-bottom:24px; }
+
+/* Typographic cover for a project without a screenshot: the one thing it
+   refused to show, struck out, then what it shows instead. */
+.coverNote { position:relative; display:flex; flex-direction:column; justify-content:center; gap:var(--space-2); height:100%; margin:0; padding:var(--space-6); padding-right:var(--space-10); color:var(--fg); }
+.coverStruck { font-size:clamp(1.75rem, 7vw, 2.5rem); font-weight:500; letter-spacing:-0.02em; line-height:1; color:var(--fg-subtle); text-decoration-thickness:2px; }
+.coverInstead { font-size:var(--type-home-note); line-height:1.5; color:var(--fg); }
+.coverSignal { color:var(--accent-text); }
