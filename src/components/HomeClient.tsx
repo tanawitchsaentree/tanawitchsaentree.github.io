@@ -44,33 +44,6 @@ export function HomeClient() {
             </nav>
           </header>
 
-          <section id="work" className={styles.section} aria-labelledby="work-heading">
-            <h2 id="work-heading" className={styles.sectionHeading}>Selected work</h2>
-            <ul className={styles.workList}>
-              {SELECTED_WORK.map(work => (
-                <li key={work.href}>
-                  <Link href={work.href} className={styles.workLink}>
-                    <div className={styles.workTopline}>
-                      <span className={styles.company}>{work.company}</span>
-                      <span className={styles.period}>{work.period}</span>
-                    </div>
-                    <h3 className={styles.workTitle}>{work.title}</h3>
-                    <p className={styles.workRole}>{work.role}</p>
-                    <p className={styles.workDescription}>{work.description}</p>
-                    <span className={styles.workAction}>
-                      View case study <ArrowRight size={14} aria-hidden="true" />
-                      {work.protected && (
-                        <span className={styles.accessNote}>
-                          <LockKeyhole size={11} aria-hidden="true" /> Password required
-                        </span>
-                      )}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-
           <section className={styles.section} aria-labelledby="independent-heading">
             <h2 id="independent-heading" className={styles.sectionHeading}>Independent projects</h2>
             <div className={styles.projects}>
@@ -111,6 +84,33 @@ export function HomeClient() {
                 </div>
               </div>
             </div>
+          </section>
+
+          <section id="work" className={styles.section} aria-labelledby="work-heading">
+            <h2 id="work-heading" className={styles.sectionHeading}>Selected work</h2>
+            <ul className={styles.workList}>
+              {SELECTED_WORK.map(work => (
+                <li key={work.href}>
+                  <Link href={work.href} className={styles.workLink}>
+                    <div className={styles.workTopline}>
+                      <span className={styles.company}>{work.company}</span>
+                      <span className={styles.period}>{work.period}</span>
+                    </div>
+                    <h3 className={styles.workTitle}>{work.title}</h3>
+                    <p className={styles.workRole}>{work.role}</p>
+                    <p className={styles.workDescription}>{work.description}</p>
+                    <span className={styles.workAction}>
+                      View case study <ArrowRight size={14} aria-hidden="true" />
+                      {work.protected && (
+                        <span className={styles.accessNote}>
+                          <LockKeyhole size={11} aria-hidden="true" /> Password required
+                        </span>
+                      )}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
 
           <details className={styles.more}>
