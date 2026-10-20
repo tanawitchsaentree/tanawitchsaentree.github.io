@@ -58,7 +58,7 @@ export const PERSONAL_PROJECT = {
 
 export const BREWCODEX_PROJECT = {
   title: 'Brewcodex',
-  description: 'My independent deck finder for new Magic: The Gathering Arena players, from the deck engine to plain-language explanations of why a deck works.',
+  description: "A deck builder for MTG players who don't want to spend money on a deck that doesn't fit them. It builds one around what you like and what you already own, then explains why it works.",
   details: 'Inside the project',
   url: 'https://brewcodex.app',
 } as const

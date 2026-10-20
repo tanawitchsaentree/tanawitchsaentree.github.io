@@ -93,8 +93,8 @@ export function HomeClient() {
                 </div>
               </div>
               <div className={styles.project}>
-                <div className={styles.projectImage} aria-hidden="true">
-                  <span className={styles.projectGlyph}><s>%</s></span>
+                <div className={`${styles.projectImage} ${styles.projectLogo}`}>
+                  <Image src="/images/brewcodex-logo.png" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
                 </div>
                 <div>
                   <h3 className={styles.projectTitle}>{BREWCODEX_PROJECT.title}</h3>
