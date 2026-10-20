@@ -196,7 +196,7 @@
 
 /* Typographic cover for a project without a screenshot: the one thing it
    refused to show, struck out, then what it shows instead. */
-.coverNote { position:relative; display:flex; flex-direction:column; justify-content:center; gap:var(--space-2); height:100%; margin:0; padding:var(--space-6); padding-right:var(--space-10); color:var(--fg); }
+.coverNote { position:relative; display:flex; flex-direction:column; justify-content:center; gap:var(--space-2); min-height:100%; margin:0; padding:var(--space-6); padding-right:var(--space-12); color:var(--fg); }
 .coverStruck { font-size:clamp(1.75rem, 7vw, 2.5rem); font-weight:500; letter-spacing:-0.02em; line-height:1; color:var(--fg-subtle); text-decoration-thickness:2px; }
 .coverInstead { font-size:var(--type-home-note); line-height:1.5; color:var(--fg); }
 .coverSignal { color:var(--accent-text); }
