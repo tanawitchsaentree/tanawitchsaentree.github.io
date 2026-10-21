@@ -6,9 +6,10 @@ import { BREWCODEX_PROJECT } from '@/data/home'
 
 const SECTIONS: ProjectSection[] = [
   { label: 'A deck around what you like and own', body: 'Players pick game moments and cards they like, or import a collection from Arena, Moxfield or Archidekt. The engine builds a 60-card deck in one to five colours, with a mana base and a wildcard budget. A library map then marks each colour set as playable, craftable or short. Precon and Commander pages work outside Arena too. So does the deck doctor, which takes any pasted list.' },
-  { label: 'Checked against real tournament lists', body: 'I split 812 tournament lists by day. The engine learns from earlier days and is tested on later ones. An early version collapsed five-colour requests into two. After the fix, colours kept is 100% on the validation set, up from 28.6%. Castable mana is 92.1%, up from 71.1%.' },
+  { label: 'Checked against real tournament lists', body: 'I split 812 tournament lists by day. The engine learns from earlier days and is tested on later ones. An early version collapsed five-colour requests into two. Colours kept is now 100% on the validation set, up from 28.6%.' },
+  { label: 'How closely to follow winning decks', body: "I didn't want it to copy winning decks, but those lists are the only real evidence of strength. With no lists at all, only 5% of its spells showed up in real decks. So I measured how much weight a new deck should give them. At full weight a deck matched its nearest winning list 88%, more than the 81% winners match each other. That is a copy. At a quarter weight it matched 74%, and the share of its cards that later winning lists play rose from 44% to 69%. Full weight only applies when the player asks for a competitive deck." },
   { label: 'A score I chose not to show', body: 'I tried a single strength score twice. It dropped as wildcards filled out the list, which is backwards. Each deck now shows the named archetype it is closest to and that archetype’s real match win rate.' },
-  { label: 'Where it stands', body: 'Brewcodex is live and early. The start page had 122 views in the last 30 days and two decks were saved. More tournament sources and Thai baht card prices are next.' },
+  { label: 'Where it stands', body: 'Brewcodex is live and early. Most of the traffic so far is me testing, and I only started excluding my own visits on 20 October. More tournament sources and Thai baht card prices are next.' },
 ]
 
 interface BrewcodexModalProps {
