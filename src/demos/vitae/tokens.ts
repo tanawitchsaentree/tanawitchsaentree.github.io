@@ -94,7 +94,8 @@ export const V = {
     dangerRed:   '#c0492f',   // "The one we killed" eyebrow + bullet icons
     dangerBg:    '#fbe9e4',   // danger icon background tint
     screenBg:    '#fbfdf7',   // phone screen inner background
-    amber:       '#d8902e',   // low-confidence indicator (Trends screen)
+    amber:       '#d8902e',   // low-confidence indicator (Trends screen), fills/icons only
+    amberText:   '#95600a',   // amber for text and text-bearing fills: 5.2:1 on screenBg, white on it 5.3:1
   },
   alpha: _a,
   shadow: {

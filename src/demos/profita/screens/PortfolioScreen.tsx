@@ -62,12 +62,12 @@ export function PortfolioScreen() {
   return (
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, background: SC.paper, overflow: 'hidden' }}>
       {/* Navy header */}
-      <div style={{ background: SC.navy, padding: '6px 14px 16px', borderRadius: '0 0 18px 18px', flexShrink: 0, textAlign: 'center', color: '#fff' }}>
+      <div style={{ background: SC.navy, padding: '6px 14px 16px', borderRadius: '0 0 18px 18px', flexShrink: 0, textAlign: 'center', color: SC.white }}>
         <div style={{ fontSize: 13, fontWeight: 700, padding: '4px 0 8px' }}>Portfolio</div>
         <div style={{ color: 'rgba(255,255,255,.6)', fontSize: 9 }}>Latest total value (baht)</div>
         <div style={{ fontSize: 21, fontWeight: 800, letterSpacing: '-.02em', marginTop: 2 }}>62,292.18</div>
         <div style={{ color: '#5fd39a', fontSize: 10, fontWeight: 700, marginTop: 2 }}>+4,995.35 (+8.72%)</div>
-        <div style={{ color: 'rgba(255,255,255,.4)', fontSize: 8, marginTop: 3 }}>As of 31 Oct. 2020</div>
+        <div style={{ color: SC.onNavyMuted, fontSize: 8, marginTop: 3 }}>As of 31 Oct. 2020</div>
       </div>
 
       {/* Body */}
@@ -75,7 +75,7 @@ export function PortfolioScreen() {
         <div style={{ color: SC.ink, fontWeight: 800, fontSize: 10, marginBottom: 8 }}>Overview of investment portfolio</div>
 
         {/* Donut + legend */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#fff', borderRadius: 12, padding: '12px 12px', boxShadow: '0 3px 12px -7px rgba(0,0,0,.25)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: SC.white, borderRadius: 12, padding: '12px 12px', boxShadow: '0 3px 12px -7px rgba(0,0,0,.25)' }}>
           <div style={{ flexShrink: 0 }}><Donut size={72} /></div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7 }}>
             {SLICES.map(s => (
@@ -114,7 +114,7 @@ export function PortfolioScreen() {
         </div>
 
         {/* Savings account */}
-        <div style={{ background: '#fff', borderRadius: 10, padding: '10px 12px', boxShadow: '0 2px 10px -7px rgba(0,0,0,.25)', marginTop: 4 }}>
+        <div style={{ background: SC.white, borderRadius: 10, padding: '10px 12px', boxShadow: '0 2px 10px -7px rgba(0,0,0,.25)', marginTop: 4 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', color: SC.ink, fontWeight: 700, fontSize: 10, marginBottom: 6 }}>
             <span>Savings account</span><a style={{ color: SC.navyL, fontWeight: 600, fontSize: 9, textDecoration: 'none' }}>See all ›</a>
           </div>

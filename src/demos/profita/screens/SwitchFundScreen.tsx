@@ -2,6 +2,10 @@
 import { useState } from 'react'
 import { SC, SW, SH } from './_screenTokens'
 
+// Decorative controls inside the scripted mock: `inert` keeps them out of the tab order and the
+// accessibility tree without changing how they look (React 18 has no typed `inert` prop).
+const INERT = { inert: '' } as Record<string, string>
+
 const INTER_BAHT = 3421.22
 
 export function SwitchFundScreen() {
@@ -17,8 +21,8 @@ export function SwitchFundScreen() {
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, overflow: 'hidden', background: SC.paper }}>
       {/* Header */}
       <div style={{ background: SC.navy, flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', color: '#fff', padding: '6px 14px 10px' }}>
-          <button type="button" aria-label="Back" style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', textAlign: 'left', lineHeight: 1 }}>←</button>
+        <div style={{ display: 'flex', alignItems: 'center', color: SC.white, padding: '6px 14px 10px' }}>
+          <button type="button" {...INERT} aria-label="Back" style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'default', textAlign: 'left', lineHeight: 1 }}>←</button>
           <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, marginRight: 20 }}>Switch Fund</span>
         </div>
       </div>
@@ -29,7 +33,7 @@ export function SwitchFundScreen() {
       {/* Body */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '10px 14px 8px' }}>
         <div style={{ fontSize: 10, fontWeight: 800, color: SC.ink, marginBottom: 7 }}>Switch-out funds</div>
-        <div style={{ background: '#fff', borderRadius: 10, padding: '10px 12px', marginBottom: 10, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
+        <div style={{ background: SC.white, borderRadius: 10, padding: '10px 12px', marginBottom: 10, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
           <div style={{ fontSize: 8, color: SC.grey }}>Fund</div>
           <div style={{ fontSize: 11, fontWeight: 800, color: SC.ink, marginTop: 2 }}>LHIP-D | LH Thai property</div>
           <div style={{ fontSize: 9, color: SC.grey, marginTop: 1 }}>LH Thai Property Open Fund</div>
@@ -50,9 +54,9 @@ export function SwitchFundScreen() {
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 10, fontWeight: 800, color: SC.ink, marginBottom: 7 }}>
           <span>Switch-in fund</span>
-          <button type="button" style={{ color: SC.navyL, fontWeight: 600, fontSize: 9, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: SC.ui }}>Change funds</button>
+          <button type="button" {...INERT} style={{ color: SC.navyL, fontWeight: 600, fontSize: 9, background: 'none', border: 'none', cursor: 'default', padding: 0, fontFamily: SC.ui }}>Change funds</button>
         </div>
-        <div style={{ background: '#fff', borderRadius: 10, padding: '10px 12px', marginBottom: 12, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
+        <div style={{ background: SC.white, borderRadius: 10, padding: '10px 12px', marginBottom: 12, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
           <div style={{ fontSize: 8, color: SC.grey }}>Fund</div>
           <div style={{ fontSize: 11, fontWeight: 800, color: SC.ink, marginTop: 2 }}>LHDEBT-A | LH Thai property</div>
           <div style={{ fontSize: 9, color: SC.grey, marginTop: 1 }}>LH Fixed Income Fund, Accumulated Value Type</div>
@@ -67,7 +71,7 @@ export function SwitchFundScreen() {
           <span>Specify amount</span>
           <div style={{ display: 'flex', background: '#eceef2', borderRadius: 8, padding: 2 }}>
             {(['THB', 'Unit'] as const).map(m => (
-              <button key={m} type="button" onClick={() => setMode(m)} style={{ padding: '4px 10px', fontSize: 10, fontWeight: 700, borderRadius: 6, background: mode === m ? '#fff' : 'transparent', color: mode === m ? SC.ink : SC.grey, cursor: 'pointer', border: 'none', fontFamily: SC.ui }}>{m}</button>
+              <button key={m} type="button" aria-pressed={mode === m} onClick={() => setMode(m)} style={{ padding: '4px 10px', fontSize: 10, fontWeight: 700, borderRadius: 6, background: mode === m ? SC.white : 'transparent', color: mode === m ? SC.ink : SC.grey, cursor: 'pointer', border: 'none', fontFamily: SC.ui }}>{m}</button>
             ))}
           </div>
         </div>
@@ -75,7 +79,7 @@ export function SwitchFundScreen() {
         {/* Quick % */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
           {[25, 50, 100].map(p => (
-            <button key={p} type="button" onClick={() => setPct(pct === p ? null : p)} style={{ border: `1px solid ${pct === p ? SC.navy : '#d5d9e0'}`, color: pct === p ? '#fff' : SC.navy, borderRadius: 20, padding: '4px 10px', fontSize: 10, fontWeight: 700, background: pct === p ? SC.navy : '#fff', cursor: 'pointer', fontFamily: SC.ui }}>
+            <button key={p} type="button" aria-pressed={pct === p} onClick={() => setPct(pct === p ? null : p)} style={{ border: `1px solid ${pct === p ? SC.navy : '#d5d9e0'}`, color: pct === p ? SC.white : SC.navy, borderRadius: 20, padding: '4px 10px', fontSize: 10, fontWeight: 700, background: pct === p ? SC.navy : SC.white, cursor: 'pointer', fontFamily: SC.ui }}>
               {p === 100 ? 'All' : p + '%'}
             </button>
           ))}
@@ -91,8 +95,8 @@ export function SwitchFundScreen() {
       </div>
 
       {/* Footer */}
-      <div style={{ flexShrink: 0, padding: '10px 14px 14px', background: '#fff', borderTop: '1px solid #eef0f3' }}>
-        <button style={{ width: '100%', background: SC.navy, color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: 'pointer' }}>Next</button>
+      <div style={{ flexShrink: 0, padding: '10px 14px 14px', background: SC.white, borderTop: '1px solid #eef0f3' }}>
+        <button type="button" {...INERT} style={{ width: '100%', background: SC.navy, color: SC.white, border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: 'default' }}>Next</button>
       </div>
     </div>
   )

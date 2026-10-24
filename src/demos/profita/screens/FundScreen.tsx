@@ -19,20 +19,20 @@ export function FundScreen({ onOpenFund }: { onOpenFund?: () => void } = {}) {
       {/* Header */}
       <div style={{ background: SC.navy, padding: '6px 0 0', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', padding: '6px 14px 10px' }}>
-          <span style={{ color: '#fff', fontWeight: 800, fontSize: 15 }}>Fund</span>
+          <span style={{ color: SC.white, fontWeight: 800, fontSize: 15 }}>Fund</span>
           <div style={{ position: 'absolute', right: 14, display: 'flex', gap: 10 }}>
             <span aria-hidden="true" title="Sort shown in the original interface" style={{ display: 'flex', opacity: .72 }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M4 7h11M4 12h7M4 17h4M17 5v11m0 0l-3-3m3 3l3-3"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={SC.white} strokeWidth="2"><path d="M4 7h11M4 12h7M4 17h4M17 5v11m0 0l-3-3m3 3l3-3"/></svg>
             </span>
             <span aria-hidden="true" title="Search shown in the original interface" style={{ display: 'flex', opacity: .72 }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={SC.white} strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
             </span>
           </div>
         </div>
         {/* Tabs */}
         <div style={{ display: 'flex', gap: 12, padding: '0 14px', color: 'rgba(255,255,255,.6)', fontSize: 10, fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,.12)' }}>
           {['All (99)', 'Property', 'Foreign', 'Fixed'].map((t, i) => (
-            <div key={t} style={{ padding: '6px 0 8px', position: 'relative', whiteSpace: 'nowrap', color: i === 0 ? '#fff' : 'rgba(255,255,255,.55)', borderBottom: i === 0 ? '2px solid #fff' : 'none' }}>
+            <div key={t} style={{ padding: '6px 0 8px', position: 'relative', whiteSpace: 'nowrap', color: i === 0 ? SC.white : SC.onNavyMuted, borderBottom: i === 0 ? `2px solid ${SC.white}` : 'none' }}>
               {t}
             </div>
           ))}
@@ -51,7 +51,7 @@ export function FundScreen({ onOpenFund }: { onOpenFund?: () => void } = {}) {
       {/* Segmented — pulled up */}
       <div style={{ display: 'flex', background: SC.paper, borderRadius: 10, margin: '0 14px', padding: 3, transform: 'translateY(-10px)', boxShadow: '0 4px 12px -6px rgba(0,0,0,.3)', flexShrink: 0 }}>
         {['All','Follow','Owned'].map((s, i) => (
-          <div key={s} style={{ flex: 1, textAlign: 'center', padding: '5px', fontSize: 10, fontWeight: 700, color: i === 0 ? SC.ink : SC.grey, borderRadius: 8, background: i === 0 ? '#fff' : 'transparent', boxShadow: i === 0 ? '0 1px 4px -1px rgba(0,0,0,.2)' : 'none' }}>{s}</div>
+          <div key={s} style={{ flex: 1, textAlign: 'center', padding: '5px', fontSize: 10, fontWeight: 700, color: i === 0 ? SC.ink : SC.grey, borderRadius: 8, background: i === 0 ? SC.white : 'transparent', boxShadow: i === 0 ? '0 1px 4px -1px rgba(0,0,0,.2)' : 'none' }}>{s}</div>
         ))}
       </div>
 
@@ -65,7 +65,7 @@ export function FundScreen({ onOpenFund }: { onOpenFund?: () => void } = {}) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           {FUNDS.map(f => (
-            <div key={f.code} style={{ background: '#fff', borderRadius: 11, padding: '11px 12px', boxShadow: '0 3px 12px -7px rgba(0,0,0,.18)' }}>
+            <div key={f.code} style={{ background: SC.white, borderRadius: 11, padding: '11px 12px', boxShadow: '0 3px 12px -7px rgba(0,0,0,.18)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ color: SC.ink, fontWeight: 800, fontSize: 10, lineHeight: 1.25 }}>{f.code}</div>
@@ -79,9 +79,9 @@ export function FundScreen({ onOpenFund }: { onOpenFund?: () => void } = {}) {
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 8 }}>
-                <div style={{ border: '1px solid #e3e6ea', borderRadius: 5, height: 20, display: 'flex', alignItems: 'center', padding: '0 5px', color: SC.gold, fontSize: 8 }}>👍</div>
-                <div style={{ border: '1px solid #e3e6ea', borderRadius: 5, height: 20, display: 'flex', alignItems: 'center', padding: '0 5px', color: SC.gold, fontSize: 8 }}>🌱</div>
-                <div style={{ border: '1px solid #e3e6ea', borderRadius: 5, height: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 5px', color: SC.gold }}>
+                <div style={{ border: '1px solid #e3e6ea', borderRadius: 5, height: 20, display: 'flex', alignItems: 'center', padding: '0 5px', color: SC.goldText, fontSize: 8 }}>👍</div>
+                <div style={{ border: '1px solid #e3e6ea', borderRadius: 5, height: 20, display: 'flex', alignItems: 'center', padding: '0 5px', color: SC.goldText, fontSize: 8 }}>🌱</div>
+                <div style={{ border: '1px solid #e3e6ea', borderRadius: 5, height: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 5px', color: SC.goldText }}>
                   <Stars n={f.stars} />
                   <span style={{ fontSize: 5, color: SC.grey }}>MORNINGSTAR</span>
                 </div>
@@ -92,13 +92,13 @@ export function FundScreen({ onOpenFund }: { onOpenFund?: () => void } = {}) {
                   <span style={{ width: 13, height: 13, borderRadius: 4, background: SC.navy, display: 'inline-block' }} />LH Fund
                 </div>
               </div>
-              {f.code === 'LHIP-D' && onOpenFund && <button type="button" onClick={onOpenFund} style={{ width: '100%', marginTop: 8, padding: '6px 8px', border: `1px solid ${SC.navy}`, borderRadius: 7, background: '#fff', color: SC.navy, font: `700 9px ${SC.ui}`, cursor: 'pointer' }}>View fund details</button>}
+              {f.code === 'LHIP-D' && onOpenFund && <button type="button" onClick={onOpenFund} style={{ width: '100%', marginTop: 8, padding: '6px 8px', border: `1px solid ${SC.navy}`, borderRadius: 7, background: SC.white, color: SC.navy, font: `700 9px ${SC.ui}`, cursor: 'pointer' }}>View fund details</button>}
             </div>
           ))}
         </div>
 
         {/* Compare sticky */}
-        <div style={{ position: 'sticky', bottom: 4, background: SC.navy, color: '#fff', borderRadius: 16, padding: '9px 14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontWeight: 700, fontSize: 10, boxShadow: '0 10px 20px -10px rgba(0,0,0,.5)', marginTop: 8, width: '100%' }}>
+        <div style={{ position: 'sticky', bottom: 4, background: SC.navy, color: SC.white, borderRadius: 16, padding: '9px 14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontWeight: 700, fontSize: 10, boxShadow: '0 10px 20px -10px rgba(0,0,0,.5)', marginTop: 8, width: '100%' }}>
           <div style={{ width: 16, height: 16, borderRadius: '50%', background: 'linear-gradient(135deg,#4a8fd0,#2f6ba8)', flexShrink: 0 }} />
           Compare funds
         </div>

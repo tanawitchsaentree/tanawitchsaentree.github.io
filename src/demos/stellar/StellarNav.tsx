@@ -1,16 +1,21 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { S } from './tokens'
 
 export function StellarNav() {
   const router = useRouter()
   const [scrolled, setScrolled] = useState(false)
+  const sentinelRef = useRef<HTMLSpanElement>(null)
+  // A 1px sentinel 20px below the page top. Once it leaves the viewport the nav
+  // gets its hairline. No scroll listener, no per-frame work.
   useEffect(() => {
-    const h = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', h, { passive: true })
-    return () => window.removeEventListener('scroll', h)
+    const el = sentinelRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => setScrolled(!e.isIntersecting))
+    io.observe(el)
+    return () => io.disconnect()
   }, [])
 
   const handleBack = () => { router.push('/') }
@@ -24,6 +29,8 @@ export function StellarNav() {
   ]
 
   return (
+    <>
+    <span ref={sentinelRef} aria-hidden style={{ position: 'absolute', top: 20, left: 0, width: 1, height: 1, pointerEvents: 'none' }} />
     <nav
       style={{
         position:       'fixed',
@@ -35,8 +42,9 @@ export function StellarNav() {
         alignItems:     'center',
         justifyContent: 'space-between',
         padding:        `1rem clamp(1.2rem,5vw,7.5rem)`,
-        backdropFilter: 'blur(13px) saturate(160%)',
-        background:     S.alpha.paper66,
+        // Solid near-opaque paper instead of a live backdrop blur: the blur
+        // re-rasterised the content under the fixed bar on every scroll frame.
+        background:     'color-mix(in srgb, var(--stellar-paper) 94%, transparent)',
         borderBottom:   scrolled ? `1px solid ${S.alpha.line}` : '1px solid transparent',
         transition:     `border-color .4s ${S.ease.expo}`,
         fontFamily:     S.font.body,
@@ -77,5 +85,6 @@ export function StellarNav() {
         ))}
       </div>
     </nav>
+    </>
   )
 }

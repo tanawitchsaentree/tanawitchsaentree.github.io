@@ -3,6 +3,10 @@
 import { useRef, useEffect, useState } from 'react'
 import { StellarPhone, useBotFinger } from './StellarPhone'
 
+// Decorative controls inside the scripted mock: `inert` keeps them out of the tab order and the
+// accessibility tree without changing how they look (React 18 has no typed `inert` prop).
+const INERT = { inert: '' } as Record<string, string>
+
 /* ── data ─────────────────────────────────────────────────── */
 const DATA: Record<string, [string, number, number][]> = {
   'For you':  [['Classic Cheeseburger',10,12],['Avocado Toast & Poached Eggs',5,10],['Grilled Chicken Fajitas',20,38],['Baked Salmon & Asparagus',12,38]],
@@ -32,7 +36,7 @@ const CSS = `
 .s1-statusbar{position:absolute;top:0;left:0;right:0;z-index:4;display:flex;justify-content:space-between;align-items:center;padding:13px 22px 0;font-size:11.5px;font-weight:700;color:var(--stellar-white);font-family:'DM Sans',sans-serif}
 .s1-statusbar .sig{display:flex;gap:4px;align-items:center}
 .s1-greet{position:absolute;top:42px;left:18px;right:18px;display:flex;align-items:center;gap:10px;z-index:3}
-.s1-chef-ico{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));display:grid;place-content:center;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 40%, transparent);color:var(--stellar-white);flex-shrink:0}
+.s1-chef-ico{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));display:grid;place-content:center;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 40%, transparent);color:var(--stellar-ink-app);flex-shrink:0}
 .s1-greet-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:16px;color:var(--stellar-white);text-shadow:0 1px 8px color-mix(in srgb, var(--stellar-black) 50%, transparent)}
 .s1-greet-icons{margin-left:auto;display:flex;gap:14px;color:var(--stellar-white);opacity:.96}
 .s1-hero h3{color:var(--stellar-white);font-size:21px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;text-shadow:0 1px 10px color-mix(in srgb, var(--stellar-black) 50%, transparent);margin:0}
@@ -51,8 +55,8 @@ const CSS = `
 
 .s1-tabs-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
 .s1-tabs-row::-webkit-scrollbar{display:none}
-.s1-tab-btn{font-size:13px;font-weight:600;color:var(--stellar-ink-soft-app);white-space:nowrap;cursor:default;padding-bottom:4px;border:0;border-bottom:2px solid transparent;background:none;font-family:'DM Sans',sans-serif;transition:color .15s}
-.s1-tab-btn.on{color:var(--stellar-lime);font-weight:700;border-bottom-color:var(--stellar-lime)}
+.s1-tab-btn{font-size:13px;font-weight:600;color:var(--stellar-ink-soft-app);white-space:nowrap;cursor:default;padding-bottom:4px;border:0;border-bottom:2px solid transparent;background:none;font-family:'DM Sans',sans-serif;transition:color .15s cubic-bezier(.65,0,.35,1)}
+.s1-tab-btn.on{color:var(--stellar-green-deep);font-weight:700;border-bottom-color:var(--stellar-lime)}
 
 .s1-thumbs-row{display:flex;gap:9px;overflow-x:auto;padding-bottom:16px;scrollbar-width:none}
 .s1-thumbs-row::-webkit-scrollbar{display:none}
@@ -63,7 +67,7 @@ const CSS = `
 
 .s1-section-head{display:flex;align-items:center;justify-content:space-between;margin:6px 0 12px}
 .s1-section-head .t{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:17px;color:var(--stellar-ink-app)}
-.s1-chatbtn{display:inline-flex;align-items:center;gap:5px;background:var(--stellar-lime);color:var(--stellar-white);font-size:12px;font-weight:700;padding:6px 12px;border-radius:9px;border:0;font-family:'DM Sans',sans-serif;cursor:default;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 28%, transparent)}
+.s1-chatbtn{display:inline-flex;align-items:center;gap:5px;background:var(--stellar-lime);color:var(--stellar-ink-app);font-size:12px;font-weight:700;padding:6px 12px;border-radius:9px;border:0;font-family:'DM Sans',sans-serif;cursor:default;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 28%, transparent)}
 
 .s1-prompts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:22px}
 .s1-prompt{background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:14px;padding:13px;text-align:left;cursor:default;position:relative;min-height:78px;display:flex;align-items:flex-start;box-shadow:0 2px 8px color-mix(in srgb, var(--stellar-ink-app) 4%, transparent);font-family:'DM Sans',sans-serif}
@@ -78,23 +82,23 @@ const CSS = `
 .s1-count-badge.show{display:inline-block}
 
 .s1-recipe{display:flex;align-items:center;gap:11px;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:14px;padding:12px 13px;margin-bottom:9px;transition:transform .15s cubic-bezier(.65,0,.35,1),box-shadow .15s cubic-bezier(.65,0,.35,1),border-color .15s cubic-bezier(.65,0,.35,1);box-shadow:0 2px 8px color-mix(in srgb, var(--stellar-ink-app) 4%, transparent)}
-.s1-recipe.added{border-color:var(--stellar-lime-mid);background:var(--stellar-cta-bg-soft)}
+.s1-recipe.added{border-color:var(--stellar-lime-mid);background:var(--stellar-white)}
 .s1-recipe-info{flex:1;min-width:0}
 .s1-recipe-name{font-weight:700;font-size:13px;color:var(--stellar-ink-app);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'DM Sans',sans-serif}
 .s1-recipe-meta{display:flex;gap:12px;font-size:11px;color:var(--stellar-muted-app);margin-top:3px;font-family:'DM Sans',sans-serif}
-.s1-add-btn{width:30px;height:30px;border-radius:50%;background:var(--stellar-cta-bg-soft);border:1px solid var(--stellar-cta-bg-strong);color:var(--stellar-lime);font-size:17px;display:grid;place-content:center;cursor:pointer;flex-shrink:0;transition:transform .15s cubic-bezier(.65,0,.35,1),background .15s cubic-bezier(.65,0,.35,1);font-family:inherit}
-.s1-add-btn.added{background:var(--stellar-lime);border-color:var(--stellar-lime);color:var(--stellar-white)}
+.s1-add-btn{width:30px;height:30px;border-radius:50%;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);color:var(--stellar-green-deep);font-size:17px;display:grid;place-content:center;cursor:pointer;flex-shrink:0;transition:transform .15s cubic-bezier(.65,0,.35,1),background .15s cubic-bezier(.65,0,.35,1);font-family:inherit}
+.s1-add-btn.added{background:var(--stellar-lime);border-color:var(--stellar-lime);color:var(--stellar-ink-app)}
 
 .s1-recipes-list{opacity:0;transform:translateY(8px);transition:opacity .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1)}
 .s1-recipes-list.in{opacity:1;transform:none}
 
 .s1-addmore{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--stellar-ink-app);margin-top:6px;cursor:default;font-family:'DM Sans',sans-serif;background:none;border:0}
-.s1-addmore-ic{width:24px;height:24px;border-radius:7px;background:var(--stellar-lime);color:var(--stellar-white);display:grid;place-content:center;font-size:15px}
+.s1-addmore-ic{width:24px;height:24px;border-radius:7px;background:var(--stellar-lime);color:var(--stellar-ink-app);display:grid;place-content:center;font-size:15px}
 
 /* bottom bar */
 .s1-bottom-bar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;padding:12px 18px 16px;background:linear-gradient(180deg,transparent,var(--stellar-white) 38%);z-index:10}
 .s1-filter-btn{width:42px;height:42px;display:grid;place-content:center;color:var(--stellar-ink-soft-app);cursor:default;background:transparent;border:0;border-radius:50%;padding:0;flex-shrink:0}
-.s1-new-recipes-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-white);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;padding:15px;border-radius:999px;border:0;cursor:default;box-shadow:0 8px 22px color-mix(in srgb, var(--stellar-lime) 40%, transparent)}
+.s1-new-recipes-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-ink-app);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;padding:15px;border-radius:999px;border:0;cursor:default;box-shadow:0 8px 22px color-mix(in srgb, var(--stellar-lime) 40%, transparent)}
 
 /* chat sheet */
 .s1-chatsheet{position:absolute;left:0;right:0;bottom:0;height:86%;z-index:40;background:var(--stellar-surface-tint);border-radius:26px 26px 0 0;box-shadow:0 -20px 50px color-mix(in srgb, var(--stellar-ink-app) 20%, transparent);transform:translateY(102%);transition:transform .5s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;overflow:hidden}
@@ -104,7 +108,7 @@ const CSS = `
 /* sheet header */
 .s1-sheet-head{padding:10px 16px 0;flex-shrink:0}
 .s1-sheet-top{display:flex;align-items:center;gap:9px;padding-bottom:10px}
-.s1-sheet-chef{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));display:grid;place-content:center;color:var(--stellar-white);flex-shrink:0;box-shadow:0 4px 10px color-mix(in srgb, var(--stellar-lime) 30%, transparent)}
+.s1-sheet-chef{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));display:grid;place-content:center;color:var(--stellar-ink-app);flex-shrink:0;box-shadow:0 4px 10px color-mix(in srgb, var(--stellar-lime) 30%, transparent)}
 .s1-sheet-info{flex:1}
 .s1-sheet-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13.5px;color:var(--stellar-ink-app);display:block;line-height:1.2}
 .s1-sheet-sub{font-size:10px;color:var(--stellar-muted-app);font-family:'DM Sans',sans-serif}
@@ -113,7 +117,7 @@ const CSS = `
 .s1-fridge-bar{background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 8%, transparent);border-radius:14px;padding:10px 12px;margin-bottom:10px}
 .s1-fridge-label{font-size:9.5px;color:var(--stellar-muted-app);font-family:'Space Mono',monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
 .s1-fridge-chips{display:flex;gap:5px;flex-wrap:wrap}
-.s1-fridge-chip{display:inline-flex;align-items:center;gap:4px;background:var(--stellar-surface-tint);border:1px solid color-mix(in srgb, var(--stellar-lime) 20%, transparent);color:var(--stellar-green-deep);font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:99px;font-family:'DM Sans',sans-serif}
+.s1-fridge-chip{display:inline-flex;align-items:center;gap:4px;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);color:var(--stellar-green-deep);font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:99px;font-family:'DM Sans',sans-serif}
 .s1-fridge-chip .ci{font-size:12px}
 
 /* messages */
@@ -121,10 +125,10 @@ const CSS = `
 .s1-sheet-body::-webkit-scrollbar{display:none}
 .s1-msg{max-width:82%;padding:10px 13px;border-radius:18px;font-size:12.5px;line-height:1.5;opacity:0;transform:translateY(6px);animation:s1msgin .28s cubic-bezier(.16,1,.3,1) forwards;font-family:'DM Sans',sans-serif}
 @keyframes s1msgin{to{opacity:1;transform:none}}
-.s1-msg.user{align-self:flex-end;background:var(--stellar-lime);color:var(--stellar-white);border-bottom-right-radius:5px;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 25%, transparent)}
+.s1-msg.user{align-self:flex-end;background:var(--stellar-lime);color:var(--stellar-ink-app);border-bottom-right-radius:5px;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 25%, transparent)}
 .s1-msg.ai{align-self:flex-start;background:var(--stellar-white);color:var(--stellar-ink-app);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 7%, transparent);border-bottom-left-radius:5px;box-shadow:0 2px 8px color-mix(in srgb, var(--stellar-ink-app) 6%, transparent)}
 .s1-typing{align-self:flex-start;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 7%, transparent);border-radius:18px;border-bottom-left-radius:5px;padding:12px 15px;display:flex;gap:5px;box-shadow:0 2px 8px color-mix(in srgb, var(--stellar-ink-app) 6%, transparent)}
-.s1-typing i{width:6px;height:6px;border-radius:50%;background:var(--stellar-lime);animation:s1dot 1.1s infinite;list-style:none;opacity:.4}
+.s1-typing i{width:6px;height:6px;border-radius:50%;background:var(--stellar-lime);animation:s1dot 1.1s cubic-bezier(.65,0,.35,1) infinite;list-style:none;opacity:.4}
 .s1-typing i:nth-child(2){animation-delay:.18s}
 .s1-typing i:nth-child(3){animation-delay:.36s}
 @keyframes s1dot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
@@ -136,7 +140,7 @@ const CSS = `
 .s1-sugg-body{padding:10px 12px}
 .s1-sugg-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13px;color:var(--stellar-ink-app)}
 .s1-sugg-meta{display:flex;gap:12px;font-size:10.5px;color:var(--stellar-muted-app);margin:3px 0 9px;font-family:'DM Sans',sans-serif}
-.s1-sugg-go{display:block;width:100%;text-align:center;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-white);border:0;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:default;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 30%, transparent)}
+.s1-sugg-go{display:block;width:100%;text-align:center;background:linear-gradient(135deg,var(--stellar-lime-mid),var(--stellar-lime));color:var(--stellar-ink-app);border:0;border-radius:10px;padding:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;cursor:default;box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-lime) 30%, transparent)}
 
 /* skeleton */
 .s1-sugg-skel{align-self:flex-start;width:90%;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 7%, transparent);border-radius:16px;overflow:hidden}
@@ -156,8 +160,8 @@ const CSS = `
 .s1-input-bar{flex-shrink:0;padding:8px 12px 6px;background:var(--stellar-white);border-top:1px solid color-mix(in srgb, var(--stellar-ink-app) 7%, transparent)}
 .s1-input-row{display:flex;align-items:center;gap:8px;background:var(--stellar-surface-tint);border:1.5px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:22px;padding:9px 10px 9px 14px}
 .s1-input-text{flex:1;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--stellar-ink-app);min-height:18px;line-height:1.4}
-.s1-input-text.placeholder{color:var(--stellar-placeholder)}
-.s1-input-send{width:32px;height:32px;border-radius:50%;background:var(--stellar-lime);display:grid;place-content:center;color:var(--stellar-white);flex-shrink:0;opacity:0;transform:scale(.7);transition:opacity .2s cubic-bezier(.34,1.56,.64,1),transform .2s cubic-bezier(.34,1.56,.64,1)}
+.s1-input-text.placeholder{color:var(--stellar-muted-app)}
+.s1-input-send{width:32px;height:32px;border-radius:50%;background:var(--stellar-lime);display:grid;place-content:center;color:var(--stellar-ink-app);flex-shrink:0;opacity:0;transform:scale(.7);transition:opacity .2s cubic-bezier(.34,1.56,.64,1),transform .2s cubic-bezier(.34,1.56,.64,1)}
 .s1-input-send.show{opacity:1;transform:scale(1)}
 
 /* iOS keyboard */
@@ -165,10 +169,10 @@ const CSS = `
 .s1-keyboard.show{display:block}
 .s1-kb-row{display:flex;gap:5px;margin-bottom:10px;justify-content:center}
 .s1-kb-row:last-child{margin-bottom:0}
-.s1-kb-key{height:42px;border-radius:5px;background:var(--stellar-white);box-shadow:0 1px 0 var(--stellar-kb-key-shadow);display:flex;align-items:center;justify-content:center;font-family:-apple-system,'DM Sans',sans-serif;font-size:16px;color:var(--stellar-black);font-weight:400;flex:1;max-width:30px;cursor:default;user-select:none;transition:background .08s}
+.s1-kb-key{height:42px;border-radius:5px;background:var(--stellar-white);box-shadow:0 1px 0 var(--stellar-kb-key-shadow);display:flex;align-items:center;justify-content:center;font-family:-apple-system,'DM Sans',sans-serif;font-size:16px;color:var(--stellar-black);font-weight:400;flex:1;max-width:30px;cursor:default;user-select:none;transition:background .15s cubic-bezier(.65,0,.35,1)}
 .s1-kb-key.wide{max-width:44px;font-size:13px;font-weight:500;background:var(--stellar-kb-key-alt);color:var(--stellar-black)}
 .s1-kb-key.space{max-width:none;flex:4}
-.s1-kb-key.send-key{max-width:44px;background:var(--stellar-lime);color:var(--stellar-white);font-size:12px;font-weight:700}
+.s1-kb-key.send-key{max-width:44px;background:var(--stellar-lime);color:var(--stellar-ink-app);font-size:12px;font-weight:700}
 .s1-kb-key.lit{background:var(--stellar-kb-lit)}
 
 /* toast */
@@ -177,7 +181,7 @@ const CSS = `
 .s1-toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* bot styles */
-.sbot-finger{opacity:0;transition:opacity 300ms}
+.sbot-finger{opacity:0;transition:opacity 300ms cubic-bezier(.65,0,.35,1)}
 .sbot-finger.sbot-show{opacity:1}
 .sbot-ripple{opacity:0}
 .sbot-go{animation:sbot-rip .55s cubic-bezier(.16,1,.3,1)}
@@ -373,7 +377,7 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
         <div class="s1-sugg-body">
           <div class="s1-sugg-name">Spaghetti Carbonara from Scratch</div>
           <div class="s1-sugg-meta"><span>6 Ingredients</span><span>35 mins</span></div>
-          <button class="s1-sugg-go">I'll make this tonight!</button>
+          <button class="s1-sugg-go" inert>I'll make this tonight!</button>
         </div>`
       skel.replaceWith(sugg)
       msgs.scrollTop = msgs.scrollHeight
@@ -486,10 +490,9 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
         position: 'absolute', top: -20, right: -6, zIndex: 96,
         width: 34, height: 34, borderRadius: '50%',
         display: 'grid', placeContent: 'center',
-        background: 'color-mix(in srgb, var(--stellar-black) 65%, transparent)',
+        background: 'color-mix(in srgb, var(--stellar-black) 72%, transparent)',
         border: '1px solid color-mix(in srgb, var(--stellar-white) 30%, transparent)',
         color: 'var(--stellar-white)', cursor: 'pointer', padding: 0,
-        backdropFilter: 'blur(4px)',
       }}
     >
       {paused ? (
@@ -565,13 +568,13 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
               {/* search */}
               <div className="s1-search">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
-                <input className="s1-search-input" placeholder="Explore recipes, techniques and more..." readOnly />
+                <input {...INERT} aria-label="Search recipes" className="s1-search-input" placeholder="Explore recipes, techniques and more..." readOnly />
               </div>
 
               {/* tabs */}
               <div className="s1-tabs-row">
                 {TABS.map((t, i) => (
-                  <button key={t} className={`s1-tab-btn${i === 0 ? ' on' : ''}`}>{t}</button>
+                  <button key={t} {...INERT} className={`s1-tab-btn${i === 0 ? ' on' : ''}`}>{t}</button>
                 ))}
               </div>
 
@@ -591,7 +594,7 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
               {/* how can I help */}
               <div className="s1-section-head">
                 <span className="t">What&apos;s cooking today?</span>
-                <button className="s1-chatbtn">
+                <button {...INERT} className="s1-chatbtn">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
                   Chat
                 </button>
@@ -603,7 +606,7 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
                   {text:'Surprise me tonight', em:'✨'},
                   {text:'Use what I have', em:'🥚'},
                 ].map(p => (
-                  <button key={p.text} className="s1-prompt">
+                  <button key={p.text} {...INERT} className="s1-prompt">
                     <span>{p.text}</span>
                     <span className="em">{p.em}</span>
                   </button>
@@ -616,14 +619,14 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
                   Today&apos;s Recipes
                   <span ref={countRef} className="s1-count-badge" />
                 </span>
-                <button className="s1-view-plan">
+                <button {...INERT} className="s1-view-plan">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 2v4M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
                   View Meal Plan
                 </button>
               </div>
               <div className="s1-group-label">For you</div>
               <div ref={recipesRef} className="s1-recipes-list" />
-              <button className="s1-addmore">
+              <button {...INERT} className="s1-addmore">
                 <span className="s1-addmore-ic">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
                 </span>
@@ -634,10 +637,10 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
 
           {/* bottom bar */}
           <div className="s1-bottom-bar">
-            <button className="s1-filter-btn">
+            <button {...INERT} className="s1-filter-btn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
             </button>
-            <button className="s1-new-recipes-btn">
+            <button {...INERT} className="s1-new-recipes-btn">
               New Recipes
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
             </button>

@@ -77,6 +77,9 @@ export function StellarStats() {
           <h3 style={{ fontFamily: S.font.display, fontWeight: 700, color: S.color.paper, fontSize: S.size.title, margin: '.8rem 0 2rem', maxWidth: '24ch', lineHeight: 1.15 }}>
             Rather than guess, I asked home cooks directly and <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', color: S.color.lime }}>counted</em> what they told me.
           </h3>
+          <p style={{ color: S.alpha.paper82, fontSize: '1.1rem', lineHeight: 1.6, maxWidth: '56ch', margin: '-1rem 0 2rem', position: 'relative', zIndex: 1 }}>
+            The clearest number was 70%, the share of people who wanted recipes from what was already in their fridge or pantry.
+          </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1.6rem', position: 'relative', zIndex: 1 }} className="stellar-stats-grid">
             {STATS.map(s => (
@@ -101,7 +104,7 @@ export function StellarStats() {
           </div>
 
           <p style={{ fontSize: '1rem', fontWeight: 500, color: S.alpha.paper68, marginTop: '1.1rem', lineHeight: 1.6, position: 'relative', zIndex: 1, fontFamily: S.font.mono, letterSpacing: '.02em' }}>
-            Figures and quotes above come from my own research; they are illustrative composites standing in for real respondents, not verbatim quotes from a named individual.
+            The figures and quotes above come from my own research. Each quote is a composite of several real responses, so none of them belongs to one named person.
           </p>
         </div>
       </div>

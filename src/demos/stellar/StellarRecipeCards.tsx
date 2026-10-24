@@ -31,7 +31,7 @@ const CSS = `
 .rc-nav{display:flex;gap:.6rem}
 .rc-nav button{width:48px;height:48px;border-radius:50%;border:1px solid color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);background:var(--stellar-white);color:var(--stellar-ink-app);
   display:grid;place-content:center;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s cubic-bezier(.65,0,.35,1),color .2s cubic-bezier(.65,0,.35,1),border-color .2s cubic-bezier(.65,0,.35,1),box-shadow .2s cubic-bezier(.65,0,.35,1)}
-.rc-nav button:hover{background:var(--stellar-lime);border-color:var(--stellar-lime);color:var(--stellar-white);box-shadow:0 10px 24px color-mix(in srgb, var(--stellar-lime) 45%, transparent)}
+.rc-nav button:hover{background:var(--stellar-green-deep);border-color:var(--stellar-green-deep);color:var(--stellar-white);box-shadow:0 10px 24px color-mix(in srgb, var(--stellar-lime) 45%, transparent)}
 .rc-nav button:active{transform:scale(.92)}
 .rc-nav button:disabled{opacity:.3;cursor:default;background:var(--stellar-white);color:var(--stellar-ink-app);border-color:color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);box-shadow:none}
 
@@ -40,7 +40,7 @@ const CSS = `
 .rc-rail::-webkit-scrollbar{display:none}
 
 .rc-card{flex:0 0 clamp(290px,30vw,340px);scroll-snap-align:start;position:relative;aspect-ratio:3/4;border-radius:26px;overflow:hidden;
-  cursor:pointer;isolation:isolate;background:var(--stellar-forest-1);
+  isolation:isolate;background:var(--stellar-forest-1);
   box-shadow:0 2px 4px color-mix(in srgb, var(--stellar-ink-app) 5%, transparent),0 18px 40px -12px color-mix(in srgb, var(--stellar-ink-app) 28%, transparent);
   transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s cubic-bezier(.16,1,.3,1)}
 .rc-card:hover{transform:translateY(-10px);box-shadow:0 30px 60px -16px color-mix(in srgb, var(--stellar-lime) 55%, transparent)}
@@ -57,35 +57,41 @@ const CSS = `
 .rc-match .bar{stroke:var(--stellar-white);stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1)}
 .rc-match .pct{position:absolute;inset:0;display:grid;place-content:center;color:var(--stellar-white);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:14px;line-height:1}
 .rc-match .lbl{position:absolute;top:56px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb, var(--stellar-white) 85%, transparent);white-space:nowrap}
-.rc-save{width:38px;height:38px;border-radius:50%;background:color-mix(in srgb, var(--stellar-white) 16%, transparent);backdrop-filter:blur(8px);border:1px solid color-mix(in srgb, var(--stellar-white) 28%, transparent);
+.rc-save{width:38px;height:38px;border-radius:50%;background:color-mix(in srgb, var(--stellar-black) 30%, transparent);border:1px solid color-mix(in srgb, var(--stellar-white) 28%, transparent);
   display:grid;place-content:center;color:var(--stellar-white);cursor:pointer;transition:background .2s cubic-bezier(.65,0,.35,1),transform .2s cubic-bezier(.34,1.56,.64,1)}
-.rc-save:hover{background:color-mix(in srgb, var(--stellar-white) 30%, transparent)}.rc-save:active{transform:scale(.88)}
-.rc-save.saved{background:var(--stellar-white);color:var(--stellar-lime)}
+.rc-save:hover{background:color-mix(in srgb, var(--stellar-black) 45%, transparent)}.rc-save:active{transform:scale(.88)}
+.rc-save.saved{background:var(--stellar-white);color:var(--stellar-green-deep)}
+/* The ink-green page ring disappears on the forest photo cards; lime reads at 5.4:1 there. */
+.rc-card :focus-visible{outline-color:var(--stellar-lime)!important}
 .rc-chips{position:absolute;top:78px;left:14px;z-index:3;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 .rc-chip{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;
   height:24px;padding:0 10px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;
-  background:color-mix(in srgb, var(--stellar-black) 52%, transparent);color:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-white) 25%, transparent);backdrop-filter:blur(6px);box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-black) 12%, transparent)}
+  background:color-mix(in srgb, var(--stellar-black) 52%, transparent);color:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-white) 25%, transparent);box-shadow:0 4px 12px color-mix(in srgb, var(--stellar-black) 12%, transparent)}
 .rc-chip.alt{background:color-mix(in srgb, var(--stellar-black) 42%, transparent)}
 .rc-chip svg{display:block;flex-shrink:0;position:relative;top:-0.5px}
-.rc-info{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:18px 18px 20px;color:var(--stellar-white)}
+.rc-info{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:18px 18px 20px;color:var(--stellar-white);
+  --rc-cta-h:56px;transform:translateY(var(--rc-cta-h));transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.rc-card:hover .rc-info,.rc-card:focus-within .rc-info{transform:none}
 .rc-rate{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--stellar-white);margin-bottom:8px;
-  background:color-mix(in srgb, var(--stellar-white) 14%, transparent);backdrop-filter:blur(6px);padding:4px 9px;border-radius:999px;border:1px solid color-mix(in srgb, var(--stellar-white) 20%, transparent)}
+  background:color-mix(in srgb, var(--stellar-black) 34%, transparent);padding:4px 9px;border-radius:999px;border:1px solid color-mix(in srgb, var(--stellar-white) 20%, transparent)}
 .rc-rate svg{color:var(--stellar-star)}
 .rc-info h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;letter-spacing:-.02em;font-size:1.45rem;line-height:1.08;margin:0;color:var(--stellar-white);text-shadow:0 2px 14px color-mix(in srgb, var(--stellar-black) 40%, transparent)}
 .rc-meta{display:flex;gap:16px;margin-top:10px;font-size:12px;color:color-mix(in srgb, var(--stellar-white) 92%, transparent)}
 .rc-meta span{display:inline-flex;align-items:center;gap:6px}
-.rc-cta{max-height:0;opacity:0;overflow:hidden;transition:max-height .45s cubic-bezier(.16,1,.3,1),opacity .4s cubic-bezier(.16,1,.3,1),margin-top .45s cubic-bezier(.16,1,.3,1)}
-.rc-card:hover .rc-cta{max-height:60px;opacity:1;margin-top:14px}
-.rc-cta button{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--stellar-white);color:var(--stellar-ink-app);
-  border:0;border-radius:12px;padding:12px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13.5px;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .2s cubic-bezier(.65,0,.35,1),color .2s cubic-bezier(.65,0,.35,1)}
-.rc-cta button:hover{background:var(--stellar-lime);color:var(--stellar-white)}
-.rc-cta button:active{transform:scale(.97)}
+/* The CTA always holds its 56px slot; .rc-info rests shifted down by that slot, so the card's
+   overflow clips the CTA. Hover/focus slides the block up and wipes the CTA in with clip-path:
+   transform + clip-path only, no layout animation. */
+.rc-cta{margin-top:14px;height:42px;clip-path:inset(0 0 100% 0 round 12px);transition:clip-path .45s cubic-bezier(.16,1,.3,1)}
+.rc-card:hover .rc-cta,.rc-card:focus-within .rc-cta{clip-path:inset(0 0 0 0 round 12px)}
+.rc-cta .rc-cta-label{width:100%;height:42px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--stellar-white);color:var(--stellar-ink-app);
+  border:0;border-radius:12px;padding:12px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13.5px;box-sizing:border-box;transition:background .2s cubic-bezier(.65,0,.35,1),color .2s cubic-bezier(.65,0,.35,1)}
+.rc-cta .rc-cta-label:hover{background:var(--stellar-green-deep);color:var(--stellar-white)}
 .rc-card::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;
   background:linear-gradient(120deg,transparent 30%,color-mix(in srgb, var(--stellar-white) 14%, transparent) 48%,transparent 60%);transition:opacity .5s cubic-bezier(.65,0,.35,1)}
 .rc-card:hover::after{opacity:1}
 .rc-prog{height:3px;background:color-mix(in srgb, var(--stellar-ink-app) 10%, transparent);border-radius:99px;overflow:hidden;max-width:220px;margin-top:.4rem}
-.rc-prog i{display:block;height:100%;background:var(--stellar-green);border-radius:99px;width:30%;transition:transform .2s cubic-bezier(.16,1,.3,1),width .2s cubic-bezier(.16,1,.3,1)}
-@media (prefers-reduced-motion:reduce){.rc-card,.rc-card .photo,.rc-cta{transition:none}}
+.rc-prog i{display:block;height:100%;background:var(--stellar-green);border-radius:99px;width:100%;transform-origin:left center;transform:scaleX(.3);transition:transform .2s cubic-bezier(.16,1,.3,1)}
+@media (prefers-reduced-motion:reduce){.rc-card,.rc-card .photo img,.rc-cta,.rc-info{transition:none}}
 `
 
 export function StellarRecipeCards() {
@@ -121,21 +127,21 @@ export function StellarRecipeCards() {
             <span class="pct">${r.match}<small style="font-size:8px">%</small></span>
             <span class="lbl">match</span>
           </div>
-          <button class="rc-save" aria-label="save">${BOOK}</button>
+          <button type="button" class="rc-save" aria-label="Save ${r.nm}" aria-pressed="false">${BOOK}</button>
         </div>
         <div class="rc-chips">${chips}</div>
         <div class="rc-info">
           <span class="rc-rate">${STAR}${r.rate}</span>
           <h3>${r.nm}</h3>
           <div class="rc-meta"><span>${FORK}${r.ing} ingredients</span><span>${CLOCK}${r.min} min</span></div>
-          <div class="rc-cta"><button>View recipe ${ARROW}</button></div>
+          <div class="rc-cta" aria-hidden="true"><span class="rc-cta-label">View recipe ${ARROW}</span></div>
         </div>
       </article>`
     }).join('')
 
     // save toggle
     rl.querySelectorAll<HTMLButtonElement>('.rc-save').forEach(b =>
-      b.addEventListener('click', e => { e.stopPropagation(); b.classList.toggle('saved') })
+      b.addEventListener('click', e => { e.stopPropagation(); b.setAttribute('aria-pressed', String(b.classList.toggle('saved'))) })
     )
 
     // animate rings on scroll into view
@@ -159,23 +165,34 @@ export function StellarRecipeCards() {
     pv.addEventListener('click', () => rl.scrollBy({ left: -cardW(), behavior: 'smooth' }))
     nx.addEventListener('click', () => rl.scrollBy({ left:  cardW(), behavior: 'smooth' }))
 
-    function update() {
-      const max = rl.scrollWidth - rl.clientWidth
-      const p   = max > 0 ? rl.scrollLeft / max : 0
-      const vis = rl.clientWidth / rl.scrollWidth
-      pg.style.width     = Math.max(18, vis * 100) + '%'
-      pg.style.transform = `translateX(${p * (100 / Math.max(vis, 0.001) - 100)}%)`
+    // Rail geometry is measured on resize only; the scroll handler is coalesced
+    // to one rAF and writes a transform plus two disabled flags.
+    // The thumb spans the whole track and is scaled to the visible share (scaleX), then
+    // translated along the track: transform only, no width writes or width transitions.
+    let max = 0, vis = 1, frame = 0
+    function measure() {
+      max = rl.scrollWidth - rl.clientWidth
+      vis = Math.min(1, Math.max(0.18, rl.clientWidth / rl.scrollWidth))
+      paint()
+    }
+    function paint() {
+      frame = 0
+      const p = max > 0 ? rl.scrollLeft / max : 0
+      pg.style.transform = `translateX(${(p * (1 - vis) * 100).toFixed(2)}%) scaleX(${vis.toFixed(3)})`
       pv.disabled = rl.scrollLeft < 4
       nx.disabled = rl.scrollLeft > max - 4
     }
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(paint) }
 
-    rl.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update)
-    update()
+    rl.addEventListener('scroll', onScroll, { passive: true })
+    const ro = new ResizeObserver(measure)
+    ro.observe(rl)
+    measure()
 
     return () => {
-      rl.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
+      rl.removeEventListener('scroll', onScroll)
+      ro.disconnect()
+      if (frame) cancelAnimationFrame(frame)
       ringObs.disconnect()
     }
   }, [])
@@ -193,14 +210,14 @@ export function StellarRecipeCards() {
         <div className="rc-head">
           <div className="l">
             <span className="k">From your kitchen</span>
-            <h2>Four matches, <em>ranked for you.</em></h2>
+            <h2>Five matches, <em>ranked for you.</em></h2>
             <p>Stellar returns a shelf of dishes you can actually make. Each one is scored by how well it fits what you have and like.</p>
           </div>
           <nav className="rc-nav" aria-label="Recipe slider">
-            <button ref={prevRef} aria-label="previous">
+            <button ref={prevRef} type="button" aria-label="Previous recipes">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
-            <button ref={nextRef} aria-label="next">
+            <button ref={nextRef} type="button" aria-label="Next recipes">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </button>
           </nav>

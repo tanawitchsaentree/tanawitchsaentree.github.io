@@ -1,11 +1,8 @@
 'use client'
 import { ClaimsCaseFile } from '@/demos/claims/casefile/ClaimsCaseFile'
 
-// Stellareat, Tims and Vitae now live in their own files so edits stop colliding here.
-export { StellarStory } from './StellarStory'
-export { TimsStory } from './TimsStory'
-export { VitaeStory } from './VitaeStory'
-
+/* The Stellareat, Tims and Vitae compact stories were removed when their full
+   case studies were restored. Claims still renders through this export. */
 export function ClaimsStory() {
  return <ClaimsCaseFile />
 }

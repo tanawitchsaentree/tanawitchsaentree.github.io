@@ -2,6 +2,7 @@
 
 import { V } from './tokens'
 import { VitaeKilledScreen } from './KilledScreen/VitaeKilledScreen'
+import { BotPauseButton } from './ui/BotPauseButton'
 
 const PTS = [
   {
@@ -83,12 +84,12 @@ export function VitaeKilled() {
               fontFamily: V.font.sans,
               lineHeight: 1.65,
             }}>
-              An absolute &ldquo;health score&rdquo; looked sharper and product loved it.
-              Clinical killed it in one review: a confident number that{' '}
+              An absolute &ldquo;health score&rdquo; looked sharper, and product loved it.
+              Clinical killed it in one review, because a confident number that{' '}
               <b style={{ color: V.color.ink, fontWeight: 600 }}>
                 can&rsquo;t tell a great day from a sickening one
               </b>{' '}
-              is a lie dressed as simplicity.
+              would falsely reassure people.
             </p>
 
             <div style={{ display: 'grid', gap: '.7rem' }}>
@@ -144,6 +145,7 @@ export function VitaeKilled() {
               flexShrink:   0,
               position:     'relative',
             }}>
+              <BotPauseButton />
               <div style={{
                 width:        '100%',
                 height:       '100%',

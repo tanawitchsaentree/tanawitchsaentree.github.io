@@ -61,9 +61,9 @@ export function VitaeHero() {
             margin:        0,
           }}
         >
-          <span className="v-ln"><i>A daily view</i></span>
-          <span className="v-ln"><i>of personal</i></span>
-          <span className="v-ln"><i><em style={{ fontStyle: 'italic', color: V.color.limeDeep }}>health signals.</em></i></span>
+          <span className="v-ln"><i>A score is a</i></span>
+          <span className="v-ln"><i><em style={{ fontStyle: 'italic', color: V.color.limeDeep }}>promise.</em> Break it</i></span>
+          <span className="v-ln"><i>and trust is gone.</i></span>
         </h1>
 
         <div
@@ -87,7 +87,8 @@ export function VitaeHero() {
               fontFamily: V.font.sans,
             }}
           >
-            For Vitae, I worked with product, clinical, and engineering colleagues on how to explain daily health signals. I designed a view that compares readings with a person&apos;s recent baseline, giving the team a concrete way to review what the score communicates and where the interface needs to show uncertainty.
+            Vitae turns a watch&apos;s raw signals into one daily number. Working out the number
+            was the easy part. Most of my time went into making it something people could trust on screen.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.9rem' }}>
             {[

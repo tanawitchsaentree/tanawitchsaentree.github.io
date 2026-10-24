@@ -17,16 +17,16 @@ export function TimsIdea() {
         </div>
 
         <blockquote style={{ fontFamily: T.font.display, fontWeight: 500, fontSize: 'clamp(1.4rem,3vw,2.1rem)', lineHeight: 1.28, color: T.color.ink, borderLeft: `3px solid ${T.color.red}`, paddingLeft: '1.5rem', margin: '2rem 0', maxWidth: '24ch' }}>
-          It&apos;s a fight I had every morning:{' '}
-          <em style={{ fontStyle: 'normal', color: T.color.red }}>everyone wants it their exact way, and everyone wants it now.</em>
+          I had the same fight every morning.{' '}
+          <em style={{ fontStyle: 'normal', color: T.color.red }}>Everyone wanted their order exactly their way, and they wanted it now.</em>
         </blockquote>
 
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
-          I tried three layouts and judged each against the forty-second test in my head. I knew exactly what forty seconds felt like. What won came down to <strong style={{ color: T.color.ink, fontWeight: 600 }}>distribution</strong>. I rang the same handful of orders all day: large double-double, medium steeped tea, French Vanilla. The weird blends were real, but rare, maybe one in fifty.
+          I tried three layouts and judged each against the forty-second test in my head. I knew exactly what forty seconds felt like. What won came down to <strong style={{ color: T.color.ink, fontWeight: 600 }}>distribution</strong>. All day I rang the same handful of orders, like a large double-double, a medium steeped tea or a French Vanilla. The weird blends were real, but rare, maybe one in fifty.
         </p>
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
-          So the whole thing rests on one move:{' '}
-          <strong style={{ color: T.color.ink, fontWeight: 600 }}>the common order collapses to a single tap; the strange one is fully supported and allowed to be slow</strong>, because it almost never happens and won&apos;t drag the average. Presets up front. A &ldquo;custom&rdquo; door for the long tail.
+          So the design depends on one decision.{' '}
+          <strong style={{ color: T.color.ink, fontWeight: 600 }}>The common order takes a single tap, and the strange one is fully supported but allowed to be slow</strong>, because it almost never happens and won&apos;t drag the average down. Presets sit up front, with a &ldquo;custom&rdquo; door for the rare orders.
         </p>
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
           Two things followed. The layout puts the{' '}

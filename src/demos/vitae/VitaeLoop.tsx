@@ -9,7 +9,7 @@ const ROUNDS: { n: string; h: string; steps: Step[] }[] = [
     h:    'Absolute score → killed',
     steps: [
       { k: 'In',      text: 'A universal 0–100 health score on the watch face.' },
-      { k: 'The room',text: 'Clinical vetoed it: implies a medical claim; can falsely reassure.', bad: true },
+      { k: 'The room',text: 'Clinical vetoed it because it implies a medical claim and can falsely reassure.', bad: true },
       { k: 'Forward', text: 'Drop "health." Score momentum vs personal baseline instead.', good: true },
     ],
   },

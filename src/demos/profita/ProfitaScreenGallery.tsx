@@ -38,14 +38,17 @@ export function ProfitaScreenGallery() {
           letterSpacing: '-.02em',
           lineHeight:    1.15,
           color:         P.color.on,
-          margin:        '0 0 2.8rem',
+          margin:        '0 0 1.2rem',
           maxWidth:      '28ch',
         }}>
-          Every edge covered,{' '}
+          Every screen in the flow,{' '}
           <em style={{ fontStyle: 'italic', color: P.color.gold }}>
-            nothing left hanging.
+            including the edge cases.
           </em>
         </h2>
+        <p style={{ fontSize: '1.05rem', color: P.color.onMut, lineHeight: 1.65, maxWidth: '52ch', margin: '0 0 2.8rem' }}>
+          Four more screens sit around the purchase flow, from the order receipt to choosing which account pays.
+        </p>
       </div>
 
       {/* Horizontal scroll strip — bleeds past prof-wrap */}

@@ -5,7 +5,7 @@ import { T } from './tokens'
 const STATS = [
   { value: '~40s', desc: 'per order at the window, the number on the board I got judged by' },
   { value: '2 yrs', desc: 'I actually rang these orders in, headset and all' },
-  { value: '≤3',   desc: 'iterations before shipping, a discipline, not a limit' },
+  { value: '≤3',   desc: 'iterations before shipping, a cap I set for myself on purpose' },
   { value: '1 bet', desc: 'preset-first, custom as escape hatch' },
 ] as const
 
@@ -13,7 +13,7 @@ export function TimsStatStrip() {
   return (
     <div style={{ background: T.color.espresso, color: T.color.cream }}>
       <div
-        className="tims-wrap tims-animate"
+        className="tims-wrap tims-animate tims-strip-grid"
         style={{
           display:             'grid',
           gridTemplateColumns: 'repeat(4,1fr)',

@@ -16,7 +16,7 @@ const CALLS = [
     q:    'Hide doubt, or show it?',
     lose: 'Always a confident score',
     win:  'A quiet "low confidence" note',
-    why:  'On sparse-data days the score says so. Trust comes from admitting the gaps.',
+    why:  'On sparse-data days the score says so. We decided an honest gap was safer than a confident guess.',
     cost: 'It cost a tidier screen, but it was worth it.',
   },
   {
@@ -57,6 +57,9 @@ export function VitaeCalls() {
               Three decisions, each with a{' '}
               <em style={{ fontStyle: 'italic', color: V.color.limeDeep }}>price.</em>
             </h2>
+            <p style={{ color: V.color.inkSoft, fontSize: '1.1rem', maxWidth: '50ch', fontFamily: V.font.sans, lineHeight: 1.65, margin: '1.2rem 0 0' }}>
+              Each call protected someone in the room, and each one cost us something we wanted.
+            </p>
           </div>
 
           <div

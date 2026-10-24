@@ -35,8 +35,8 @@ export function VitaeOutcome() {
                 color:         V.color.ink,
               }}
             >
-              The best thing I designed never shipped. It was{' '}
-              <b style={{ fontStyle: 'normal', fontWeight: 600, color: V.color.limeDeep }}>the absolute score we killed.</b>
+              The most useful thing I designed was{' '}
+              <b style={{ fontStyle: 'normal', fontWeight: 600, color: V.color.limeDeep }}>the absolute score we killed</b>, and it never shipped.
             </blockquote>
             <p
               style={{
@@ -50,11 +50,11 @@ export function VitaeOutcome() {
                 fontFamily: V.font.sans,
               }}
             >
-              Case-study presentation of a product-design project. The score logic, stakeholder tensions,
-              and decisions reflect the real work; figures (3s, review outcomes) come from the project&apos;s
-              own usability testing and review notes and are shown as directional, not published metrics.
-              Vitae is not a medical device and does not provide medical advice. That framing itself
-              drove the relative-score decision above.
+              Case-study presentation of a product-design project. The score logic, stakeholder tensions
+              and decisions reflect the real work. Figures such as the 3s and the review outcomes come from
+              the project&apos;s own usability testing and review notes. They are directional and were never
+              published. Vitae is not a medical device and does not give medical advice, and that limit is
+              what drove the relative-score decision above.
             </p>
           </div>
         </div>
@@ -85,7 +85,7 @@ export function VitaeOutcome() {
               <em style={{ fontStyle: 'italic', color: V.color.limeDeep }}>zero caveats.</em>
             </h2>
             <p style={{ color: V.color.inkSoft, fontSize: '1.1rem', maxWidth: '50ch', fontFamily: V.font.sans, lineHeight: 1.65 }}>
-              The clinical advisor signed off without a single one, <b style={{ color: V.color.ink }}>because the design never claims more than it knows.</b>
+              The clinical advisor signed off with no caveats, <b style={{ color: V.color.ink }}>because the score never claims more than the data supports.</b>
             </p>
           </div>
 

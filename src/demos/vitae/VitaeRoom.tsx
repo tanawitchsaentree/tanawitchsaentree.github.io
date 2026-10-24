@@ -6,31 +6,31 @@ const VOICES = [
   {
     who:   'Product',
     said:  '"If they don\'t open it daily, nothing else we do matters."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>engagement</b>: a reason to come back every morning.</>,
+    pull:  <>This argued for <b style={{ color: V.color.ink }}>engagement</b>, so people had a reason to open the app each morning.</>,
     me:    false,
   },
   {
     who:   'Clinical advisor · MD',
     said:  '"A green score on the day someone\'s getting sick is the one thing we can never ship."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>safety</b>: never falsely reassuring.</>,
+    pull:  <>The advisor&apos;s line was <b style={{ color: V.color.ink }}>safety</b>. The score could never falsely reassure anyone.</>,
     me:    false,
   },
   {
     who:   'Engineering',
     said:  '"Assume only the sensors already on the wrist. No new hardware, no cloud round-trip."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>constraint</b>: shipping inside what exists.</>,
+    pull:  <>Engineering&apos;s <b style={{ color: V.color.ink }}>constraint</b> was to ship inside the hardware people already wore.</>,
     me:    false,
   },
   {
     who:   'Privacy',
     said:  '"This is the most sensitive data we hold. It does not leave the device."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>trust</b>: on-device or not at all.</>,
+    pull:  <><b style={{ color: V.color.ink }}>Trust</b> meant the data stayed on the device, or the feature didn&apos;t exist.</>,
     me:    false,
   },
   {
     who:   'Design · me',
     said:  '"If the first glance needs a tutorial, the glance has already failed."',
-    pull:  <>Pulls toward <b style={{ color: V.color.ink }}>clarity</b>: one reading, understood instantly.</>,
+    pull:  <>I pushed for <b style={{ color: V.color.ink }}>clarity</b>. One reading had to make sense the moment you saw it.</>,
     me:    true,
   },
 ] as const

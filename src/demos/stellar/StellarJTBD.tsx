@@ -122,7 +122,6 @@ export function StellarJTBD() {
                 background: S.alpha.white55,
                 borderRadius: 2,
                 boxShadow: `0 1px 2px ${S.alpha.black10}`,
-                backdropFilter: 'blur(2px)',
               }} />
 
               {/* fold corner bottom-right */}
@@ -138,7 +137,7 @@ export function StellarJTBD() {
                 fontSize:      '.72rem',
                 letterSpacing: '.08em',
                 color:         S.color.stickyInk,
-                opacity:       0.55,
+                opacity:       0.75, // 0.55 measured ~3.4:1 on the sticky paper; 0.75 clears AA
                 marginBottom:  '.7rem',
                 lineHeight:    1.4,
               }}>

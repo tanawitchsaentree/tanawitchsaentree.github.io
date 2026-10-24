@@ -190,3 +190,31 @@
   --docsort-mono: 'IBM Plex Mono', monospace;
   --docsort-font: var(--docsort-sans);
 }
+
+/* ── Invitrace case study (demo surface: [data-demo="invitrace"] only) ──────────
+   Page chrome around the ward console. The console's own values are demo data
+   (src/demos/invitrace/model.ts, tiers raw → theme → semantic → component).
+   Contrast (computed): ink on paper 16.5:1 · muted on paper 6.7:1 · violet on
+   paper 6.1:1 · card on violet 6.3:1 · ink on card 17:1. */
+[data-demo="invitrace"] {
+  --ixp-paper:    #FBFAFE;
+  --ixp-card:     #FEFEFF;
+  --ixp-ink:      #1D1A26;
+  --ixp-muted:    #5B5670;
+  --ixp-line:     #E2DDEC;
+  --ixp-line-strong: #8C849E;  /* control borders, 3.4:1 on paper */
+  --ixp-violet:   #5644E3;     /* violet-ink: AA step derived from Invitrace violet-500, 6.1:1 on paper; links, focus, page buttons */
+  --ixp-violet-500: #6C5CE7;   /* Invitrace violet-500 (invitrace-system/tokens/global.json), large accents only */
+  --ixp-violet-soft: #F1ECFB;
+  --ixp-code:     #15131C;
+  --ixp-code-ink: #EDE9F6;
+  --ixp-add:      #0B7A44;     /* diff + lines, 5.4:1 on paper */
+  --ixp-del:      #B42318;     /* diff − lines, 6.3:1 on paper */
+  --ixp-add-on-code: #7EE2A8;  /* diff + on the code panel, 11:1 */
+  --ixp-del-on-code: #FDA29B;  /* diff − on the code panel, 9:1 */
+  --ixp-shadow: 0 18px 40px -24px rgba(29, 26, 38, .35);
+  --ixp-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', sans-serif;
+  --ixp-sans: 'DM Sans Variable', 'DM Sans', sans-serif;
+  --ixp-mono: 'Space Mono', monospace;
+  --ixp-font: var(--ixp-sans);
+}

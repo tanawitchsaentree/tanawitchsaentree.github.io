@@ -4,21 +4,6 @@ import { useEffect, useRef } from 'react'
 import { V } from './tokens'
 import { VitaeAppScreen } from './Reframe/VitaeAppScreen'
 
-// Parse a 6-digit CSS hex token (e.g. "#f6f5ef") into [r, g, b] integers.
-// This derives the melt arrays from token values; no magic numbers in the scroll handler.
-function hexToRgb(hex: string): [number, number, number] {
-  const h = hex.replace('#', '')
-  return [
-    parseInt(h.slice(0, 2), 16),
-    parseInt(h.slice(2, 4), 16),
-    parseInt(h.slice(4, 6), 16),
-  ]
-}
-// Scroll-melt palette: paper → ink → lime → paper (derived from token values)
-const T_PAPER = hexToRgb(V.color.paper)   // #f6f5ef
-const T_INK   = hexToRgb(V.color.ink)     // #16201a
-const T_LIME  = hexToRgb(V.color.lime)    // #aede3d
-
 const SCENES = [
   {
     tag:   'Concept 01',
@@ -29,120 +14,164 @@ const SCENES = [
   {
     tag:   'Clinical review',
     h:     <>It died in <em>ten minutes.</em></>,
-    p:     'An absolute health number implies a medical claim. And a confident "78" on the morning you\'re coming down with something isn\'t simple. It\'s a dangerous lie.',
+    p:     'An absolute health number implies a medical claim. A confident "78" on the morning you are coming down with something would falsely reassure you, and that is dangerous.',
     dark:  true,
   },
   {
     tag:   'The reframe',
     h:     <>Score the day against <em>your own</em> baseline.</>,
-    p:     'Not a verdict on your health, just a read on your momentum versus your last 14 days, honest and still one glanceable number.',
+    p:     'The score compares today with your own last 14 days. It makes no claim about your health, and it is still one number you can read at a glance.',
     dark:  false,
   },
 ] as const
 
+
+// Scroll-melt choreography. Progress p runs 0→1 while the 460vh film scrolls past the
+// sticky stage. Background melts paper → ink (28%) → lime (55%) → paper (90%). It is
+// painted by stacked colour layers whose OPACITY animates, so the melt stays on the
+// compositor. Scene text crossfades between an ink copy and a paper copy for the same
+// reason. Browsers with CSS scroll-driven animations scrub it natively (no JS on
+// scroll); everywhere else an IntersectionObserver steps the stage through 3 states.
+const PAR = V.motion.reframeParallax
+const PY1 = V.motion.distanceReveal * 0.35
+const PY2 = V.motion.distanceReveal * 0.18
+const EASE = V.ease.smoothInOut
+const px = (n: number) => `${Math.round(n * 10) / 10}px`
+// scene i peaks at its centre c = (i + .5) / 3 and fades over ±0.2 of progress
+const sceneKF = [
+  `0%{opacity:.17;transform:translateY(${px(PAR / 6)})}16.67%{opacity:1;transform:none}36.67%{opacity:0;transform:translateY(${px(-PAR * 0.2)})}100%{opacity:0;transform:translateY(${px(-PAR * 5 / 6)})}`,
+  `0%{opacity:0;transform:translateY(${px(PAR / 2)})}30%{opacity:0;transform:translateY(${px(PAR * 0.2)})}50%{opacity:1;transform:none}70%{opacity:0;transform:translateY(${px(-PAR * 0.2)})}100%{opacity:0;transform:translateY(${px(-PAR / 2)})}`,
+  `0%{opacity:0;transform:translateY(${px(PAR * 5 / 6)})}63.33%{opacity:0;transform:translateY(${px(PAR * 0.2)})}83.33%{opacity:1;transform:none}100%{opacity:.17;transform:translateY(${px(-PAR / 6)})}`,
+]
+const PHONE_MID = `translate(-5%,${px(-PY1)}) scale(1.04) rotate(-1.5deg)`
+const PHONE_END = `translate(0,${px(-PY2)}) scale(.95) rotate(1deg)`
+
+const CSS = `
+.vr-film{position:relative;height:460vh;view-timeline-name:--vr-film;view-timeline-axis:block}
+.vr-trig{position:absolute;left:0;width:1px;height:120vh;pointer-events:none}
+.vr-stage{background:${V.color.paper}}
+.vr-layer{position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none;transition:opacity ${V.motion.durationBase} ${EASE}}
+.vr-layer--ink{background:${V.color.ink}}
+.vr-layer--lime{background:${V.color.lime}}
+.vr-cols{position:relative;z-index:1}
+.vr-set{position:absolute;inset:0;transition:opacity ${V.motion.durationBase} ${EASE}}
+.vr-set--ink{color:${V.color.ink}}
+.vr-set--light{color:${V.color.paper};opacity:0}
+.vr-scene{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateY(${px(PAR * 0.2)});transition:opacity ${V.motion.durationBase} ${EASE},transform ${V.motion.durationBase} ${EASE}}
+.vr-phone{position:relative;z-index:1;justify-self:center;transition:transform ${V.motion.durationBase} ${EASE}}
+/* stepped fallback */
+.vr-film[data-step="0"] .vr-s0,.vr-film[data-step="1"] .vr-s1,.vr-film[data-step="2"] .vr-s2{opacity:1;transform:none}
+.vr-film[data-step="1"] .vr-s0,.vr-film[data-step="2"] .vr-s0,.vr-film[data-step="2"] .vr-s1{transform:translateY(${px(-PAR * 0.2)})}
+.vr-film[data-step="1"] .vr-layer--ink,.vr-film[data-step="1"] .vr-set--light{opacity:1}
+.vr-film[data-step="1"] .vr-set--ink{opacity:0}
+.vr-film[data-step="2"] .vr-layer--lime{opacity:.22}
+.vr-film[data-step="1"] .vr-phone{transform:${PHONE_MID}}
+.vr-film[data-step="2"] .vr-phone{transform:${PHONE_END}}
+@keyframes vr-ink{0%{opacity:0}28%{opacity:1}55%{opacity:1}55.1%{opacity:0}100%{opacity:0}}
+@keyframes vr-lime{0%{opacity:0}28%{opacity:0}55%{opacity:1}90%{opacity:0}100%{opacity:0}}
+@keyframes vr-light{0%{opacity:0}28%{opacity:1}55%{opacity:0}100%{opacity:0}}
+@keyframes vr-dark{0%{opacity:1}28%{opacity:0}55%{opacity:1}100%{opacity:1}}
+@keyframes vr-s0{${sceneKF[0]}}
+@keyframes vr-s1{${sceneKF[1]}}
+@keyframes vr-s2{${sceneKF[2]}}
+@keyframes vr-phone{0%{transform:none}45%{transform:${PHONE_MID}}100%{transform:${PHONE_END}}}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .vr-film .vr-layer,.vr-film .vr-set,.vr-film .vr-scene,.vr-film .vr-phone{transition:none;animation-fill-mode:both;animation-timing-function:${EASE};animation-timeline:--vr-film;animation-range:contain 0% contain 100%}
+    .vr-film .vr-layer--ink{animation-name:vr-ink}
+    .vr-film .vr-layer--lime{animation-name:vr-lime}
+    .vr-film .vr-set--light{animation-name:vr-light}
+    .vr-film .vr-set--ink{animation-name:vr-dark}
+    .vr-film .vr-s0{animation-name:vr-s0}
+    .vr-film .vr-s1{animation-name:vr-s1}
+    .vr-film .vr-s2{animation-name:vr-s2}
+    .vr-film .vr-phone{animation-name:vr-phone}
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vr-layer,.vr-set,.vr-scene,.vr-phone{transition:none}
+}
+`
+
+const H_STYLE = {
+  fontFamily:    V.font.serif,
+  fontWeight:    300,
+  fontSize:      'clamp(2rem,4.6vw,3.8rem)',
+  lineHeight:    1.04,
+  letterSpacing: '-.022em',
+  maxWidth:      '15ch',
+  margin:        '0 0 1.3rem',
+} as const
+
+function SceneSet({ light }: { light?: boolean }) {
+  return (
+    <div className={`vr-set ${light ? 'vr-set--light' : 'vr-set--ink'}`} aria-hidden={light || undefined}>
+      {SCENES.map((sc, i) => (
+        <div key={sc.tag} className={`vr-scene vr-s${i}`}>
+          <div
+            style={{
+              fontFamily:    V.font.mono,
+              fontSize:      V.size.eyebrow,
+              letterSpacing: '.22em',
+              textTransform: 'uppercase',
+              marginBottom:  '1.2rem',
+              opacity:       0.75,
+            }}
+          >
+            {sc.tag}
+          </div>
+          {light ? <div style={H_STYLE}>{sc.h}</div> : <h2 style={H_STYLE}>{sc.h}</h2>}
+          <p
+            style={{
+              fontFamily: V.font.sans,
+              fontSize:   '1.08rem',
+              maxWidth:   '40ch',
+              lineHeight: 1.65,
+              margin:     0,
+              opacity:    0.75,
+            }}
+          >
+            {sc.p}
+          </p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export function VitaeReframe() {
-  const filmRef  = useRef<HTMLDivElement>(null)
-  const stageRef = useRef<HTMLDivElement>(null)
-  const phoneRef = useRef<HTMLDivElement>(null)
-  const sceneRefs = useRef<(HTMLDivElement | null)[]>([])
+  const filmRef = useRef<HTMLDivElement>(null)
+  const trigRefs = useRef<(HTMLDivElement | null)[]>([])
 
+  // Three state changes over the whole film; drives the fallback / reduced-motion view.
   useEffect(() => {
-    const film   = filmRef.current
-    const stage  = stageRef.current
-    const phone  = phoneRef.current
-    if (!film || !stage || !phone) return
-
-    const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches
-    if (reduce) {
-      sceneRefs.current.forEach((s, i) => {
-        if (s) s.style.opacity = i === 0 ? '1' : '0'
-      })
-      return
-    }
-
-    // Token-derived, no magic numbers here
-    const BG = [T_PAPER, T_INK,   T_LIME,  T_PAPER]
-    const FG = [T_INK,   T_PAPER, T_INK,   T_INK  ]
-    const ST = [0, 0.28, 0.55, 0.90]
-
-    const lerp  = (a: number, b: number, t: number) => a + (b - a) * t
-    const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v))
-    const lerpC = (c1: number[], c2: number[], t: number) => c1.map((v, i) => Math.round(lerp(v, c2[i], t)))
-    const rgb   = (a: number[]) => `rgb(${a[0]},${a[1]},${a[2]})`
-
-    function samp(p: number, arr: number[][]) {
-      for (let i = 0; i < ST.length - 1; i++) {
-        if (p <= ST[i + 1]) {
-          const t = (p - ST[i]) / (ST[i + 1] - ST[i])
-          return lerpC(arr[i], arr[i + 1], t)
-        }
-      }
-      return arr[arr.length - 1]
-    }
-
-    const PY1 = V.motion.distanceReveal * 0.35  // -12px phone parallax mid (~12)
-    const PY2 = V.motion.distanceReveal * 0.18  // -6px  phone parallax end (~6)
-    const PHONE_KF = [
-      { at: 0,    x: 0,  y: 0,    s: 1,    r: 0    },
-      { at: 0.45, x: -5, y: -PY1, s: 1.04, r: -1.5 },
-      { at: 1,    x: 0,  y: -PY2, s: 0.95, r: 1    },
-    ]
-    function sampPhone(p: number) {
-      for (let i = 0; i < PHONE_KF.length - 1; i++) {
-        const a = PHONE_KF[i], b = PHONE_KF[i + 1]
-        if (p <= b.at) {
-          const t = (p - a.at) / (b.at - a.at)
-          return { x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t), s: lerp(a.s, b.s, t), r: lerp(a.r, b.r, t) }
-        }
-      }
-      return PHONE_KF[PHONE_KF.length - 1]
-    }
-
-    const n     = sceneRefs.current.length
-    const filmEl  = film
-    const stageEl = stage
-    const phoneEl = phone
-
-    function render() {
-      const rect  = filmEl.getBoundingClientRect()
-      const total = rect.height - window.innerHeight
-      const p     = clamp(-rect.top / total, 0, 1)
-
-      const bg = samp(p, BG)
-      const fg = samp(p, FG)
-      stageEl.style.background = rgb(bg)
-      stageEl.style.color       = rgb(fg)
-
-      sceneRefs.current.forEach((sc, i) => {
-        if (!sc) return
-        const center = (i + 0.5) / n
-        const dist   = Math.abs(p - center) / (0.6 / n)
-        const opacity = clamp(1 - dist, 0, 1)
-        sc.style.opacity   = String(opacity)
-        sc.style.transform = `translateY(${(p - center) * -V.motion.reframeParallax}px)`
-      })
-
-      const k = sampPhone(p)
-      phoneEl.style.transform = `translate(${k.x}%,${k.y}px) scale(${k.s}) rotate(${k.r}deg)`
-    }
-
-    window.addEventListener('scroll', render, { passive: true })
-    window.addEventListener('resize', render)
-    render()
-    return () => {
-      window.removeEventListener('scroll', render)
-      window.removeEventListener('resize', render)
-    }
+    const film = filmRef.current
+    if (!film) return
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) film.dataset.step = (e.target as HTMLElement).dataset.i ?? '0'
+      }),
+      { rootMargin: '-50% 0px -50% 0px' },
+    )
+    trigRefs.current.forEach(t => { if (t) io.observe(t) })
+    return () => io.disconnect()
   }, [])
 
   return (
-    <div
-      ref={filmRef}
-      id="reframe"
-      style={{ position: 'relative', height: '460vh' }}
-    >
+    <div ref={filmRef} id="reframe" className="vr-film" data-step="0">
+      <style dangerouslySetInnerHTML={{ __html: CSS }} />
+      {/* scroll triggers: segment i covers progress [i/3, (i+1)/3] at the viewport centre line */}
+      {[0, 1, 2].map(i => (
+        <div
+          key={i}
+          ref={el => { trigRefs.current[i] = el }}
+          data-i={i}
+          aria-hidden
+          className="vr-trig"
+          style={{ top: `calc(50vh + ${i * 120}vh)` }}
+        />
+      ))}
       <div
-        ref={stageRef}
         style={{
           position:      'sticky',
           top:           0,
@@ -153,69 +182,20 @@ export function VitaeReframe() {
           alignItems:    'center',
           gap:           'clamp(2rem,5vw,5rem)',
           padding:       '0 clamp(1.4rem,5vw,7.5rem)',
-          transition:    `background ${V.motion.durationFast} ${V.ease.smoothInOut}, color ${V.motion.durationFast} ${V.ease.smoothInOut}`,
         }}
-        className="vitae-reframe-stage"
+        className="vitae-reframe-stage vr-stage"
       >
-        {/* scenes column */}
-        <div style={{ position: 'relative', height: '58vh' }}>
-          {SCENES.map((sc, i) => (
-            <div
-              key={sc.tag}
-              ref={el => { sceneRefs.current[i] = el }}
-              style={{
-                position:      'absolute',
-                inset:         0,
-                display:       'flex',
-                flexDirection: 'column',
-                justifyContent:'center',
-                willChange:    'opacity,transform',
-                opacity:       i === 0 ? 1 : 0,
-              }}
-            >
-              <div
-                style={{
-                  fontFamily:    V.font.mono,
-                  fontSize:      V.size.eyebrow,
-                  letterSpacing: '.22em',
-                  textTransform: 'uppercase',
-                  marginBottom:  '1.2rem',
-                  opacity:       0.75,
-                }}
-              >
-                {sc.tag}
-              </div>
-              <h2
-                style={{
-                  fontFamily:    V.font.serif,
-                  fontWeight:    300,
-                  fontSize:      'clamp(2rem,4.6vw,3.8rem)',
-                  lineHeight:    1.04,
-                  letterSpacing: '-.022em',
-                  maxWidth:      '15ch',
-                  margin:        '0 0 1.3rem',
-                }}
-              >
-                {sc.h}
-              </h2>
-              <p
-                style={{
-                  fontFamily: V.font.sans,
-                  fontSize:   '1.08rem',
-                  maxWidth:   '40ch',
-                  lineHeight: 1.65,
-                  margin:     0,
-                  opacity:    0.75,
-                }}
-              >
-                {sc.p}
-              </p>
-            </div>
-          ))}
+        {/* scenes column: ink copy + paper copy crossfade instead of animating colour */}
+        <div className="vr-cols" style={{ position: 'relative', height: '58vh' }}>
+          <SceneSet />
+          <SceneSet light />
         </div>
 
+        <span aria-hidden className="vr-layer vr-layer--ink" />
+        <span aria-hidden className="vr-layer vr-layer--lime" />
+
         {/* phone column: shell + animated app screen */}
-        <div ref={phoneRef} style={{ justifySelf: 'center', willChange: 'transform' }}>
+        <div className="vr-phone">
           <div
             style={{
               width:        'clamp(228px, 26vw, 300px)',
@@ -246,4 +226,3 @@ export function VitaeReframe() {
     </div>
   )
 }
-

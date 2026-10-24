@@ -49,6 +49,9 @@ export function StellarEmpathy() {
           <h2 style={{ fontFamily: S.font.display, fontWeight: 700, fontSize: S.size.display, letterSpacing: '-.015em', lineHeight: 1.02, color: S.color.ink }}>
             An empathy map made the <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>feeling</em> concrete.
           </h2>
+          <p style={{ color: S.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch', marginTop: '1.1rem' }}>
+            The map kept landing on one worry, which was wasting food and money without knowing what to cook.
+          </p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.1rem' }} className="stellar-empathy-grid">

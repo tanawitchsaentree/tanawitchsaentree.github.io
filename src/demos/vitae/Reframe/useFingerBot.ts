@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { V } from '../tokens'
+import { createBotGate } from '../ui/botGate'
 
 export interface FingerBotRefs {
   fingerRef:  React.RefObject<HTMLDivElement | null>
@@ -21,7 +22,6 @@ const FINGER_W = 14
 const CHECK_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`
 const ARROW_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`
 
-function wait(ms: number) { return new Promise<void>(r => setTimeout(r, ms)) }
 
 function getScale(screen: HTMLDivElement) {
   return screen.getBoundingClientRect().width / screen.offsetWidth || 1
@@ -64,10 +64,13 @@ export function useFingerBot(refs: FingerBotRefs) {
     if (!screenRef.current) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // pauses the loop while the phone is off screen (no timers firing out of view)
+    const gate = createBotGate(screenRef.current, 0.35)
+    const wait = gate.wait
 
     function reset() {
       if (numRef.current)     numRef.current.textContent = '82'
-      if (bandRef.current)    (bandRef.current as HTMLElement).style.width = '82%'
+      if (bandRef.current)    (bandRef.current as HTMLElement).style.transform = 'scaleX(.82)'
       if (verdictRef.current) verdictRef.current.textContent = 'On track today'
       moveRef.current?.classList.remove('va-move--done')
       if (doBtnRef.current) { doBtnRef.current.classList.remove('va-do--done'); doBtnRef.current.innerHTML = ARROW_SVG }
@@ -129,7 +132,7 @@ export function useFingerBot(refs: FingerBotRefs) {
           moveRef.current?.classList.add('va-move--done')
           if (doBtnRef.current) { doBtnRef.current.classList.add('va-do--done'); doBtnRef.current.innerHTML = CHECK_SVG }
           if (verdictRef.current) verdictRef.current.textContent = 'Ring closed'
-          if (bandRef.current) (bandRef.current as HTMLElement).style.width = '88%'
+          if (bandRef.current) (bandRef.current as HTMLElement).style.transform = 'scaleX(.88)'
           if (numRef.current) countTo(numRef.current, 88)
         })
         await wait(V.motion.appDoneDwellMs)
@@ -161,13 +164,9 @@ export function useFingerBot(refs: FingerBotRefs) {
       }
     }
 
-    // start only when phone screen enters viewport
-    const io = new IntersectionObserver(
-      es => es.forEach(e => { if (e.isIntersecting) { io.disconnect(); setTimeout(loop, 600) } }),
-      { threshold: 0.35 }
-    )
-    io.observe(screenRef.current)
-    return () => { stopRef.current = true; io.disconnect() }
+    // start once the screen first enters the viewport
+    gate.untilVisible().then(() => wait(600)).then(loop)
+    return () => { stopRef.current = true; gate.stop() }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }

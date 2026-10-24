@@ -1,21 +1,9 @@
 'use client'
 
+import { InvitraceCase } from '@/demos/invitrace/InvitraceCase'
+
+// The case study used to be a static iframe (public/demos/invitrace-ds.html), which anyone
+// could open without the password. It is now a React page whose text ships encrypted.
 export function InvitraceClient() {
-  return (
-    <iframe
-      src="/demos/invitrace-ds.html"
-      title="Invitrace Design System: federated token architecture case study"
-      style={{
-        display:    'block',
-        position:   'fixed',
-        inset:      0,
-        width:      '100%',
-        height:     '100%',
-        border:     'none',
-        background: 'var(--bg)',
-        zIndex:     1,
-      }}
-      allow="autoplay"
-    />
-  )
+  return <InvitraceCase />
 }

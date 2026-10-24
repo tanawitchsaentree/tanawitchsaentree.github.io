@@ -55,10 +55,7 @@ const SCREEN_MAP: Record<ScreenName, React.ComponentType> = {
   buyaccount:   BuyAccountScreen,
 }
 
-export type ConfirmCutoff = NonNullable<NonNullable<Parameters<typeof ConfirmScreen>[0]>['cutoff']>
-export type ReceiptDates = NonNullable<NonNullable<Parameters<typeof OrderSuccessScreen>[0]>['dates']>
-
-export function ProfitaPhoneScreen({ screen, purchase, cutoff, receiptDates }: { screen: ScreenName; purchase?: PurchaseDemoProps; cutoff?: ConfirmCutoff; receiptDates?: ReceiptDates }) {
+export function ProfitaPhoneScreen({ screen, purchase }: { screen: ScreenName; purchase?: PurchaseDemoProps }) {
   const Screen = SCREEN_MAP[screen]
 
   return (
@@ -68,7 +65,7 @@ export function ProfitaPhoneScreen({ screen, purchase, cutoff, receiptDates }: {
       height:       PROFITA_PHONE_H,
       borderRadius: 48,
       padding:      PAD,
-      background:   'linear-gradient(160deg,#2c3035 0%,#0e0f10 45%,#000 70%,#1c1e21 100%)',
+      background:   'linear-gradient(160deg,#2c3035 0%,#0e0f10 45%,#060708 70%,#1c1e21 100%)',
       boxShadow:    `
         0 0 0 1.5px #3c4044,
         0 0 0 4px #111314,
@@ -96,9 +93,7 @@ export function ProfitaPhoneScreen({ screen, purchase, cutoff, receiptDates }: {
         overflow:     'hidden',
         background:   SC.paper,
       }}>
-        {screen === 'confirm' && cutoff ? <ConfirmScreen cutoff={cutoff} />
-          : screen === 'ordersuccess' && receiptDates ? <OrderSuccessScreen dates={receiptDates} />
-          : screen === 'fund' && purchase ? <FundScreen onOpenFund={() => purchase.onNavigate('funddetail')} />
+        {screen === 'fund' && purchase ? <FundScreen onOpenFund={() => purchase.onNavigate('funddetail')} />
           : screen === 'funddetail' && purchase ? <FundDetailScreen onBack={() => purchase.onNavigate('fund')} onBuy={() => purchase.onNavigate('buyamount')} />
           : screen === 'buyamount' && purchase ? <BuyAmountScreen amount={purchase.amount} account={purchase.account} onAmountChange={purchase.onAmountChange} onBack={() => purchase.onNavigate('funddetail')} onNext={() => purchase.onNavigate('confirm')} onChangeAccount={() => purchase.onNavigate('buyaccount')} />
           : screen === 'buyaccount' && purchase ? <BuyAccountScreen account={purchase.account} onBack={() => purchase.onNavigate('buyamount')} onConfirm={(account) => { purchase.onAccountChange?.(account); purchase.onNavigate('buyamount') }} />

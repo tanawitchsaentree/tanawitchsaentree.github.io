@@ -2,11 +2,12 @@
 
 import { V } from './tokens'
 import { VitaeTrendsScreen } from './HowItWorks/VitaeTrendsScreen'
+import { BotPauseButton } from './ui/BotPauseButton'
 
 const STEPS = [
   { n: '01', text: <><b style={{ color: 'inherit', fontWeight: 600 }}>Steps, sleep, water, resting HR</b>, read on the wrist and normalised to your baseline.</> },
   { n: '02', text: <>A weighted sum maps to 0–100 and picks a plain <b style={{ color: 'inherit', fontWeight: 600 }}>verdict word.</b></> },
-  { n: '03', text: <>Too few signals? It flags <b style={{ color: 'inherit', fontWeight: 600 }}>low confidence</b> rather than inventing a score.</> },
+  { n: '03', text: <>When signals are missing, it flags <b style={{ color: 'inherit', fontWeight: 600 }}>low confidence</b> and does not fill the gap with a guess.</> },
 ] as const
 
 export function VitaeHowItWorks() {
@@ -78,8 +79,8 @@ export function VitaeHowItWorks() {
               The score reads four on-device signals against your own 14-day baseline.
               On a normal day it lands a confident number. On a thin-data day, like a missed
               night or a travel morning, it{' '}
-              <b style={{ color: V.color.ink, fontWeight: 600 }}>shows its uncertainty instead of guessing.</b>{' '}
-              That restraint is what let it pass clinical review.
+              <b style={{ color: V.color.ink, fontWeight: 600 }}>says it is unsure and does not guess.</b>{' '}
+              That is what got it through clinical review.
             </p>
 
             <div style={{ display: 'grid', gap: '.2rem' }}>
@@ -126,6 +127,7 @@ export function VitaeHowItWorks() {
               flexShrink:   0,
               position:     'relative',
             }}>
+              <BotPauseButton />
               <div style={{
                 width:        '100%',
                 height:       '100%',

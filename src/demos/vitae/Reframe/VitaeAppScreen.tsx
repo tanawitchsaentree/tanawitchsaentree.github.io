@@ -1,16 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef } from 'react'
 import { V } from '../tokens'
+import { useFingerBot } from './useFingerBot'
 import { PhoneShell } from '../ui/PhoneShell'
+import { BotPauseButton } from '../ui/BotPauseButton'
+
+// Decorative controls inside the scripted mock: `inert` keeps them out of the tab order and the
+// accessibility tree without changing how they look (React 18 has no typed `inert` prop).
+const INERT = { inert: '' } as Record<string, string>
 
 // ── icons (inline SVG strings to avoid dependency) ─────────────────────────
 const IconUser  = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg>
 const IconMove  = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 5 12 12M12 12 5 19M12 12l4 7M12 12 8 5"/><circle cx="12" cy="12" r="2"/></svg>
 const IconChev  = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+const IconToday = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+const IconTrend = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17l6-6 4 4 7-7"/></svg>
+const IconMe    = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg>
 const ARROW_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`
 
 // ── CSS (scoped to .va-root) ────────────────────────────────────────────────
+const _ms = `${V.motion.fingerMoveMs / 1000}s`
 const APP_CSS = `
 .va-root{position:absolute;inset:0;display:flex;flex-direction:column;padding:16px 15px 0;font-family:'DM Sans',sans-serif;color:${V.color.ink};background:${V.color.screenBg}}
 .va-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -26,39 +36,63 @@ const APP_CSS = `
 .va-conf{font-family:'Space Mono',monospace;font-weight:500;font-size:10.5px;letter-spacing:.03em;color:${V.color.muted};margin:5px 0 10px}
 .va-verdict{font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:${V.color.limeDeep};margin:0 0 12px}
 .va-band{height:7px;border-radius:99px;background:${V.color.paper2};overflow:hidden;margin:0 6px}
-.va-band-fill{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,${V.color.lime},${V.color.limeDeep});transition:width .9s cubic-bezier(.16,1,.3,1)}
+.va-band-fill{display:block;width:100%;height:100%;border-radius:99px;background:linear-gradient(90deg,${V.color.lime},${V.color.limeDeep});transform-origin:left center;transition:transform .9s cubic-bezier(.16,1,.3,1)}
 .va-scale{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:7.5px;color:${V.color.muted};margin:5px 6px 0}
-.va-move{display:flex;align-items:center;gap:9px;background:${V.color.paper2};border-radius:13px;padding:10px 11px;margin-bottom:9px;transition:background .3s}
+.va-move{display:flex;align-items:center;gap:9px;background:${V.color.paper2};border-radius:13px;padding:10px 11px;margin-bottom:9px;transition:background .3s ${V.ease.smoothInOut}}
 .va-move--done{background:${V.alpha.lime28}}
 .va-mic{width:26px;height:26px;border-radius:8px;background:${V.color.lime};display:grid;place-content:center;flex:none;color:${V.color.ink}}
 .va-mt{font-size:10px;color:${V.color.inkSoft};line-height:1.35;flex:1}
 .va-mt b{display:block;color:${V.color.ink};font-weight:700;font-size:11px;margin-top:1px}
-.va-do{width:30px;height:30px;border-radius:9px;background:${V.color.limeDeep};color:${V.color.white};border:0;display:grid;place-content:center;flex:none;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .3s}
+.va-do{width:30px;height:30px;border-radius:9px;background:${V.color.limeDeep};color:${V.color.white};border:0;display:grid;place-content:center;flex:none;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),background .3s ${V.ease.smoothInOut}}
 .va-do--done{background:${V.color.ink}}
 .va-toggle{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:none;border:0;border-top:1px solid ${V.alpha.ink06};padding:11px 0 9px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:${V.color.muted};cursor:pointer}
 .va-toggle svg{transition:transform .35s cubic-bezier(.16,1,.3,1)}
 .va-toggle--open svg{transform:rotate(180deg)}
-.va-inputs{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;gap:7px}
-.va-inputs--open{max-height:140px}
+/* The four input rows always hold their space (the tab bar is pinned with margin-top:auto, so
+   nothing below moves); the reveal is a clip-path wipe plus a short slide, no height animation. */
+.va-inputs{display:flex;flex-direction:column;gap:7px;clip-path:inset(0 0 100% 0);transform:translateY(-6px);transition:clip-path .45s cubic-bezier(.16,1,.3,1),transform .45s cubic-bezier(.16,1,.3,1)}
+.va-inputs--open{clip-path:inset(0 0 0 0);transform:none}
 .va-in{display:flex;align-items:center;gap:8px;font-size:9.5px}
 .va-in .vl{width:42px;color:${V.color.inkSoft};flex:none}
 .va-in .vb{flex:1;height:5px;border-radius:99px;background:${V.color.paper2};overflow:hidden}
 .va-in .vb i{display:block;height:100%;background:${V.color.limeDeep};border-radius:99px}
 .va-in .vv{width:30px;text-align:right;font-family:'Space Mono',monospace;font-size:9px;color:${V.color.ink};flex:none}
-.va-context{margin-top:auto;border-top:1px solid ${V.alpha.ink06};padding:11px 2px;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;text-align:center;color:${V.color.muted}}
+.va-tabs{margin-top:auto;display:flex;justify-content:space-between;border-top:1px solid ${V.alpha.ink06};padding:9px 2px 9px}
+.va-tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:'Space Mono',monospace;font-size:7.5px;letter-spacing:.04em;text-transform:uppercase;color:${V.color.muted};flex:1;cursor:pointer;transition:color .25s ${V.ease.smoothInOut};background:none;border:0}
+.va-tab--on{color:${V.color.limeDeep}}
+/* ghost finger */
+.va-finger{position:absolute;top:0;left:0;width:28px;height:28px;z-index:20;pointer-events:none;border-radius:50%;background:radial-gradient(circle at 38% 34%,${V.alpha.ink42},${V.alpha.ink28});border:1.5px solid ${V.alpha.white80};box-shadow:0 4px 14px ${V.alpha.ink30};transform:translate(120px,300px);transition:transform ${_ms} ${V.ease.glide};opacity:0}
+.va-finger--show{opacity:1}
+.va-finger--press{transform:translate(var(--fx),var(--fy)) scale(.78)!important;transition:transform .15s ${V.ease.expo}}
+.va-ripple{position:absolute;top:0;left:0;width:28px;height:28px;z-index:19;pointer-events:none;border-radius:50%;border:2px solid ${V.color.limeDeep};opacity:0;transform:translate(120px,300px) scale(.3)}
+.va-ripple--go{animation:va-rip .55s ${V.ease.expo}}
+@keyframes va-rip{0%{opacity:.6;transform:translate(var(--rx),var(--ry)) scale(.4)}100%{opacity:0;transform:translate(var(--rx),var(--ry)) scale(2.3)}}
+@media(prefers-reduced-motion:reduce){.va-finger,.va-ripple{display:none}}
 `
 
 // ── component ───────────────────────────────────────────────────────────────
 export function VitaeAppScreen() {
-  const [done, setDone] = useState(false)
-  const [inputsOpen, setInputsOpen] = useState(false)
+  const screenRef  = useRef<HTMLDivElement>(null)
+  const fingerRef  = useRef<HTMLDivElement>(null)
+  const rippleRef  = useRef<HTMLDivElement>(null)
+  const numRef     = useRef<HTMLSpanElement>(null)
+  const bandRef    = useRef<HTMLElement>(null)
+  const verdictRef = useRef<HTMLDivElement>(null)
+  const moveRef    = useRef<HTMLDivElement>(null)
+  const doBtnRef   = useRef<HTMLButtonElement>(null)
+  const toggleRef  = useRef<HTMLButtonElement>(null)
+  const inputsRef  = useRef<HTMLDivElement>(null)
+  const tabsRef    = useRef<(HTMLButtonElement | null)[]>([])
+
+  useFingerBot({ screenRef, fingerRef, rippleRef, numRef, bandRef, verdictRef,
+                 moveRef, doBtnRef, toggleRef, inputsRef, tabsRef })
 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: APP_CSS }} />
 
-      <PhoneShell>
-      <div className="va-root">
+      <PhoneShell controls={<BotPauseButton />}>
+      <div ref={screenRef} {...INERT} className="va-root">
 
         {/* top bar */}
         <div className="va-top">
@@ -72,13 +106,13 @@ export function VitaeAppScreen() {
         {/* score hero */}
         <div className="va-hero">
           <div className="va-score">
-            <span className="va-num">{done ? 88 : 82}</span>
+            <span className="va-num" ref={numRef}>82</span>
             <span className="va-den">/100</span>
           </div>
           <div className="va-conf">vs your 14-day baseline</div>
-          <div className="va-verdict">{done ? 'Ring closed' : 'On track today'}</div>
+          <div className="va-verdict" ref={verdictRef}>On track today</div>
           <div className="va-band">
-            <i className="va-band-fill" style={{ width: done ? '88%' : '82%' }} />
+            <i className="va-band-fill" ref={bandRef as React.RefObject<HTMLElement>} style={{ transform: 'scaleX(.82)' }} />
           </div>
           <div className="va-scale">
             <span>Rest</span><span>Balanced</span><span>Pushing</span>
@@ -86,27 +120,26 @@ export function VitaeAppScreen() {
         </div>
 
         {/* one move */}
-        <div className={`va-move${done ? ' va-move--done' : ''}`}>
+        <div className="va-move" ref={moveRef}>
           <span className="va-mic"><IconMove /></span>
           <span className="va-mt">
             Today&apos;s one move
             <b>A 10-min walk closes your ring.</b>
           </span>
-          <button type="button" className={`va-do${done ? ' va-do--done' : ''}`}
-            aria-label={done ? 'Reset daily move' : 'Mark daily move done'}
-            aria-pressed={done}
-            onClick={() => setDone(value => !value)}
-            dangerouslySetInnerHTML={{ __html: done ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' : ARROW_SVG }} />
+          <button
+            ref={doBtnRef}
+            className="va-do"
+            aria-label="Mark done"
+            dangerouslySetInnerHTML={{ __html: ARROW_SVG }}
+          />
         </div>
 
         {/* inputs toggle */}
-        <button type="button" className={`va-toggle${inputsOpen ? ' va-toggle--open' : ''}`}
-          aria-expanded={inputsOpen} aria-controls="vitae-score-inputs"
-          onClick={() => setInputsOpen(value => !value)}>
-          <span>{inputsOpen ? 'Hide the 4 inputs' : 'Show the 4 inputs'}</span>
+        <button ref={toggleRef} className="va-toggle">
+          <span>Show the 4 inputs</span>
           <IconChev />
         </button>
-        <div id="vitae-score-inputs" className={`va-inputs${inputsOpen ? ' va-inputs--open' : ''}`} aria-hidden={!inputsOpen}>
+        <div ref={inputsRef} className="va-inputs">
           {[
             { l: 'Steps',   w: '72%', v: '7.2k' },
             { l: 'Sleep',   w: '88%', v: '7h20' },
@@ -121,7 +154,26 @@ export function VitaeAppScreen() {
           ))}
         </div>
 
-        <div className="va-context">Today · sample readings</div>
+        {/* tab bar */}
+        <div className="va-tabs">
+          {[
+            { icon: <IconToday />, label: 'Today' },
+            { icon: <IconTrend />, label: 'Trends' },
+            { icon: <IconMe />,    label: 'You'    },
+          ].map(({ icon, label }, i) => (
+            <button
+              key={label}
+              ref={el => { tabsRef.current[i] = el }}
+              className={`va-tab${i === 0 ? ' va-tab--on' : ''}`}
+            >
+              {icon}{label}
+            </button>
+          ))}
+        </div>
+
+        {/* ghost finger + ripple */}
+        <div ref={rippleRef} className="va-ripple" />
+        <div ref={fingerRef} className="va-finger" />
       </div>
       </PhoneShell>
     </>

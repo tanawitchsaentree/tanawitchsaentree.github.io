@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { P } from './tokens'
 import { ProfitaPhoneScreen, PROFITA_PHONE_W, PROFITA_PHONE_H, type ScreenName } from './ProfitaPhoneScreen'
 import { useContainerWidth } from './useContainerWidth'
@@ -37,16 +37,41 @@ function PiecePhone({ label, targetW }: { label: string; targetW: number }) {
   )
 }
 
-// ── helpers ────────────────────────────────────────────────────────
-function lerp(a: number, b: number, t: number) { return a + (b - a) * t }
-function clamp(v: number, lo: number, hi: number) { return Math.max(lo, Math.min(hi, v)) }
+// ── collage motion (CSS) ───────────────────────────────────────────
+// Start pose → assembled pose, driven by scroll where supported. Opacity reaches
+// 1 halfway through, matching the old lerp(0.4, 1, t * 2).
+const START = 'translate(calc(var(--sx) - 50%), calc(var(--sy) - 50%)) scale(var(--s0)) rotate(var(--rot))'
+const END   = 'translate(calc(var(--ex) - 50%), calc(var(--ey) - 50%)) scale(var(--s1)) rotate(0deg)'
+const COLLAGE_CSS = `
+.prof-collage { view-timeline: --prof-collage block; }
+.prof-piece { transform: ${START}; opacity: .4; will-change: transform; }
+@keyframes prof-assemble {
+  0%   { transform: ${START}; opacity: .4 }
+  50%  { opacity: 1 }
+  100% { transform: ${END}; opacity: 1 }
+}
+@supports (animation-timeline: view()) {
+  .prof-piece {
+    animation: prof-assemble auto cubic-bezier(.45,0,.55,1) both;
+    animation-timeline: --prof-collage;
+    animation-range: contain 0% contain 100%;
+  }
+}
+@supports not (animation-timeline: view()) {
+  .prof-piece { transition: transform 1.2s cubic-bezier(.16,1,.3,1), opacity 1.2s cubic-bezier(.16,1,.3,1); }
+  .prof-collage.is-in .prof-piece { transform: ${END}; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prof-piece, .prof-collage.is-in .prof-piece { animation: none !important; transition: none !important; transform: ${END}; opacity: 1; }
+}
+`
 
 // ── decision cards ─────────────────────────────────────────────────
 const DECISIONS = [
   {
     num:       '01',
     title:     'Robo Advisor is the front door',
-    body:      'New users land on the Robo Advisor flow, not a fund catalogue. It asks "what is your goal?" before showing any numbers. The fund appears after the goal is set.',
+    body:      'New users land on the Robo Advisor flow before they see the fund catalogue. It asks "what is your goal?" before showing any numbers, and the fund appears after the goal is set.',
     traded:    'Browsing freedom for expert users',
     bought:    'Zero-to-invested in under 5 minutes',
   },
@@ -60,7 +85,7 @@ const DECISIONS = [
   {
     num:       '03',
     title:     'The dashboard says where you stand',
-    body:      'Portfolio view leads with "You\'re up ฿X this month," not a raw NAV delta. Gains and losses are framed as progress toward goals rather than market performance.',
+    body:      'The portfolio view opens with "You\'re up ฿X this month" in place of a raw NAV delta. Gains and losses read as progress toward a goal.',
     traded:    'Raw portfolio data at a glance',
     bought:    'Emotional safety for new investors',
   },
@@ -111,68 +136,34 @@ function StatCard({ label }: { label: string }) {
 // ── Scroll collage ─────────────────────────────────────────────────
 function ScrollCollage() {
   const trackRef  = useRef<HTMLDivElement>(null)
-  const pieceRefs = useRef<(HTMLDivElement | null)[]>([])
   const vw = useContainerWidth()
   // Responsive phone width: 148px desktop, scales down for narrow viewports
   const pieceTargetW = vw > 0 && vw < 640 ? Math.round(vw * 0.36) : 148
 
+  // Scrub: a CSS scroll-driven animation on a view timeline named after the 300vh
+  // track (`contain` range = the same 0→1 span the old rAF loop computed from
+  // getBoundingClientRect). Zero JS per frame.
+  // Fallback (no animation-timeline support): one IntersectionObserver adds
+  // `is-in` when the sticky stage is mostly on screen, and the pieces transition
+  // from their start pose to the assembled pose once.
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      pieceRefs.current.forEach((el, i) => {
-        if (!el) return
-        const p = PIECES[i]
-        el.style.transform = `translate(calc(${p.e[0]}vw - 50%), calc(${p.e[1]}vh - 50%)) scale(${p.s1}) rotate(0deg)`
-        el.style.opacity   = '1'
-      })
-      return
-    }
-
-    // RAF loop — reads getBoundingClientRect() every frame so it works
-    // with Lenis (which drives scroll via its own RAF, not native events).
-    // Only runs while the 300vh track is anywhere near the viewport.
+    if (typeof CSS !== 'undefined' && CSS.supports('animation-timeline: view()')) return
     const track = trackRef.current
     if (!track) return
-
-    let rafId = 0
-    let visible = false
-
-    const tick = () => {
-      if (!visible) { rafId = 0; return }
-      const rect = track.getBoundingClientRect()
-      const vh   = window.innerHeight
-      const raw  = -rect.top / (rect.height - vh)
-      const t    = clamp(raw, 0, 1)
-
-      pieceRefs.current.forEach((el, i) => {
-        if (!el) return
-        const piece = PIECES[i]
-        const x     = lerp(piece.s[0], piece.e[0], t)
-        const y     = lerp(piece.s[1], piece.e[1], t)
-        const scale = lerp(piece.s0, piece.s1, t)
-        const rot   = lerp(piece.rot, 0, t)
-        el.style.transform = `translate(calc(${x}vw - 50%), calc(${y}vh - 50%)) scale(${scale}) rotate(${rot}deg)`
-        el.style.opacity   = String(lerp(0.4, 1, clamp(t * 2, 0, 1)))
-      })
-      rafId = requestAnimationFrame(tick)
-    }
-
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting
-      if (visible && !rafId) rafId = requestAnimationFrame(tick)
-    }, { threshold: 0 })
+    const io = new IntersectionObserver(([e]) => {
+      track.classList.toggle('is-in', e.isIntersecting)
+    }, { rootMargin: '0px 0px -60% 0px', threshold: 0 })
     io.observe(track)
-
-    return () => {
-      io.disconnect()
-      if (rafId) cancelAnimationFrame(rafId)
-    }
+    return () => io.disconnect()
   }, [])
 
   return (
     <div
       ref={trackRef}
+      className="prof-collage"
       style={{ height: '300vh', position: 'relative' }}
     >
+      <style>{COLLAGE_CSS}</style>
       {/* Sticky viewport */}
       <div style={{
         position:   'sticky',
@@ -210,6 +201,15 @@ function ScrollCollage() {
             </span>
           </h2>
           <p style={{
+            fontSize:   '1.05rem',
+            color:      P.color.onMut,
+            lineHeight: 1.6,
+            maxWidth:   '40ch',
+            margin:     '1.2rem 0 0',
+          }}>
+            Each one traded something experts wanted for something first-time investors needed.
+          </p>
+          <p style={{
             fontFamily:    P.font.mono,
             fontSize:      '.7rem',
             letterSpacing: '.1em',
@@ -225,15 +225,16 @@ function ScrollCollage() {
         {PIECES.map((piece, i) => (
           <div
             key={i}
-            ref={el => { pieceRefs.current[i] = el }}
+            className="prof-piece"
             style={{
               position:  'absolute',
               top:       '50%',
               left:      '50%',
-              opacity:   0,
-              transform: `translate(calc(${piece.s[0]}vw - 50%), calc(${piece.s[1]}vh - 50%)) scale(${piece.s0}) rotate(${piece.rot}deg)`,
               zIndex:    5,
-            }}
+              '--sx': `${piece.s[0]}vw`, '--sy': `${piece.s[1]}vh`,
+              '--ex': `${piece.e[0]}vw`, '--ey': `${piece.e[1]}vh`,
+              '--s0': piece.s0, '--s1': piece.s1, '--rot': `${piece.rot}deg`,
+            } as React.CSSProperties}
           >
             {piece.type === 'phone'
               ? <PiecePhone label={piece.label} targetW={pieceTargetW} />
@@ -319,6 +320,51 @@ export function ProfitaDecisions() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* The cutoff: the design problem behind the two dates on the confirm screen. */}
+          <div style={{
+            marginTop:    'clamp(1rem,2vw,1.5rem)',
+            background:   P.alpha.white07,
+            border:       `1px solid ${P.alpha.line}`,
+            borderRadius: 16,
+            padding:      '2rem 1.8rem',
+            display:      'grid',
+            gap:          '.9rem',
+          }}>
+            <span style={{
+              fontFamily:    P.font.mono,
+              fontSize:      '.65rem',
+              letterSpacing: '.14em',
+              textTransform: 'uppercase',
+              color:         P.color.gold,
+            }}>
+              The cutoff
+            </span>
+            <h3 style={{
+              fontFamily:    P.font.disp,
+              fontWeight:    400,
+              fontSize:      '1.3rem',
+              lineHeight:    1.25,
+              letterSpacing: '-.01em',
+              color:         P.color.on,
+              margin:        0,
+            }}>
+              Paid today, priced later
+            </h3>
+            <p style={{
+              fontSize:   '1rem',
+              color:      P.color.onMut,
+              lineHeight: 1.65,
+              margin:     0,
+              maxWidth:   '68ch',
+            }}>
+              Money leaves the account when the order is confirmed. The fund is priced after
+              the cutoff, often on the next business day. I had to make that gap visible before
+              people paid. The confirm screen shows the transaction date and the effective date
+              together, and the receipt marks the order as received and pending processing,
+              because the price comes later.
+            </p>
           </div>
         </div>
       </div>

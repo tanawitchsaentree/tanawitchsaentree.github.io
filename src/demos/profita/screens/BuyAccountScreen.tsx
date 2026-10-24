@@ -17,7 +17,7 @@ export function BuyAccountScreen({ account, onBack, onConfirm }: { account?: Pur
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, overflow: 'hidden', background: SC.paper }}>
       {/* Header */}
       <div style={{ background: SC.navy, flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', color: '#fff', padding: '6px 14px 10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', color: SC.white, padding: '6px 14px 10px' }}>
           <button type="button" aria-label="Back to amount" onClick={onBack} style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: onBack ? 'pointer' : 'default', textAlign: 'left', lineHeight: 1 }}>←</button>
           <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, marginRight: 20 }}>Select account</span>
         </div>
@@ -31,9 +31,10 @@ export function BuyAccountScreen({ account, onBack, onConfirm }: { account?: Pur
           <button
             key={acct.id}
             type="button"
+            aria-pressed={selected === acct.id}
             onClick={() => { setSelected(acct.id); setConfirmed(false) }}
             style={{
-              background: '#fff', borderRadius: 10, padding: '11px 12px', marginBottom: 9,
+              background: SC.white, borderRadius: 10, padding: '11px 12px', marginBottom: 9,
               display: 'flex', alignItems: 'center', gap: 10, width: '100%', textAlign: 'left',
               boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)',
               border: `1.5px solid ${selected === acct.id ? SC.navy : 'transparent'}`,
@@ -58,8 +59,8 @@ export function BuyAccountScreen({ account, onBack, onConfirm }: { account?: Pur
       </div>
 
       {/* Footer */}
-      <div style={{ flexShrink: 0, padding: '10px 14px 14px', background: '#fff', borderTop: '1px solid #eef0f3' }}>
-        <button type="button" onClick={() => { if (onConfirm) onConfirm(ACCOUNTS[selected]); else setConfirmed(true) }} style={{ width: '100%', background: confirmed ? SC.green : SC.navy, color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: 'pointer' }}>
+      <div style={{ flexShrink: 0, padding: '10px 14px 14px', background: SC.white, borderTop: '1px solid #eef0f3' }}>
+        <button type="button" onClick={() => { if (onConfirm) onConfirm(ACCOUNTS[selected]); else setConfirmed(true) }} style={{ width: '100%', background: confirmed ? SC.green : SC.navy, color: SC.white, border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: 'pointer' }}>
           {confirmed ? `Selected · ${ACCOUNTS[selected].name}` : `Confirm · ${ACCOUNTS[selected].name}`}
         </button>
       </div>

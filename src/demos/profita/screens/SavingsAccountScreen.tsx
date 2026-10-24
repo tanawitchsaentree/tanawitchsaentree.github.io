@@ -2,6 +2,10 @@
 import { useState } from 'react'
 import { SC, SW, SH } from './_screenTokens'
 
+// Decorative controls inside the scripted mock: `inert` keeps them out of the tab order and the
+// accessibility tree without changing how they look (React 18 has no typed `inert` prop).
+const INERT = { inert: '' } as Record<string, string>
+
 const ACCOUNTS = [
   {
     name: 'Savings account', active: false, no: '221-1-12345-1',
@@ -31,8 +35,8 @@ export function SavingsAccountScreen() {
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, overflow: 'hidden', background: SC.paper }}>
       {/* Header */}
       <div style={{ background: SC.navy, flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', color: '#fff', padding: '6px 14px 10px' }}>
-          <button type="button" aria-label="Back" style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', textAlign: 'left', lineHeight: 1 }}>←</button>
+        <div style={{ display: 'flex', alignItems: 'center', color: SC.white, padding: '6px 14px 10px' }}>
+          <button type="button" {...INERT} aria-label="Back" style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'default', textAlign: 'left', lineHeight: 1 }}>←</button>
           <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, marginRight: 20 }}>Savings account</span>
         </div>
       </div>
@@ -45,11 +49,11 @@ export function SavingsAccountScreen() {
         </div>
 
         {ACCOUNTS.map((acct, idx) => (
-          <div key={acct.name} style={{ background: '#fff', borderRadius: 10, padding: '11px 12px', marginBottom: 10, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
+          <div key={acct.name} style={{ background: SC.white, borderRadius: 10, padding: '11px 12px', marginBottom: 10, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ fontSize: 11, fontWeight: 800, color: SC.ink, display: 'flex', alignItems: 'center', gap: 5 }}>
                 {acct.name}
-                {acct.active && <span style={{ fontSize: 7, fontWeight: 700, color: '#fff', background: SC.green, borderRadius: 3, padding: '1px 4px' }}>Active</span>}
+                {acct.active && <span style={{ fontSize: 7, fontWeight: 700, color: SC.white, background: SC.green, borderRadius: 3, padding: '1px 4px' }}>Active</span>}
               </div>
               <div style={{ fontSize: 9, color: SC.grey }}>{acct.no}</div>
             </div>
@@ -68,7 +72,7 @@ export function SavingsAccountScreen() {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, paddingTop: 8, borderTop: '1px solid #f3f4f6', fontSize: 10, fontWeight: 600 }}>
-              <button type="button" onClick={() => setOpen(open === idx ? null : idx)} style={{ color: SC.grey, cursor: 'pointer', background: 'none', border: 'none', padding: 0, fontSize: 10, fontWeight: 600, fontFamily: SC.ui }}>
+              <button type="button" aria-expanded={open === idx} onClick={() => setOpen(open === idx ? null : idx)} style={{ color: SC.grey, cursor: 'pointer', background: 'none', border: 'none', padding: 0, fontSize: 10, fontWeight: 600, fontFamily: SC.ui }}>
                 Transaction history ›
               </button>
               <span style={{ color: SC.navyL }}>Transfer ›</span>

@@ -1,17 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { T } from './tokens'
 
 export function TimsNav() {
   const router = useRouter()
   const [scrolled, setScrolled] = useState(false)
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
+  // A 20px sentinel at the top of the page replaces the scroll listener:
+  // the border shows once it leaves the viewport, with no work per scroll frame.
   useEffect(() => {
-    const h = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', h, { passive: true })
-    return () => window.removeEventListener('scroll', h)
+    const el = sentinelRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([entry]) => setScrolled(!entry.isIntersecting))
+    io.observe(el)
+    return () => io.disconnect()
   }, [])
 
   const handleBack = () => { router.push('/') }
@@ -25,6 +30,8 @@ export function TimsNav() {
   ]
 
   return (
+    <>
+    <div ref={sentinelRef} aria-hidden="true" style={{ position: 'absolute', top: 0, left: 0, width: 1, height: 20, pointerEvents: 'none' }} />
     <nav
       style={{
         position:       'fixed',
@@ -36,8 +43,8 @@ export function TimsNav() {
         alignItems:     'center',
         justifyContent: 'space-between',
         padding:        '1.05rem clamp(1.2rem,5vw,7.5rem)',
-        backdropFilter: 'blur(13px) saturate(150%)',
-        background:     T.alpha.cream70,
+        // Solid paper instead of backdrop blur: same look over this page's flat sections, no per-frame blur cost.
+        background:     `color-mix(in srgb, ${T.color.cream} 94%, transparent)`,
         borderBottom:   scrolled ? `1px solid ${T.alpha.line}` : '1px solid transparent',
         transition:     `border-color .4s ${T.ease.expo}`,
         fontFamily:     T.font.sans,
@@ -75,5 +82,6 @@ export function TimsNav() {
         ))}
       </div>
     </nav>
+    </>
   )
 }

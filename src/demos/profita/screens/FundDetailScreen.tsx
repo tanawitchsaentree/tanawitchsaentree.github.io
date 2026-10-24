@@ -10,7 +10,7 @@ const ROWS: { group: string; items: Row[] }[] = [
     { k: 'Later purchases (THB)',      v: '5,000.00' },
   ]},
   { group: 'Order times', items: [
-    { k: 'Order cut-off time',        v: '3:30 pm' },
+    { k: 'Order cut-off time',        v: '3:00 pm' },
     { k: 'Sell order cutoff',  v: '3:00 pm', help: "The deadline for submitting an order for the current dealing day." },
   ]},
   { group: 'Trading fees', items: [
@@ -30,15 +30,15 @@ export function FundDetailScreen({ onBack, onBuy }: { onBack?: () => void; onBuy
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, overflow: 'hidden', background: SC.paper }}>
       {/* Header */}
       <div style={{ background: SC.navy, padding: '6px 14px 0', flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#fff', padding: '4px 0 10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: SC.white, padding: '4px 0 10px' }}>
           <button type="button" aria-label="Back to funds" onClick={onBack} style={{ fontSize: 16, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: onBack ? 'pointer' : 'default', lineHeight: 1 }}>←</button>
           <span style={{ fontSize: 13, fontWeight: 800 }}>LHIP-D</span>
           <span style={{ fontSize: 8, border: '1px solid rgba(255,255,255,.4)', borderRadius: 20, padding: '3px 7px', display: 'flex', gap: 3, alignItems: 'center', color: 'rgba(255,255,255,.9)' }}>⊕ Compare</span>
           <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 600, color: SC.goldL }}>Save</span>
         </div>
-        <div style={{ display: 'flex', gap: 14, color: 'rgba(255,255,255,.55)', fontSize: 10, fontWeight: 600 }}>
+        <div style={{ display: 'flex', gap: 14, color: SC.onNavyMuted, fontSize: 10, fontWeight: 600 }}>
           {['Performance', 'Policy', 'Trading information'].map((t, i) => (
-            <div key={t} style={{ paddingBottom: 8, position: 'relative', whiteSpace: 'nowrap', color: i === 2 ? '#fff' : 'rgba(255,255,255,.55)' }}>
+            <div key={t} style={{ paddingBottom: 8, position: 'relative', whiteSpace: 'nowrap', color: i === 2 ? SC.white : SC.onNavyMuted }}>
               {t}
               {i === 2 && <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 2, background: SC.gold }} />}
             </div>
@@ -49,7 +49,7 @@ export function FundDetailScreen({ onBack, onBuy }: { onBack?: () => void; onBuy
       {/* Body */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 14px 8px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {ROWS.map(group => (
-          <div key={group.group} style={{ background: '#fff', borderRadius: 10, padding: '2px 12px', boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
+          <div key={group.group} style={{ background: SC.white, borderRadius: 10, padding: '2px 12px', boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
             <div style={{ fontSize: 10, fontWeight: 800, color: SC.ink, padding: '9px 0 6px', borderBottom: '1px solid #eef0f3' }}>{group.group}</div>
             {group.items.map((row, ri) => {
               const id = `${group.group}-${row.k}`
@@ -99,8 +99,8 @@ export function FundDetailScreen({ onBack, onBuy }: { onBack?: () => void; onBuy
       </div>
 
       {/* Actions */}
-      <div style={{ flexShrink: 0, display: 'flex', gap: 7, padding: '10px 14px 14px', background: '#fff', borderTop: '1px solid #eef0f3' }}>
-        <button type="button" onClick={onBuy} style={{ flex: 1, border: 'none', borderRadius: 10, padding: '11px', fontFamily: SC.ui, fontWeight: 800, fontSize: 11, background: SC.navy, color: '#fff', cursor: onBuy ? 'pointer' : 'default' }}>Buy</button>
+      <div style={{ flexShrink: 0, display: 'flex', gap: 7, padding: '10px 14px 14px', background: SC.white, borderTop: '1px solid #eef0f3' }}>
+        <button type="button" onClick={onBuy} style={{ flex: 1, border: 'none', borderRadius: 10, padding: '11px', fontFamily: SC.ui, fontWeight: 800, fontSize: 11, background: SC.navy, color: SC.white, cursor: onBuy ? 'pointer' : 'default' }}>Buy</button>
         <span style={{ flex: 2, display: 'flex', alignItems: 'center', color: SC.grey, fontSize: 9, lineHeight: 1.35 }}>Sell and switch are shown elsewhere as separate examples.</span>
       </div>
     </div>

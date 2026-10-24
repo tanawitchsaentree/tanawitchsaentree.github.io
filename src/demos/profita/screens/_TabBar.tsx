@@ -66,7 +66,7 @@ export function TabBar({ active }: { active: TabName }) {
             flexDirection:  'column',
             alignItems:     'center',
             gap:            3,
-            color:          on ? SC.goldL : 'rgba(255,255,255,.4)',
+            color:          on ? SC.goldL : SC.onNavyMuted,
             fontSize:       8,
             fontWeight:     on ? 700 : 500,
             minWidth:       32,

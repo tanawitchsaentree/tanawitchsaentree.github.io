@@ -207,19 +207,19 @@ export function VitaePhases() {
             From a vague goal to a shipped screen.
           </h2>
           <p style={{ color: V.color.inkSoft, fontSize: '1.08rem', lineHeight: 1.65 }}>
-            Each stage below carries its real decisions: what we asked, what we tried, what we cut.
+            Each stage below lists the real decisions we made in it, including the questions we asked and the ideas we cut.
           </p>
         </div>
 
         {/* 01 Discover */}
         <Phase id="discover" n="01" kicker="Discover · set the goal" title="Why do people quit health apps?">
           <p style={{ color: V.color.inkSoft, maxWidth: '56ch', marginBottom: '1.4rem', lineHeight: 1.65 }}>
-            Five user interviews and a teardown of six competitors pointed at one pattern: data was everywhere,
-            meaning was nowhere. People opened the app, saw numbers, and felt <em>audited</em> rather than
-            encouraged. So the goal got sharp and measurable.
+            Five user interviews and a teardown of six competitors showed the same pattern. The apps were full
+            of data that explained very little. People opened them, saw numbers and felt <em>audited</em> when
+            they wanted encouragement. So we made the goal specific and measurable.
           </p>
           <Quote>
-            &ldquo;Make today&apos;s health legible in under five seconds, and make it feel like momentum, not a report card.&rdquo;
+            &ldquo;Make today&apos;s health readable in under five seconds, and make it read as momentum the user can build on.&rdquo;
           </Quote>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', marginBottom: '1.3rem' }}>
             {['5 interviews', '6-app teardown', 'Goal: time-to-insight <5s', 'Tone: encouraging'].map(c => (
@@ -235,9 +235,9 @@ export function VitaePhases() {
             the five-second goal and kept the three that read fastest at a glance.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <MiniCard icon="◐" title="Weekly progress ring"    body={'One streak number (“6 days”) wrapped in a fill ring. Progress without a paragraph.'} />
+            <MiniCard icon="◐" title="Weekly progress ring"    body={'One streak number (“6 days”) inside a fill ring, so progress reads without any text.'} />
             <MiniCard icon="▤" title="Glanceable metric tiles" body="Steps & water as big numbers, one icon each. No charts on home." />
-            <MiniCard icon="▦" title="Meals as ranges"         body="Calorie ranges (456–512) instead of false precision. Lowers logging anxiety." />
+            <MiniCard icon="▦" title="Meals as ranges"         body="Calorie ranges such as 456 to 512, because an exact number would claim precision we didn't have. Ranges also made logging less stressful." />
             <MiniCard icon="▥" title="One stats deep-dive"     body="Push detail to a second screen so home stays calm." />
           </div>
         </Phase>
@@ -273,8 +273,8 @@ export function VitaePhases() {
         {/* 05 Review */}
         <Phase n="05" kicker="Review · find what hurts" title="Five seconds, tested">
           <p style={{ color: V.color.inkSoft, maxWidth: '56ch', marginBottom: '1.4rem', lineHeight: 1.65 }}>
-            A quick heuristic pass plus five timed glance-tests surfaced three real problems. Small,
-            but each one cost the user clarity.
+            A quick heuristic review and five timed glance tests found three problems. Each was small,
+            and each made the screen harder to read.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <MiniCard icon="!" title="Low-contrast percentages" body="Grey % labels on the chart failed against the light bars at a glance." />
@@ -286,7 +286,7 @@ export function VitaePhases() {
         {/* 06 Iterate */}
         <Phase n="06" kicker="Iterate · fix it, then stop" title="Three turns, then ship">
           <p style={{ color: V.color.inkSoft, maxWidth: '56ch', marginBottom: '1.4rem', lineHeight: 1.65 }}>
-            Each review fed exactly one focused iteration. A three-pass budget forced decisions instead of endless polish.
+            Each review led to exactly one iteration. With a budget of three passes, we had to decide what mattered and stop polishing.
           </p>
           <div style={{ display: 'grid', gap: '.8rem' }}>
             {[
@@ -338,7 +338,7 @@ export function VitaePhases() {
               gap:           '.6rem',
             }}
           >
-            ⟳ Loop closes here. Next cycle starts from a fresh Discover, not a fourth patch.
+            ⟳ The loop closes here. The next cycle starts again at Discover, and there is no fourth patch.
           </div>
         </Phase>
       </div>

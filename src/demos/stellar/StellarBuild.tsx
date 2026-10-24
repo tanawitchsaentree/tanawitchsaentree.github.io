@@ -52,7 +52,7 @@ function Screen1Row() {
           <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>command center</em>
         </h3>
         <p style={{ color: S.color.inkSoft, fontSize: 'clamp(1rem,1.4vw,1.15rem)', maxWidth: '46ch', lineHeight: 1.65, fontFamily: S.font.body }}>
-          Open Stellar and the day&apos;s already handled: a hero dish to inspire, quick prompts when you&apos;re stuck, and today&apos;s plan laid out. Cooking starts with momentum.
+          The home screen opens with a featured dish and quick prompts for when you&apos;re stuck. Today&apos;s meals sit below them, already planned by time of day.
         </p>
         <FeaturePoints points={[
           'A greeting and hero recipe set the tone instantly',
@@ -95,7 +95,7 @@ function Screen2Row() {
           <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>what you&apos;ve got.</em>
         </h3>
         <p style={{ color: S.color.inkSoft, fontSize: 'clamp(1rem,1.4vw,1.15rem)', maxWidth: '46ch', lineHeight: 1.65, fontFamily: S.font.body }}>
-          Point your camera at a half-empty fridge, a mystery sauce, or last night&apos;s leftovers, and Stellar&apos;s chef reads the photo and tells you exactly what to make. It&apos;s the fastest path from having ingredients to having dinner.
+          You can point the camera at a half-empty fridge, a sauce you can&apos;t place, or last night&apos;s leftovers. Stellar&apos;s chef reads the photo and suggests what to make, which was the quickest way I found to get from ingredients to dinner.
         </p>
         <FeaturePoints points={[
           'Reads a photo of ingredients, including product labels, and suggests real dishes from what it actually sees',
@@ -127,10 +127,10 @@ function Screen3Row() {
           <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>what you have.</em>
         </h3>
         <p style={{ color: S.color.inkSoft, fontSize: 'clamp(1rem,1.4vw,1.15rem)', maxWidth: '46ch', lineHeight: 1.65, fontFamily: S.font.body }}>
-          Tap what&apos;s actually in your fridge and pantry, hit one button, and Stellar builds a recipe around it. No grocery run, no waste, just dinner from the shelf you already own.
+          You tap the ingredients in your fridge and pantry and press one button. Stellar builds a recipe around them, and dinner comes from food you already bought.
         </p>
         <FeaturePoints points={[
-          'Pick ingredients by category: produce, protein, pantry',
+          'Ingredients are grouped into produce, protein and pantry',
           'One tap on "Feed me!" turns your shelf into a recipe',
           'Shows what you already have next to the few things to grab',
           'A quick search jumps straight to one ingredient in a long list',

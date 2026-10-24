@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 import { V } from '../tokens'
-import { useKilledBot } from './useKilledBot'
+import { useKilledBot, setKilledState } from './useKilledBot'
 
 const _ms = `${V.motion.fingerMoveMs / 1000}s`
 
@@ -28,7 +28,7 @@ const SCREEN_CSS = `
 .vk-base{font-family:'Space Mono',monospace;font-size:8.5px;color:${V.color.muted};text-align:center;margin-top:8px}
 .vk-state-rej .vk-num{color:${V.color.dangerRed}}.vk-state-rej .vk-label{color:${V.color.dangerRed}}
 .vk-state-shp .vk-num{color:${V.color.ink}}.vk-state-shp .vk-label{color:${V.color.limeDeep}}
-.vk-flag{margin-top:auto;display:flex;gap:8px;background:${V.color.dangerBg};border:1px solid ${V.alpha.danger25};border-radius:11px;padding:11px;font-size:10px;color:${V.color.dangerRed};line-height:1.4}
+.vk-flag{margin-top:auto;display:flex;gap:8px;background:${V.color.white};border:1px solid ${V.alpha.ink10};border-radius:11px;padding:11px;font-size:10px;color:${V.color.dangerText};line-height:1.4}
 .vk-flag svg{flex:none;margin-top:1px}
 .vk-ok{margin-top:auto;display:flex;gap:8px;background:${V.color.paper2};border-radius:11px;padding:11px;font-size:10px;color:${V.color.inkSoft};line-height:1.4}
 .vk-ok svg{flex:none;margin-top:1px;color:${V.color.limeDeep}}
@@ -65,11 +65,11 @@ export function VitaeKilledScreen() {
           {/* segmented toggle */}
           <div className="vk-seg">
             <span className="vk-pill" />
-            <button ref={rejBtnRef} data-s="rejected" onClick={() => { if (rootRef.current) rootRef.current.dataset.state = 'rejected' }}>
+            <button ref={rejBtnRef} type="button" data-s="rejected" aria-pressed="false" onClick={() => setKilledState(rootRef.current, 'rejected')}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
               Rejected
             </button>
-            <button ref={shpBtnRef} data-s="shipped" onClick={() => { if (rootRef.current) rootRef.current.dataset.state = 'shipped' }}>
+            <button ref={shpBtnRef} type="button" data-s="shipped" aria-pressed="true" onClick={() => setKilledState(rootRef.current, 'shipped')}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
               Shipped
             </button>

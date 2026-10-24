@@ -124,6 +124,11 @@ function KdsRail() {
   let   carRef    = useRef(37)
   let   servedRef = useRef(0)
   const MAX = 6
+  const pendingRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const later = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => { pendingRef.current = pendingRef.current.filter(t => t !== id); fn() }, ms)
+    pendingRef.current.push(id)
+  }, [])
 
   const refresh = useCallback(() => {
     ordersRef.current.forEach((o, i) => {
@@ -175,11 +180,11 @@ function KdsRail() {
     servedRef.current++
     if (servedEl.current) servedEl.current.textContent = `${servedRef.current} cleared`
     o.el!.classList.add('tims-tk-leaving')
-    setTimeout(() => {
+    later(() => {
       flip(() => { o.el!.remove(); ordersRef.current.shift() })
       refresh()
     }, 340)
-  }, [flip, refresh])
+  }, [flip, refresh, later])
 
   useEffect(() => {
     const rail = railRef.current; if (!rail) return
@@ -205,7 +210,7 @@ function KdsRail() {
           refresh()
         }, 1000)
         loop = setInterval(() => {
-          if (ordersRef.current.length >= MAX) { bump(); setTimeout(arrive, 520) }
+          if (ordersRef.current.length >= MAX) { bump(); later(arrive, 520) }
           else arrive()
         }, 6500)
       }
@@ -219,9 +224,9 @@ function KdsRail() {
       }, { threshold: 0 })
       io.observe(rail)
 
-      return () => { stop(); io.disconnect() }
+      return () => { stop(); io.disconnect(); pendingRef.current.forEach(clearTimeout); pendingRef.current = [] }
     }
-  }, [arrive, bump, refresh])
+  }, [arrive, bump, refresh, later])
 
   return (
     <div style={{ background: T.color.espresso2, borderRadius: 26, padding: 'clamp(1.1rem,2vw,1.5rem)', display: 'flex', flexDirection: 'column' }}>
@@ -332,7 +337,7 @@ function DecodePanel() {
       </span>
 
       <h3 style={{ fontFamily: T.font.display, fontWeight: 800, fontSize: 'clamp(1.5rem,3.6vw,2.05rem)', lineHeight: 1.12, letterSpacing: '-.02em', margin: '1.1rem 0 2rem', color: T.color.cream }}>
-        You don&apos;t type the order. <span style={{ color: T.color.red }}>You translate it. Fast.</span>
+        Ringing in an order <span style={{ color: T.color.red }}>means translating it into taps.</span>
       </h3>
 
       <div style={{ fontFamily: T.font.mono, fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '.7rem' }}>
@@ -351,7 +356,7 @@ function DecodePanel() {
       <div ref={tapsRef} style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', minHeight: '6rem', alignContent: 'flex-start' }} />
 
       <p style={{ marginTop: '1.5rem', fontSize: '.92rem', lineHeight: 1.5, color: T.alpha.cream62, maxWidth: '44ch' }}>
-        One breath from the customer turns into a handful of taps for me, found and hit before the next car. The screen&apos;s only job is to make that translation{' '}
+        One sentence from the customer turned into a handful of taps that I had to find and hit before the next car. I wanted the screen to make that translation{' '}
         <b style={{ color: T.color.cream }}>disappear</b>.
       </p>
     </div>
@@ -378,40 +383,58 @@ const TAKES = [
 ] as const
 
 export function TimsProblem() {
+  const sectionRef = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) el.removeAttribute('data-offscreen')
+      else el.setAttribute('data-offscreen', '')
+    })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   return (
-    <section id="problem" style={{ padding: 'clamp(5rem,13vw,11rem) 0', background: T.color.cream2, fontFamily: T.font.sans }}>
-      <style>{`
+    <section ref={sectionRef} id="problem" style={{ padding: 'clamp(5rem,13vw,11rem) 0', background: T.color.cream2, fontFamily: T.font.sans }}>
+      {/* dangerouslySetInnerHTML: a plain <style>{text} child gets its quotes HTML-escaped by
+          the server render, which caused React hydration errors #425/#418/#423 on this page. */}
+      <style dangerouslySetInnerHTML={{ __html: `
         .tims-kds-live{width:7px;height:7px;border-radius:50%;background:${T.color.green};box-shadow:0 0 8px ${T.color.green};animation:timsKdsBlink 1.6s steps(2) infinite;display:inline-block}
         @keyframes timsKdsBlink{50%{opacity:.35}}
-        .tims-decode-pip{width:8px;height:8px;border-radius:50%;background:${T.color.red};display:inline-block;animation:timsDecPip 2s cubic-bezier(.4,0,.2,1) infinite}
-        @keyframes timsDecPip{0%{box-shadow:0 0 0 0 ${T.alpha.gold55}}70%{box-shadow:0 0 0 9px ${T.alpha.red00}}100%{box-shadow:0 0 0 0 ${T.alpha.red00}}}
+        .tims-decode-pip{position:relative;width:8px;height:8px;border-radius:50%;background:${T.color.red};display:inline-block}
+        .tims-decode-pip::after{content:"";position:absolute;inset:0;border-radius:50%;background:${T.alpha.gold55};animation:timsDecPip 2s cubic-bezier(.4,0,.2,1) infinite}
+        @keyframes timsDecPip{0%{transform:scale(1);opacity:1}70%{transform:scale(3.25);opacity:0}100%{transform:scale(1);opacity:0}}
         .tims-spoken{animation:timsSpokenIn .5s cubic-bezier(.4,0,.2,1)}
         @keyframes timsSpokenIn{from{opacity:0;transform:translateY(8px)}}
-        .tims-tap{display:inline-flex;align-items:center;background:${T.color.chipBg};border:1px solid ${T.alpha.cream10};border-radius:11px;padding:.55rem .85rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:${T.alpha.cream45};opacity:.32;transform:translateY(5px);transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.16,1,.3,1),background .35s,color .35s,box-shadow .35s,border-color .35s}
+        .tims-tap{display:inline-flex;align-items:center;background:${T.color.chipBg};border:1px solid ${T.alpha.cream10};border-radius:11px;padding:.55rem .85rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:${T.alpha.cream45};opacity:.32;transform:translateY(5px);transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.16,1,.3,1),background .35s cubic-bezier(.65,0,.35,1),color .35s cubic-bezier(.65,0,.35,1),box-shadow .35s cubic-bezier(.65,0,.35,1),border-color .35s cubic-bezier(.65,0,.35,1)}
         .tims-tap.tims-tap-lit{opacity:1;transform:none;background:linear-gradient(135deg,${T.color.red},${T.color.redDk});color:${T.color.cream};border-color:transparent;box-shadow:0 6px 16px -6px ${T.alpha.gold55}}
-        .tims-tk{background:${T.color.ticketBg};border:1px solid ${T.alpha.cream08};border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;transition:transform .52s cubic-bezier(.16,1,.3,1),opacity .42s cubic-bezier(.4,0,.2,1),border-color .3s;will-change:transform;--tkc:${T.color.green};border-color:color-mix(in srgb,var(--tkc) 38%,${T.alpha.cream07})}
+        .tims-tk{position:relative;background:${T.color.ticketBg};border:1px solid ${T.alpha.cream10};border-top:3px solid var(--tkc);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;transition:transform .52s cubic-bezier(.16,1,.3,1),opacity .42s cubic-bezier(.4,0,.2,1),border-color .3s cubic-bezier(.65,0,.35,1);will-change:transform;--tkc:${T.color.green}}
         .tims-tk-arriving{opacity:0;transform:translateX(54px) scale(.92)}
         .tims-tk-leaving{opacity:0;transform:scale(.9) translateY(-10px);transition:opacity .34s cubic-bezier(.4,0,.2,1),transform .34s cubic-bezier(.4,0,.2,1)}
-        .tims-tk-hd{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.5rem .7rem;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(90deg,color-mix(in srgb,var(--tkc) 20%,transparent),transparent);color:var(--tkc)}
+        .tims-tk-hd{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.5rem .7rem;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tkc)}
         .tims-tk-st{font-weight:700;display:flex;align-items:center;gap:.45em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .tims-tk-dot{flex:none;width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 7px currentColor;display:inline-block}
         .tims-tk-tm{font-variant-numeric:tabular-nums;font-weight:700;flex:none}
-        .tims-tk[data-zone="window"]{--tkc:${T.color.red};border-color:color-mix(in srgb,var(--tkc) 55%,${T.alpha.cream07})}
-        .tims-tk[data-zone="over"]{animation:timsKdsPulse 1.5s cubic-bezier(.4,0,.2,1) infinite}
-        @keyframes timsKdsPulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 0 2px color-mix(in srgb,var(--tkc) 45%,transparent)}}
-        .tims-tk-car{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.1em;color:${T.alpha.cream38};padding:0 .7rem .1rem}
+        .tims-tk[data-zone="window"]{--tkc:${T.color.red}}
+        .tims-tk[data-zone="over"]::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid color-mix(in srgb,var(--tkc) 45%,transparent);opacity:0;pointer-events:none;animation:timsKdsPulse 1.5s cubic-bezier(.4,0,.2,1) infinite}
+        @keyframes timsKdsPulse{0%,100%{opacity:0}50%{opacity:1}}
+        .tims-tk-car{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.1em;color:${T.alpha.cream50};padding:0 .7rem .1rem}
         .tims-tk-items{padding:.5rem .7rem .8rem;display:flex;flex-direction:column;gap:.55rem}
         .tims-tk-it{display:flex;gap:.5rem;align-items:flex-start}
         .tims-tk-ic{flex:none;width:18px;height:18px;color:${T.alpha.cream65};opacity:.85;margin-top:1px}
         .tims-tk-nm{font-size:.84rem;color:${T.alpha.cream90};line-height:1.25;font-weight:500}
         .tims-tk-mod{display:block;font-size:.72rem;color:${T.alpha.cream50};margin-top:.12rem}
-        .tims-tk-flag{color:${T.color.red}}
+        .tims-tk-flag{color:${T.color.redOnDark}}
         .tims-bump-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
         .tims-bump-btn:active{transform:translateY(0)}
-        .tims-bump-btn{transition:transform .18s cubic-bezier(.16,1,.3,1),filter .2s}
+        .tims-bump-btn{transition:transform .18s cubic-bezier(.16,1,.3,1),filter .2s cubic-bezier(.65,0,.35,1)}
         @media(max-width:900px){.tims-prob-stage{grid-template-columns:1fr!important}}
         @media(max-width:760px){.tims-takes-row{grid-template-columns:1fr!important}}
-      `}</style>
+        /* Infinite loops (live dot, pip ring, overdue pulse) pause while the section is off-screen. */
+        #problem[data-offscreen] *,#problem[data-offscreen] *::before,#problem[data-offscreen] *::after{animation-play-state:paused!important}
+        @media(prefers-reduced-motion:reduce){.tims-decode-pip::after,.tims-tk[data-zone="over"]::after{animation:none}}
+      ` }} />
 
       <div className="tims-wrap tims-animate">
         <div style={{ marginBottom: 'clamp(2.4rem,6vw,4rem)' }}>

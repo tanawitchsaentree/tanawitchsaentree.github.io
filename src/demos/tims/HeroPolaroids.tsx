@@ -63,15 +63,13 @@ export function HeroPolaroids() {
   }, [order])
 
   return (
-    <div
+    <button
+      type="button"
       className={styles.deckWrap}
       onClick={shuffle}
-      role="button"
-      tabIndex={0}
       aria-label="Browse photos, click to cycle"
-      onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && shuffle()}
     >
-      <div className={`${styles.deck}${arcIdx !== null ? ` ${styles.busy}` : ''}`}>
+      <span className={`${styles.deck}${arcIdx !== null ? ` ${styles.busy}` : ''}`}>
         {/* Render bottom-to-top so front card paints last (on top visually) */}
         {[...order].reverse().map((photoIdx, reversedDepth) => {
           const depth = N - 1 - reversedDepth  // 0 = front
@@ -91,7 +89,7 @@ export function HeroPolaroids() {
 
           const photo = PHOTOS[photoIdx]
           return (
-            <div
+            <span
               key={photo.base}
               className={cardClass}
               style={{
@@ -104,8 +102,8 @@ export function HeroPolaroids() {
               } as React.CSSProperties}
               aria-hidden={!isTop}
             >
-              <div className={styles.frame}>
-                <div className={styles.photoWrap}>
+              <span className={styles.frame}>
+                <span className={styles.photoWrap}>
                   <picture>
                     <source srcSet={`${photo.base}.avif`} type="image/avif" />
                     <source srcSet={`${photo.base}.jpg`}  type="image/jpeg" />
@@ -120,15 +118,15 @@ export function HeroPolaroids() {
                       draggable={false}
                     />
                   </picture>
-                </div>
-                <figcaption className={styles.caption}>
+                </span>
+                <span className={styles.caption}>
                   {photo.caption}
-                </figcaption>
-              </div>
-            </div>
+                </span>
+              </span>
+            </span>
           )
         })}
-      </div>
-    </div>
+      </span>
+    </button>
   )
 }

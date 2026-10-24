@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { V } from '../tokens'
+import { createBotGate } from '../ui/botGate'
 
 export interface KilledBotRefs {
   screenRef:  React.RefObject<HTMLDivElement | null>
@@ -14,7 +15,6 @@ export interface KilledBotRefs {
 
 const FINGER_W = 14
 
-function wait(ms: number) { return new Promise<void>(r => setTimeout(r, ms)) }
 
 function getScale(screen: HTMLDivElement) {
   return screen.getBoundingClientRect().width / screen.offsetWidth || 1
@@ -39,6 +39,9 @@ export function useKilledBot(refs: KilledBotRefs) {
     if (!screenRef.current) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // pauses the loop while the phone is off screen (no timers firing out of view)
+    const gate = createBotGate(screenRef.current, 0.4)
+    const wait = gate.wait
 
     function rip(c: { x: number; y: number }) {
       const r = rippleRef.current
@@ -74,7 +77,7 @@ export function useKilledBot(refs: KilledBotRefs) {
     }
 
     function setState(s: 'rejected' | 'shipped') {
-      if (rootRef.current) rootRef.current.dataset.state = s
+      setKilledState(rootRef.current, s)
     }
 
     async function loop() {
@@ -105,12 +108,16 @@ export function useKilledBot(refs: KilledBotRefs) {
       }
     }
 
-    const io = new IntersectionObserver(
-      es => es.forEach(e => { if (e.isIntersecting) { io.disconnect(); setTimeout(loop, 600) } }),
-      { threshold: 0.4 }
-    )
-    io.observe(screenRef.current)
-    return () => { stopRef.current = true; io.disconnect() }
+    // start once the screen first enters the viewport
+    gate.untilVisible().then(() => wait(600)).then(loop)
+    return () => { stopRef.current = true; gate.stop() }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+}
+
+/** Switches the Rejected/Shipped view and keeps the segmented buttons' aria-pressed in sync. */
+export function setKilledState(root: HTMLElement | null, s: 'rejected' | 'shipped') {
+  if (!root) return
+  root.dataset.state = s
+  root.querySelectorAll<HTMLButtonElement>('button[data-s]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.s === s)))
 }

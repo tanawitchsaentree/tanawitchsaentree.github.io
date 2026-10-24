@@ -18,7 +18,7 @@ export function StellarHMW() {
           <span className="stellar-label" style={{ justifyContent: 'center', color: S.color.greenDeep }}>
             The question that pointed the way
           </span>
-          <p style={{
+          <h2 style={{
             fontFamily:  S.font.display,
             fontWeight:  600,
             fontSize:    'clamp(1.5rem,3.4vw,2.6rem)',
@@ -28,6 +28,9 @@ export function StellarHMW() {
             color:       S.color.ink,
           }}>
             How might we <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>build a recipe generator</em> that creates new dishes from the ingredients people already have?
+          </h2>
+          <p style={{ color: S.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.6, maxWidth: '44ch', margin: '1.2rem auto 0' }}>
+            That question put the recipe generator at the centre of the app.
           </p>
         </div>
       </div>

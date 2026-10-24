@@ -5,7 +5,7 @@ import { S } from './tokens'
 const PRINCIPLES = [
   {
     title: 'Design from the leftover ingredient.',
-    body:  'One tester scrolled past six generated recipes to search "random fridge things" by hand. That moment reset the priority list: design for the three items already wilting in her drawer, not for infinite choice.',
+    body:  'One tester scrolled past six generated recipes and searched "random fridge things" by hand. After that, I put designing from leftover ingredients first, starting with the three items already wilting in her drawer.',
   },
   {
     title: 'Numbers turn opinions into a brief.',
@@ -17,7 +17,7 @@ const PRINCIPLES = [
   },
   {
     title: 'Photos decide whether someone taps.',
-    body:  '65% of respondents said a bad photo was reason enough to skip a recipe. After that, the image system got the same design attention as the recommendation logic.',
+    body:  '65% of respondents said great photos made them far more likely to try a dish. After that, the image system got the same design attention as the recommendation logic.',
   },
 ] as const
 
@@ -32,6 +32,9 @@ export function StellarLearned() {
           <h2 style={{ fontFamily: S.font.display, fontWeight: 700, fontSize: S.size.display, letterSpacing: '-.015em', lineHeight: 1.02, color: S.color.ink }}>
             Four things this taught me.
           </h2>
+          <p style={{ color: S.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch', marginTop: '1.1rem' }}>
+            One tester and the survey numbers decided what I built first.
+          </p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '1.3rem' }} className="stellar-princ-grid">

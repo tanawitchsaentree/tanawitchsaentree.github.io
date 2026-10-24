@@ -50,11 +50,11 @@ export function BuyAmountScreen({ amount: controlledAmount, account = DEFAULT_AC
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, overflow: 'hidden', background: SC.paper }}>
       {/* Header */}
       <div style={{ background: SC.navy, flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', color: '#fff', padding: '6px 14px 10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', color: SC.white, padding: '6px 14px 10px' }}>
           <button type="button" aria-label="Back to fund details" onClick={onBack} style={{ fontSize: 16, width: 20, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: onBack ? 'pointer' : 'default', textAlign: 'left', lineHeight: 1 }}>←</button>
           <span style={{ flex: 1, textAlign: 'center', fontSize: 13, fontWeight: 700, marginRight: 20 }}>Buy</span>
         </div>
-        <div style={{ color: '#fff', padding: '0 14px 14px', textAlign: 'center' }}>
+        <div style={{ color: SC.white, padding: '0 14px 14px', textAlign: 'center' }}>
           <div style={{ fontSize: 12, fontWeight: 800 }}>LHIP-D | LH Thai property</div>
           <div style={{ fontSize: 9, color: 'rgba(255,255,255,.6)', marginTop: 2 }}>LH Thai Property Open Fund</div>
         </div>
@@ -79,14 +79,14 @@ export function BuyAmountScreen({ amount: controlledAmount, account = DEFAULT_AC
         <div style={{ display: 'flex', gap: 6, justifyContent: 'center', padding: '0 14px 12px' }}>
           {QUICK.map(q => (
             <button key={q} type="button" onClick={() => setDigits(q.replace(/,/g, ''))}
-              style={{ border: '1px solid #d5d9e0', color: SC.navy, borderRadius: 20, padding: '5px 10px', fontSize: 10, fontWeight: 700, background: '#fff', cursor: 'pointer', fontFamily: SC.ui }}>
+              style={{ border: '1px solid #d5d9e0', color: SC.navy, borderRadius: 20, padding: '5px 10px', fontSize: 10, fontWeight: 700, background: SC.white, cursor: 'pointer', fontFamily: SC.ui }}>
               {q}
             </button>
           ))}
         </div>
 
         {/* Debit account */}
-        <div style={{ margin: '0 14px 10px', background: '#fff', borderRadius: 10, padding: '9px 12px', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
+        <div style={{ margin: '0 14px 10px', background: SC.white, borderRadius: 10, padding: '9px 12px', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 10px -7px rgba(0,0,0,.2)' }}>
           <div style={{ width: 26, height: 26, borderRadius: 6, background: 'rgba(33,58,94,.1)', flexShrink: 0 }} />
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 10, fontWeight: 700, color: SC.ink }}>{account.name}</div>
@@ -107,8 +107,8 @@ export function BuyAmountScreen({ amount: controlledAmount, account = DEFAULT_AC
       </div>
 
       {/* Footer */}
-      <div style={{ flexShrink: 0, padding: '10px 14px 14px', background: '#fff' }}>
-        <button type="button" disabled={!valid} onClick={onNext} style={{ width: '100%', background: valid ? SC.navy : SC.greyL, color: '#fff', border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: valid ? 'pointer' : 'not-allowed' }}>
+      <div style={{ flexShrink: 0, padding: '10px 14px 14px', background: SC.white }}>
+        <button type="button" disabled={!valid} onClick={onNext} style={{ width: '100%', background: valid ? SC.navy : SC.greyL, color: SC.white, border: 'none', borderRadius: 10, padding: '12px', fontWeight: 800, fontSize: 12, fontFamily: SC.ui, cursor: valid ? 'pointer' : 'not-allowed' }}>
           Next
         </button>
       </div>

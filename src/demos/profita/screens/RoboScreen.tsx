@@ -2,6 +2,10 @@
 import { SC, SW, SH } from './_screenTokens'
 import { TabBar } from './_TabBar'
 
+// Decorative controls inside the scripted mock: `inert` keeps them out of the tab order and the
+// accessibility tree without changing how they look (React 18 has no typed `inert` prop).
+const INERT = { inert: '' } as Record<string, string>
+
 const PLANS = [
   { dot: '#6b8cc4', name: 'Early retirement plan', value: '6,374.40', chg: '+893.42 ฿ (+30%)', tag: 'Long term growth plan' },
   { dot: SC.gold,   name: 'Travel plan',           value: '14,873.60',chg: '+1,487.36 ฿ (+10%)',tag: 'Travel plan' },
@@ -17,19 +21,19 @@ export function RoboScreen() {
     <div style={{ width: SW, height: SH, display: 'flex', flexDirection: 'column', fontFamily: SC.ui, fontSize: 11, background: SC.paper, overflow: 'hidden' }}>
       {/* Header */}
       <div style={{ background: SC.navy, padding: '6px 14px 0', borderRadius: '0 0 18px 18px', flexShrink: 0, position: 'relative', zIndex: 3 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#fff', padding: '4px 2px 2px' }}>
-          <button type="button" aria-label="Back" style={{ fontSize: 16, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', lineHeight: 1 }}>←</button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: SC.white, padding: '4px 2px 2px' }}>
+          <button type="button" {...INERT} aria-label="Back" style={{ fontSize: 16, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'default', lineHeight: 1 }}>←</button>
           <span style={{ fontSize: 13, fontWeight: 700 }}>Robo Advisor</span>
-          <button type="button" aria-label="Add plan" style={{ fontSize: 16, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'pointer', lineHeight: 1 }}>+</button>
+          <button type="button" {...INERT} aria-label="Add plan" style={{ fontSize: 16, background: 'none', border: 'none', padding: 0, margin: 0, color: 'inherit', font: 'inherit', cursor: 'default', lineHeight: 1 }}>+</button>
         </div>
         <div style={{ textAlign: 'center', marginTop: 2, paddingBottom: 5, padding: '0 24px 5px' }}>
-          <span style={{ background: 'rgba(8,18,32,.5)', color: '#fff', fontSize: 9, fontWeight: 600, padding: '3px 9px', borderRadius: 20, display: 'inline-block', lineHeight: 1.4 }}>
+          <span style={{ background: 'rgba(8,18,32,.5)', color: SC.white, fontSize: 9, fontWeight: 600, padding: '3px 9px', borderRadius: 20, display: 'inline-block', lineHeight: 1.4 }}>
             Risk level 5/5 <span style={{ opacity: .75 }}>— higher risk, higher potential return</span>
           </span>
         </div>
         {/* Total value card */}
         <div style={{
-          background: '#fff', borderRadius: 12, margin: '10px 4px -40px', padding: '12px 10px',
+          background: SC.white, borderRadius: 12, margin: '10px 4px -40px', padding: '12px 10px',
           textAlign: 'center', boxShadow: '0 12px 24px -12px rgba(0,0,0,.5)', position: 'relative', zIndex: 3,
         }}>
           <div style={{ color: SC.grey, fontSize: 9 }}>Latest total value (baht)</div>
@@ -45,7 +49,7 @@ export function RoboScreen() {
         </div>
 
         {PLANS.map(plan => (
-          <div key={plan.name} style={{ background: '#fff', borderRadius: 10, padding: '10px 11px', marginBottom: 8, boxShadow: '0 2px 10px -7px rgba(0,0,0,.25)' }}>
+          <div key={plan.name} style={{ background: SC.white, borderRadius: 10, padding: '10px 11px', marginBottom: 8, boxShadow: '0 2px 10px -7px rgba(0,0,0,.25)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: SC.ink, fontWeight: 600 }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: plan.dot, display: 'inline-block', flexShrink: 0 }} />
               {plan.name}
@@ -66,13 +70,13 @@ export function RoboScreen() {
         <div style={{ color: SC.ink, fontWeight: 800, fontSize: 11, margin: '8px 0 8px' }}>Recommended plan</div>
         <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2 }}>
           {RECS.map(r => (
-            <div key={r.name} style={{ flexShrink: 0, width: 120, background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 3px 12px -7px rgba(0,0,0,.3)' }}>
+            <div key={r.name} style={{ flexShrink: 0, width: 120, background: SC.white, borderRadius: 10, overflow: 'hidden', boxShadow: '0 3px 12px -7px rgba(0,0,0,.3)' }}>
               <div style={{ height: 58, background: r.bg }} />
               <div style={{ padding: '8px 9px' }}>
                 <div style={{ fontWeight: 800, fontSize: 11, color: SC.ink }}>{r.name}</div>
                 <div style={{ fontSize: 8, color: SC.grey, marginTop: 1 }}>{r.desc}</div>
-                <div style={{ fontSize: 9, color: SC.ink, marginTop: 5 }}>Starting at <strong style={{ color: SC.gold }}>{r.min}</strong> THB</div>
-                <div style={{ marginTop: 6, background: SC.navy, color: '#fff', textAlign: 'center', borderRadius: 6, padding: '5px', fontSize: 9, fontWeight: 700 }}>Invest now</div>
+                <div style={{ fontSize: 9, color: SC.ink, marginTop: 5 }}>Starting at <strong style={{ color: SC.goldText }}>{r.min}</strong> THB</div>
+                <div style={{ marginTop: 6, background: SC.navy, color: SC.white, textAlign: 'center', borderRadius: 6, padding: '5px', fontSize: 9, fontWeight: 700 }}>Invest now</div>
               </div>
             </div>
           ))}

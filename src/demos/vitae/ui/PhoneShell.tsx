@@ -9,8 +9,11 @@ export function PhoneShell({
   offset = false,
   width  = 300,
   height = 632,
+  controls,
 }: {
   children: React.ReactNode
+  /** Rendered on the chassis, outside the screen (e.g. a BotPauseButton). */
+  controls?: React.ReactNode
   offset?:  boolean
   width?:   number
   height?:  number
@@ -69,6 +72,7 @@ export function PhoneShell({
       >
         {children}
       </div>
+      {controls}
     </div>
   )
 }

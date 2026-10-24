@@ -16,11 +16,12 @@ export const P = {
     white:    '#ffffff',
     on:       'rgba(255,255,255,.92)',
     onMut:    'rgba(255,255,255,.60)',
-    onFaint:  'rgba(255,255,255,.38)',
+    onFaint:  'rgba(255,255,255,.52)', // was .38 (3.4:1 on navy900); .52 clears AA 4.5:1 for small meta text
     // Light-surface variants — used by the paper-white "Behind this" modals,
     // which read as a distinct light reading surface against the dark shell.
     paperInk:    '#1f2733', // primary text on paper surfaces
-    paperMuted:  '#8a93a0', // meta / caption text on paper surfaces
+    paperMuted:  '#6b7480', // meta / caption text on paper surfaces (was #8a93a0, 3.1:1 on white)
+    paperGold:   '#8a6a24', // gold-family text on paper surfaces (goldDeep is 2.9:1 on white)
     paperIcon:   '#55606e', // icon-weight text on paper surfaces (e.g. close button)
     paperSurface: '#faf9f6', // warm card/callout background on paper
     paperLine:    '#eef0f3', // hairline border on paper

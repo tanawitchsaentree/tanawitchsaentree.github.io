@@ -2,6 +2,10 @@
 
 import { V } from '../tokens'
 
+// Decorative controls inside the scripted mock: `inert` keeps them out of the tab order and the
+// accessibility tree without changing how they look (React 18 has no typed `inert` prop).
+const INERT = { inert: '' } as Record<string, string>
+
 interface Tab {
   id:     string
   label:  string
@@ -81,6 +85,7 @@ export function TabBar({ active = 'home' }: { active?: string }) {
       {tabs.map(t => (
         <button
           key={t.id}
+          {...INERT}
           style={{
             display:    'flex',
             flexDirection: 'column',
@@ -128,6 +133,7 @@ export function TabBar({ active = 'home' }: { active?: string }) {
       ].map(t => (
         <button
           key={t.id}
+          {...INERT}
           style={{
             display:    'flex',
             flexDirection: 'column',

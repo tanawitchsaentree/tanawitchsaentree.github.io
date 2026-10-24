@@ -6,7 +6,7 @@ export const dynamic = 'force-static'
 export const metadata: Metadata = {
   title: 'Profita · Mutual Fund App · LH Bank × Robowealth',
   description:
-    'How the Profita fund purchase flow shows when an order really happens, before and after the cutoff.',
+    'Designing financial confidence for users who had never invested. Highly Commended for Best App for Customer Experience at the Retail Banker International Asia Trailblazer Awards 2023.',
 }
 
 export default function ProfitaPage() {

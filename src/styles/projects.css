@@ -8,12 +8,17 @@
   background:var(--bg); color:var(--fg); min-height:100svh;
   font:14px/1.65 var(--project-font);
 }
-.project-pages *, .project-pages *::before, .project-pages *::after {
+/* The four restored case studies (stellar, vitae, tims, profita) are excluded here because
+   their components set several families inline; an !important rule beats inline styles, and
+   no later rule can hand the choice back to them. Their opt-outs are at the end of the file. */
+.project-pages *:not(:is([data-demo="stellar"], [data-demo="vitae"], [data-demo="tims"], [data-demo="profita"]), :is([data-demo="stellar"], [data-demo="vitae"], [data-demo="tims"], [data-demo="profita"]) *),
+.project-pages *:not(:is([data-demo="stellar"], [data-demo="vitae"], [data-demo="tims"], [data-demo="profita"]) *)::before,
+.project-pages *:not(:is([data-demo="stellar"], [data-demo="vitae"], [data-demo="tims"], [data-demo="profita"]) *)::after {
   font-family:var(--project-font) !important;
 }
-.project-pages > [data-universe],
-.project-pages [data-demo="stellar"], .project-pages [data-demo="tims"],
-.project-pages [data-demo="vitae"], .project-pages [data-demo="claims"] {
+/* Stellar, Tims, Vitae and Profita paint their own page backgrounds (see the opt-outs at the end). */
+.project-pages > [data-universe]:not([data-universe="profita"]),
+.project-pages [data-demo="claims"] {
   background:#f5f5f3 !important; background-image:none !important;
 }
 .project-pages [data-demo="claims"]::before { display:none; }
@@ -56,3 +61,14 @@
 .project-pages [data-universe="allianz"] [data-demo="docsort"] h2 { font-size: clamp(1.5rem, 2.6vw, 2.125rem); font-weight: 600; }
 .project-pages [data-universe="allianz"] [data-demo="docsort"] p { font-size: var(--docsort-p-size, inherit); }
 .project-pages [data-demo="docsort"] :is(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--docsort-focus, var(--docsort-blue)); outline-offset: 2px; }
+
+/* Stellareat, Vitae, Tims and Profita opt out of the editorial shell the same way as claims:
+   each keeps its 5c4cfe5^ typefaces (self-hosted in case-fonts.css and set inline by the demo
+   components, so the shared font rule above skips these roots), its own page background, its
+   own hero h1 scale (the values its hero sets inline) and a focus ring in its own accent
+   (--case-focus, set on each root). Scoped to those four surfaces only. */
+.project-pages [data-demo="stellar"] h1 { font-size: clamp(2.4rem, 7vw, 6rem) !important; font-weight: 700 !important; line-height: 1.02 !important; letter-spacing: -0.02em !important; }
+.project-pages [data-demo="vitae"] h1 { font-size: clamp(2.4rem, 5.8vw, 5rem) !important; font-weight: 300 !important; line-height: 1 !important; letter-spacing: -0.025em !important; }
+.project-pages [data-demo="tims"] h1 { font-size: clamp(3rem, 11vw, 9rem) !important; font-weight: 700 !important; line-height: 1.03 !important; letter-spacing: -0.02em !important; }
+.project-pages [data-demo="profita"] h1 { font-size: clamp(2.4rem, 6vw, 5rem) !important; font-weight: 400 !important; line-height: 1.07 !important; letter-spacing: -0.02em !important; }
+.project-pages :is([data-demo="stellar"], [data-demo="vitae"], [data-demo="tims"], [data-demo="profita"]) :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 2px solid var(--case-focus, currentColor); outline-offset: 3px; }

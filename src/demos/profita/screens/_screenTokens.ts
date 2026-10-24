@@ -11,6 +11,10 @@ export const SC = {
   gold:    '#c2a256',
   goldL:   '#d8c185',
   goldCard:'#cdb26c',
+  // Gold for text on white/paper: SC.gold is 2.4:1 there, this is 5.0:1 (same as P.color.paperGold).
+  goldText:'#8a6a24',
+  // White text on the navy header/tab bar: .4 alpha was 3.0:1; .62 clears 4.5:1.
+  onNavyMuted: 'rgba(255,255,255,.62)',
   paper:   '#f3f4f6',
   white:   '#ffffff',
   ink:     '#2b3d4f',
@@ -20,13 +24,6 @@ export const SC = {
   green:   'var(--signal-ok)',
   red:     'var(--signal-danger)',
   pink:    '#e6c9cd',
-  // Cutoff notice on the confirm screen, card shadow and hairlines on the edited screens.
-  goldTint: '#faf1dc',
-  goldInk:  '#7a5f1f',  // 5.4:1 on goldTint
-  hairline: '#eef0f3',
-  cardShadow: '0 2px 10px -7px rgba(0,0,0,.2)',
-  dashLine: '#d5d9e0',
-  unitsPending: 'rgba(33,58,94,.15)',
 
   // Portfolio allocation series — shared by the donut chart and its legend/list
   allocDiy:        '#5cb37f',

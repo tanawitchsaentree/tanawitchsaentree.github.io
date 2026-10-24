@@ -2,6 +2,9 @@
 
 import { P } from './tokens'
 
+// MEED RBI 2023 special report, page 14: the Highly Commended listing.
+export const AWARD_SOURCE = 'https://hs.meed.com/hubfs/MEED/MEED%20Events/Special%20Reports/RBI/RBI%20Special%20Report%202023-1.pdf#page=14'
+
 export function ProfitaReflection() {
   return (
     <section
@@ -51,9 +54,9 @@ export function ProfitaReflection() {
           maxWidth:      '28ch',
           margin:        '0 auto 2.5rem',
         }}>
-          Helping first-time investors{' '}
+          Getting someone to start investing{' '}
           <span style={{ color: P.color.gold }}>
-            understand the next step.
+            means getting past their fear.
           </span>
         </blockquote>
 
@@ -64,9 +67,9 @@ export function ProfitaReflection() {
           margin:     '0 auto 1.2rem',
           lineHeight: 1.72,
         }}>
-          Research shifted our attention from adding features to explaining choices.
-          I worked on language, information hierarchy and the purchase flow so people
-          could make decisions with less financial jargon.
+          The commendation mattered less than the number underneath it. In testing, new users
+          reached their first confirmed investment in under five minutes, with zero
+          jargon required to get there.
         </p>
 
         <p style={{
@@ -76,8 +79,9 @@ export function ProfitaReflection() {
           margin:     '0 auto 1.2rem',
           lineHeight: 1.72,
         }}>
-          My work on Profita was in 2020. The app continued to evolve before
-          LH Bank received recognition for customer experience in 2023.
+          Profita was the project where I understood that UX design and emotional design
+          are the same thing. Every decision, from the onboarding copy to the colour of
+          a number, was a decision about how someone would feel about money.
         </p>
 
         <p style={{
@@ -89,15 +93,20 @@ export function ProfitaReflection() {
           margin:        '0 auto',
           lineHeight:    1.6,
         }}>
-          <strong style={{ color: P.color.gold, fontWeight: 600 }}>
-            Highly Commended · Best App for Customer Experience
-          </strong>
-          {' '}— Retail Banker International Asia Trailblazer Awards, 2023
+          <a
+            href={AWARD_SOURCE}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'inherit', textDecoration: 'underline', textDecorationColor: P.alpha.gold50, textUnderlineOffset: 3 }}
+          >
+            <strong style={{ color: P.color.gold, fontWeight: 600 }}>
+              Highly Commended for Best App for Customer Experience
+            </strong>
+            {' '}at the Retail Banker International Asia Trailblazer Awards 2023
+          </a>
           <br />
-          <span style={{ opacity: .8 }}>
-            <a href="https://hs.meed.com/hubfs/MEED/MEED%20Events/Special%20Reports/RBI/RBI%20Special%20Report%202023-1.pdf#page=14" target="_blank" rel="noopener noreferrer">
-              Award organizer’s report, page 14 (PDF)
-            </a>
+          <span>
+            (given three years after launch, after several redesigns)
           </span>
         </p>
       </div>

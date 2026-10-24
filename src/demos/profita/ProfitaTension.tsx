@@ -20,7 +20,7 @@ const EXPERIENCED = [
 const PROCESS = [
   'Mapped 34 user journeys across both segments',
   'Tested 3 IA variations with 8 participants each',
-  'Settled on progressive disclosure: a simple surface with depth available on demand',
+  'Settled on progressive disclosure, with a simple first screen and the detail one tap away',
 ]
 
 export function ProfitaTension() {
@@ -127,9 +127,8 @@ export function ProfitaTension() {
           lineHeight:  1.65,
           marginBottom:'2rem',
         }}>
-          The answer wasn&rsquo;t to simplify for one and exclude the other.
-          It was to make the simple surface undeniably good, and hide the depth
-          where it wouldn&rsquo;t scare anyone.
+          We made the simple surface as good as we could for newcomers, and kept
+          the depth experts needed one tap away, where it wouldn&rsquo;t scare anyone.
         </p>
 
         {/* Collapsible process */}
@@ -142,8 +141,8 @@ export function ProfitaTension() {
             letterSpacing: '.1em',
             textTransform: 'uppercase',
             color:         P.color.gold,
-            background:    P.alpha.gold10,
-            border:        `1px solid ${P.alpha.gold35}`,
+            background:    'transparent',
+            border:        `1px solid ${P.alpha.lineHi}`,
             borderRadius:  8,
             padding:       '.5rem 1rem',
             cursor:        'pointer',
@@ -152,15 +151,16 @@ export function ProfitaTension() {
             gap:           '.5em',
             transition:    `background .25s ${P.ease.expo}`,
           }}
-          onMouseEnter={e => (e.currentTarget.style.background = P.alpha.gold20)}
-          onMouseLeave={e => (e.currentTarget.style.background = P.alpha.gold10)}
+          onMouseEnter={e => (e.currentTarget.style.background = P.alpha.white07)}
+          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
           aria-expanded={open}
+          aria-controls="profita-tension-process"
         >
           <span>{open ? '−' : '+'}</span> Behind this
         </button>
 
         {open && (
-          <ul style={{
+          <ul id="profita-tension-process" style={{
             marginTop:     '1.2rem',
             listStyle:     'none',
             padding:       0,

@@ -47,8 +47,8 @@ const SCREEN_CSS = `
 .vhd-meta{flex:1}
 .vhd-verdict{font-family:'Fraunces',serif;font-style:italic;font-size:14px;color:${V.color.limeDeep}}
 .vhd-note{font-size:9.5px;color:${V.color.muted};margin-top:2px;line-height:1.35}
-.vhd--lowconf .vhd-score,.vhd--lowconf .vhd-verdict{color:${V.color.amber}}
-.vhd-badge{display:none;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:${V.color.white};background:${V.color.amber};padding:3px 7px;border-radius:99px;margin-bottom:4px}
+.vhd--lowconf .vhd-score,.vhd--lowconf .vhd-verdict{color:${V.color.amberText}}
+.vhd-badge{display:none;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:${V.color.white};background:${V.color.amberText};padding:3px 7px;border-radius:99px;margin-bottom:4px}
 .vhd--lowconf .vhd-badge{display:inline-block}
 /* ghost finger: V.ease.glide for smooth decelerate-to-stop finger travel */
 .vhf{position:absolute;top:0;left:0;width:28px;height:28px;z-index:20;pointer-events:none;border-radius:50%;background:radial-gradient(circle at 38% 34%,${V.alpha.ink42},${V.alpha.ink28});border:1.5px solid ${V.alpha.white80};box-shadow:0 4px 14px ${V.alpha.ink30};transform:translate(120px,300px);transition:transform ${_ms} ${V.ease.glide};opacity:0}
@@ -107,7 +107,7 @@ export function VitaeTrendsScreen() {
               className={`vhb${i === 2 ? ' vhb--on' : ''}${b.low ? ' vhb--sparse' : ''}`}
             >
               {b.low && (
-                <span className="vhb-flag" aria-label="Low confidence — not enough signal data">
+                <span className="vhb-flag" aria-label="Low confidence. Not enough signal data.">
                   Low conf
                 </span>
               )}

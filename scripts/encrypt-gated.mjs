@@ -15,11 +15,10 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 const ITERATIONS = 310_000
 const password = process.env.GATE_PASSWORD || '1234'
-// invitrace carries no content yet: its blob only lets the gate check the password.
 const BLOBS = [
   { name: 'claims', source: 'content/gated/claims.json' },
   { name: 'docsort', source: 'content/gated/docsort.json' },
-  { name: 'invitrace', source: null },
+  { name: 'invitrace', source: 'content/gated/invitrace.json' },
 ]
 
 const enc = new TextEncoder(), dec = new TextDecoder()

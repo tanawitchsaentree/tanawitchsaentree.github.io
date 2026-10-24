@@ -6,21 +6,21 @@ const PAINS = [
   {
     icon:  '🔁',
     title: 'The same-old rut',
-    body:  'Cooking the same handful of meals every week until it feels like a chore, not a pleasure.',
+    body:  'People cook the same few meals every week until cooking starts to feel like a chore.',
     quote: '"I wish cooking felt less like a chore."',
     accent: S.color.green,
   },
   {
     icon:  '🗑️',
     title: 'Food guilt',
-    body:  'Buying groceries, forgetting them, tossing them. Wasted food and wasted money, and it stings every time.',
+    body:  'Groceries get forgotten at the back of the fridge and thrown out. People feel bad about the wasted food and the wasted money every time it happens.',
     quote: '"It\'s gone bad before I realize."',
     accent: S.color.citrus,
   },
   {
     icon:  '📚',
     title: 'Recipe chaos',
-    body:  'Recipes scattered across screenshots, tabs, and bookmarks. Never the right one when you need it.',
+    body:  'Saved recipes end up spread across screenshots, tabs and bookmarks, and the one you want is hard to find when you need it.',
     quote: '"I can never find the one I saved."',
     accent: S.color.lime,
   },
@@ -41,7 +41,7 @@ export function StellarProblem() {
             Three frustrations kept <em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>showing up.</em>
           </h2>
           <p style={{ color: S.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            Talking to home cooks, the same complaints surfaced again and again. They clustered into three knots that all trace back to one thing: a full kitchen and no plan.
+            When I talked to home cooks, the same complaints came up again and again. They fell into three groups, and all three came from having a full kitchen and no plan.
           </p>
         </div>
 

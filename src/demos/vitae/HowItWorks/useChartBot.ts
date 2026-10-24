@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { V } from '../tokens'
+import { createBotGate } from '../ui/botGate'
 
 export interface Bar {
   day:    string
@@ -24,7 +25,6 @@ export interface ChartBotRefs {
 
 const FINGER_W = 14
 
-function wait(ms: number) { return new Promise<void>(r => setTimeout(r, ms)) }
 
 function getScale(screen: HTMLElement) {
   return screen.getBoundingClientRect().width / screen.offsetWidth || 1
@@ -50,6 +50,9 @@ export function useChartBot(bars: Bar[], refs: ChartBotRefs) {
     if (!screenRef.current) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // pauses the loop while the phone is off screen (no timers firing out of view)
+    const gate = createBotGate(screenRef.current, 0.4)
+    const wait = gate.wait
 
     function setActive(idx: number) {
       barEls.current?.forEach((el, i) => el?.classList.toggle('vhb--on', i === idx))
@@ -137,13 +140,9 @@ export function useChartBot(bars: Bar[], refs: ChartBotRefs) {
       }
     }
 
-    // start only when screen enters viewport
-    const io = new IntersectionObserver(
-      es => es.forEach(e => { if (e.isIntersecting) { io.disconnect(); setTimeout(loop, 600) } }),
-      { threshold: 0.4 }
-    )
-    io.observe(screenRef.current)
-    return () => { stopRef.current = true; io.disconnect() }
+    // start once the screen first enters the viewport
+    gate.untilVisible().then(() => wait(600)).then(loop)
+    return () => { stopRef.current = true; gate.stop() }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }

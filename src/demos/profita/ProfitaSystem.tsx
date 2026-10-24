@@ -38,11 +38,14 @@ export function ProfitaSystem() {
           letterSpacing: '-.02em',
           color:         P.color.on,
           maxWidth:      '20ch',
-          marginBottom:  '3rem',
+          marginBottom:  '1.2rem',
         }}>
           Modern{' '}
           <em style={{ fontStyle: 'italic', color: P.color.gold }}>Naval Blue.</em>
         </h2>
+        <p style={{ fontSize: '1.05rem', color: P.color.onMut, lineHeight: 1.65, maxWidth: '52ch', margin: '0 0 3rem' }}>
+          The palette is navy with a single gold accent, and headlines are set in Instrument Serif.
+        </p>
 
         <div className="prof-grid-2" style={{
           display:             'grid',

@@ -1,24 +1,26 @@
 // Tims POS case study design tokens: Bricolage Grotesque + DM Sans + Space Mono
 // Scoped to the demo surface (data-demo="tims"). NOT portfolio shell tokens.
-// Primary palette: #000000 / #CF162D / #FFFFFF
+// Primary palette: warm near-black #14110F / #CF162D / warm near-white #FFFDF9 (no pure #000/#fff)
 
 export const T = {
   color: {
     red:       '#CF162D',  // Tim Hortons brand red
     redDk:     '#9E0E1F',  // 15% darker, for hover / gradient end
-    espresso:  '#000000',  // pure black, dark section backgrounds
+    espresso:  '#14110F',  // warm near-black, dark section backgrounds
     espresso2: '#111111',  // near-black, card surfaces in dark sections
-    cream:     '#FFFFFF',  // pure white, text on dark backgrounds
+    cream:     '#FFFDF9',  // warm near-white, text on dark backgrounds
     cream2:    '#F5F5F5',  // light gray, alternating section backgrounds
-    paper:     '#FFFFFF',  // pure white, card backgrounds
-    ink:       '#000000',  // pure black, primary text
+    paper:     '#FFFDF9',  // warm near-white, card backgrounds
+    ink:       '#16120F',  // warm near-black, primary text
     inkSoft:   '#555555',  // mid gray, body text
-    muted:     '#888888',  // light gray, labels, meta
+    muted:     '#888888',  // light gray, labels, meta (AA on dark surfaces only)
+    mutedLt:   '#6B6B6B',  // labels/meta on light surfaces (4.9:1 on the #f5f5f3 shell)
+    redOnDark: '#EC4458',  // small red text on espresso/ticket surfaces (AA 4.8:1+); brand red stays for fills and large type
     gold:      '#CF162D',  // red replaces gold in dark sections
     green:     'var(--signal-ok)',                                    // functional, KDS timer fresh zone, shared demo-surface signal token
     amber:     'var(--signal-warn)',                                  // functional, KDS timer getting-late zone, shared demo-surface signal token
-    amberDk:   'color-mix(in srgb, var(--signal-warn) 80%, black)',   // functional, KDS timer amber, darker fill for the progress bar
-    onAccent:  '#FFFFFF',  // white text on red
+    amberDk:   'color-mix(in srgb, var(--signal-warn) 80%, #16120F)',   // functional, KDS timer amber, darker fill for the progress bar
+    onAccent:  '#FFFDF9',  // warm near-white text on red
     smoke1:    '#D0D0D0',
     smoke2:    '#B8B8B8',
     smoke3:    '#A0A0A0',

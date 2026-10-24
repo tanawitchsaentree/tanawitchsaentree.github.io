@@ -12,166 +12,60 @@ const META = [
   { label: 'Year',    value: '2026' },
 ] as const
 
-const SCENE_LABELS = ['01 · pressure', '02 · the problem', '03 · the build'] as const
-
-// ── Scene 0: live 40s pressure meter ──────────────────────────────────
-function ScenePressure({ elapsed }: { elapsed: number }) {
-  const pct    = Math.min(elapsed / 40, 1)
-  const urgent = elapsed >= 28
-  const danger = elapsed >= 37
-  const numCol = danger ? T.color.red : urgent ? T.color.amber : T.color.ink
-  const barCol = danger ? T.color.red : urgent ? T.color.amberDk : T.color.green
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '.9rem', flex: 1 }}>
-      <div>
-        <div style={{
-          fontFamily:         T.font.mono,
-          fontWeight:         700,
-          fontSize:           'clamp(4rem,7.5vw,6rem)',
-          lineHeight:         1,
-          color:              numCol,
-          transition:         `color .5s cubic-bezier(.65,0,.35,1)`,
-          fontVariantNumeric: 'tabular-nums',
-        }}>
-          {String(elapsed).padStart(2, '0')}
-          <span style={{ fontSize: '.38em', color: T.color.muted, fontWeight: 400, marginLeft: '.2em' }}>s</span>
-        </div>
-        <div style={{ height: 5, background: T.alpha.line, borderRadius: 999, marginTop: '1rem', overflow: 'hidden' }}>
-          <div style={{
-            height:       '100%',
-            width:        `${pct * 100}%`,
-            background:   barCol,
-            borderRadius: 999,
-            transition:   `width 1s cubic-bezier(.65,0,.35,1), background .5s cubic-bezier(.65,0,.35,1)`,
-          }} />
-        </div>
-      </div>
-      <div>
-        <p style={{
-          fontFamily: T.font.mono, fontSize: '.7rem', letterSpacing: '.14em',
-          textTransform: 'uppercase', color: danger ? T.color.red : T.color.muted, margin: 0,
-          transition: `color .4s cubic-bezier(.65,0,.35,1)`,
-        }}>
-          {danger ? '⚠ target exceeded' : urgent ? '↑ approaching limit' : '● live · avg order window'}
-        </p>
-        <p style={{ fontSize: '.92rem', color: T.color.inkSoft, marginTop: '.5rem', lineHeight: 1.55 }}>
-          The cashier has{' '}
-          <b style={{ color: numCol, transition: `color .5s cubic-bezier(.65,0,.35,1)` }}>
-            {Math.max(0, 40 - elapsed)}s
-          </b>{' '}
-          left. The drive-thru queue is not waiting.
-        </p>
-      </div>
-    </div>
-  )
-}
-
-// ── Scene 1: the problem ───────────────────────────────────────────────
-function SceneProblem() {
-  const rows = [
-    { action: 'Order a Double-Double', old: '12 taps',       fix: '1 tap'   },
-    { action: 'Add oat milk',          old: '4 sub-menus',   fix: '1 chip'  },
-    { action: 'Fix a wrong item',      old: 'void + restart',fix: 'qty −'   },
-    { action: 'Custom blend coffee',   old: 'not possible',  fix: '4 taps'  },
-  ]
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '.85rem', flex: 1 }}>
-      <div>
-        <p style={{ fontFamily: T.font.mono, fontSize: '.7rem', letterSpacing: '.14em', textTransform: 'uppercase', color: T.color.muted }}>
-          The system I had to use
-        </p>
-        <p style={{ fontFamily: T.font.display, fontWeight: 700, fontSize: '1.05rem', color: T.color.ink, marginTop: '.3rem', lineHeight: 1.25 }}>
-          Every common action was buried.
-        </p>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '.3rem' }}>
-        {rows.map(r => (
-          <div key={r.action} style={{
-            display: 'grid', gridTemplateColumns: '1fr auto auto',
-            alignItems: 'center', gap: '.5rem',
-            padding: '.4rem .65rem', background: T.alpha.ink06, borderRadius: 9,
-          }}>
-            <span style={{ fontSize: '.84rem', color: T.color.inkSoft }}>{r.action}</span>
-            <span style={{ fontFamily: T.font.mono, fontSize: '.68rem', color: T.color.red, textDecoration: 'line-through', opacity: .75 }}>{r.old}</span>
-            <span style={{ fontFamily: T.font.mono, fontSize: '.68rem', color: T.color.green, fontWeight: 700 }}>{r.fix}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ── Scene 2: the build ─────────────────────────────────────────────────
-function SceneBuild() {
-  const stats = [
-    { num: '1',   unit: 'tap',     desc: 'add any food item'          },
-    { num: '4',   unit: 'taps',    desc: 'fully customise a coffee'   },
-    { num: '0',   unit: 'lookups', desc: 'frequently-ordered items always visible' },
-    { num: '40s', unit: 'target',  desc: 'order · customise · pay'    },
-  ]
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '.85rem', flex: 1 }}>
-      <div>
-        <p style={{ fontFamily: T.font.mono, fontSize: '.7rem', letterSpacing: '.14em', textTransform: 'uppercase', color: T.color.muted }}>
-          What I shipped
-        </p>
-        <p style={{ fontFamily: T.font.display, fontWeight: 700, fontSize: '1.05rem', color: T.color.ink, marginTop: '.3rem', lineHeight: 1.25 }}>
-          Speed as the design constraint.
-        </p>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.45rem' }}>
-        {stats.map(s => (
-          <div key={s.desc} style={{ background: T.alpha.ink06, borderRadius: 12, padding: '.65rem .75rem' }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '.25em' }}>
-              <span style={{ fontFamily: T.font.mono, fontWeight: 700, fontSize: '1.55rem', color: T.color.red }}>{s.num}</span>
-              <span style={{ fontFamily: T.font.mono, fontSize: '.65rem', color: T.color.muted }}>{s.unit}</span>
-            </div>
-            <p style={{ fontSize: '.78rem', color: T.color.inkSoft, marginTop: '.15rem', lineHeight: 1.35 }}>{s.desc}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ── Main hero ──────────────────────────────────────────────────────────
-export function TimsHero() {
-  const rootRef                = useRef<HTMLElement>(null)
+// ── Live countdown: the headline number. Kept in its own component so the
+// once-a-second tick re-renders only this <em>, never the hero or the photo deck.
+function HeroCountdown({ rootRef }: { rootRef: React.RefObject<HTMLElement> }) {
   const [elapsed, setElapsed] = useState(0)
   const [reduced, setReduced] = useState(false)
-  const reducedRef            = useRef(false)
 
   useEffect(() => {
-    const v = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    reducedRef.current = v
-    setReduced(v)
-  }, [])
-
-  // Live 40s loop: drives the heading number colour. Only ticks while the
-  // hero is actually in view; pauses once scrolled past.
-  useEffect(() => {
-    if (reducedRef.current) return
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    setReduced(reduce)
+    if (reduce) return
     const root = rootRef.current
     if (!root) return
 
+    // Ticks only while the hero is in view; paused once scrolled past or the tab is hidden.
     let id: ReturnType<typeof setInterval> | null = null
+    let visible = false
+    const start = () => { if (!id && visible && !document.hidden) id = setInterval(() => setElapsed(e => e >= 40 ? 0 : e + 1), 1000) }
+    const stop  = () => { if (id) { clearInterval(id); id = null } }
     const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        if (!id) id = setInterval(() => setElapsed(e => e >= 40 ? 0 : e + 1), 1000)
-      } else if (id) {
-        clearInterval(id); id = null
-      }
+      visible = entry.isIntersecting
+      if (visible) start(); else stop()
     }, { threshold: 0 })
+    const onVis = () => { if (document.hidden) stop(); else start() }
     io.observe(root)
+    document.addEventListener('visibilitychange', onVis)
 
-    return () => { if (id) clearInterval(id); io.disconnect() }
-  }, [])
+    return () => { stop(); io.disconnect(); document.removeEventListener('visibilitychange', onVis) }
+  }, [rootRef])
 
   const remaining    = 40 - elapsed
   const headingColor = elapsed >= 37 ? T.color.red
                      : elapsed >= 28 ? T.color.amber
                      : T.color.red
+
+  return (
+    <em
+      style={{
+        fontStyle:          'normal',
+        color:              headingColor,
+        fontVariantNumeric: 'tabular-nums',
+        display:            'inline-block',
+        minWidth:           '2.1ch',
+        transition:         `color .5s cubic-bezier(.65,0,.35,1)`,
+      }}
+    >
+      {/* No aria-live: announcing a number every second drowned out the page for screen readers. */}
+      {reduced ? '40' : remaining}
+    </em>
+  )
+}
+
+// ── Main hero ──────────────────────────────────────────────────────────
+export function TimsHero() {
+  const rootRef = useRef<HTMLElement>(null)
 
   return (
     <header
@@ -202,15 +96,21 @@ export function TimsHero() {
               marginBottom:  0,
               color:         T.color.ink,
             }}>
-              A POS for the orders I remember.
+              {/* The number IS the live countdown */}
+              <HeroCountdown rootRef={rootRef} />
+              <span style={{ color: T.color.ink }}> seconds.</span>
+              <span style={{
+                display:       'block',
+                fontSize:      'clamp(1.1rem,2.4vw,1.7rem)',
+                fontWeight:    500,
+                color:         T.color.inkSoft,
+                letterSpacing: '-.01em',
+                marginTop:     '1.1rem',
+                maxWidth:      '28ch',
+              }}>
+                I spent two years behind a Tim Hortons counter. Then I redesigned the POS I had to use at 5&nbsp;a.m.
+              </span>
             </h1>
-            <p style={{ color: T.color.inkSoft, fontSize: '1.05rem', lineHeight: 1.65, marginTop: '1.4rem', maxWidth: '48ch' }}>
-              After two years at Tim Hortons, I made a POS concept for the orders and changes I used to handle. I turned common combinations into presets and kept custom orders available, creating a working prototype to try against remembered counter situations.
-            </p>
-            <p style={{ color: headingColor, fontSize: '.8rem', marginTop: '1rem', fontVariantNumeric: 'tabular-nums' }}>
-              Practice timer: {reduced ? '40' : remaining} seconds · personal concept
-            </p>
-
           </div>
 
           {/* ── RIGHT: polaroid deck, no background, floats on page ── */}
@@ -234,7 +134,7 @@ export function TimsHero() {
         <div className="tims-reveal" style={{ marginTop: 'clamp(2rem,4vw,3rem)' }}>
           <p style={{ fontSize: '1.15rem', color: T.color.inkSoft, maxWidth: '60ch', lineHeight: 1.65 }}>
             Forty seconds is roughly how long a Tims order takes. I know, because I was the one getting timed.
-            This is a weekend concept: take everything the drive-thru taught me, and build the point-of-sale terminal I always wished I&apos;d had.
+            This is a weekend concept. I took what the drive-thru taught me and built the point-of-sale terminal I always wished I&apos;d had.
           </p>
 
           <div style={{
@@ -247,7 +147,7 @@ export function TimsHero() {
           }}>
             {META.map(({ label, value }) => (
               <div key={label}>
-                <b style={{ display: 'block', fontFamily: T.font.mono, fontSize: '.75rem', letterSpacing: '.16em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '.4rem', fontWeight: 400 }}>
+                <b style={{ display: 'block', fontFamily: T.font.mono, fontSize: '.75rem', letterSpacing: '.16em', textTransform: 'uppercase', color: T.color.mutedLt, marginBottom: '.4rem', fontWeight: 400 }}>
                   {label}
                 </b>
                 <span style={{ fontFamily: T.font.display, fontWeight: 500, fontSize: '1.02rem', color: T.color.ink }}>

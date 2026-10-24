@@ -10,7 +10,7 @@ export function TimsFooter() {
           The POS I wish <em style={{ fontStyle: 'normal', color: T.color.red }}>past me</em> had.
         </h2>
         <p style={{ color: T.alpha.cream60, maxWidth: '54ch', lineHeight: 1.65 }}>
-          A weekend concept where the constraint that ran my mornings, seconds, drove every decision, and a hard iteration cap turned &ldquo;make it perfect&rdquo; into &ldquo;make it ship.&rdquo; Built with affection for everyone still on the headset.
+          A weekend concept. The seconds that ran my mornings drove every decision, and a hard cap on iterations made me ship it before it was perfect. Built with affection for everyone still on the headset.
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', marginTop: '3rem', paddingTop: '2rem', borderTop: `1px solid ${T.alpha.lineDk}` }}>

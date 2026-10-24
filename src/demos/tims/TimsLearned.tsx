@@ -9,7 +9,7 @@ const PRINCIPLES = [
   },
   {
     title: 'Design for the distribution.',
-    body: 'Optimise the order that happens ten thousand times, not the one that happens twice. Presets first; everything else is an escape hatch.',
+    body: 'Optimise for the order that happens ten thousand times. Presets come first, and anything unusual goes through an escape hatch.',
   },
   {
     title: 'Reversible is what makes fast safe.',
@@ -17,7 +17,7 @@ const PRINCIPLES = [
   },
   {
     title: 'The ticket never hides.',
-    body: "The order is the single source of truth between two people. Don't ever cover it, especially while they're changing their mind.",
+    body: "The order is the one record both people rely on. Nothing should cover it, especially while the customer is changing their mind.",
   },
 ] as const
 
@@ -33,6 +33,9 @@ export function TimsLearned() {
           <h2 style={{ fontFamily: T.font.display, fontWeight: 600, fontSize: T.size.display, letterSpacing: '-.015em', lineHeight: 1.03, margin: '.7rem 0', color: T.color.ink }}>
             Four things two years of mornings taught me.
           </h2>
+          <p style={{ color: T.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch', marginTop: '1rem' }}>
+            Each one shows up somewhere in the build above, from the timer to the ticket that never hides.
+          </p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '1.2rem', marginTop: '1.6rem' }} className="tims-princ-grid">

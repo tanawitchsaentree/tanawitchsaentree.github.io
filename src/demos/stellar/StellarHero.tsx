@@ -34,6 +34,10 @@ export function StellarHero() {
     if (!root) return
 
     let mx = 0.5, my = 0.5, sy = 0
+    // Hero size, cached so the frame loop never reads layout.
+    const box = { w: root.offsetWidth, h: root.offsetHeight }
+    const ro = new ResizeObserver(() => { box.w = root.offsetWidth; box.h = root.offsetHeight })
+    ro.observe(root)
 
     // Per-item spring state
     const sp = VEGS.map(() => ({ x: 0, y: 0, vx: 0, vy: 0 }))
@@ -48,6 +52,7 @@ export function StellarHero() {
 
     let raf = 0
     let visible = false
+    let lastMx = -1, lastMy = -1
 
     const frame = (t: number) => {
       if (!visible) { raf = 0; return }
@@ -87,16 +92,20 @@ export function StellarHero() {
       // Headline micro-tilt — whole h1 leans into cursor like a physical slab
       hvx += (nmx * 3.2 - htx) * 0.034;  hvx *= 0.868;  htx += hvx
       hvy += (nmy * 2.0 - hty) * 0.034;  hvy *= 0.868;  hty += hvy
+      // Once the tilt spring has settled (cursor still), stop rewriting the h1 and the bloom:
+      // the veg drift keeps running, but the big text layer no longer restyles every frame.
+      const settled = Math.abs(hvx) + Math.abs(hvy) < 0.0005 && lastMx === mx && lastMy === my
+      lastMx = mx; lastMy = my
+      if (settled) { raf = requestAnimationFrame(frame); return }
       if (h1Ref.current) {
         h1Ref.current.style.transform =
           `perspective(1100px) rotateY(${htx * 0.006}deg) rotateX(${-hty * 0.004}deg)`
       }
 
-      // Ambient bloom — soft radial light follows cursor. Gradient itself is a
-      // static CSS string (set once below); only the two position vars move.
+      // Ambient bloom follows the cursor. The gradient is painted once; the layer
+      // is only translated, so the compositor moves it without a repaint.
       if (lightRef.current) {
-        lightRef.current.style.setProperty('--bloom-x', `${mx * 100}%`)
-        lightRef.current.style.setProperty('--bloom-y', `${my * 100}%`)
+        lightRef.current.style.transform = `translate3d(${nmx * box.w}px,${nmy * box.h}px,0)`
       }
 
       raf = requestAnimationFrame(frame)
@@ -112,6 +121,7 @@ export function StellarHero() {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('scroll',    onScroll)
       io.disconnect()
+      ro.disconnect()
       if (raf) cancelAnimationFrame(raf)
     }
   }, [])
@@ -129,7 +139,7 @@ export function StellarHero() {
         overflow:     'hidden',
       }}
     >
-      {/* Ambient cursor bloom — position driven by --bloom-x/--bloom-y vars set in the RAF loop */}
+      {/* Ambient cursor bloom, translated by the RAF loop */}
       <div
         ref={lightRef}
         aria-hidden
@@ -138,7 +148,8 @@ export function StellarHero() {
           inset:       0,
           zIndex:      0,
           pointerEvents: 'none',
-          background:  'radial-gradient(ellipse 65% 55% at var(--bloom-x, 50%) var(--bloom-y, 50%), rgba(154,216,78,.11) 0%, rgba(63,161,74,.04) 42%, transparent 68%)',
+          background:  'radial-gradient(ellipse 65% 55% at 50% 50%, color-mix(in srgb, var(--stellar-lime) 11%, transparent) 0%, color-mix(in srgb, var(--stellar-green) 4%, transparent) 42%, transparent 68%)',
+          willChange:  'transform',
         }}
       />
 
@@ -172,13 +183,14 @@ export function StellarHero() {
           className="stellar-hero-h1"
           style={{ transformOrigin: 'left center', willChange: 'transform' }}
         >
-          <span className="stellar-l1"><span>Meal ideas</span></span>
-          <span className="stellar-l1"><span>from ingredients</span></span>
-          <span className="stellar-l1"><span><em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>at home.</em></span></span>
+          <span className="stellar-l1"><span>Your fridge is</span></span>
+          <span className="stellar-l1"><span><em style={{ fontFamily: S.font.italic, fontStyle: 'italic', fontWeight: 500, color: S.color.greenDeep }}>full.</em> Dinner</span></span>
+          <span className="stellar-l1"><span>still feels</span></span>
+          <span className="stellar-l1"><span>impossible.</span></span>
         </h1>
 
         <p className="stellar-hero-lead">
-          For Stellareat, I designed a cooking app around the ingredients people already have. I connected ingredient entry, meal suggestions, and saved recipes into a prototype the team could use to explore how someone gets from looking in the fridge to choosing dinner.
+          Stellar is an AI cooking app I designed around a common problem. People waste food they already own and still don&apos;t know what to make, so the app suggests recipes from what&apos;s in their kitchen.
         </p>
 
         <div className="stellar-meta">

@@ -48,7 +48,7 @@ function HeroPhone({ screen, scale, tilt }: {
 }
 
 const STATS = [
-  { label: 'Role',   value: 'Senior UX / UI Designer' },
+  { label: 'Role',   value: 'Senior UX/UI Designer' },
   { label: 'Client', value: 'Robowealth × LH Bank' },
   { label: 'Year',   value: '2020' },
 ] as const
@@ -61,36 +61,49 @@ export function ProfitaHero() {
   const sideSC   = sideW   / PROFITA_PHONE_W
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      const el = containerRef.current
-      if (!el) return
-      const rect = el.getBoundingClientRect()
-      const cx = rect.left + rect.width  / 2
-      const cy = rect.top  + rect.height / 2
-      const dx = (e.clientX - cx) / rect.width   // -0.5 → +0.5
-      const dy = (e.clientY - cy) / rect.height
+    const el = containerRef.current
+    if (!el) return
+    const phones = Array.from(el.querySelectorAll<HTMLDivElement>('[data-parallax]'))
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
-      const phones = el.querySelectorAll<HTMLDivElement>('[data-parallax]')
+    // Pause the infinite float while the hero is off screen.
+    const io = new IntersectionObserver(([e]) => {
+      phones.forEach(ph => { ph.style.animationPlayState = e.isIntersecting ? 'running' : 'paused' })
+    })
+    io.observe(el)
+
+    // Parallax: listen on the hero only, read layout once per frame at most.
+    let raf = 0
+    let mx = 0, my = 0
+    const paint = () => {
+      raf = 0
+      const rect = el.getBoundingClientRect()
+      const dx = (mx - (rect.left + rect.width  / 2)) / rect.width   // -0.5 → +0.5
+      const dy = (my - (rect.top  + rect.height / 2)) / rect.height
       phones.forEach((ph, i) => {
         const depth = i === 1 ? 1.4 : 0.8
-        const x = dx * 18 * depth
-        const y = dy * 10 * depth
-        ph.style.transform = `${ph.dataset.baseTransform ?? ''} translate(${x}px,${y}px)`
+        ph.style.transform = `${ph.dataset.baseTransform ?? ''} translate(${dx * 18 * depth}px,${dy * 10 * depth}px)`
       })
     }
-
+    const onMove = (e: MouseEvent) => {
+      mx = e.clientX; my = e.clientY
+      if (!raf) raf = requestAnimationFrame(paint)
+    }
     const onLeave = () => {
-      const el = containerRef.current
-      if (!el) return
-      el.querySelectorAll<HTMLDivElement>('[data-parallax]').forEach(ph => {
-        ph.style.transform = ph.dataset.baseTransform ?? ''
-      })
+      if (raf) { cancelAnimationFrame(raf); raf = 0 }
+      phones.forEach(ph => { ph.style.transform = ph.dataset.baseTransform ?? '' })
     }
 
-    window.addEventListener('mousemove', onMove)
-    containerRef.current?.addEventListener('mouseleave', onLeave)
+    if (finePointer && !reduce) {
+      el.addEventListener('mousemove', onMove)
+      el.addEventListener('mouseleave', onLeave)
+    }
     return () => {
-      window.removeEventListener('mousemove', onMove)
+      io.disconnect()
+      el.removeEventListener('mousemove', onMove)
+      el.removeEventListener('mouseleave', onLeave)
+      if (raf) cancelAnimationFrame(raf)
     }
   }, [])
 
@@ -101,6 +114,9 @@ export function ProfitaHero() {
         @keyframes profita-float {
           from { translate: 0 0px;   }
           to   { translate: 0 -14px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [data-parallax] { animation: none !important; }
         }
       `}</style>
 
@@ -162,8 +178,8 @@ export function ProfitaHero() {
             marginBottom: '3rem',
           }}>
             Profita is the mutual fund investment app I designed for Robowealth and LH Bank.
-            Starting with 0 → 1, we built a product that made first-time investing feel safe
-            and clear. Over time, it started to feel natural.
+            We built it from scratch to make a first investment feel safe and clear, and
+            over time investing in it started to feel normal.
           </p>
 
           {/* Phone trio */}

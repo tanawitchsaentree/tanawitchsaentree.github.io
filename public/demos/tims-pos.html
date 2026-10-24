@@ -154,6 +154,11 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .ord small{display:block;font-family:'Space Mono',monospace;font-size:9px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;font-weight:400}
 .tk-row1-r{display:flex;align-items:center;gap:6px}
 .cnt-badge{font-family:'Space Mono',monospace;font-size:11px;background:var(--ink);color:var(--on-fill);padding:4px 8px;border-radius:7px}
+.timer-pill{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-3);padding:4px 8px;border-radius:7px;border:1px solid var(--border-md);background:var(--card-2);transition:color .2s var(--ease),border-color .2s var(--ease)}
+.timer-pill.warn{color:var(--signal-warn);border-color:var(--signal-warn)}
+.timer-pill.warn::before{content:"⚠ ";font-size:9px}
+.timer-pill.over{color:var(--signal-danger);border-color:var(--signal-danger)}
+.timer-pill.over::before{content:"● ";font-size:9px}
 .lines{flex:1;min-height:0;overflow-y:auto;padding:6px 10px}
 .empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--ink-3);text-align:center;padding:24px}
 .empty .big{font-size:36px}
@@ -200,8 +205,8 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .toast{position:absolute;left:10px;right:10px;bottom:10px;background:var(--ink);color:var(--on-fill);padding:10px 13px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh-lg);transform:translateY(160%);transition:transform .32s var(--ease);z-index:30;font-size:12px}
 .toast.show{transform:none}
 .toast button{color:var(--accent);font-weight:700;font-size:12px}
-.pay-ov{position:absolute;inset:0;z-index:40;background:var(--ink);display:grid;place-content:center;text-align:center;color:var(--on-fill);clip-path:inset(100% 0 0 0);pointer-events:none;transition:clip-path .4s var(--ease)}
-.pay-ov.show{clip-path:inset(0 0 0 0);pointer-events:auto}
+.pay-ov{position:absolute;inset:0;z-index:40;background:var(--ink);display:grid;place-content:center;text-align:center;color:var(--on-fill);opacity:0;pointer-events:none;transition:opacity .28s var(--ease)}
+.pay-ov.show{opacity:1;pointer-events:auto}
 .pay-ov .check{width:72px;height:72px;border-radius:50%;background:var(--green);display:grid;place-content:center;margin:0 auto 14px;font-size:34px;animation:pop .45s var(--spring)}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
 .pay-ov h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.5rem}
@@ -270,13 +275,14 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
             <div class="ord">Order <span id="ordNo">#1042</span><small>Counter · Cashier 03</small></div>
             <div class="tk-row1-r">
               <div class="cnt-badge"><span id="itemCnt">0</span> <span id="itemLabel">items</span></div>
+              <div class="timer-pill" id="timerM" style="display:none"><span id="timerV">0s</span></div>
             </div>
           </div>
         </div>
         <div class="lines" id="lines">
           <div class="empty" id="empty">
             <div class="big">☕</div>
-            <p>Pick a size and a mod, then tap a drink.</p>
+            <p>Size &amp; mod selected. Tap any drink to add instantly.</p>
           </div>
         </div>
         <div class="tk-foot">
@@ -298,7 +304,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
             <h2>Sent to bar</h2>
             <p>Tendered · receipt printed</p>
             <div class="pamt" id="payOvAmt">$0.00</div>
-            <div class="pst">Taps <b id="payOvTaps">0</b></div>
+            <div class="pst">Order time <b id="payOvTime">0s</b></div>
           </div>
         </div>
       </section>
@@ -308,24 +314,8 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 </div>
 
 <script>
-// ── Parent page link ──
-// When embedded on the case study, the POS reports taps and the ticket to the parent with
-// postMessage, so the order slip beside it updates without polling.
-const EMBEDDED = window.parent !== window;
-function post(type, extra){
-  if(!EMBEDDED) return;
-  window.parent.postMessage(Object.assign({ source:'tims-pos', type }, extra || {}), location.origin);
-}
-let taps = 0;
-document.addEventListener('click', e => {
-  if(!e.target.closest || !e.target.closest('button')) return;
-  taps++; post('taps', { taps });
-}, true);
-function resetTaps(){ taps = 0; post('taps', { taps }); }
-window.addEventListener('message', e => {
-  if(e.origin !== location.origin || !e.data || e.data.source !== 'tims-slip') return;
-  if(e.data.type === 'reset') resetAll();
-});
+const SHOWCASE = new URLSearchParams(location.search).get('mode') === 'showcase';
+if(SHOWCASE) document.getElementById('timerM').style.display = '';
 
 // ── Config ──
 const SIZES = [
@@ -364,9 +354,6 @@ const EXTRAS = [
   { name:'Extra hot',up:0 },{ name:'Half-caf',up:0 },{ name:'Decaf',up:0 },
 ];
 const ICE_LEVELS = ['Easy ice','Regular ice','Extra ice','No ice'];
-// Hot drinks that have an iced version, so an edit can switch between them.
-const ICED_OF = { 'hot-1':'iced-1', 'hot-4':'iced-4', 'esp-1':'iced-2', 'esp-7':'iced-7' };
-const HOT_OF  = { 'iced-1':'hot-1', 'iced-4':'hot-4', 'iced-2':'esp-1', 'iced-7':'esp-7' };
 
 // Quick modifier presets. Shown as a persistent strip above the grid.
 const MOD_QUICK = [
@@ -585,10 +572,11 @@ let lastRm   = null;
 let lastEdit = null;
 let dealOn   = false;
 let ordNum   = 1042;
+let timerID  = null;
+let startT   = 0;
+let elapsed  = 0;
 
 // ── Helpers ──
-function itemById(id){ return Object.values(ITEMS).flat().find(x => x.id === id); }
-function subOfItem(it){ return Object.keys(ITEMS).find(k => ITEMS[k].some(x => x.id === it.id)); }
 function groupOfSub(s){ return GROUPS.find(g => g.subs.some(x => x.id === s)); }
 function subMeta(s)   { return GROUPS.flatMap(g => g.subs).find(x => x.id === s); }
 function isDrinksGroup(){ return curGroup === 'drinks'; }
@@ -744,6 +732,7 @@ function instantAdd(it){
     openCust(it);
     return;
   }
+  startTimer();
   const mod = MOD_QUICK.find(m => m.id === curMod);
   const cfg = Object.assign(defCfg(), mod ? mod.p : {}, { size: curSize });
   // merge same item + same size + same mod
@@ -763,6 +752,26 @@ function instantAdd(it){
     qty:   1,
   });
   renderCart();
+}
+
+// ── Timer ──
+function startTimer(){
+  if(timerID) return;
+  startT  = Date.now() - elapsed * 1000;
+  timerID = setInterval(tickTimer, 250);
+}
+function tickTimer(){
+  elapsed = Math.floor((Date.now() - startT) / 1000);
+  const v = elapsed < 60 ? elapsed+'s' : Math.floor(elapsed/60)+':'+String(elapsed%60).padStart(2,'0');
+  document.getElementById('timerV').textContent = v;
+  const pill = document.getElementById('timerM');
+  pill.className = 'timer-pill' + (elapsed > 90 ? ' over' : elapsed > 40 ? ' warn' : '');
+}
+function stopTimer(){ if(timerID){ clearInterval(timerID); timerID = null; } }
+function resetTimer(){
+  stopTimer(); elapsed = 0;
+  document.getElementById('timerV').textContent = '0s';
+  document.getElementById('timerM').className = 'timer-pill';
 }
 
 // ── Customizer ──
@@ -796,12 +805,10 @@ function openCust(item, cfg, uid){
 }
 
 function buildCust(){
-  const isIced = dItem.ice || (['iced','capp','refresh'].includes(curSub) && !HOT_OF[dItem.id] && !ICED_OF[dItem.id]);
-  const swapId = ICED_OF[dItem.id] || HOT_OF[dItem.id];
+  const isIced = dItem.ice || ['iced','capp','refresh'].includes(curSub);
   const b = document.getElementById('cBody');
   b.innerHTML = `
     <div class="fld"><label>Size</label><div class="seg" id="sgSz"></div></div>
-    ${swapId ? '<div class="fld"><label>Hot or iced</label><div class="seg" id="sgTemp"></div></div>' : ''}
     <div class="fld"><label>Blend (preset)</label>
       <div class="presets" id="blPre" style="margin-bottom:6px"></div>
       <button class="blendbtn" onclick="toggleBuilder()"><span class="ic">⚗</span> Custom blend…</button>
@@ -834,16 +841,6 @@ function buildCust(){
     if(draft.size === s.id) x.classList.add('sel');
     x.onclick = () => { draft.size = s.id; refresh(); };
     sgSz.appendChild(x);
-  });
-
-  const sgTemp = document.getElementById('sgTemp');
-  if(sgTemp) [['Hot', !dItem.ice], ['Iced', !!dItem.ice]].forEach(([label, on]) => {
-    const x = document.createElement('button');
-    x.textContent = label;
-    x.setAttribute('aria-pressed', String(on));
-    if(on) x.classList.add('sel');
-    x.onclick = () => { if(!on){ dItem = itemById(swapId); document.getElementById('cName').textContent = dItem.n; refresh(); } };
-    sgTemp.appendChild(x);
   });
 
   const blPre = document.getElementById('blPre');
@@ -972,19 +969,19 @@ function updateCustPrice(){ document.getElementById('cPrice').textContent = fmt(
 function commitCust(){
   if(editing){
     const ln = cart.find(l=>l.uid===editing);
-    lastEdit = { uid:editing, prevCfg:JSON.parse(JSON.stringify(ln.cfg)), prevName:ln.name, prevItem:ln.item, prevEmoji:ln.emoji, prevSub:ln.sub };
-    ln.item = dItem; ln.emoji = dItem.e; ln.sub = subOfItem(dItem) || ln.sub;
+    lastEdit = { uid:editing, prevCfg:JSON.parse(JSON.stringify(ln.cfg)), prevName:ln.name };
     ln.cfg  = JSON.parse(JSON.stringify(draft));
     ln.name = draft.blend ? draft.blend.l : dItem.n;
     ln.unit = cfgPrice(dItem,draft);
     ln.key  = null; // edited lines don't merge
     showToast('Item updated', () => {
       const x=cart.find(l=>l.uid===lastEdit.uid);
-      if(x){ x.cfg=lastEdit.prevCfg; x.name=lastEdit.prevName; x.item=lastEdit.prevItem; x.emoji=lastEdit.prevEmoji; x.sub=lastEdit.prevSub; x.unit=cfgPrice(x.item,x.cfg); }
+      if(x){ x.cfg=lastEdit.prevCfg; x.name=lastEdit.prevName; x.unit=cfgPrice(x.item,x.cfg); }
       lastEdit=null; renderCart();
     });
   } else {
-      cart.push({
+    startTimer();
+    cart.push({
       uid:   'u'+Date.now()+Math.random().toString(36).slice(2,5),
       key:   null,
       name:  draft.blend ? draft.blend.l : dItem.n,
@@ -1023,6 +1020,7 @@ function clearPreview(){
 }
 
 function quickAdd(it){
+  startTimer();
   const ex = cart.find(l=>l.name===it.n && !l.cfg);
   if(ex){ ex.qty++; }
   else cart.push({ uid:'u'+Date.now()+Math.random().toString(36).slice(2,5), key:null, name:it.n, emoji:it.e, item:it, group:curGroup, sub:curSub, cfg:null, unit:it.p, qty:1 });
@@ -1064,9 +1062,6 @@ function renderCart(){
     prev ? wrap.insertBefore(d,prev) : wrap.appendChild(d);
   });
   updateTotals();
-  post('cart', { lines: cart.map(l => ({ id: l.item ? l.item.id : null, name: l.name, qty: l.qty,
-    size: l.cfg ? l.cfg.size : null, cream: l.cfg ? l.cfg.cream : null, sugar: l.cfg ? l.cfg.sugar : null,
-    iced: !!(l.item && l.item.ice) })) });
 }
 
 function adjQty(uid,d){ const l=cart.find(x=>x.uid===uid); if(!l) return; l.qty+=d; if(l.qty<=0){ removeLine(uid); return; } renderCart(); }
@@ -1118,11 +1113,7 @@ function updateTotals(){
 }
 
 // ── Clear / Pay ──
-function clearOrder(){ if(!cart.length) return; cart=[]; dealOn=false; showMenu(); renderCart(); resetTaps(); post('reset', { reason:'clear' }); }
-function resetAll(){
-  cart=[]; dealOn=false; curGroup='drinks'; curSub='hot'; curSize='M'; curMod='dd';
-  hideToast(); renderRail(); renderSubTabs(); renderSizeBar(); renderModStrip(); showMenu(); renderGrid(); renderCart(); resetTaps();
-}
+function clearOrder(){ if(!cart.length) return; cart=[]; dealOn=false; resetTimer(); showMenu(); renderCart(); }
 
 function pay(){
   if(!cart.length) return;
@@ -1132,16 +1123,17 @@ function pay(){
     if(action) action.focus();
     return;
   }
+  stopTimer();
   const total=document.getElementById('tTotal').textContent;
+  const v=elapsed<60?elapsed+'s':Math.floor(elapsed/60)+':'+String(elapsed%60).padStart(2,'0');
   document.getElementById('payOvAmt').textContent=total;
-  document.getElementById('payOvTaps').textContent=taps;
-  post('paid', { taps });
+  document.getElementById('payOvTime').textContent=v;
   document.getElementById('payOv').classList.add('show');
   setTimeout(()=>{
     document.getElementById('payOv').classList.remove('show');
     cart=[]; dealOn=false; ordNum++;
     document.getElementById('ordNo').textContent='#'+ordNum;
-    showMenu(); renderCart(); resetTaps(); post('reset', { reason:'paid' });
+    resetTimer(); showMenu(); renderCart();
   },1700);
 }
 

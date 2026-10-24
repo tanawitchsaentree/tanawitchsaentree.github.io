@@ -6,14 +6,14 @@ const FIXES = [
   {
     tag: 'FIX 1',
     title: 'Put the clock on screen',
-    body: "I'd been judging “fast” by feel. So I added the thing the back wall had: a live order timer in seconds against the real 40s mark, plus a tap counter.",
-    why: 'Now every later change could be measured against the clock I used to live under, not guessed at.',
+    body: "I'd been judging “fast” by feel. So I added what the back wall had, a live order timer in seconds against the real 40s mark, plus a tap counter.",
+    why: 'After that, I could measure every later change against the same clock I used to work under.',
   },
   {
     tag: 'FIX 2',
     title: 'Make the weird orders possible without slowing the normal ones',
     body: 'Half-step cream and sugar, one-tap blend presets (½ coffee · ½ FV, mocha, ¾ · ¼), and a "custom blend" door for the rare full recipe.',
-    why: 'The double-double stayed one tap; the triple-triple-half-steeped-tea finally became sane. Exactly the bet, proven on the timer.',
+    why: 'The double-double stayed one tap, and the triple-triple half-steeped tea became manageable. The timer showed the bet held.',
   },
   {
     tag: 'FIX 3',
@@ -36,7 +36,7 @@ export function TimsFixed() {
             Three things the first build got wrong.
           </h2>
           <p style={{ color: T.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            The walkthrough exposed exactly what a rushed first version quietly fails. I gave myself three passes, no more, and each one closed a real gap, not a cosmetic one.
+            The walkthrough showed where a rushed first version fails. I gave myself three passes, and each one fixed a gap that affected real orders.
           </p>
         </div>
 
@@ -73,7 +73,7 @@ export function TimsFixed() {
 
         <div style={{ marginTop: '1.2rem', fontFamily: T.font.mono, fontSize: '1rem', color: T.color.gold, display: 'flex', alignItems: 'center', gap: '.6rem' }}>
           <span aria-hidden>⟳</span>
-          The leftovers I wrote down for a clean next start, not a fourth round of tinkering: &ldquo;the usual&rdquo; recall, mobile pickup, steeped-vs-bag, French labels.
+          What was left went on a list for the next round. It covers &ldquo;the usual&rdquo; recall, mobile pickup, steeped-vs-bag and French labels.
         </div>
       </div>
     </section>
