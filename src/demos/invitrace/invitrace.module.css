@@ -34,7 +34,7 @@
 .hero { padding: 32px 0 48px; max-width: 46rem; }
 .eyebrow { color: var(--ixp-muted); margin: 0 0 12px; }
 .h1 { margin: 0 0 20px; color: var(--ixp-ink); }
-.lead { font-size: 1.1875rem; line-height: 1.55; margin: 0 0 16px; max-width: 40ch; }
+.lead { font-size: 1.1875rem; line-height: 1.55; margin: 0 0 16px; max-width: 30.78rem; /* 40ch of Atkinson; rem so the fallback font cannot move the column */ }
 .sample { font-size: .875rem; color: var(--ixp-muted); margin: 0; }
 
 .grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; column-gap: 56px; }
@@ -49,11 +49,11 @@
 .section > .eyebrow::after { content: ''; flex: 1; border-top: 1px solid var(--ixp-ink); }
 .h2 { font-size: clamp(1.625rem, 3vw, 2.25rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 16px; }
 .h3 { font-size: 1rem; font-weight: 600; margin: 24px 0 8px; }
-.body { font-size: 1.0625rem; line-height: 1.65; margin: 0 0 14px; max-width: 56ch; }
-.sectionLead { font-size: 1.125rem; line-height: 1.55; font-weight: 500; margin: 0 0 14px; max-width: 56ch; }
+.body { font-size: 1.0625rem; line-height: 1.65; margin: 0 0 14px; max-width: 38.56rem; /* 56ch of Atkinson */ }
+.sectionLead { font-size: 1.125rem; line-height: 1.55; font-weight: 500; margin: 0 0 14px; max-width: 40.82rem; }
 .note { font-size: 1rem; color: var(--ixp-muted); margin: 8px 0 0; }
 .muted { color: var(--ixp-muted); font-weight: 400; }
-.quote { margin: 24px 0 0; padding-left: 16px; border-left: 2px solid var(--ixp-violet); font-size: 1.0625rem; line-height: 1.6; max-width: 56ch; }
+.quote { margin: 24px 0 0; padding-left: 16px; border-left: 2px solid var(--ixp-violet); font-size: 1.0625rem; line-height: 1.6; max-width: 38.56rem; }
 .limits { font-size: .875rem; color: var(--ixp-muted); margin: 32px 0 0; }
 .anchor { display: block; height: 0; }
 
@@ -117,8 +117,10 @@
 .tierName { color: var(--ixp-violet); }
 
 /* ── Drift: fork buttons, then a lab result sheet. ── */
-.drift { display: flex; flex-wrap: wrap; gap: 14px 8px; padding: 12px 0; }
-.driftItem { display: inline-grid; justify-items: center; gap: 6px; }
+/* Fixed slots, each button pinned top-left (widest fork 144px, tallest 49px), so converging
+   padding, height and labels never move a neighbour. The 20px gap absorbs the ±10px lean. */
+.drift { display: grid; grid-template-columns: repeat(auto-fill, 9rem); grid-auto-rows: 4.5rem; gap: 14px 20px; padding: 12px 0; }
+.driftItem { display: grid; grid-template-rows: 3.125rem auto; justify-items: start; align-items: start; gap: 6px; }
 .driftTag { font-size: .6875rem; color: var(--ixp-muted); text-transform: uppercase; letter-spacing: .1em; --ixp-font: var(--ixp-mono); }
 .driftBtn {
   display: inline-flex; align-items: center; box-sizing: border-box; white-space: nowrap; padding: 9px 16px; border-radius: 8px; background: var(--ixp-violet); color: var(--ixp-card); font-size: .8125rem; font-weight: 600; box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 22%, transparent), 0 1px 1px color-mix(in srgb, var(--ixp-ink) 14%, transparent);
@@ -547,3 +549,98 @@
   .xPulse { display: none; }
 }
 .panelLabel .muted { text-transform: none; letter-spacing: 0; font-size: .875rem; }
+
+/* ══ Story layout: "A clinic asks for its own look" ══
+   One reading column with a margin mark beside each heading (above it on phones). The S5 alert
+   band is the only full-bleed element. Demo panels are the one raised surface; nothing inside
+   them gets another box. */
+.page { overflow-x: clip; }
+.hero { max-width: 46rem; padding: 32px 0 56px; }
+.reqTable { width: 100%; max-width: 46rem; border-collapse: collapse; margin: 28px 0 12px; font-size: 1rem; }
+.reqTable caption { text-align: left; padding: 0 0 8px; font-weight: 700; font-size: 1.0625rem; }
+.reqTable th, .reqTable td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-top: 1px solid var(--ixp-line); }
+.reqTable thead th { border-top: 0; padding-block: 0 6px; color: var(--ixp-muted); font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; --ixp-font: var(--ixp-mono); }
+.reqTable tbody th { font-weight: 400; width: 55%; }
+.reqTable tbody th a { color: var(--ixp-ink); text-decoration: none; }
+.reqTable tbody th a:hover { text-decoration: underline; text-underline-offset: 4px; }
+/* Empty answers are a hairline baseline with reserved height, so filling them never shifts the page. */
+.answer { display: block; min-height: 1.5em; color: var(--ixp-ink); text-decoration: none; box-shadow: inset 0 -1px 0 var(--ixp-line-strong); }
+.answer[data-filled] { box-shadow: none; }
+.answerFill { display: grid; gap: 2px; animation: answerIn .32s var(--ease-out-standard) both; }
+@keyframes answerIn { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* A third, flexible column makes the grid span the whole shell, so the S5 band can bleed from it. */
+.chapter { display: grid; grid-template-columns: 11rem min(40rem, calc(100% - 11rem - 80px)) minmax(0, 1fr); column-gap: 40px; padding-block: 56px; border-top: 1px solid var(--ixp-line); }
+.mark { grid-column: 1; margin: 6px 0 0; font-size: 12px; line-height: 1.4; letter-spacing: .1em; text-transform: uppercase; color: var(--ixp-muted); --ixp-font: var(--ixp-mono); }
+.chapterMain, .chapterAfter { grid-column: 2; min-width: 0; }
+.chapterAfter { display: grid; gap: 12px; margin-top: 20px; }
+.request { margin: 0 0 18px; }
+.reqLabel { margin: 0 0 4px; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ixp-muted); --ixp-font: var(--ixp-mono); }
+.reqMeta { text-transform: none; letter-spacing: 0; }
+.reqText { margin: 0; font-size: 1.125rem; font-style: italic; line-height: 1.5; }
+.panel { margin-top: 24px; padding: 16px; border: 0; border-radius: 8px; background: var(--ixp-card); box-shadow: inset 0 0 0 1px var(--ixp-line); display: grid; gap: 14px; }
+.panel .panel { background: none; box-shadow: none; padding: 0; margin-top: 0; }
+.notice { display: grid; gap: 8px; justify-items: start; font-size: 1rem; }
+.notice p { margin: 0; }
+.slice { border-radius: 6px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--ixp-line); max-width: 26rem; }
+.slice .console { width: 100%; }
+.slice[data-region="full"] { max-width: 26rem; }
+.slideIn { animation: slideIn .36s var(--ease-in-out-natural) both; }
+@keyframes slideIn { from { transform: translateX(32px); clip-path: inset(0 0 0 32px); } to { transform: none; clip-path: inset(0 0 0 0); } }
+.cost { margin: 0; color: var(--ixp-muted); font-size: 1rem; animation: wipe .3s var(--ease-out-standard) both; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 20px; }
+.split > div { padding: 0 20px; }
+.split > div:first-child { padding-left: 0; border-right: 1px solid var(--ixp-line); }
+.plainList { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; font-size: 1rem; }
+.plainList li { display: flex; gap: 8px; align-items: center; }
+.aside2 { margin-top: 8px; padding: 14px 0 0 16px; border-top: 1px solid var(--ixp-line); display: grid; gap: 12px; }
+.tablet { max-width: 18rem; padding: 10px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--ixp-line-strong); display: grid; gap: 8px; }
+.matrix [data-f] { animation: fIn .3s var(--ease-out-standard) both; }
+@keyframes fIn { from { transform: translateX(24px); } to { transform: none; } }
+
+/* Theme-file lines: plain documentation in mono. The sign and icon carry the meaning; struck
+   lines are what the clinic asked for and didn't get, with the reason left unstruck. */
+.fLine { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: .875rem; color: var(--ixp-ink); }
+.fLine svg { align-self: center; flex: none; color: var(--ixp-muted); }
+.fCode { white-space: pre-wrap; --ixp-font: var(--ixp-mono); }
+.fLine[data-struck] .fCode { text-decoration: line-through; color: var(--ixp-muted); }
+.fNote { color: var(--ixp-muted); --ixp-font: var(--ixp-mono); }
+.review { margin: 20px 0 8px; font-size: .875rem; color: var(--ixp-muted); --ixp-font: var(--ixp-mono); }
+.review[data-ok] { color: var(--ixp-ink); }
+.file { margin: 0; padding: 14px 16px; border-radius: 8px; background: var(--ixp-card); box-shadow: inset 0 0 0 1px var(--ixp-line); }
+.fileHead { font-size: .8125rem; color: var(--ixp-muted); padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--ixp-line); --ixp-font: var(--ixp-mono); }
+.fileLines { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.fileEmpty { margin: 0; color: var(--ixp-muted); font-size: .9375rem; }
+
+/* S5: the alert band, one continuous full-bleed strip. Every slice shares one alert row. */
+.bleed { grid-column: 1 / -1; width: 100vw; margin: 28px 0 0 calc(50% - 50vw); }
+.band { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 2px; }
+.bandSlice { container-type: inline-size; display: grid; grid-template-rows: 6px 56px auto; min-width: 0; }
+.bandStripe { background: var(--b); }
+.bandAlert { position: relative; display: flex; align-items: center; padding: 0 clamp(8px, 4cqi, 20px); background: var(--c); color: var(--ixp-card); font-weight: 700; font-size: clamp(11px, 4.4cqi, 1rem); overflow: hidden; }
+.bandWipe { position: absolute; inset: 0; background: var(--b); animation: bandWipe .76s both; }
+@keyframes bandWipe {
+  0% { clip-path: inset(0 100% 0 0); animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+  36.8% { clip-path: inset(0 0 0 0); }
+  63.2% { clip-path: inset(0 0 0 0); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+  100% { clip-path: inset(0 0 0 100%); }
+}
+.bandMeta { margin: 0; padding: 8px clamp(8px, 4cqi, 20px) 0; display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 11px; color: var(--ixp-muted); --ixp-font: var(--ixp-mono); }
+.bandMeta span:first-child { color: var(--ixp-ink); font-weight: 600; width: 100%; --ixp-font: var(--ixp-sans); font-size: .8125rem; }
+
+@media (max-width: 959px) {
+  .chapter { grid-template-columns: minmax(0, 1fr); padding-block: 44px; }
+  .mark, .chapterMain, .chapterAfter { grid-column: 1; }
+  .mark { margin: 0 0 10px; }
+  .split { grid-template-columns: 1fr; gap: 16px; }
+  .split > div, .split > div:first-child { padding: 0; border: 0; }
+  .split > div:first-child { padding-bottom: 16px; border-bottom: 1px solid var(--ixp-line); }
+}
+@media (max-width: 559px) {
+  .reqTable thead { display: none; }
+  .reqTable tr { display: grid; border-top: 1px solid var(--ixp-line); padding: 10px 0; }
+  .reqTable th, .reqTable td, .reqTable tbody th { border: 0; padding: 0; width: auto; }
+  .reqTable td { margin-top: 6px; }
+  .bandSlice { grid-template-rows: 4px 44px auto; }
+  .panel .row > .btn, .panel .row > .btnQuiet, .chapterAfter .row > .btnQuiet { flex: 1 1 100%; min-height: 44px; }
+}

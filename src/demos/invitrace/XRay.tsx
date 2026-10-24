@@ -71,9 +71,9 @@ function tagRows<T extends { p: Pt }>(list: T[]) {
 }
 type Mode = 'stack' | 'flat' | 'step'
 
-export function XRay({ st }: { st: Store }) {
+export function XRay({ st, defaultOpen = false }: { st: Store; defaultOpen?: boolean }) {
   const g = st.graph
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(defaultOpen)
   const [settled, setSettled] = useState(false)
   const [mode, setMode] = useState<Mode>('stack')
   const [stepAt, setStepAt] = useState(0)
@@ -152,7 +152,7 @@ export function XRay({ st }: { st: Store }) {
     const st0 = stage.current
     const ro = new ResizeObserver(() => measure()); if (st0) ro.observe(st0)
     return () => { cancelAnimationFrame(id); ro.disconnect() }
-  }, [showOverlay, shape, measure, st.resolved])
+  }, [showOverlay, shape, measure, st.resolved, tops])
   // Safety net if a transitionend never arrives (tab in the background, for example).
   useEffect(() => {
     if (mode !== 'stack' || !open || settled) return

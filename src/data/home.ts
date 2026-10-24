@@ -13,10 +13,10 @@ export const PROFILE = {
 export const SELECTED_WORK = [
   {
     company: 'Allianz Technology',
-    title: 'Sorting the post at an insurer',
+    title: 'Property assessor reports kept getting filed under Vehicle',
     role: 'Senior Designer · sole designer',
     period: '2025–present',
-    description: "Each office files insurance documents its own way. I designed the tool where a team builds its filing system, turns it into the AI's prompt and tests it before it goes live.",
+    description: "One invented week at an insurer, following the person who sets up the AI's filing tree and the person who opens the sorted post.",
     href: '/projects/allianz/',
     protected: true,
   },
@@ -31,10 +31,10 @@ export const SELECTED_WORK = [
   },
   {
     company: 'Invitrace Health',
-    title: 'One ward screen, many hospitals',
+    title: 'A clinic asks for its own look',
     role: 'Lead Product Designer',
     period: '2024–2025',
-    description: "Every hospital wanted its own look, and the buttons drifted apart. I led a design system that keeps one set of components and moves each hospital's differences into a theme.",
+    description: 'A specialty clinic sends a list of requests, and each answer shows what a hospital can change in the Invitrace design system and what stays the same everywhere.',
     href: '/projects/invitrace/',
     protected: true,
   },

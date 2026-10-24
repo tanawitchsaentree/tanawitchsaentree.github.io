@@ -172,24 +172,45 @@
 }
 
 /* ── Allianz case study (demo surface: [data-demo="docsort"] only) ────────────────
-   The inverse of the claims case file: a light paper desk, white cards and sheets,
-   the prompt typed in Allianz blue. Contrast (computed): blue on paper 10.6:1, on desk
-   9.6:1 · ink on paper 18:1 · ink-muted on paper 6.9:1, on desk 6.2:1 · paper on blue
-   10.6:1 · signal-ok/warn/danger on paper 4.9 / 3.9 / 5.3:1 (strokes, dots, bars only). */
+   Direction: a paper week-to-view diary, soft 60-30-10. 60 paper · 30 ruled band, notes
+   pages, label strips · 10 one teal signal (Friday's label strip, focus rings, the primary
+   button). Allianz blue is the AI prompt's ink only. Contrast (computed, WCAG 2.x):
+   ink on paper 16.0 / band 13.7 / sheet 17.0 · ink-muted 7.5 / 6.5 / 8.0 · ink-subtle 5.0 on
+   paper, 5.4 on sheet (spread lines not yet done) · accent 5.9 on paper, 6.3 on sheet, sheet
+   on accent 6.3, on accent-deep 8.3 · prompt 10.2 on sheet · danger 5.9 / 5.1 / 6.3 · ok 5.7
+   on paper, 6.0 on sheet · line-strong 3.6 on band, 4.2 on paper (control borders, 3:1
+   non-text). The hairline is decorative (1.4:1). */
 [data-demo="docsort"] {
-  --docsort-desk:        #F4F2EC;
-  --docsort-paper:       #FDFDFB;
-  --docsort-blue:        #003781;  /* Allianz blue: prompt type, ink of the cards' spine */
-  --docsort-blue-soft:   #B9C6DC;  /* hierarchy bracket on the prompt, decorative */
-  --docsort-ink:         #111417;
-  --docsort-ink-muted:   #545A60;
-  --docsort-line:        #DEDBD3;  /* hairline, non-text */
-  --docsort-line-strong: #8E897F;  /* control borders: 3.4:1 on paper, 3.1:1 on desk (WCAG 1.4.11) */
-  --docsort-shadow:      0 1px 2px rgba(17, 20, 23, .06), 0 6px 18px -10px rgba(17, 20, 23, .22);
-  --docsort-sans: 'Onest', sans-serif;
-  --docsort-mono: 'IBM Plex Mono', monospace;
-  --docsort-font: var(--docsort-sans);
+  --ds-paper:       #F4F3EF;  /* 60 */
+  --ds-band:        #E4E2DB;  /* 30 */
+  --ds-sheet:       #FBFAF7;  /* raised sheets: the letter, cards, dialogs */
+  --ds-ink:         #16181C;
+  --ds-ink-muted:   #4A4E55;
+  --ds-ink-subtle:  #65686D;  /* only for spread lines not yet done */
+  --ds-line:        #D3D0C6;  /* hairline rules, decorative */
+  --ds-line-strong: #78746C;  /* control borders and the hour rule */
+  --ds-accent:      #1F6670;  /* 10: the one signal */
+  --ds-accent-deep: #17535B;  /* hover and pressed step of the signal */
+  --ds-on-accent:   #FBFAF7;
+  --ds-prompt:      #003781;  /* Allianz blue: AI prompt ink only */
+  --signal-ok:      #2F6B4C;  /* always with a glyph */
+  --signal-danger:  #A13B30;  /* always with a glyph */
+  --ds-raise: 0 0 0 1px color-mix(in srgb, #16181C 11%, transparent), 0 1px 2px color-mix(in srgb, #16181C 12%, transparent);
+  --ds-sans: 'Atkinson Hyperlegible Next', sans-serif;
+  --ds-mono: 'Atkinson Hyperlegible Mono', monospace;
+  --docsort-font: var(--ds-sans);
+  --docsort-focus: var(--ds-accent);
 }
+
+/* Metric-matched local fallbacks for Atkinson Hyperlegible, so the swap to the webfont doesn't
+   move text. size-adjust is tuned to the page's own text (fewest line-wrap changes at 390 and
+   1440); vertical metrics are Atkinson's (ascent 984, descent 316, no gap) divided by size-adjust. */
+@font-face { font-family: 'Atkinson Fallback'; font-weight: 100 500; src: local('Arial'), local('ArialMT');
+  size-adjust: 99.2%; ascent-override: 99.19%; descent-override: 31.85%; line-gap-override: 0%; }
+@font-face { font-family: 'Atkinson Fallback'; font-weight: 600 900; src: local('Arial Bold'), local('Arial-BoldMT');
+  size-adjust: 99.4%; ascent-override: 99%; descent-override: 31.8%; line-gap-override: 0%; }
+@font-face { font-family: 'Atkinson Mono Fallback'; src: local('Courier New'), local('CourierNewPSMT');
+  size-adjust: 105.3%; ascent-override: 93.45%; descent-override: 30.01%; line-gap-override: 0%; }
 
 /* ── Invitrace case study (demo surface: [data-demo="invitrace"] only) ──────────
    Direction: radiology lightbox + clinical instrument, in soft tones, 60-30-10.
@@ -223,8 +244,8 @@
   --ixp-hi: color-mix(in srgb, #FEFEFF 75%, transparent);  /* 1px inner top highlight on raised surfaces */
   --ixp-shadow: 0 1px 2px color-mix(in srgb, #14181D 12%, transparent), 0 0 0 1px color-mix(in srgb, #14181D 10%, transparent);  /* raised: 2px blur max plus a hairline */
   /* One family: Atkinson Hyperlegible (Braille Institute), chosen for a system with a low-vision preset. */
-  --ixp-display: 'Atkinson Hyperlegible Next', sans-serif;
-  --ixp-sans: 'Atkinson Hyperlegible Next', sans-serif;
-  --ixp-mono: 'Atkinson Hyperlegible Mono', monospace;
+  --ixp-display: 'Atkinson Hyperlegible Next', 'Atkinson Fallback', sans-serif;
+  --ixp-sans: 'Atkinson Hyperlegible Next', 'Atkinson Fallback', sans-serif;
+  --ixp-mono: 'Atkinson Hyperlegible Mono', 'Atkinson Mono Fallback', monospace;
   --ixp-font: var(--ixp-sans);
 }

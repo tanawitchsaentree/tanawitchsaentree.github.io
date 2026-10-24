@@ -1,96 +1,93 @@
-import { PROMPT_HEAD, QUEUE_DOCS, SHAPES, TOGGLE_CARD, type L1, type Shape } from './data'
+import { PROMPT_HEAD, TOGGLE_CARD, TREE, type L1 } from './data'
 
 export type VersionStatus = 'Draft' | 'Approved' | 'Deployed'
-export type Version = { n: number; label: string; status: VersionStatus; active: boolean }
-export type QueueRow = { id: string; status: 'Available' | 'Locked' | 'Done'; queue: string }
+export type Version = { n: number; status: VersionStatus; active: boolean }
 
-export type DeskState = {
-  /** 0 = hero, 1–6 = moments. Set by one IntersectionObserver. */
-  active: number
-  shape: Shape
-  /** The editable Claims tree used from moment 2 on. */
-  tree: L1[]
-  placeholder: boolean
-  l2On: boolean
-  expected: Record<string, string>
-  run: 'idle' | 'running' | 'done'
-  versions: Version[]
-  rows: QueueRow[]
-  openDoc: string | null
-  toast: { n: number; text: string } | null
-}
+/** Shared across the week: the Claims tree Ana edits and the prompt's placeholder. */
+export type Shared = { tree: L1[]; placeholder: boolean }
 
-export const baseTree = (): L1[] =>
-  SHAPES.claims.l1.map(c => ({ name: c.name, l2: c.l2.filter(t => !(c.name === TOGGLE_CARD.l1 && t === TOGGLE_CARD.l2)) }))
-
-/** Built on first render (after unlock): it reads the gated tree and queue. */
-export const initialState = (): DeskState => ({
-  active: 0, shape: 'claims', tree: baseTree(), placeholder: true, l2On: true,
-  expected: {}, run: 'idle',
-  versions: [
-    { n: 1, label: 'Version 1', status: 'Deployed', active: true },
-    { n: 2, label: 'Version 2', status: 'Draft', active: false },
-  ],
-  rows: QUEUE_DOCS.map(d => ({ id: d.id, status: 'Available', queue: d.queue })),
-  openDoc: null, toast: null,
+/** Built on first render (after unlock): it reads the gated tree. */
+export const initialShared = (): Shared => ({
+  tree: TREE.l1.map(c => ({ name: c.name, l2: [...c.l2] })),
+  placeholder: true,
 })
 
-/** Moment 1 shows the chosen shape; from moment 2 the editable Claims tree. */
-export function shownTree(s: DeskState): { l0: string; l1: L1[]; note?: string } {
-  if (s.active <= 1) return SHAPES[s.shape]
-  return { l0: SHAPES.claims.l0, l1: s.tree }
-}
-
-// ── Fixed geometry (mirrors docsort.module.css) ──
-export const G = {
-  stageW: 600, stageH: 620,
-  treeW: 216, sheetX: 240,
-  treeTop: 52, l0H: 34, l1H: 38, l2H: 30, gap: 6,
-  lineTop: 92, lineH: 20,
-  chipW: 52, chipH: 22, chipStep: 56,
-}
-
-/** Phone stage: 340 × 520, everything stacked. */
-export const PG = { stageW: 340, stageH: 520, treeTop: 44, l0H: 28, l1H: 30, l2H: 22, gap: 3, lineH: 16 }
-
-type TreeGeo = { treeTop: number; l0H: number; l1H: number; l2H: number; gap: number }
-export type Row = { key: string; kind: 'l0' | 'l1' | 'l2'; label: string; y: number; h: number; tucked: boolean; parent?: string }
-
-/** Card rows. With document types off, L2 cards tuck under their category card. */
-export function layoutTree(t: { l0: string; l1: L1[] }, l2On: boolean, geo: TreeGeo = G): Row[] {
-  const rows: Row[] = [{ key: `l0:${t.l0}`, kind: 'l0', label: t.l0, y: geo.treeTop, h: geo.l0H, tucked: false }]
-  let y = geo.treeTop + geo.l0H + geo.gap
-  for (const c of t.l1) {
-    const cy = y
-    rows.push({ key: `l1:${c.name}`, kind: 'l1', label: c.name, y: cy, h: geo.l1H, tucked: false })
-    y += geo.l1H + geo.gap
-    for (const d of c.l2) {
-      rows.push({ key: `l2:${c.name}>${d}`, kind: 'l2', label: d, y: l2On ? y : cy + 4, h: geo.l2H, tucked: !l2On, parent: c.name })
-      if (l2On) y += geo.l2H + geo.gap
-    }
-  }
-  return rows
-}
-
 export const leafOf = (l1: string, l2?: string) => (l2 ? `${l1} > ${l2}` : l1)
+export const catOf = (leaf: string) => leaf.split(' > ')[0]
+/** "Vehicle > Assessor report" read aloud as "Vehicle, Assessor report". */
+export const spoken = (leaf: string) => leaf.replace(' > ', ', ')
 
-/** Classes a document can be sorted into. */
-export function leaves(l1s: L1[], l2On: boolean): string[] {
-  return l1s.flatMap(c => (l2On && c.l2.length ? c.l2.map(d => leafOf(c.name, d)) : [c.name]))
+/** Classes a document can be filed under: each document type, or the bare category if it has none. */
+export function leaves(l1s: L1[]): string[] {
+  return l1s.flatMap(c => (c.l2.length ? c.l2.map(d => leafOf(c.name, d)) : [c.name]))
 }
 
-/** The prompt as the tool fills it in. Lines are keyed so new ones type in. */
-export function promptLines(l1s: L1[], l2On: boolean, placeholder: boolean): { key: string; text: string; hier?: boolean }[] {
-  type Line = { key: string; text: string; hier?: boolean }
-  const out: Line[] = PROMPT_HEAD.map((text, i) => ({ key: `h${i}`, text }))
-  if (!placeholder) return out
-  out.push({ key: 'cats', text: 'Document categories:', hier: true })
+/** The nearest class that exists in the current tree (a leaf, else its category). */
+export function nearest(l1s: L1[], leaf: string) {
+  const opts = leaves(l1s)
+  if (opts.includes(leaf)) return leaf
+  const c = catOf(leaf)
+  return opts.find(o => o === c || o.startsWith(`${c} > `)) ?? opts[0]
+}
+
+export const hasType = (l1s: L1[], l1 = TOGGLE_CARD.l1, l2 = TOGGLE_CARD.l2) =>
+  l1s.some(c => c.name === l1 && c.l2.includes(l2))
+
+export const withType = (l1s: L1[], on: boolean, l1 = TOGGLE_CARD.l1, l2 = TOGGLE_CARD.l2): L1[] =>
+  l1s.map(c => (c.name !== l1 ? c : { ...c, l2: on ? (c.l2.includes(l2) ? c.l2 : [...c.l2, l2]) : c.l2.filter(t => t !== l2) }))
+
+export type PromptLine = { key: string; text: string; hier?: boolean }
+
+/** The tree as the tool writes it into {{CLASSIFICATION_HIERARCHY}}. */
+export function hierarchyLines(l1s: L1[]): PromptLine[] {
+  const out: PromptLine[] = [{ key: 'cats', text: 'Document categories:', hier: true }]
   for (const c of l1s) out.push({ key: `c:${c.name}`, text: `- ${c.name}`, hier: true })
-  if (l2On && l1s.some(c => c.l2.length)) {
+  if (l1s.some(c => c.l2.length)) {
     out.push({ key: 'types', text: 'Document types:', hier: true })
     for (const c of l1s) for (const d of c.l2) out.push({ key: `t:${c.name}>${d}`, text: `- ${c.name} > ${d}`, hier: true })
   }
   return out
 }
 
-export const pendingVersion = (s: DeskState) => s.versions.find(v => !v.active && v.status !== 'Deployed')
+export const headLines = (): PromptLine[] => PROMPT_HEAD.map((text, i) => ({ key: `h${i}`, text }))
+
+export const TOKEN = '{{CLASSIFICATION_HIERARCHY}}'
+
+export const initialVersions = (): Version[] => [
+  { n: 6, status: 'Draft', active: false },
+  { n: 5, status: 'Deployed', active: true },
+  { n: 4, status: 'Draft', active: false },
+  { n: 3, status: 'Draft', active: false },
+  { n: 2, status: 'Draft', active: false },
+  { n: 1, status: 'Approved', active: false },
+]
+
+// ── Tuesday's fixed geometry (mirrors .tStage in docsort.module.css) ──
+// Every row has a fixed height so the connector from the new card to its prompt line is
+// computed, never measured.
+export const TG = {
+  treeW: 200, gap: 24, sheetPad: 14,
+  l0H: 32, cardGap: 8, l1H: 36, l2H: 28, addH: 40,
+  sheetHead: 52, lineH: 22, blockGap: 8,
+}
+
+/** y of the middle of the tree row for l1 > l2 (Tuesday's stage). */
+export function cardMidY(l1s: L1[], l1: string, l2: string) {
+  let y = TG.l0H + TG.cardGap
+  for (const c of l1s) {
+    if (c.name === l1) {
+      const i = c.l2.indexOf(l2)
+      return y + TG.l1H + i * TG.l2H + TG.l2H / 2
+    }
+    y += TG.l1H + c.l2.length * TG.l2H + (c.name === TOGGLE_CARD.l1 ? TG.addH : 0) + TG.cardGap
+  }
+  return y
+}
+
+/** y of the middle of a filled prompt line (Tuesday's preview pane). */
+export function lineMidY(l1s: L1[], key: string) {
+  const head = PROMPT_HEAD.length
+  const i = hierarchyLines(l1s).findIndex(l => l.key === key)
+  // +1 line for the pane caption (Template / Preview).
+  return TG.sheetHead + TG.sheetPad + (head + 1) * TG.lineH + TG.blockGap + i * TG.lineH + TG.lineH / 2
+}

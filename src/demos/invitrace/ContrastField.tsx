@@ -16,8 +16,9 @@ const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
 const segPath = (f: Float32Array, k: number) => { let d = ''; for (let i = 0; i < f.length; i += 4) d += `M${(f[i] * k).toFixed(1)} ${(f[i + 1] * k).toFixed(1)}L${(f[i + 2] * k).toFixed(1)} ${(f[i + 3] * k).toFixed(1)}`; return d }
 const grade = (r: number) => (r >= 4.5 ? 'passes' : r >= 3 ? 'large text only' : 'fails')
 
-export function ContrastField({ st }: { st: Store }) {
-  const start = hexToOklch(st.hospital.primary)
+/** `start` puts the reticle on a colour the clinic sent, before anything is applied. */
+export function ContrastField({ st, start: startHex }: { st: Store; start?: string }) {
+  const start = hexToOklch(startHex ?? st.hospital.primary)
   const [hue, setHue] = useState(start.h)
   const [pt, setPt] = useState<HC>({ L: start.L, C: start.C })
   const [size, setSize] = useState(0)

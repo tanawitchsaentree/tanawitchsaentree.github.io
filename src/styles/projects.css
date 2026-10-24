@@ -57,10 +57,10 @@
 .project-pages [data-demo="docsort"] *,
 .project-pages [data-demo="docsort"] *::before,
 .project-pages [data-demo="docsort"] *::after { font-family: var(--docsort-font) !important; }
-.project-pages [data-demo="docsort"] h1 { font-size: clamp(2.25rem, 5vw, 4rem) !important; font-weight: 600 !important; line-height: 1.02 !important; letter-spacing: -0.03em !important; }
-.project-pages [data-universe="allianz"] [data-demo="docsort"] h2 { font-size: clamp(1.5rem, 2.6vw, 2.125rem); font-weight: 600; }
+.project-pages [data-demo="docsort"] h1 { font-size: clamp(2.25rem, 4.6vw, 3.75rem) !important; font-weight: 600 !important; line-height: 1.04 !important; letter-spacing: -0.03em !important; }
+.project-pages [data-universe="allianz"] [data-demo="docsort"] h2 { font-size: clamp(1.625rem, 2.6vw, 2.25rem); font-weight: 600; }
 .project-pages [data-universe="allianz"] [data-demo="docsort"] p { font-size: var(--docsort-p-size, inherit); }
-.project-pages [data-demo="docsort"] :is(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--docsort-focus, var(--docsort-blue)); outline-offset: 2px; }
+.project-pages [data-demo="docsort"] :is(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--docsort-focus); outline-offset: 2px; }
 
 /* Stellareat, Vitae, Tims and Profita opt out of the editorial shell the same way as claims:
    each keeps its 5c4cfe5^ typefaces (self-hosted in case-fonts.css and set inline by the demo

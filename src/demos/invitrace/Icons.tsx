@@ -16,3 +16,4 @@ export const IconErr = (p: P) => <Svg {...p}><circle cx="12" cy="12" r="8.25" />
 export const IconCheck = (p: P) => <Svg {...p}><path d="M6 12.5l4 4 8-9" /></Svg>
 export const IconLock = (p: P) => <Svg {...p}><rect x="5.5" y="11" width="13" height="9" rx="2" /><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3" /></Svg>
 export const IconChevron = (p: P) => <Svg {...p}><path d="M9.5 6.5l5.5 5.5-5.5 5.5" /></Svg>
+export const IconLink = (p: P) => <Svg {...p}><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1" /><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" /></Svg>
