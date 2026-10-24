@@ -39,11 +39,24 @@ export function CustomCursor() {
 
     function lerp(a: number, b: number, t: number) { return a + (b - a) * t }
 
-    // Ring leads (fast), dot trails slightly for organic feel
+    // Ring leads (fast), dot trails slightly for organic feel.
+    // The rAF loop only runs while either mark is still travelling toward the
+    // pointer; it stops once both are within 0.1px and restarts on the next move.
     let ringX = -100, ringY = -100
     let dotX  = -100, dotY  = -100
+    let primed = false
+    let last = 0
+    const RING_T = 0.5
+    const DOT_T  = 0.38
+    const EPS    = 0.1
 
-    function tick() {
+    function tick(now: number) {
+      rafRef.current = null
+      // time-based easing so the trail feels the same at 60 Hz and 120 Hz
+      const frames = last ? Math.min((now - last) / 16.67, 4) : 1
+      last = now
+      const rt = 1 - Math.pow(1 - RING_T, frames)
+      const dt = 1 - Math.pow(1 - DOT_T, frames)
       const ring = ringRef.current
       const dot  = dotRef.current
       if (!ring || !dot) { rafRef.current = requestAnimationFrame(tick); return }
@@ -51,20 +64,29 @@ export function CustomCursor() {
       const tx = posRef.current.x
       const ty = posRef.current.y
 
-      ringX = lerp(ringX, tx, 0.80)
-      ringY = lerp(ringY, ty, 0.80)
-      dotX  = lerp(dotX,  tx, 0.55)
-      dotY  = lerp(dotY,  ty, 0.55)
+      ringX = lerp(ringX, tx, rt)
+      ringY = lerp(ringY, ty, rt)
+      dotX  = lerp(dotX,  tx, dt)
+      dotY  = lerp(dotY,  ty, dt)
+
+      const settled =
+        Math.abs(tx - ringX) < EPS && Math.abs(ty - ringY) < EPS &&
+        Math.abs(tx - dotX)  < EPS && Math.abs(ty - dotY)  < EPS
+      if (settled) { ringX = dotX = tx; ringY = dotY = ty }
 
       ring.style.transform = `translate(${ringX}px, ${ringY}px)`
-      dot.style.transform  = `translate(${dotX}px,  ${dotY}px)`
+      dot.style.transform  = `translate(${dotX}px, ${dotY}px)`
 
-      rafRef.current = requestAnimationFrame(tick)
+      if (!settled) rafRef.current = requestAnimationFrame(tick)
+      else last = 0
     }
-    rafRef.current = requestAnimationFrame(tick)
 
-    function onMove(e: MouseEvent) {
+    function onMove(e: PointerEvent) {
+      if (e.pointerType !== 'mouse') return // touch/pen on hybrids keep the native cursor path
       posRef.current = { x: e.clientX, y: e.clientY }
+      // First move: jump straight to the pointer instead of sliding in from -100.
+      if (!primed) { primed = true; ringX = dotX = e.clientX; ringY = dotY = e.clientY }
+      if (rafRef.current === null) rafRef.current = requestAnimationFrame(tick)
     }
 
     // Single DOM walk instead of three — closest() with a combined selector,
@@ -80,14 +102,15 @@ export function CustomCursor() {
       else                                                      setState('text')
     }
 
-    window.addEventListener('mousemove', onMove, { passive: true })
+    window.addEventListener('pointermove', onMove, { passive: true })
     window.addEventListener('mouseover', onOver, { passive: true })
 
     return () => {
-      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('pointermove', onMove)
       window.removeEventListener('mouseover', onOver)
       document.documentElement.style.cursor = ''
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
     }
   }, [motionAllowed])
 

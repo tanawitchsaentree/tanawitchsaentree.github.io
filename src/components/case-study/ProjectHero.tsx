@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import s from './ProjectHero.module.css'
 
 type Props = {
@@ -5,7 +6,7 @@ type Props = {
   period: string
   title: string
   intro: string
-  details: readonly (readonly [string, string])[]
+  details: readonly (readonly [string, ReactNode])[]
 }
 
 export function ProjectHero({ company, period, title, intro, details }: Props) {

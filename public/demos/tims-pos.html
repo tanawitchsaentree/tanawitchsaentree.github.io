@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Tims POS · iPad Terminal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:opsz,wght@9..40,400..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Fonts: /demos/project-type.css sets system sans on every element (!important), so no webfont is loaded. -->
 <style>
 :root{
   --accent:#CF162D;--accent-dk:#9e0e1f;--accent-bg:rgba(207,22,45,.10);--accent-ring:rgba(207,22,45,.25);
@@ -56,9 +54,9 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 
 /* ── Size bar ── */
 .sz-bar{display:flex;gap:4px;padding:6px 16px 8px;flex-shrink:0}
-.sz-btn{flex:1;padding:8px 4px 6px;border-radius:10px;background:var(--card);border:1.5px solid var(--border-md);display:flex;flex-direction:column;align-items:center;gap:1px;transition:background .12s var(--ease),border-color .12s var(--ease),box-shadow .12s var(--ease);cursor:pointer}
-.sz-btn .sz-l{font-weight:700;font-size:15px;color:var(--ink-3);line-height:1;transition:color .12s var(--ease)}
-.sz-btn .sz-s{font-family:'Space Mono',monospace;font-size:8px;color:var(--ink-3);opacity:.7;transition:color .12s var(--ease),opacity .12s var(--ease)}
+.sz-btn{flex:1;padding:8px 4px 6px;border-radius:10px;background:var(--card);border:1.5px solid var(--border-md);display:flex;flex-direction:column;align-items:center;gap:1px;transition:background .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease);cursor:pointer}
+.sz-btn .sz-l{font-weight:700;font-size:15px;color:var(--ink-3);line-height:1;transition:color .15s var(--ease)}
+.sz-btn .sz-s{font-family:'Space Mono',monospace;font-size:8px;color:var(--ink-3);opacity:.7;transition:color .15s var(--ease),opacity .15s var(--ease)}
 .sz-btn:active{transform:scale(.92)}
 .sz-btn.on{background:var(--accent);border-color:var(--accent);box-shadow:0 3px 10px var(--accent-ring)}
 .sz-btn.on .sz-l,.sz-btn.on .sz-s{color:var(--on-fill);opacity:1}
@@ -67,24 +65,23 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 /* ── Sub-tabs ── */
 .subtabs{display:flex;gap:5px;padding:0 16px 8px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
 .subtabs::-webkit-scrollbar{display:none}
-.stab{font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;white-space:nowrap;border:1.5px solid var(--border-md);color:var(--ink-3);background:var(--card);transition:background .12s var(--ease),color .12s var(--ease),border-color .12s var(--ease)}
+.stab{font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;white-space:nowrap;border:1.5px solid var(--border-md);color:var(--ink-3);background:var(--card);transition:background .15s var(--ease),color .15s var(--ease),border-color .15s var(--ease)}
 .stab:active{transform:scale(.94)}
 .stab.on{background:var(--accent);color:var(--on-fill);border-color:var(--accent);box-shadow:0 3px 10px var(--accent-ring)}
 
 /* ── Modifier strip ── */
-.mod-strip{display:flex;gap:5px;padding:0 16px 8px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;align-items:center}
-.mod-strip::-webkit-scrollbar{display:none}
-.mchip{font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:999px;white-space:nowrap;border:1.5px solid var(--border-md);color:var(--ink-3);background:var(--card);transition:background .12s var(--ease),color .12s var(--ease),border-color .12s var(--ease);flex-shrink:0;cursor:pointer}
+.mod-strip{display:flex;flex-wrap:wrap;gap:5px;padding:0 16px 8px;flex-shrink:0;align-items:center}
+.mchip{font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:999px;white-space:nowrap;border:1.5px solid var(--border-md);color:var(--ink-3);background:var(--card);transition:background .15s var(--ease),color .15s var(--ease),border-color .15s var(--ease);flex-shrink:0;cursor:pointer}
 .mchip:active{transform:scale(.94)}
-.mchip.on{background:var(--accent-bg);color:var(--accent-dk);border-color:var(--accent)}
+.mchip.on{background:var(--accent);border-color:var(--accent);color:var(--on-fill)}
 .mchip.more{border-style:dashed;color:var(--ink-2);background:var(--card-2)}
 .mchip.more.on{background:var(--ink);color:var(--on-fill);border-color:var(--ink);border-style:solid}
 /* inactive handled above */
 
 /* ── Item grid ── */
 .grid{flex:1;min-height:0;overflow-y:auto;padding:2px 16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:9px;align-content:start}
-.item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px 11px 10px;text-align:left;box-shadow:var(--sh);position:relative;overflow:hidden;min-height:100px;display:flex;flex-direction:column;transition:box-shadow .13s var(--ease),transform .13s var(--ease)}
-.item::after{content:"";position:absolute;inset:0;background:var(--accent);opacity:0;transition:opacity .14s var(--ease);pointer-events:none;border-radius:inherit}
+.item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:11px 11px 10px;text-align:left;box-shadow:var(--sh);position:relative;overflow:hidden;min-height:100px;display:flex;flex-direction:column;transition:box-shadow .15s var(--ease),transform .15s var(--ease)}
+.item::after{content:"";position:absolute;inset:0;background:var(--accent);opacity:0;transition:opacity .15s var(--ease);pointer-events:none;border-radius:inherit}
 .item:hover{box-shadow:0 2px 8px rgba(0,0,0,.1),0 8px 24px rgba(0,0,0,.1)}
 .item:active{transform:scale(.93)}
 .item.flash::after{opacity:.1}
@@ -101,20 +98,20 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .cust.show{display:block}
 .center.detail .grid,.center.detail .subtabs,.center.detail .sz-bar,.center.detail .mod-strip{display:none!important}
 .cust-head{display:flex;align-items:center;gap:10px;padding:4px 0 14px;position:sticky;top:0;background:var(--bg);z-index:5}
-.back{width:36px;height:36px;border-radius:10px;background:var(--card);border:1px solid var(--border-md);display:grid;place-content:center;font-size:17px;color:var(--ink-3);transition:background .13s var(--ease),color .13s var(--ease);flex-shrink:0}
+.back{width:36px;height:36px;border-radius:10px;background:var(--card);border:1px solid var(--border-md);display:grid;place-content:center;font-size:17px;color:var(--ink-3);transition:background .15s var(--ease),color .15s var(--ease);flex-shrink:0}
 .back:active{transform:scale(.88)}
 .cust-head .ttl .kick{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:2px}
 .cust-head .ttl h3{font-family:'Bricolage Grotesque',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
 .fld{margin-bottom:14px}
 .fld>label{display:block;font-size:10px;font-family:'Space Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px}
 .seg{display:flex;gap:5px;flex-wrap:wrap}
-.seg button{flex:1;min-width:52px;padding:11px 5px;border-radius:11px;background:var(--card);border:1.5px solid var(--border-md);font-weight:700;font-size:13px;color:var(--ink-3);transition:background .12s var(--ease),color .12s var(--ease),border-color .12s var(--ease)}
+.seg button{flex:1;min-width:52px;padding:11px 5px;border-radius:11px;background:var(--card);border:1.5px solid var(--border-md);font-weight:700;font-size:13px;color:var(--ink-3);transition:background .15s var(--ease),color .15s var(--ease),border-color .15s var(--ease)}
 .seg button .sz{display:block;font-size:9.5px;font-weight:400;color:var(--ink-3);margin-top:2px;font-family:'Space Mono',monospace}
 .seg button:active{transform:scale(.93)}
 .seg button.sel{background:var(--ink);color:var(--on-fill);border-color:var(--ink)}
 .seg button.sel .sz{color:rgba(255,255,255,.55)}
 .presets{display:flex;gap:5px;flex-wrap:wrap}
-.preset{padding:8px 12px;border-radius:999px;background:var(--card);border:1.5px solid var(--border-md);font-size:12px;font-weight:600;color:var(--ink-3);transition:background .12s var(--ease),color .12s var(--ease),border-color .12s var(--ease),box-shadow .12s var(--ease)}
+.preset{padding:8px 12px;border-radius:999px;background:var(--card);border:1.5px solid var(--border-md);font-size:12px;font-weight:600;color:var(--ink-3);transition:background .15s var(--ease),color .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease)}
 .preset:active{transform:scale(.93)}
 .preset.sel{background:var(--ink);color:var(--on-fill);border-color:var(--ink);box-shadow:0 3px 10px rgba(0,0,0,.2)}
 .preset.blend-sel{background:var(--accent);color:var(--on-fill);border-color:var(--accent);box-shadow:0 3px 10px var(--accent-ring)}
@@ -122,16 +119,16 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .stepper{flex:1;background:var(--card);border:1px solid var(--border-md);border-radius:13px;padding:11px 12px}
 .stepper .sl{font-size:11.5px;font-weight:600;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;gap:5px}
 .stepper .ctl{display:flex;align-items:center;justify-content:space-between;gap:4px}
-.stepper .ctl button{width:42px;height:42px;border-radius:11px;background:var(--card-2);border:1px solid var(--border);font-size:21px;font-weight:700;color:var(--accent);display:grid;place-content:center;transition:background .1s var(--ease),transform .1s var(--ease)}
+.stepper .ctl button{width:42px;height:42px;border-radius:11px;background:var(--card-2);border:1px solid var(--border);font-size:21px;font-weight:700;color:var(--accent);display:grid;place-content:center;transition:background .15s var(--ease),transform .15s var(--ease)}
 .stepper .ctl button.half{font-size:13px;font-family:'Space Mono',monospace;color:var(--ink-3);width:38px;height:42px}
 .stepper .ctl button:active{transform:scale(.86);background:var(--card-2)}
 .stepper .ctl .v{font-family:'Space Mono',monospace;font-weight:700;font-size:19px;min-width:28px;text-align:center}
 .chips{display:flex;gap:5px;flex-wrap:wrap}
-.chip{padding:8px 12px;border-radius:10px;background:var(--card);border:1.5px solid var(--border-md);font-size:12.5px;font-weight:600;color:var(--ink-3);transition:background .12s var(--ease),color .12s var(--ease),border-color .12s var(--ease);display:inline-flex;align-items:center;gap:5px}
+.chip{padding:8px 12px;border-radius:10px;background:var(--card);border:1.5px solid var(--border-md);font-size:12.5px;font-weight:600;color:var(--ink-3);transition:background .15s var(--ease),color .15s var(--ease),border-color .15s var(--ease);display:inline-flex;align-items:center;gap:5px}
 .chip:active{transform:scale(.93)}
-.chip.sel{background:var(--accent-bg);color:var(--accent-dk);border-color:var(--accent)}
+.chip.sel{background:var(--accent);color:var(--on-fill);border-color:var(--accent)}
 .chip .up{font-family:'Space Mono',monospace;font-size:9.5px;opacity:.7}
-.blendbtn{margin-top:6px;width:100%;padding:11px;border-radius:12px;border:1.5px dashed var(--border-md);font-size:12.5px;font-weight:600;color:var(--ink-3);background:var(--card-2);transition:background .13s var(--ease),color .13s var(--ease);display:flex;align-items:center;justify-content:center;gap:7px}
+.blendbtn{margin-top:6px;width:100%;padding:11px;border-radius:12px;border:1.5px dashed var(--border-md);font-size:12.5px;font-weight:600;color:var(--ink-3);background:var(--card-2);transition:background .15s var(--ease),color .15s var(--ease);display:flex;align-items:center;justify-content:center;gap:7px}
 .blendbtn:active{transform:scale(.97)}
 .blendbtn .ic{color:var(--accent)}
 .builder{display:none;margin-top:9px;background:var(--card);border:1.5px solid var(--accent);border-radius:14px;padding:12px}
@@ -140,13 +137,13 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .builder .bl{font-size:11px;font-weight:700;color:var(--ink);margin:8px 0 6px}
 .builder .bl:first-child{margin-top:0}
 .ratio{display:flex;gap:6px}
-.ratio button{flex:1;padding:11px 4px;border-radius:9px;background:var(--card-2);border:1.5px solid var(--border-md);font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--ink-3);transition:background .12s var(--ease),color .12s var(--ease),border-color .12s var(--ease)}
+.ratio button{flex:1;padding:11px 4px;border-radius:9px;background:var(--card-2);border:1.5px solid var(--border-md);font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--ink-3);transition:background .15s var(--ease),color .15s var(--ease),border-color .15s var(--ease)}
 .ratio button.sel{background:var(--ink);color:var(--on-fill);border-color:var(--ink)}
 .clearblend{margin-top:8px;font-size:11px;color:var(--signal-danger);font-weight:700;width:100%;text-align:center;padding:6px}
 .c-foot{border-top:1px solid var(--border);padding:12px 16px;display:flex;gap:10px;align-items:center;background:var(--card);flex-shrink:0}
 .c-foot .lp{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.35rem;color:var(--ink)}
 .c-foot .lp small{display:block;font-size:9.5px;font-family:'Space Mono',monospace;color:var(--ink-3);font-weight:400;letter-spacing:.06em;text-transform:uppercase}
-.c-foot .add{flex:1;padding:14px;border-radius:12px;background:var(--accent);color:var(--on-fill);font-weight:700;font-size:14px;transition:transform .13s var(--ease),box-shadow .13s var(--ease);box-shadow:0 5px 16px var(--accent-ring);display:flex;align-items:center;justify-content:center;gap:7px}
+.c-foot .add{flex:1;padding:14px;border-radius:12px;background:var(--accent);color:var(--on-fill);font-weight:700;font-size:14px;transition:transform .15s var(--ease),box-shadow .15s var(--ease);box-shadow:0 5px 16px var(--accent-ring);display:flex;align-items:center;justify-content:center;gap:7px}
 .c-foot .add:active{transform:scale(.97)}
 
 /* ── Ticket ── */
@@ -157,11 +154,6 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .ord small{display:block;font-family:'Space Mono',monospace;font-size:9px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;font-weight:400}
 .tk-row1-r{display:flex;align-items:center;gap:6px}
 .cnt-badge{font-family:'Space Mono',monospace;font-size:11px;background:var(--ink);color:var(--on-fill);padding:4px 8px;border-radius:7px}
-.timer-pill{font-family:'Space Mono',monospace;font-size:11px;color:var(--ink-3);padding:4px 8px;border-radius:7px;border:1px solid var(--border-md);background:var(--card-2);transition:color .2s var(--ease),border-color .2s var(--ease)}
-.timer-pill.warn{color:var(--signal-warn);border-color:var(--signal-warn)}
-.timer-pill.warn::before{content:"⚠ ";font-size:9px}
-.timer-pill.over{color:var(--signal-danger);border-color:var(--signal-danger)}
-.timer-pill.over::before{content:"● ";font-size:9px}
 .lines{flex:1;min-height:0;overflow-y:auto;padding:6px 10px}
 .empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--ink-3);text-align:center;padding:24px}
 .empty .big{font-size:36px}
@@ -171,7 +163,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .line.removing{animation:lineOut .22s var(--ease) forwards}
 @keyframes lineOut{to{opacity:0;transform:translateX(14px);height:0;margin:0;padding:0;border-width:0}}
 .line.editing{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-ring)}
-.line.preview{border:1.5px dashed var(--accent);background:var(--accent-bg);animation:none}
+.line.preview{border:1.5px dashed var(--accent);background:var(--card);animation:none}
 .line.preview .lp{color:var(--accent)}
 .line-top{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
 .line .nm{font-weight:700;font-size:12.5px;color:var(--ink);line-height:1.25}
@@ -180,11 +172,11 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .line .mods .hi{color:var(--accent-dk);font-weight:700}
 .line-bot{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
 .qty{display:flex;align-items:center;background:var(--card);border:1px solid var(--border-md);border-radius:10px;overflow:hidden}
-.qty button{width:40px;height:40px;font-size:16px;font-weight:700;color:var(--accent);display:grid;place-content:center;transition:background .1s var(--ease),transform .1s var(--ease)}
+.qty button{width:40px;height:40px;font-size:16px;font-weight:700;color:var(--accent);display:grid;place-content:center;transition:background .15s var(--ease),transform .15s var(--ease)}
 .qty button:active{background:var(--card-2);transform:scale(.9)}
 .qty .q{width:28px;text-align:center;font-family:'Space Mono',monospace;font-weight:700;font-size:12px}
 .line-acts{display:flex;gap:4px}
-.mini{font-size:10px;font-weight:600;padding:6px 12px;min-height:40px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;transition:background .12s var(--ease),color .12s var(--ease),transform .12s var(--ease)}
+.mini{font-size:10px;font-weight:600;padding:6px 12px;min-height:40px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;transition:background .15s var(--ease),color .15s var(--ease),transform .15s var(--ease)}
 .mini.edit{background:var(--card-2);color:var(--ink-3)}
 .mini.edit:active{transform:scale(.91)}
 .mini.del{color:var(--signal-danger)}
@@ -198,7 +190,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .tots .grand .lab{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:.95rem;color:var(--ink)}
 .tots .grand .amt{font-family:'Space Mono',monospace;font-weight:700;font-size:1.2rem;color:var(--ink)}
 .foot-row{display:flex;gap:6px;margin-top:9px}
-.btn{flex:1;padding:12px;border-radius:11px;font-weight:700;font-size:13px;transition:transform .13s var(--ease),background .13s var(--ease),color .13s var(--ease);display:flex;align-items:center;justify-content:center;gap:6px}
+.btn{flex:1;padding:12px;border-radius:11px;font-weight:700;font-size:13px;transition:transform .15s var(--ease),background .15s var(--ease),color .15s var(--ease);display:flex;align-items:center;justify-content:center;gap:6px}
 .btn:active{transform:scale(.97)}
 .btn.ghost{background:var(--card-2);color:var(--ink-3);flex:0 0 auto;padding:12px 13px;border:1px solid var(--border-md)}
 .btn.ghost:active{background:var(--ink);color:var(--on-fill)}
@@ -208,8 +200,8 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 .toast{position:absolute;left:10px;right:10px;bottom:10px;background:var(--ink);color:var(--on-fill);padding:10px 13px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh-lg);transform:translateY(160%);transition:transform .32s var(--ease);z-index:30;font-size:12px}
 .toast.show{transform:none}
 .toast button{color:var(--accent);font-weight:700;font-size:12px}
-.pay-ov{position:absolute;inset:0;z-index:40;background:var(--ink);display:grid;place-content:center;text-align:center;color:var(--on-fill);opacity:0;pointer-events:none;transition:opacity .28s var(--ease)}
-.pay-ov.show{opacity:1;pointer-events:auto}
+.pay-ov{position:absolute;inset:0;z-index:40;background:var(--ink);display:grid;place-content:center;text-align:center;color:var(--on-fill);clip-path:inset(100% 0 0 0);pointer-events:none;transition:clip-path .4s var(--ease)}
+.pay-ov.show{clip-path:inset(0 0 0 0);pointer-events:auto}
 .pay-ov .check{width:72px;height:72px;border-radius:50%;background:var(--green);display:grid;place-content:center;margin:0 auto 14px;font-size:34px;animation:pop .45s var(--spring)}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
 .pay-ov h2{font-family:'Bricolage Grotesque',sans-serif;font-size:1.5rem}
@@ -232,7 +224,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 
       <aside class="rail" id="rail">
         <div class="logo">
-          <img src="/images/timhortons/tims-logo.svg" width="40" height="40" alt="Tim Hortons" style="border-radius:11px;display:block">
+          <img src="/images/timhortons/tims-logo-80.webp" width="40" height="40" alt="Tim Hortons" style="border-radius:11px;display:block;object-fit:contain">
         </div>
       </aside>
 
@@ -278,14 +270,13 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
             <div class="ord">Order <span id="ordNo">#1042</span><small>Counter · Cashier 03</small></div>
             <div class="tk-row1-r">
               <div class="cnt-badge"><span id="itemCnt">0</span> <span id="itemLabel">items</span></div>
-              <div class="timer-pill" id="timerM" style="display:none"><span id="timerV">0s</span></div>
             </div>
           </div>
         </div>
         <div class="lines" id="lines">
           <div class="empty" id="empty">
             <div class="big">☕</div>
-            <p>Size &amp; mod selected. Tap any drink to add instantly.</p>
+            <p>Pick a size and a mod, then tap a drink.</p>
           </div>
         </div>
         <div class="tk-foot">
@@ -307,7 +298,7 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
             <h2>Sent to bar</h2>
             <p>Tendered · receipt printed</p>
             <div class="pamt" id="payOvAmt">$0.00</div>
-            <div class="pst">Order time <b id="payOvTime">0s</b></div>
+            <div class="pst">Taps <b id="payOvTaps">0</b></div>
           </div>
         </div>
       </section>
@@ -317,8 +308,24 @@ button{font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:no
 </div>
 
 <script>
-const SHOWCASE = new URLSearchParams(location.search).get('mode') === 'showcase';
-if(SHOWCASE) document.getElementById('timerM').style.display = '';
+// ── Parent page link ──
+// When embedded on the case study, the POS reports taps and the ticket to the parent with
+// postMessage, so the order slip beside it updates without polling.
+const EMBEDDED = window.parent !== window;
+function post(type, extra){
+  if(!EMBEDDED) return;
+  window.parent.postMessage(Object.assign({ source:'tims-pos', type }, extra || {}), location.origin);
+}
+let taps = 0;
+document.addEventListener('click', e => {
+  if(!e.target.closest || !e.target.closest('button')) return;
+  taps++; post('taps', { taps });
+}, true);
+function resetTaps(){ taps = 0; post('taps', { taps }); }
+window.addEventListener('message', e => {
+  if(e.origin !== location.origin || !e.data || e.data.source !== 'tims-slip') return;
+  if(e.data.type === 'reset') resetAll();
+});
 
 // ── Config ──
 const SIZES = [
@@ -357,6 +364,9 @@ const EXTRAS = [
   { name:'Extra hot',up:0 },{ name:'Half-caf',up:0 },{ name:'Decaf',up:0 },
 ];
 const ICE_LEVELS = ['Easy ice','Regular ice','Extra ice','No ice'];
+// Hot drinks that have an iced version, so an edit can switch between them.
+const ICED_OF = { 'hot-1':'iced-1', 'hot-4':'iced-4', 'esp-1':'iced-2', 'esp-7':'iced-7' };
+const HOT_OF  = { 'iced-1':'hot-1', 'iced-4':'hot-4', 'iced-2':'esp-1', 'iced-7':'esp-7' };
 
 // Quick modifier presets. Shown as a persistent strip above the grid.
 const MOD_QUICK = [
@@ -575,11 +585,10 @@ let lastRm   = null;
 let lastEdit = null;
 let dealOn   = false;
 let ordNum   = 1042;
-let timerID  = null;
-let startT   = 0;
-let elapsed  = 0;
 
 // ── Helpers ──
+function itemById(id){ return Object.values(ITEMS).flat().find(x => x.id === id); }
+function subOfItem(it){ return Object.keys(ITEMS).find(k => ITEMS[k].some(x => x.id === it.id)); }
 function groupOfSub(s){ return GROUPS.find(g => g.subs.some(x => x.id === s)); }
 function subMeta(s)   { return GROUPS.flatMap(g => g.subs).find(x => x.id === s); }
 function isDrinksGroup(){ return curGroup === 'drinks'; }
@@ -735,7 +744,6 @@ function instantAdd(it){
     openCust(it);
     return;
   }
-  startTimer();
   const mod = MOD_QUICK.find(m => m.id === curMod);
   const cfg = Object.assign(defCfg(), mod ? mod.p : {}, { size: curSize });
   // merge same item + same size + same mod
@@ -755,26 +763,6 @@ function instantAdd(it){
     qty:   1,
   });
   renderCart();
-}
-
-// ── Timer ──
-function startTimer(){
-  if(timerID) return;
-  startT  = Date.now() - elapsed * 1000;
-  timerID = setInterval(tickTimer, 250);
-}
-function tickTimer(){
-  elapsed = Math.floor((Date.now() - startT) / 1000);
-  const v = elapsed < 60 ? elapsed+'s' : Math.floor(elapsed/60)+':'+String(elapsed%60).padStart(2,'0');
-  document.getElementById('timerV').textContent = v;
-  const pill = document.getElementById('timerM');
-  pill.className = 'timer-pill' + (elapsed > 90 ? ' over' : elapsed > 40 ? ' warn' : '');
-}
-function stopTimer(){ if(timerID){ clearInterval(timerID); timerID = null; } }
-function resetTimer(){
-  stopTimer(); elapsed = 0;
-  document.getElementById('timerV').textContent = '0s';
-  document.getElementById('timerM').className = 'timer-pill';
 }
 
 // ── Customizer ──
@@ -808,10 +796,12 @@ function openCust(item, cfg, uid){
 }
 
 function buildCust(){
-  const isIced = dItem.ice || ['iced','capp','refresh'].includes(curSub);
+  const isIced = dItem.ice || (['iced','capp','refresh'].includes(curSub) && !HOT_OF[dItem.id] && !ICED_OF[dItem.id]);
+  const swapId = ICED_OF[dItem.id] || HOT_OF[dItem.id];
   const b = document.getElementById('cBody');
   b.innerHTML = `
     <div class="fld"><label>Size</label><div class="seg" id="sgSz"></div></div>
+    ${swapId ? '<div class="fld"><label>Hot or iced</label><div class="seg" id="sgTemp"></div></div>' : ''}
     <div class="fld"><label>Blend (preset)</label>
       <div class="presets" id="blPre" style="margin-bottom:6px"></div>
       <button class="blendbtn" onclick="toggleBuilder()"><span class="ic">⚗</span> Custom blend…</button>
@@ -844,6 +834,16 @@ function buildCust(){
     if(draft.size === s.id) x.classList.add('sel');
     x.onclick = () => { draft.size = s.id; refresh(); };
     sgSz.appendChild(x);
+  });
+
+  const sgTemp = document.getElementById('sgTemp');
+  if(sgTemp) [['Hot', !dItem.ice], ['Iced', !!dItem.ice]].forEach(([label, on]) => {
+    const x = document.createElement('button');
+    x.textContent = label;
+    x.setAttribute('aria-pressed', String(on));
+    if(on) x.classList.add('sel');
+    x.onclick = () => { if(!on){ dItem = itemById(swapId); document.getElementById('cName').textContent = dItem.n; refresh(); } };
+    sgTemp.appendChild(x);
   });
 
   const blPre = document.getElementById('blPre');
@@ -972,19 +972,19 @@ function updateCustPrice(){ document.getElementById('cPrice').textContent = fmt(
 function commitCust(){
   if(editing){
     const ln = cart.find(l=>l.uid===editing);
-    lastEdit = { uid:editing, prevCfg:JSON.parse(JSON.stringify(ln.cfg)), prevName:ln.name };
+    lastEdit = { uid:editing, prevCfg:JSON.parse(JSON.stringify(ln.cfg)), prevName:ln.name, prevItem:ln.item, prevEmoji:ln.emoji, prevSub:ln.sub };
+    ln.item = dItem; ln.emoji = dItem.e; ln.sub = subOfItem(dItem) || ln.sub;
     ln.cfg  = JSON.parse(JSON.stringify(draft));
     ln.name = draft.blend ? draft.blend.l : dItem.n;
     ln.unit = cfgPrice(dItem,draft);
     ln.key  = null; // edited lines don't merge
     showToast('Item updated', () => {
       const x=cart.find(l=>l.uid===lastEdit.uid);
-      if(x){ x.cfg=lastEdit.prevCfg; x.name=lastEdit.prevName; x.unit=cfgPrice(x.item,x.cfg); }
+      if(x){ x.cfg=lastEdit.prevCfg; x.name=lastEdit.prevName; x.item=lastEdit.prevItem; x.emoji=lastEdit.prevEmoji; x.sub=lastEdit.prevSub; x.unit=cfgPrice(x.item,x.cfg); }
       lastEdit=null; renderCart();
     });
   } else {
-    startTimer();
-    cart.push({
+      cart.push({
       uid:   'u'+Date.now()+Math.random().toString(36).slice(2,5),
       key:   null,
       name:  draft.blend ? draft.blend.l : dItem.n,
@@ -1023,7 +1023,6 @@ function clearPreview(){
 }
 
 function quickAdd(it){
-  startTimer();
   const ex = cart.find(l=>l.name===it.n && !l.cfg);
   if(ex){ ex.qty++; }
   else cart.push({ uid:'u'+Date.now()+Math.random().toString(36).slice(2,5), key:null, name:it.n, emoji:it.e, item:it, group:curGroup, sub:curSub, cfg:null, unit:it.p, qty:1 });
@@ -1065,6 +1064,9 @@ function renderCart(){
     prev ? wrap.insertBefore(d,prev) : wrap.appendChild(d);
   });
   updateTotals();
+  post('cart', { lines: cart.map(l => ({ id: l.item ? l.item.id : null, name: l.name, qty: l.qty,
+    size: l.cfg ? l.cfg.size : null, cream: l.cfg ? l.cfg.cream : null, sugar: l.cfg ? l.cfg.sugar : null,
+    iced: !!(l.item && l.item.ice) })) });
 }
 
 function adjQty(uid,d){ const l=cart.find(x=>x.uid===uid); if(!l) return; l.qty+=d; if(l.qty<=0){ removeLine(uid); return; } renderCart(); }
@@ -1116,7 +1118,11 @@ function updateTotals(){
 }
 
 // ── Clear / Pay ──
-function clearOrder(){ if(!cart.length) return; cart=[]; dealOn=false; resetTimer(); showMenu(); renderCart(); }
+function clearOrder(){ if(!cart.length) return; cart=[]; dealOn=false; showMenu(); renderCart(); resetTaps(); post('reset', { reason:'clear' }); }
+function resetAll(){
+  cart=[]; dealOn=false; curGroup='drinks'; curSub='hot'; curSize='M'; curMod='dd';
+  hideToast(); renderRail(); renderSubTabs(); renderSizeBar(); renderModStrip(); showMenu(); renderGrid(); renderCart(); resetTaps();
+}
 
 function pay(){
   if(!cart.length) return;
@@ -1126,17 +1132,16 @@ function pay(){
     if(action) action.focus();
     return;
   }
-  stopTimer();
   const total=document.getElementById('tTotal').textContent;
-  const v=elapsed<60?elapsed+'s':Math.floor(elapsed/60)+':'+String(elapsed%60).padStart(2,'0');
   document.getElementById('payOvAmt').textContent=total;
-  document.getElementById('payOvTime').textContent=v;
+  document.getElementById('payOvTaps').textContent=taps;
+  post('paid', { taps });
   document.getElementById('payOv').classList.add('show');
   setTimeout(()=>{
     document.getElementById('payOv').classList.remove('show');
     cart=[]; dealOn=false; ordNum++;
     document.getElementById('ordNo').textContent='#'+ordNum;
-    resetTimer(); showMenu(); renderCart();
+    showMenu(); renderCart(); resetTaps(); post('reset', { reason:'paid' });
   },1700);
 }
 

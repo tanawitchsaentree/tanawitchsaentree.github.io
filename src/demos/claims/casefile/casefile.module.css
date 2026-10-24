@@ -1,0 +1,340 @@
+/* Case file, Act 1. Palette: --cf-* tokens (src/styles/tokens.css → [data-demo="claims"]).
+   Motion: transform and clip-path only, design-system curves. Geometry numbers mirror
+   GEO in CaseFile.tsx, so nothing is measured at runtime.
+   Fonts: --cf-font switches family per element; the projects shell forces font-family
+   with !important, and src/styles/projects.css lets this surface read --cf-font. */
+
+.page { background: var(--cf-desk); color: var(--cf-desk-fg); font-family: var(--cf-font); padding-bottom: 96px; }
+.mono { --cf-font: var(--cf-mono); font-family: var(--cf-font); }
+
+/* One explicit grid: every left-column element sits on the shell's content edge. */
+.shell { max-width: 1280px; margin: 0 auto; padding-inline: clamp(24px, 5vw, 80px); box-sizing: border-box; }
+.grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: 64px; }
+.prose { min-width: 0; max-width: 56ch; }
+.aside { min-width: 0; container: cf-file / inline-size; }
+.top { padding-block: 24px; }
+.backLink { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--cf-desk-fg-muted); text-underline-offset: 4px; }
+.backLink:hover { color: var(--cf-desk-fg); }
+.tail { padding-top: 48px; display: grid; gap: 24px; justify-items: start; max-width: 56ch; }
+
+/* The file scales from its column (container query steps below) and, on short or
+   single-column screens, from the viewport height. Tabs are inside the 448px stage. */
+.scaleBox {
+  --sw: 1; --sh: 1; --s: min(var(--sw), var(--sh));
+  position: sticky; top: max(16px, calc(50svh - 316px * var(--s)));
+  /* 464 = the 448px stage plus 8px each side for the sheets that peek out (offset + rotation). */
+  width: calc(464px * var(--s)); height: calc(632px * var(--s)); margin-inline: auto;
+}
+
+/* ── Prose on the desk: quiet. ── */
+.moment { padding-block: 48px; }
+.hero { min-height: calc(100svh - 72px); display: flex; flex-direction: column; justify-content: center; padding-block: 0 48px; }
+.eyebrow { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--cf-desk-fg-muted); margin: 0 0 16px; }
+.h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; margin: 0 0 24px; color: var(--cf-desk-fg); }
+.h2 { font-size: clamp(1.5rem, 2.6vw, 2.125rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 16px; color: var(--cf-desk-fg); }
+.body { font-size: 1.0625rem; line-height: 1.6; color: var(--cf-desk-fg-muted); max-width: 42ch; margin: 0; }
+.stats { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 24px 0 0; padding: 16px 0 0; border-top: 1px solid var(--cf-desk-line); --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .8125rem; color: var(--cf-desk-fg); }
+.credit { font-size: .875rem; color: var(--cf-desk-fg-muted); max-width: 42ch; margin: 0; }
+
+/* "How it works": content mounts on open; reveal is clip-path + transform. */
+.drawer { margin-top: 24px; max-width: 100%; }
+.drawerBtn {
+  --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--cf-desk-fg-muted); background: none; border: 0; padding: 8px 0; cursor: pointer;
+  transition: color .18s var(--ease-in-out-natural);
+}
+.drawerBtn:hover { color: var(--cf-desk-fg); }
+.drawerGlyph { display: inline-block; width: 1ch; }
+.drawerPanel {
+  margin: 8px 0 0; box-sizing: border-box; max-width: 100%; padding: 16px 16px 16px 32px; border-left: 1px solid var(--cf-desk-line); background: var(--cf-desk-raised);
+  --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .8125rem; line-height: 1.6; color: var(--cf-desk-fg);
+  display: grid; gap: 4px;
+  animation: drawerIn .36s var(--ease-out-standard) both;
+}
+
+/* ── The case file ── */
+.stage {
+  position: absolute; top: 0; left: calc(8px * var(--s)); transform: scale(var(--s)); transform-origin: 0 0;
+  width: 448px; height: 632px; perspective: 1800px;
+  --cf-ink-mask: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='132' height='66'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.6 2.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.flipper { position: relative; width: 400px; height: 600px; transform-style: preserve-3d; transition: transform .6s var(--ease-in-out-natural); }
+.isFlipped { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.front { transform: rotateY(0deg); }
+.back { transform: rotateY(180deg); }
+.fileBody { position: absolute; inset: 0; perspective: 1800px; }
+.shudder { animation: shudder .22s var(--ease-in-out-natural) .4s both; }
+
+/* Sheets under the file: one per attachment, edges peeking out. */
+.sheet {
+  position: absolute; inset: 0; z-index: 0;
+  background: var(--cf-sheet); border: 1px solid var(--cf-line); border-radius: 3px;
+  animation: sheetOut .5s var(--ease-out-standard) both;
+}
+
+/* Index tabs: paper strips attached flush to the right edge, staggered down it. */
+.tab {
+  position: absolute; z-index: 1; top: 0; left: 390px; width: 40px; /* 10px tucked under the paper */
+  transition: transform .32s var(--ease-out-standard);
+}
+.tabInner {
+  position: relative; height: 100%; box-sizing: border-box;
+  padding: 8px 6px 8px 14px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--cf-ink); border: 1px solid var(--cf-line); border-left: 0; border-radius: 0 5px 5px 0;
+  animation: tabGrow .5s var(--ease-out-standard) both;
+}
+.tabA { background: var(--cf-tab-1); }
+.tabB { background: var(--cf-tab-2); }
+.tabLabel { --cf-font: var(--cf-mono); font-family: var(--cf-font); writing-mode: vertical-rl; font-size: .6875rem; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.tabGlyph { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .75rem; line-height: 1; height: 12px; }
+.tabLip { position: absolute; top: 6px; bottom: 6px; right: 3px; width: 3px; border-radius: 2px; }
+.mark-ok { background: var(--signal-ok); }
+.mark-warn { background: var(--signal-warn); }
+.mark-danger { background: var(--signal-danger); }
+
+/* The paper. Its height is fixed; the active slip fills what the fields leave. */
+.paper {
+  --cf-focus: var(--cf-ink);
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; flex-direction: column;
+  background: var(--cf-paper); color: var(--cf-ink);
+  border: 2px solid var(--cf-paper); border-radius: 3px; box-shadow: var(--shadow-md);
+  padding: 24px 28px 24px 24px;
+}
+.skeleton { border: 2px dashed var(--cf-ink-muted); }
+.head { padding-right: 150px; min-height: 76px; }
+.fileEyebrow { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; color: var(--cf-ink-muted); }
+.fileId { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .8125rem; margin-top: 4px; }
+.fileTitle { font-size: 1.0625rem; font-weight: 600; margin-top: 4px; line-height: 1.25; }
+.fields { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 16px 0 0; font-size: .8125rem; }
+.fields dt { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--cf-ink-muted); padding-top: 1px; }
+.fields dd { margin: 0; }
+.struck { text-decoration: line-through; color: var(--cf-ink-muted); }
+
+/* Rubber stamp: blue ink, double rule, mono caps, ink irregularity from a static mask. */
+.stampBox { position: absolute; z-index: 3; top: 24px; right: 26px; width: 132px; height: 52px; pointer-events: none; }
+.stamp {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  --cf-font: var(--cf-mono); font-family: var(--cf-font); font-weight: 500; font-size: 1.125rem; letter-spacing: .22em;
+  color: var(--cf-stamp); border: 4px double var(--cf-stamp); border-radius: 4px;
+  transform: rotate(-6deg);
+  -webkit-mask-image: var(--cf-ink-mask); mask-image: var(--cf-ink-mask);
+  -webkit-mask-size: 132px 66px; mask-size: 132px 66px;
+}
+.stampFaint { color: var(--cf-stamp-faint); border-color: var(--cf-stamp-faint); }
+.stampNew { transform: translate(3px, 4px) rotate(-3deg); animation: restamp .46s both; }
+.stampReason { position: absolute; z-index: 3; top: 84px; right: 26px; width: 132px; text-align: center; --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .6875rem; color: var(--cf-stamp); transform: rotate(-3deg); }
+
+/* Front cover (hero): hinges open on the left edge as the first moment begins. */
+.cover {
+  position: absolute; inset: 0; z-index: 5;
+  background: var(--cf-cover); color: var(--cf-ink);
+  border: 1px solid var(--cf-line); border-radius: 3px; box-shadow: var(--shadow-md);
+  padding: 32px; transform-origin: left center;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  transition: transform .55s var(--ease-in-out-natural), visibility 0s steps(1, end) 0s;
+}
+/* Once open, the cover is hidden so its swung-out box can't overlap the page. */
+.coverOpen { transform: rotateY(-172deg); visibility: hidden; transition: transform .55s var(--ease-in-out-natural), visibility 0s steps(1, end) .55s; }
+.coverLabel { display: inline-block; margin-top: 96px; padding: 16px 20px; background: var(--cf-paper); border: 1px solid var(--cf-line); }
+.coverNo { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: 1.375rem; letter-spacing: .06em; margin-top: 8px; }
+.stain { position: absolute; right: 36px; bottom: 56px; }
+
+/* Tether: request tab → stamp, along the paper's right margin. 1px warn, drawn once. */
+.tether { position: absolute; z-index: 3; background: var(--signal-warn); }
+.tetherV { width: 1px; transform-origin: top; animation: growY .42s var(--ease-out-standard) both; }
+.tetherH { height: 1px; transform-origin: left; animation: growX .3s var(--ease-out-standard) .4s both; }
+
+/* Slips: clipped onto the file for the active moment; they carry the interaction. */
+.slip {
+  position: relative; flex: 1; min-height: 0; margin-top: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+  background: var(--cf-paper); border: 1px solid var(--cf-line); border-radius: 3px; box-shadow: var(--shadow-sm);
+  padding: 20px 16px 16px; font-size: .875rem;
+  animation: slipIn .45s var(--ease-out-standard) both;
+}
+.slip::before { content: ''; position: absolute; top: -10px; left: 24px; width: 8px; height: 22px; border: 2px solid var(--cf-ink-muted); border-radius: 6px; }
+.slipTitle { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; color: var(--cf-ink-muted); }
+.slipFoot { margin-top: auto; }
+.muted { color: var(--cf-ink-muted); }
+.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.between { justify-content: space-between; }
+.fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 2px; }
+.choice { display: flex; align-items: center; gap: 10px; min-height: 36px; cursor: pointer; }
+.choice input { accent-color: var(--cf-ink); margin: 0; width: 16px; height: 16px; }
+.result { padding-top: 10px; border-top: 1px solid var(--cf-line); }
+.sections { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; }
+.section { border: 1px solid var(--cf-line); border-radius: 3px; padding: 12px; display: grid; align-content: start; gap: 8px; }
+.sectionName { font-weight: 600; }
+.kv { display: grid; gap: 2px; }
+.diff { display: grid; grid-template-columns: auto 1fr 1fr; gap: 6px 12px; }
+.diffHead { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .6875rem; text-transform: uppercase; letter-spacing: .06em; color: var(--cf-ink-muted); }
+.value { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .875rem; min-width: 11ch; text-align: center; }
+.range { width: 100%; accent-color: var(--cf-ink); margin: 0; height: 28px; }
+.trackWrap { position: relative; }
+.track { position: relative; height: 10px; background: var(--cf-line); border-radius: 2px; overflow: hidden; }
+.fill { position: absolute; inset: 0; background: var(--cf-ink); transform-origin: left; transition: transform .3s var(--ease-out-standard); }
+.cap { position: absolute; top: -5px; bottom: -5px; right: -1px; width: 3px; background: var(--signal-danger); }
+.markDot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.stepDone { --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .8125rem; min-height: 36px; display: flex; align-items: center; }
+
+.paperBtn {
+  --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .75rem; min-height: 36px; padding: 8px 14px; border-radius: 4px; cursor: pointer;
+  background: var(--cf-ink); color: var(--cf-paper); border: 1px solid var(--cf-ink);
+  transition: background-color .18s var(--ease-in-out-natural), color .18s var(--ease-in-out-natural), border-color .18s var(--ease-in-out-natural);
+}
+.paperBtn:disabled { background: var(--cf-paper); color: var(--cf-ink-muted); border: 1px dashed var(--cf-ink-muted); cursor: not-allowed; }
+.paperBtnQuiet { background: var(--cf-paper); color: var(--cf-ink); border-color: var(--cf-ink-muted); }
+.paperBtnQuiet:hover:not(:disabled) { border-color: var(--cf-ink); }
+
+/* Dog-ear: a paper corner that lifts; turning it flips the file. */
+.dogEar {
+  position: absolute; z-index: 4; right: 0; bottom: 0; width: 208px; height: 64px; white-space: nowrap;
+  display: flex; align-items: flex-end; justify-content: flex-start; padding: 0 0 12px 12px;
+  background: none; border: 0; cursor: pointer; color: var(--cf-ink);
+  --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase;
+}
+.dogEar::after {
+  content: ''; position: absolute; right: 0; bottom: 0; width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--cf-tab-2) 0 50%, var(--cf-desk) 50% 100%);
+  border-radius: 0 0 3px 0; box-shadow: -2px -2px 4px var(--shadow-color-subtle);
+  transform-origin: 100% 100%; transition: transform .24s var(--ease-out-standard);
+}
+.dogEar:hover::after, .dogEar:focus-visible::after { transform: scale(1.2); }
+.dogEarLabel { position: relative; padding-right: 64px; }
+
+/* Back: the approver's side of the same file. */
+.queueCounts { display: flex; gap: 16px; --cf-font: var(--cf-mono); font-family: var(--cf-font); font-size: .75rem; margin: 16px 0 0; padding-bottom: 8px; border-bottom: 1px solid var(--cf-line); }
+.decide { display: grid; gap: 8px; }
+.decide textarea { font: inherit; font-size: .875rem; color: var(--cf-ink); background: var(--cf-paper); border: 1px solid var(--cf-ink-muted); border-radius: 4px; padding: 8px; resize: none; }
+
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@keyframes tabGrow { from { transform: translateX(-100%); } to { transform: none; } }
+@keyframes sheetOut { from { transform: none; } }
+@keyframes slipIn { from { transform: translateY(24px); clip-path: inset(0 0 100% 0); } to { transform: none; clip-path: inset(-12px -12px -12px -12px); } }
+@keyframes drawerIn { from { transform: translateY(-8px); clip-path: inset(0 0 100% 0); } to { transform: none; clip-path: inset(0 0 0 0); } }
+@keyframes growY { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes growX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* Lift (0.18s), then down hard on the Snap curve (0.28s). */
+@keyframes restamp {
+  0%   { transform: translate(3px, -6px) rotate(-3deg) scale(1.06); animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+  39%  { transform: translate(3px, -26px) rotate(-3deg) scale(1.22); animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+  100% { transform: translate(3px, 4px) rotate(-3deg) scale(1); }
+}
+@keyframes shudder { 0%, 100% { transform: none; } 30% { transform: translate(1.5px, 1px); } 65% { transform: translate(-1px, -.5px); } }
+
+/* Narrow: one column, same gutters. The file pins to the top at no more than about half
+   the screen height, so the prose underneath stays readable. */
+@media (max-width: 959px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .aside { order: -1; position: sticky; top: 0; z-index: 6; align-self: start; background: var(--cf-desk); padding-block: 8px; }
+  .scaleBox { position: relative; top: 0; }
+  .moment { padding-block: 32px; }
+  .hero { min-height: auto; padding-block: 32px; }
+  .tail { padding-top: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *, .page *::before, .page *::after { animation: none !important; transition: none !important; }
+}
+
+/* Whole-pixel grid: 5vw gutters and fr tracks land on fractions, which blurs the 1px
+   tether and hairlines. Where round() exists, snap the shell, the prose track and the
+   file's left edge; elsewhere the unrounded values above apply. */
+@supports (width: round(1.5px, 1px)) {
+  .shell { margin-left: max(0px, round(down, (100% - 1280px) / 2, 1px)); margin-right: 0; padding-inline: round(clamp(24px, 5vw, 80px), 1px); }
+  .scaleBox { margin-left: round(down, (100% - 464px * var(--s)) / 2, 1px); margin-right: 0; }
+}
+@supports (width: round(1.5px, 1px)) {
+  @media (min-width: 960px) { .grid { grid-template-columns: round(down, (100% - 64px) * 5 / 12, 1px) minmax(0, 1fr); } }
+}
+
+/* ── Generated scale steps. Width: the file column (container query). Height: viewport. ── */
+@container cf-file (max-width: 463.98px) { .scaleBox { --sw: 0.98; } }
+@container cf-file (max-width: 454.70px) { .scaleBox { --sw: 0.96; } }
+@container cf-file (max-width: 445.42px) { .scaleBox { --sw: 0.94; } }
+@container cf-file (max-width: 436.14px) { .scaleBox { --sw: 0.92; } }
+@container cf-file (max-width: 426.86px) { .scaleBox { --sw: 0.9; } }
+@container cf-file (max-width: 417.58px) { .scaleBox { --sw: 0.88; } }
+@container cf-file (max-width: 408.30px) { .scaleBox { --sw: 0.86; } }
+@container cf-file (max-width: 399.02px) { .scaleBox { --sw: 0.84; } }
+@container cf-file (max-width: 389.74px) { .scaleBox { --sw: 0.82; } }
+@container cf-file (max-width: 380.46px) { .scaleBox { --sw: 0.8; } }
+@container cf-file (max-width: 371.18px) { .scaleBox { --sw: 0.78; } }
+@container cf-file (max-width: 361.90px) { .scaleBox { --sw: 0.76; } }
+@container cf-file (max-width: 352.62px) { .scaleBox { --sw: 0.74; } }
+@container cf-file (max-width: 343.34px) { .scaleBox { --sw: 0.72; } }
+@container cf-file (max-width: 334.06px) { .scaleBox { --sw: 0.7; } }
+@container cf-file (max-width: 324.78px) { .scaleBox { --sw: 0.68; } }
+@container cf-file (max-width: 315.50px) { .scaleBox { --sw: 0.66; } }
+@container cf-file (max-width: 306.22px) { .scaleBox { --sw: 0.64; } }
+@container cf-file (max-width: 296.94px) { .scaleBox { --sw: 0.62; } }
+@container cf-file (max-width: 287.66px) { .scaleBox { --sw: 0.6; } }
+@container cf-file (max-width: 278.38px) { .scaleBox { --sw: 0.58; } }
+@container cf-file (max-width: 269.10px) { .scaleBox { --sw: 0.56; } }
+@container cf-file (max-width: 259.82px) { .scaleBox { --sw: 0.54; } }
+@container cf-file (max-width: 250.54px) { .scaleBox { --sw: 0.52; } }
+@container cf-file (max-width: 241.26px) { .scaleBox { --sw: 0.5; } }
+@container cf-file (max-width: 231.98px) { .scaleBox { --sw: 0.48; } }
+@container cf-file (max-width: 222.70px) { .scaleBox { --sw: 0.46; } }
+@container cf-file (max-width: 213.42px) { .scaleBox { --sw: 0.44; } }
+@container cf-file (max-width: 204.14px) { .scaleBox { --sw: 0.42; } }
+@container cf-file (max-width: 194.86px) { .scaleBox { --sw: 0.4; } }
+@media (min-width: 960px) and (max-height: 664px) { .scaleBox { --sh: 0.975; } }
+@media (min-width: 960px) and (max-height: 648px) { .scaleBox { --sh: 0.949; } }
+@media (min-width: 960px) and (max-height: 632px) { .scaleBox { --sh: 0.924; } }
+@media (min-width: 960px) and (max-height: 616px) { .scaleBox { --sh: 0.899; } }
+@media (min-width: 960px) and (max-height: 600px) { .scaleBox { --sh: 0.873; } }
+@media (min-width: 960px) and (max-height: 584px) { .scaleBox { --sh: 0.848; } }
+@media (min-width: 960px) and (max-height: 568px) { .scaleBox { --sh: 0.823; } }
+@media (min-width: 960px) and (max-height: 552px) { .scaleBox { --sh: 0.797; } }
+@media (min-width: 960px) and (max-height: 536px) { .scaleBox { --sh: 0.772; } }
+@media (min-width: 960px) and (max-height: 520px) { .scaleBox { --sh: 0.747; } }
+@media (min-width: 960px) and (max-height: 504px) { .scaleBox { --sh: 0.722; } }
+@media (min-width: 960px) and (max-height: 488px) { .scaleBox { --sh: 0.696; } }
+@media (min-width: 960px) and (max-height: 472px) { .scaleBox { --sh: 0.671; } }
+@media (min-width: 960px) and (max-height: 456px) { .scaleBox { --sh: 0.646; } }
+@media (min-width: 960px) and (max-height: 440px) { .scaleBox { --sh: 0.620; } }
+@media (min-width: 960px) and (max-height: 424px) { .scaleBox { --sh: 0.595; } }
+@media (min-width: 960px) and (max-height: 408px) { .scaleBox { --sh: 0.570; } }
+@media (min-width: 960px) and (max-height: 392px) { .scaleBox { --sh: 0.544; } }
+@media (min-width: 960px) and (max-height: 376px) { .scaleBox { --sh: 0.519; } }
+@media (min-width: 960px) and (max-height: 360px) { .scaleBox { --sh: 0.494; } }
+@media (max-width: 959px) and (max-height: 1400px) { .scaleBox { --sh: 1.000; } }
+@media (max-width: 959px) and (max-height: 1360px) { .scaleBox { --sh: 1.000; } }
+@media (max-width: 959px) and (max-height: 1320px) { .scaleBox { --sh: 1.000; } }
+@media (max-width: 959px) and (max-height: 1280px) { .scaleBox { --sh: 0.981; } }
+@media (max-width: 959px) and (max-height: 1240px) { .scaleBox { --sh: 0.949; } }
+@media (max-width: 959px) and (max-height: 1200px) { .scaleBox { --sh: 0.918; } }
+@media (max-width: 959px) and (max-height: 1160px) { .scaleBox { --sh: 0.886; } }
+@media (max-width: 959px) and (max-height: 1120px) { .scaleBox { --sh: 0.854; } }
+@media (max-width: 959px) and (max-height: 1080px) { .scaleBox { --sh: 0.823; } }
+@media (max-width: 959px) and (max-height: 1040px) { .scaleBox { --sh: 0.791; } }
+@media (max-width: 959px) and (max-height: 1000px) { .scaleBox { --sh: 0.759; } }
+@media (max-width: 959px) and (max-height: 960px) { .scaleBox { --sh: 0.728; } }
+@media (max-width: 959px) and (max-height: 920px) { .scaleBox { --sh: 0.696; } }
+@media (max-width: 959px) and (max-height: 880px) { .scaleBox { --sh: 0.665; } }
+@media (max-width: 959px) and (max-height: 840px) { .scaleBox { --sh: 0.633; } }
+@media (max-width: 959px) and (max-height: 800px) { .scaleBox { --sh: 0.601; } }
+@media (max-width: 959px) and (max-height: 760px) { .scaleBox { --sh: 0.570; } }
+@media (max-width: 959px) and (max-height: 720px) { .scaleBox { --sh: 0.538; } }
+@media (max-width: 959px) and (max-height: 680px) { .scaleBox { --sh: 0.506; } }
+@media (max-width: 959px) and (max-height: 640px) { .scaleBox { --sh: 0.475; } }
+@media (max-width: 959px) and (max-height: 600px) { .scaleBox { --sh: 0.443; } }
+@media (max-width: 959px) and (max-height: 560px) { .scaleBox { --sh: 0.411; } }
+@media (max-width: 959px) and (max-height: 520px) { .scaleBox { --sh: 0.400; } }
+@media (max-width: 959px) and (max-height: 480px) { .scaleBox { --sh: 0.400; } }
+@media (max-width: 959px) and (max-height: 440px) { .scaleBox { --sh: 0.400; } }
+@media (max-width: 959px) and (max-height: 400px) { .scaleBox { --sh: 0.400; } }
+@media (max-width: 959px) and (max-height: 360px) { .scaleBox { --sh: 0.400; } }
+
+/* One column: if pinning would shrink the file below 0.6 (short or zoomed screens), stop
+   pinning. The file becomes a normal block at full column width and the prose follows it.
+   Height: the generated steps go below 0.6 at 760px and under. Width: column < 279px (0.6 × 464). */
+@media (max-width: 959px) and (max-height: 760px), (max-width: 326px) {
+  .aside { position: relative; top: auto; }
+  .scaleBox { --sh: 1; }
+}

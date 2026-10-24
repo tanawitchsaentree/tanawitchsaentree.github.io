@@ -55,7 +55,10 @@ const SCREEN_MAP: Record<ScreenName, React.ComponentType> = {
   buyaccount:   BuyAccountScreen,
 }
 
-export function ProfitaPhoneScreen({ screen, purchase }: { screen: ScreenName; purchase?: PurchaseDemoProps }) {
+export type ConfirmCutoff = NonNullable<NonNullable<Parameters<typeof ConfirmScreen>[0]>['cutoff']>
+export type ReceiptDates = NonNullable<NonNullable<Parameters<typeof OrderSuccessScreen>[0]>['dates']>
+
+export function ProfitaPhoneScreen({ screen, purchase, cutoff, receiptDates }: { screen: ScreenName; purchase?: PurchaseDemoProps; cutoff?: ConfirmCutoff; receiptDates?: ReceiptDates }) {
   const Screen = SCREEN_MAP[screen]
 
   return (
@@ -93,7 +96,9 @@ export function ProfitaPhoneScreen({ screen, purchase }: { screen: ScreenName; p
         overflow:     'hidden',
         background:   SC.paper,
       }}>
-        {screen === 'fund' && purchase ? <FundScreen onOpenFund={() => purchase.onNavigate('funddetail')} />
+        {screen === 'confirm' && cutoff ? <ConfirmScreen cutoff={cutoff} />
+          : screen === 'ordersuccess' && receiptDates ? <OrderSuccessScreen dates={receiptDates} />
+          : screen === 'fund' && purchase ? <FundScreen onOpenFund={() => purchase.onNavigate('funddetail')} />
           : screen === 'funddetail' && purchase ? <FundDetailScreen onBack={() => purchase.onNavigate('fund')} onBuy={() => purchase.onNavigate('buyamount')} />
           : screen === 'buyamount' && purchase ? <BuyAmountScreen amount={purchase.amount} account={purchase.account} onAmountChange={purchase.onAmountChange} onBack={() => purchase.onNavigate('funddetail')} onNext={() => purchase.onNavigate('confirm')} onChangeAccount={() => purchase.onNavigate('buyaccount')} />
           : screen === 'buyaccount' && purchase ? <BuyAccountScreen account={purchase.account} onBack={() => purchase.onNavigate('buyamount')} onConfirm={(account) => { purchase.onAccountChange?.(account); purchase.onNavigate('buyamount') }} />

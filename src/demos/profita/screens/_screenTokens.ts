@@ -20,6 +20,13 @@ export const SC = {
   green:   'var(--signal-ok)',
   red:     'var(--signal-danger)',
   pink:    '#e6c9cd',
+  // Cutoff notice on the confirm screen, card shadow and hairlines on the edited screens.
+  goldTint: '#faf1dc',
+  goldInk:  '#7a5f1f',  // 5.4:1 on goldTint
+  hairline: '#eef0f3',
+  cardShadow: '0 2px 10px -7px rgba(0,0,0,.2)',
+  dashLine: '#d5d9e0',
+  unitsPending: 'rgba(33,58,94,.15)',
 
   // Portfolio allocation series — shared by the donut chart and its legend/list
   allocDiy:        '#5cb37f',

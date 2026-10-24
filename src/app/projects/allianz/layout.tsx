@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import { AllianzGate } from '@/components/universe/AllianzGate'
 
 export const metadata: Metadata = {
-  title: 'AI Document Intelligence Suite · Allianz Technology',
+  title: 'Sorting the post at an insurer · Allianz Technology · Tanawitch Saentree',
   description:
-    'Designing document classification, human review and fallback workflows at Allianz Technology. Senior Designer and sole designer on the project.',
+    "Each office files insurance documents its own way. I designed the tool where a team builds its filing system, turns it into the AI's prompt and tests it before it goes live.",
 }
 
 export default function AllianzLayout({ children }: { children: React.ReactNode }) {
@@ -13,7 +13,11 @@ export default function AllianzLayout({ children }: { children: React.ReactNode 
       data-universe="allianz"
       className="min-h-svh bg-[var(--bg)] text-[var(--fg)]"
     >
-      <AllianzGate>
+      <AllianzGate
+        content="docsort"
+        heading="Sorting the post at an insurer"
+        intro="How a team teaches an AI its own filing system. Clickable, on sample documents. Enter the shared password to view it."
+      >
         {children}
       </AllianzGate>
     </div>

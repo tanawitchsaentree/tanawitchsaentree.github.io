@@ -49,7 +49,7 @@ export function HomeClient() {
             <div className={styles.projects}>
               <div className={styles.project}>
                 <div className={styles.projectImage}>
-                  <Image src="/images/manabi-cover.png" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
+                  <Image src="/images/manabi-thumb.webp" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
                 </div>
                 <div>
                   <h3 className={styles.projectTitle}>{PERSONAL_PROJECT.title}</h3>
@@ -67,7 +67,7 @@ export function HomeClient() {
               </div>
               <div className={styles.project}>
                 <div className={`${styles.projectImage} ${styles.projectLogo}`}>
-                  <Image src="/images/brewcodex-logo.png" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
+                  <Image src="/images/brewcodex-thumb.webp" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
                 </div>
                 <div>
                   <h3 className={styles.projectTitle}>{BREWCODEX_PROJECT.title}</h3>

@@ -32,3 +32,5 @@ out
 ${local_app_data}*
 *.DS_Store
 .DS_Store
+# Plaintext of the gated case studies: local only, never commit (the encrypted blobs in public/gated/ are committed).
+content/gated/

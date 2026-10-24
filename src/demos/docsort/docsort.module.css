@@ -1,0 +1,401 @@
+/* Allianz case study: "the filing system is the prompt".
+   Palette: --docsort-* tokens (src/styles/tokens.css → [data-demo="docsort"]). Fonts self-hosted
+   with @fontsource and read through --docsort-font, so the projects shell's !important font rule
+   (src/styles/projects.css) can't override them. Motion: transform and clip-path only.
+   Geometry mirrors G in state.ts; nothing is measured at runtime. */
+
+.page { --docsort-font: var(--docsort-sans); font-family: var(--docsort-font); background: var(--docsort-desk); color: var(--docsort-ink); padding-bottom: 96px; --docsort-focus: var(--docsort-ink); }
+.mono, .label, .eyebrow, .line, .badge, .chip, .drawerBtn, .drawerPanel, .backLink, .cardLevel, .status, .table, .fields, .switchBtn, .btn, .toast, .tokenMark { --docsort-font: var(--docsort-mono); font-family: var(--docsort-font); }
+
+/* ── Grid: one shell, one left edge (same system as the claims case file) ── */
+.shell { max-width: 1280px; margin: 0 auto; padding-inline: clamp(24px, 5vw, 80px); box-sizing: border-box; }
+.grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: 64px; }
+.prose { min-width: 0; max-width: 56ch; }
+.aside { min-width: 0; container: docsort-desk / inline-size; }
+.top { padding-block: 24px; }
+.tail { padding-top: 48px; display: grid; gap: 24px; justify-items: start; max-width: 56ch; }
+.backLink { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--docsort-ink-muted); text-underline-offset: 4px; }
+.backLink:hover { color: var(--docsort-ink); }
+
+/* ── Prose: quiet ── */
+.moment { padding-block: 48px; }
+.hero { min-height: calc(100svh - 72px); display: flex; flex-direction: column; justify-content: center; padding-block: 0 48px; }
+.eyebrow { --docsort-p-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--docsort-ink-muted); margin: 0 0 16px; }
+.h1 { font-size: clamp(2.25rem, 5vw, 4rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; margin: 0 0 24px; color: var(--docsort-ink); }
+.h2 { font-size: clamp(1.5rem, 2.6vw, 2.125rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 16px; color: var(--docsort-ink); }
+.body { --docsort-p-size: 1.0625rem; line-height: 1.6; color: var(--docsort-ink); max-width: 46ch; margin: 0; }
+.credit { --docsort-p-size: .875rem; color: var(--docsort-ink-muted); max-width: 46ch; margin: 0; }
+.drawer { margin-top: 24px; max-width: 100%; }
+.drawerBtn { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--docsort-ink-muted); background: none; border: 0; padding: 8px 0; cursor: pointer; transition: color .18s var(--ease-in-out-natural); }
+.drawerBtn:hover { color: var(--docsort-ink); }
+.drawerGlyph { display: inline-block; width: 1ch; }
+.drawerPanel {
+  margin: 8px 0 0; padding: 16px 16px 16px 32px; box-sizing: border-box; max-width: 100%;
+  border-left: 2px solid var(--docsort-line-strong); background: var(--docsort-paper); color: var(--docsort-ink);
+  font-size: .8125rem; line-height: 1.6; display: grid; gap: 4px;
+  animation: drawerIn .36s var(--ease-out-standard) both;
+}
+
+/* ── The desk object: scaled from its column, pinned while it stays legible ── */
+.scaleBox {
+  --sw: 1; --sh: 1; --s: min(var(--sw), var(--sh));
+  position: sticky; top: max(16px, calc(50svh - 310px * var(--s)));
+  width: calc(600px * var(--s)); height: calc(620px * var(--s)); margin-inline: auto;
+}
+.stage { position: absolute; top: 0; left: 0; width: 600px; height: 620px; transform: scale(var(--s)); transform-origin: 0 0; --docsort-focus: var(--docsort-ink); }
+.treeArea { position: absolute; left: 0; top: 0; width: 216px; height: 620px; }
+.sheetArea { position: absolute; left: 240px; top: 0; width: 360px; height: 620px; }
+.emptyTree { position: absolute; inset: 52px 0 120px 0; border: 1px dashed var(--docsort-line-strong); border-radius: 4px; display: grid; place-items: center; color: var(--docsort-ink-muted); font-size: .8125rem; }
+
+/* Index cards. Position is a translateY transition; new cards deal in from the left. */
+.card {
+  position: absolute; top: 0; left: 0; right: 0; box-sizing: border-box;
+  display: flex; align-items: center; gap: 8px; padding: 0 10px;
+  background: var(--docsort-paper); border: 1px solid var(--docsort-line); border-radius: 3px; box-shadow: var(--docsort-shadow);
+  transition: transform .32s var(--ease-out-standard);
+}
+.card > * { animation: cardIn .4s var(--ease-out-standard) both; }
+.cardL0 { background: var(--docsort-ink); color: var(--docsort-paper); border-color: var(--docsort-ink); z-index: 3; }
+.cardL1 { left: 12px; z-index: 2; border-left: 3px solid var(--docsort-blue); }
+.cardL2 { left: 28px; z-index: 1; font-size: .8125rem; }
+.tucked { z-index: 0; }
+.cardLevel { font-size: .625rem; letter-spacing: .08em; color: inherit; padding: 1px 4px; border: 1px solid currentColor; border-radius: 2px; }
+.cardL1 .cardLevel, .cardL2 .cardLevel { color: var(--docsort-ink-muted); }
+.cardName { font-size: .875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.treeNote { position: absolute; top: 0; left: 12px; right: 0; font-size: .75rem; color: var(--docsort-ink-muted); }
+.switch { position: absolute; top: 0; left: 0; right: 0; display: flex; gap: 4px; padding: 4px; background: var(--docsort-paper); border: 1px solid var(--docsort-line); border-radius: 4px; }
+.switchBtn { flex: 1; font-size: .6875rem; padding: 6px 4px; border-radius: 3px; border: 0; background: none; color: var(--docsort-ink); cursor: pointer; white-space: nowrap; transition: background-color .18s var(--ease-in-out-natural), color .18s var(--ease-in-out-natural); }
+.switchOn { background: var(--docsort-ink); color: var(--docsort-paper); }
+
+/* The prompt sheet: Allianz-blue mono, each line types in with a stepped clip. */
+.sheet {
+  position: absolute; inset: 0; box-sizing: border-box; padding: 16px;
+  background: var(--docsort-paper); border: 1px solid var(--docsort-line); border-radius: 3px; box-shadow: var(--docsort-shadow);
+  display: flex; flex-direction: column;
+  animation: sheetIn .4s var(--ease-out-standard) both;
+}
+.sheetHead { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 28px; }
+.label { font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--docsort-ink-muted); }
+.badge { font-size: .6875rem; white-space: nowrap; padding: 3px 8px; border-radius: 3px; border: 1px solid currentColor; background: var(--docsort-paper); }
+.badgeOk { color: var(--docsort-ink); border-color: var(--signal-ok); }
+.badgeMissing { color: var(--docsort-ink); border-color: var(--signal-danger); }
+.lines { position: absolute; top: 92px; left: 16px; right: 16px; }
+.line { height: 20px; line-height: 20px; font-size: .75rem; color: var(--docsort-blue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: typeIn .5s steps(24, end) both; }
+.lineHier { padding-left: 12px; box-shadow: inset 2px 0 0 var(--docsort-blue-soft); }
+.lineGone { color: var(--docsort-ink-muted); font-style: italic; }
+.token { color: var(--docsort-paper); background: var(--docsort-blue); display: inline-block; padding: 0 6px; border-radius: 2px; height: 20px; }
+.tokenMark { position: absolute; top: 0; right: 16px; font-size: .625rem; color: var(--docsort-blue); border: 1px solid var(--docsort-blue); border-radius: 2px; padding: 0 4px; line-height: 16px; }
+.sheetFoot { margin-top: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* L2 on/off: the global sheet clips to its top part and per-category sheets slide out. */
+.modeRow { position: absolute; top: 0; left: 0; right: 0; height: 40px; display: flex; align-items: center; justify-content: space-between; }
+.toggle { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; border-radius: 999px; border: 1px solid var(--docsort-line-strong); background: var(--docsort-paper); cursor: pointer; font-size: .75rem; color: var(--docsort-ink); }
+.toggleKnob { width: 28px; height: 16px; border-radius: 999px; background: var(--docsort-line-strong); position: relative; }
+.toggleKnob::after { content: ''; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--docsort-paper); transition: transform .24s var(--ease-out-standard); }
+.toggleOn .toggleKnob { background: var(--docsort-ink); }
+.toggleOn .toggleKnob::after { transform: translateX(12px); }
+.mainSheet { top: 52px; z-index: 2; clip-path: inset(0 0 0 0 round 3px); transition: clip-path .5s var(--ease-in-out-natural); animation: none; }
+.mainSplit { clip-path: inset(0 0 64% 0 round 3px); }
+.mainSheet .lines { top: 40px; }
+.subSheet { top: 0; bottom: auto; height: 84px; z-index: 1; animation: none; transition: transform .5s var(--ease-in-out-natural); gap: 8px; }
+
+/* Test: the pile flies into its branches (positions computed, transform only). */
+.pileLabel { position: absolute; top: 500px; left: 8px; font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--docsort-ink-muted); --docsort-font: var(--docsort-mono); font-family: var(--docsort-font); }
+.chip {
+  position: absolute; top: 0; left: 0; z-index: 4; width: 52px; height: 22px; box-sizing: border-box;
+  display: grid; place-items: center; font-size: .625rem; white-space: nowrap; overflow: hidden;
+  background: var(--docsort-paper); color: var(--docsort-ink); border: 1px solid var(--docsort-ink); border-radius: 2px; box-shadow: var(--docsort-shadow);
+  transition: transform .6s var(--ease-out-standard);
+}
+.samples, .versions { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
+.sample, .version { border: 1px solid var(--docsort-line); border-radius: 3px; padding: 8px 10px; display: grid; gap: 6px; font-size: .8125rem; }
+.versionActive { border-color: var(--docsort-ink); }
+.sampleTop { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.expected { display: flex; align-items: center; gap: 8px; }
+.expected select, .operator select { font: inherit; font-size: .75rem; color: var(--docsort-ink); background: var(--docsort-paper); border: 1px solid var(--docsort-line-strong); border-radius: 3px; padding: 4px 6px; max-width: 100%; min-height: 28px; }
+.result { font-size: .75rem; line-height: 1.4; animation: typeIn .4s steps(20, end) both; }
+.status { font-size: .625rem; letter-spacing: .06em; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; border: 1px solid var(--docsort-line-strong); color: var(--docsort-ink); }
+.statusOk { border-color: var(--signal-ok); }
+.statusBad { border-color: var(--signal-danger); }
+.statusInfo { border-color: var(--docsort-ink); }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+.dotOk { background: var(--signal-ok); }
+.dotBad { background: var(--signal-danger); }
+.muted { color: var(--docsort-ink-muted); }
+
+.btn { font-size: .75rem; min-height: 32px; padding: 6px 12px; border-radius: 3px; cursor: pointer; background: var(--docsort-ink); color: var(--docsort-paper); border: 1px solid var(--docsort-ink); transition: background-color .18s var(--ease-in-out-natural), color .18s var(--ease-in-out-natural), border-color .18s var(--ease-in-out-natural); }
+.btnPrimary { background: var(--docsort-blue); border-color: var(--docsort-blue); }
+.btn:disabled, .btn[aria-disabled="true"] { background: var(--docsort-paper); color: var(--docsort-ink-muted); border: 1px dashed var(--docsort-ink-muted); cursor: not-allowed; }
+.btnQuiet { background: var(--docsort-paper); color: var(--docsort-ink); }
+.btnDanger { background: var(--docsort-paper); color: var(--docsort-ink); border-color: var(--docsort-line-strong); }
+.btnRed { background: var(--signal-danger); border-color: var(--signal-danger); color: var(--docsort-paper); }
+.treeArea > .btn { position: absolute; top: 0; left: 12px; }
+.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* Moment 5: category editing on the tree. */
+.cardActions { position: absolute; top: 0; right: 4px; z-index: 3; display: flex; gap: 2px; }
+.iconBtn { width: 26px; height: 26px; border-radius: 3px; border: 1px solid var(--docsort-line); background: var(--docsort-paper); color: var(--docsort-ink); cursor: pointer; font-size: .75rem; }
+.iconBtn:disabled { color: var(--docsort-ink-muted); border-style: dashed; cursor: not-allowed; }
+.editor { position: absolute; top: 0; left: 12px; right: 0; display: grid; gap: 8px; font-size: .8125rem; padding: 10px; background: var(--docsort-paper); border: 1px solid var(--docsort-line); border-radius: 3px; box-shadow: var(--docsort-shadow); }
+.editor form, .editor [role="group"] { display: grid; gap: 8px; }
+.input { font: inherit; font-size: .8125rem; color: var(--docsort-ink); background: var(--docsort-paper); border: 1px solid var(--docsort-line-strong); border-radius: 3px; padding: 6px 8px; }
+.input[aria-invalid="true"] { border-color: var(--signal-danger); }
+.error { font-size: .75rem; color: var(--docsort-ink); box-shadow: inset 2px 0 0 var(--signal-danger); padding-left: 8px; }
+.banner { font-size: .75rem; box-shadow: inset 2px 0 0 var(--docsort-ink); padding: 6px 8px; background: var(--docsort-desk); }
+
+/* Thin blue connector: card → its new prompt line. Wipes in, holds, wipes out. */
+.connector { position: absolute; top: 0; left: 0; z-index: 5; pointer-events: none; fill: none; stroke: var(--docsort-blue); stroke-width: 1; animation: connect 1.1s var(--ease-in-out-natural) .3s both; }
+
+.toast { position: absolute; z-index: 6; left: 50%; bottom: 12px; padding: 8px 14px; border-radius: 3px; font-size: .75rem; background: var(--docsort-ink); color: var(--docsort-paper); box-shadow: var(--docsort-shadow); white-space: nowrap; animation: toastIn .3s var(--ease-out-standard) both; }
+
+/* Moment 6: the operator side. */
+.operator { position: absolute; inset: 0; display: grid; grid-template-rows: auto 1fr; gap: 12px; animation: sheetIn .45s var(--ease-out-standard) both; }
+.queueList, .docPane { background: var(--docsort-paper); border: 1px solid var(--docsort-line); border-radius: 3px; box-shadow: var(--docsort-shadow); padding: 12px; box-sizing: border-box; overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; font-size: .6875rem; margin-top: 8px; }
+.table th { text-align: left; font-weight: 500; color: var(--docsort-ink-muted); padding: 4px 4px; border-bottom: 1px solid var(--docsort-line); }
+.table td { padding: 8px 4px; border-bottom: 1px solid var(--docsort-line); vertical-align: top; }
+.rowOpen td { box-shadow: inset 0 -2px 0 var(--docsort-ink); }
+.linkBtn { font: inherit; color: var(--docsort-ink); background: none; border: 0; padding: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; text-align: left; }
+.linkBtn:disabled { color: var(--docsort-ink-muted); text-decoration: none; cursor: default; }
+.docOpen { display: grid; gap: 10px; animation: sheetIn .4s var(--ease-out-standard) both; }
+.docBody { display: grid; grid-template-columns: 64px 1fr; gap: 8px; }
+.docOpen { grid-template-columns: 1fr 1fr; align-items: start; }
+.docOpen > .label, .docOpen > .row { grid-column: 1 / -1; }
+.pages { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; align-content: start; font-size: .6875rem; --docsort-font: var(--docsort-mono); font-family: var(--docsort-font); }
+.pages li { padding: 4px 6px; border: 1px solid var(--docsort-line); border-radius: 2px; }
+.pages .pageOn { border-color: var(--docsort-ink); }
+.viewer { height: 170px; border: 1px solid var(--docsort-line); border-radius: 2px; padding: 12px; display: grid; gap: 8px; align-content: start; background: var(--docsort-desk); }
+.viewerLine { display: block; height: 6px; border-radius: 2px; background: var(--docsort-line-strong); }
+.fields { width: 100%; border-collapse: collapse; font-size: .6875rem; }
+.fields caption { text-align: left; padding-bottom: 4px; }
+.fields th { text-align: left; font-weight: 500; color: var(--docsort-ink-muted); padding: 5px 4px; border-bottom: 1px solid var(--docsort-line); width: 40%; }
+.fields td { padding: 5px 4px; border-bottom: 1px solid var(--docsort-line); }
+.flagged td { box-shadow: inset 3px 0 0 var(--signal-warn); }
+.flag { color: var(--docsort-ink); }
+
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@keyframes cardIn { from { transform: translateX(-12px); clip-path: inset(0 100% 0 0); } to { transform: none; clip-path: inset(0 0 0 0); } }
+@keyframes typeIn { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes sheetIn { from { transform: translateY(16px); clip-path: inset(0 0 100% 0); } to { transform: none; clip-path: inset(-16px -16px -16px -16px); } }
+@keyframes drawerIn { from { transform: translateY(-8px); clip-path: inset(0 0 100% 0); } to { transform: none; clip-path: inset(0 0 0 0); } }
+@keyframes connect { 0% { clip-path: inset(0 100% 0 0); } 35%, 70% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
+@keyframes toastIn { from { transform: translate(-50%, 12px); clip-path: inset(100% 0 0 0); } to { transform: translate(-50%, 0); clip-path: inset(0 0 0 0); } }
+.toast { transform: translateX(-50%); }
+
+@media (max-width: 959px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .aside { order: -1; position: sticky; top: 0; z-index: 6; align-self: start; background: var(--docsort-desk); padding-block: 8px; }
+  .scaleBox { position: relative; top: 0; }
+  .moment { padding-block: 32px; }
+  .hero { min-height: auto; padding-block: 32px; }
+  .tail { padding-top: 32px; }
+}
+
+@supports (width: round(1.5px, 1px)) {
+  .shell { margin-left: max(0px, round(down, (100% - 1280px) / 2, 1px)); margin-right: 0; padding-inline: round(clamp(24px, 5vw, 80px), 1px); }
+  .scaleBox { margin-left: round(down, (100% - 600px * var(--s)) / 2, 1px); margin-right: 0; }
+}
+@supports (width: round(1.5px, 1px)) {
+  @media (min-width: 960px) { .grid { grid-template-columns: round(down, (100% - 64px) * 5 / 12, 1px) minmax(0, 1fr); } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *, .page *::before, .page *::after { animation: none !important; transition: none !important; }
+}
+
+/* ── Generated scale steps. Width: the object column (container query). Height: viewport. ── */
+@container docsort-desk (max-width: 599.98px) { .scaleBox { --sw: 0.98; } }
+@container docsort-desk (max-width: 587.98px) { .scaleBox { --sw: 0.96; } }
+@container docsort-desk (max-width: 575.98px) { .scaleBox { --sw: 0.94; } }
+@container docsort-desk (max-width: 563.98px) { .scaleBox { --sw: 0.92; } }
+@container docsort-desk (max-width: 551.98px) { .scaleBox { --sw: 0.9; } }
+@container docsort-desk (max-width: 539.98px) { .scaleBox { --sw: 0.88; } }
+@container docsort-desk (max-width: 527.98px) { .scaleBox { --sw: 0.86; } }
+@container docsort-desk (max-width: 515.98px) { .scaleBox { --sw: 0.84; } }
+@container docsort-desk (max-width: 503.98px) { .scaleBox { --sw: 0.82; } }
+@container docsort-desk (max-width: 491.98px) { .scaleBox { --sw: 0.8; } }
+@container docsort-desk (max-width: 479.98px) { .scaleBox { --sw: 0.78; } }
+@container docsort-desk (max-width: 467.98px) { .scaleBox { --sw: 0.76; } }
+@container docsort-desk (max-width: 455.98px) { .scaleBox { --sw: 0.74; } }
+@container docsort-desk (max-width: 443.98px) { .scaleBox { --sw: 0.72; } }
+@container docsort-desk (max-width: 431.98px) { .scaleBox { --sw: 0.7; } }
+@container docsort-desk (max-width: 419.98px) { .scaleBox { --sw: 0.68; } }
+@container docsort-desk (max-width: 407.98px) { .scaleBox { --sw: 0.66; } }
+@container docsort-desk (max-width: 395.98px) { .scaleBox { --sw: 0.64; } }
+@container docsort-desk (max-width: 383.98px) { .scaleBox { --sw: 0.62; } }
+@container docsort-desk (max-width: 371.98px) { .scaleBox { --sw: 0.6; } }
+@container docsort-desk (max-width: 359.98px) { .scaleBox { --sw: 0.58; } }
+@container docsort-desk (max-width: 347.98px) { .scaleBox { --sw: 0.56; } }
+@container docsort-desk (max-width: 335.98px) { .scaleBox { --sw: 0.54; } }
+@container docsort-desk (max-width: 323.98px) { .scaleBox { --sw: 0.52; } }
+@container docsort-desk (max-width: 311.98px) { .scaleBox { --sw: 0.5; } }
+@container docsort-desk (max-width: 299.98px) { .scaleBox { --sw: 0.48; } }
+@container docsort-desk (max-width: 287.98px) { .scaleBox { --sw: 0.46; } }
+@container docsort-desk (max-width: 275.98px) { .scaleBox { --sw: 0.44; } }
+@container docsort-desk (max-width: 263.98px) { .scaleBox { --sw: 0.42; } }
+@container docsort-desk (max-width: 251.98px) { .scaleBox { --sw: 0.4; } }
+@media (min-width: 960px) and (max-height: 652px) { .scaleBox { --sh: 0.974; } }
+@media (min-width: 960px) and (max-height: 636px) { .scaleBox { --sh: 0.948; } }
+@media (min-width: 960px) and (max-height: 620px) { .scaleBox { --sh: 0.923; } }
+@media (min-width: 960px) and (max-height: 604px) { .scaleBox { --sh: 0.897; } }
+@media (min-width: 960px) and (max-height: 588px) { .scaleBox { --sh: 0.871; } }
+@media (min-width: 960px) and (max-height: 572px) { .scaleBox { --sh: 0.845; } }
+@media (min-width: 960px) and (max-height: 556px) { .scaleBox { --sh: 0.819; } }
+@media (min-width: 960px) and (max-height: 540px) { .scaleBox { --sh: 0.794; } }
+@media (min-width: 960px) and (max-height: 524px) { .scaleBox { --sh: 0.768; } }
+@media (min-width: 960px) and (max-height: 508px) { .scaleBox { --sh: 0.742; } }
+@media (min-width: 960px) and (max-height: 492px) { .scaleBox { --sh: 0.716; } }
+@media (min-width: 960px) and (max-height: 476px) { .scaleBox { --sh: 0.690; } }
+@media (min-width: 960px) and (max-height: 460px) { .scaleBox { --sh: 0.665; } }
+@media (min-width: 960px) and (max-height: 444px) { .scaleBox { --sh: 0.639; } }
+@media (min-width: 960px) and (max-height: 428px) { .scaleBox { --sh: 0.613; } }
+@media (min-width: 960px) and (max-height: 412px) { .scaleBox { --sh: 0.587; } }
+@media (min-width: 960px) and (max-height: 396px) { .scaleBox { --sh: 0.561; } }
+@media (min-width: 960px) and (max-height: 380px) { .scaleBox { --sh: 0.535; } }
+@media (min-width: 960px) and (max-height: 364px) { .scaleBox { --sh: 0.510; } }
+@media (max-width: 959px) and (max-height: 1400px) { .scaleBox { --sh: 1.000; } }
+@media (max-width: 959px) and (max-height: 1360px) { .scaleBox { --sh: 1.000; } }
+@media (max-width: 959px) and (max-height: 1320px) { .scaleBox { --sh: 1.000; } }
+@media (max-width: 959px) and (max-height: 1280px) { .scaleBox { --sh: 1.000; } }
+@media (max-width: 959px) and (max-height: 1240px) { .scaleBox { --sh: 0.968; } }
+@media (max-width: 959px) and (max-height: 1200px) { .scaleBox { --sh: 0.935; } }
+@media (max-width: 959px) and (max-height: 1160px) { .scaleBox { --sh: 0.903; } }
+@media (max-width: 959px) and (max-height: 1120px) { .scaleBox { --sh: 0.871; } }
+@media (max-width: 959px) and (max-height: 1080px) { .scaleBox { --sh: 0.839; } }
+@media (max-width: 959px) and (max-height: 1040px) { .scaleBox { --sh: 0.806; } }
+@media (max-width: 959px) and (max-height: 1000px) { .scaleBox { --sh: 0.774; } }
+@media (max-width: 959px) and (max-height: 960px) { .scaleBox { --sh: 0.742; } }
+@media (max-width: 959px) and (max-height: 920px) { .scaleBox { --sh: 0.710; } }
+@media (max-width: 959px) and (max-height: 880px) { .scaleBox { --sh: 0.677; } }
+@media (max-width: 959px) and (max-height: 840px) { .scaleBox { --sh: 0.645; } }
+@media (max-width: 959px) and (max-height: 800px) { .scaleBox { --sh: 0.613; } }
+@media (max-width: 959px) and (max-height: 760px) { .scaleBox { --sh: 0.581; } }
+@media (max-width: 959px) and (max-height: 720px) { .scaleBox { --sh: 0.548; } }
+@media (max-width: 959px) and (max-height: 680px) { .scaleBox { --sh: 0.516; } }
+@media (max-width: 959px) and (max-height: 640px) { .scaleBox { --sh: 0.484; } }
+@media (max-width: 959px) and (max-height: 600px) { .scaleBox { --sh: 0.452; } }
+@media (max-width: 959px) and (max-height: 560px) { .scaleBox { --sh: 0.419; } }
+@media (max-width: 959px) and (max-height: 520px) { .scaleBox { --sh: 0.400; } }
+@media (max-width: 959px) and (max-height: 480px) { .scaleBox { --sh: 0.400; } }
+@media (max-width: 959px) and (max-height: 440px) { .scaleBox { --sh: 0.400; } }
+@media (max-width: 959px) and (max-height: 400px) { .scaleBox { --sh: 0.400; } }
+@media (max-width: 959px) and (max-height: 360px) { .scaleBox { --sh: 0.400; } }
+
+/* One column, 500–959px: if pinning would shrink the object below 0.6, stop pinning; it
+   becomes a normal block at full column width and the prose follows it. Below 500px the
+   phone layout takes over and stays pinned. */
+@media (min-width: 500px) and (max-width: 959px) and (max-height: 760px) { .aside { position: relative; top: auto; } .scaleBox { --sh: 1; } }
+
+/* ── Phone layout (below 500px, where the desk object would scale under 0.75) ──
+   A 340 × 520 stacked stage, pinned at no more than about 55% of the screen height.
+   Controls are at least 30px before scaling, so they stay ≥ 24px on screen. */
+.phoneOnly { display: none; }
+@media (max-width: 499px) {
+  .wideOnly { display: none; }
+  .phoneOnly { display: block; }
+}
+.phoneBox {
+  --sw: 1; --sh: 1; --s: min(var(--sw), var(--sh));
+  position: relative; width: calc(340px * var(--s)); height: calc(520px * var(--s)); margin-inline: auto;
+}
+.phoneStage { width: 340px; height: 520px; }
+.phoneFull { position: absolute; inset: 0; }
+.phoneTree { position: absolute; top: 0; left: 0; right: 0; height: 520px; }
+.phoneShelf { position: absolute; left: 0; right: 0; top: 296px; bottom: 0; }
+.phoneBar { position: absolute; z-index: 5; top: 0; left: 0; right: 0; height: 36px; display: flex; gap: 6px; }
+.phoneBar .btn { flex: 1 1 auto; padding: 4px 8px; font-size: .6875rem; }
+.phoneLines { position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; padding: 6px 10px; background: var(--docsort-paper); border: 1px solid var(--docsort-line); border-radius: 3px; box-shadow: var(--docsort-shadow); }
+.phoneLineList { margin-top: 6px; }
+.phoneLineList .line { height: 16px; line-height: 16px; font-size: .6875rem; }
+.phoneStage .btn { min-height: 34px; }
+.phoneStage .iconBtn { width: 30px; height: 30px; }
+.phoneStage .switchBtn { min-height: 32px; }
+.phoneStage .toggle { min-height: 32px; }
+.phoneStage select { min-height: 32px; }
+.phoneStage .linkBtn { min-height: 30px; display: inline-flex; align-items: center; }
+.phoneStage .cardActions { top: -2px; }
+.phoneStage .sheet { padding: 12px; }
+.phoneStage .sample, .phoneStage .version { padding: 6px 8px; gap: 4px; }
+.phoneStage .samples, .phoneStage .versions { gap: 6px; margin-top: 6px; }
+.phoneStage .sheetFoot { padding-top: 6px; }
+.phoneStage .table th:nth-child(1), .phoneStage .table td:nth-child(1),
+.phoneStage .table th:nth-child(4), .phoneStage .table td:nth-child(4) { display: none; }
+.phoneStage .table td { padding: 2px 4px; vertical-align: middle; }
+.phoneStage .docOpen { grid-template-columns: 1fr; }
+.phoneStage .docBody { display: none; }
+.phoneStage .queueList, .phoneStage .docPane { padding: 8px; }
+/* Phone scale steps. Width: the column (container query, 340px basis). Height: ≤ about 55% of the screen. */
+@container docsort-desk (max-width: 339.98px) { .phoneBox { --sw: 0.98; } }
+@container docsort-desk (max-width: 333.18px) { .phoneBox { --sw: 0.96; } }
+@container docsort-desk (max-width: 326.38px) { .phoneBox { --sw: 0.94; } }
+@container docsort-desk (max-width: 319.58px) { .phoneBox { --sw: 0.92; } }
+@container docsort-desk (max-width: 312.78px) { .phoneBox { --sw: 0.9; } }
+@container docsort-desk (max-width: 305.98px) { .phoneBox { --sw: 0.88; } }
+@container docsort-desk (max-width: 299.18px) { .phoneBox { --sw: 0.86; } }
+@container docsort-desk (max-width: 292.38px) { .phoneBox { --sw: 0.84; } }
+@container docsort-desk (max-width: 285.58px) { .phoneBox { --sw: 0.82; } }
+@container docsort-desk (max-width: 278.78px) { .phoneBox { --sw: 0.8; } }
+@container docsort-desk (max-width: 271.98px) { .phoneBox { --sw: 0.78; } }
+@container docsort-desk (max-width: 265.18px) { .phoneBox { --sw: 0.76; } }
+@container docsort-desk (max-width: 258.38px) { .phoneBox { --sw: 0.74; } }
+@container docsort-desk (max-width: 251.58px) { .phoneBox { --sw: 0.72; } }
+@container docsort-desk (max-width: 244.78px) { .phoneBox { --sw: 0.7; } }
+@container docsort-desk (max-width: 237.98px) { .phoneBox { --sw: 0.68; } }
+@container docsort-desk (max-width: 231.18px) { .phoneBox { --sw: 0.66; } }
+@container docsort-desk (max-width: 224.38px) { .phoneBox { --sw: 0.64; } }
+@container docsort-desk (max-width: 217.58px) { .phoneBox { --sw: 0.62; } }
+@container docsort-desk (max-width: 210.78px) { .phoneBox { --sw: 0.6; } }
+@container docsort-desk (max-width: 203.98px) { .phoneBox { --sw: 0.58; } }
+@container docsort-desk (max-width: 197.18px) { .phoneBox { --sw: 0.56; } }
+@container docsort-desk (max-width: 190.38px) { .phoneBox { --sw: 0.54; } }
+@container docsort-desk (max-width: 183.58px) { .phoneBox { --sw: 0.52; } }
+@container docsort-desk (max-width: 176.78px) { .phoneBox { --sw: 0.5; } }
+@container docsort-desk (max-width: 169.98px) { .phoneBox { --sw: 0.48; } }
+@container docsort-desk (max-width: 163.18px) { .phoneBox { --sw: 0.46; } }
+@container docsort-desk (max-width: 156.38px) { .phoneBox { --sw: 0.44; } }
+@container docsort-desk (max-width: 149.58px) { .phoneBox { --sw: 0.42; } }
+@container docsort-desk (max-width: 142.78px) { .phoneBox { --sw: 0.4; } }
+@media (max-width: 499px) and (max-height: 1000px) { .phoneBox { --sh: 1.000; } }
+@media (max-width: 499px) and (max-height: 980px) { .phoneBox { --sh: 1.000; } }
+@media (max-width: 499px) and (max-height: 960px) { .phoneBox { --sh: 0.994; } }
+@media (max-width: 499px) and (max-height: 940px) { .phoneBox { --sh: 0.973; } }
+@media (max-width: 499px) and (max-height: 920px) { .phoneBox { --sh: 0.952; } }
+@media (max-width: 499px) and (max-height: 900px) { .phoneBox { --sh: 0.931; } }
+@media (max-width: 499px) and (max-height: 880px) { .phoneBox { --sh: 0.910; } }
+@media (max-width: 499px) and (max-height: 860px) { .phoneBox { --sh: 0.888; } }
+@media (max-width: 499px) and (max-height: 840px) { .phoneBox { --sh: 0.867; } }
+@media (max-width: 499px) and (max-height: 820px) { .phoneBox { --sh: 0.846; } }
+@media (max-width: 499px) and (max-height: 800px) { .phoneBox { --sh: 0.825; } }
+@media (max-width: 499px) and (max-height: 780px) { .phoneBox { --sh: 0.804; } }
+@media (max-width: 499px) and (max-height: 760px) { .phoneBox { --sh: 0.783; } }
+@media (max-width: 499px) and (max-height: 740px) { .phoneBox { --sh: 0.762; } }
+@media (max-width: 499px) and (max-height: 720px) { .phoneBox { --sh: 0.740; } }
+@media (max-width: 499px) and (max-height: 700px) { .phoneBox { --sh: 0.719; } }
+@media (max-width: 499px) and (max-height: 680px) { .phoneBox { --sh: 0.698; } }
+@media (max-width: 499px) and (max-height: 660px) { .phoneBox { --sh: 0.677; } }
+@media (max-width: 499px) and (max-height: 640px) { .phoneBox { --sh: 0.656; } }
+@media (max-width: 499px) and (max-height: 620px) { .phoneBox { --sh: 0.635; } }
+@media (max-width: 499px) and (max-height: 600px) { .phoneBox { --sh: 0.613; } }
+@media (max-width: 499px) and (max-height: 580px) { .phoneBox { --sh: 0.592; } }
+@media (max-width: 499px) and (max-height: 560px) { .phoneBox { --sh: 0.571; } }
+@media (max-width: 499px) and (max-height: 540px) { .phoneBox { --sh: 0.550; } }
+@media (max-width: 499px) and (max-height: 520px) { .phoneBox { --sh: 0.529; } }
+@media (max-width: 499px) and (max-height: 500px) { .phoneBox { --sh: 0.508; } }
+@media (max-width: 499px) and (max-height: 480px) { .phoneBox { --sh: 0.487; } }
+@media (max-width: 499px) and (max-height: 460px) { .phoneBox { --sh: 0.465; } }
+@media (max-width: 499px) and (max-height: 440px) { .phoneBox { --sh: 0.444; } }
+@media (max-width: 499px) and (max-height: 420px) { .phoneBox { --sh: 0.423; } }
+@media (max-width: 499px) and (max-height: 400px) { .phoneBox { --sh: 0.402; } }
+@media (max-width: 499px) and (max-height: 380px) { .phoneBox { --sh: 0.400; } }
+@media (max-width: 499px) and (max-height: 360px) { .phoneBox { --sh: 0.400; } }
+
+/* Selects: WebKit ignores min-height on native menus, so draw them ourselves (≥ 24px on screen). */
+.expected select, .operator select {
+  -webkit-appearance: none; appearance: none; height: 32px; padding: 0 26px 0 8px; line-height: 30px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--docsort-ink) 50%), linear-gradient(135deg, var(--docsort-ink) 50%, transparent 50%);
+  background-position: calc(100% - 13px) 50%, calc(100% - 8px) 50%; background-size: 5px 5px; background-repeat: no-repeat;
+}
+.phoneStage select { height: 34px; line-height: 32px; }
+/* Phone moment 5: an open category editor sits above the version shelf. */
+.phoneStage .editor { z-index: 6; }

@@ -5,7 +5,7 @@ export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
   title: 'VITAE · Fitness Dashboard · Tanawitch Saentree',
-  description: 'Designing a daily view of health signals so product, clinical and engineering colleagues can review how a personal baseline and uncertainty are explained.',
+  description: 'How I redesigned the Vitae health score to compare each day with the person\'s own last 14 days.',
 }
 
 export default function VitaePage() {

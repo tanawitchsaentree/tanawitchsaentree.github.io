@@ -35,3 +35,24 @@
 .project-pages [data-universe="allianz"] .uppercase { letter-spacing:.025em; text-transform:none; }
 
 .project-pages [data-universe="allianz"] header > a { margin-bottom:24px; font-size:13px; }
+
+/* Claims case file opts out of the editorial shell: its own palette (tokens.css →
+   [data-demo="claims"]), fonts, h1 and focus ring. Scoped to that surface only;
+   !important only where the rules above already use it. */
+.project-pages div[data-demo="claims"] { background: var(--cf-desk) !important; color: var(--cf-desk-fg); }
+.project-pages [data-demo="claims"] *,
+.project-pages [data-demo="claims"] *::before,
+.project-pages [data-demo="claims"] *::after { font-family: var(--cf-font) !important; }
+.project-pages [data-demo="claims"] h1 { font-size: clamp(2.25rem, 5vw, 4rem) !important; font-weight: 600 !important; line-height: 1.02 !important; letter-spacing: -0.03em !important; }
+.project-pages [data-demo="claims"] :is(a, button, input, textarea, [tabindex]):focus-visible { outline: 2px solid var(--cf-focus, var(--cf-desk-fg)); outline-offset: 2px; }
+
+/* Allianz case study ([data-demo="docsort"]) opts out the same way as claims: its own fonts
+   (read through --docsort-font), h1/h2, paragraph size (the allianz rules above force 12px on
+   [data-demo] p) and focus ring. !important only where the rules above use it. */
+.project-pages [data-demo="docsort"] *,
+.project-pages [data-demo="docsort"] *::before,
+.project-pages [data-demo="docsort"] *::after { font-family: var(--docsort-font) !important; }
+.project-pages [data-demo="docsort"] h1 { font-size: clamp(2.25rem, 5vw, 4rem) !important; font-weight: 600 !important; line-height: 1.02 !important; letter-spacing: -0.03em !important; }
+.project-pages [data-universe="allianz"] [data-demo="docsort"] h2 { font-size: clamp(1.5rem, 2.6vw, 2.125rem); font-weight: 600; }
+.project-pages [data-universe="allianz"] [data-demo="docsort"] p { font-size: var(--docsort-p-size, inherit); }
+.project-pages [data-demo="docsort"] :is(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--docsort-focus, var(--docsort-blue)); outline-offset: 2px; }

@@ -108,7 +108,7 @@ export function ProjectModal({ open, onClose, id, name, title, intro, sections, 
           </button>
         </div>
 
-        <div className={styles.content} data-lenis-prevent>
+        <div className={styles.content}>
           <p className={styles.eyebrow}>{name} · Independent side project</p>
           <h2
             ref={titleRef}

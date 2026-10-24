@@ -4,9 +4,13 @@ import { useState, useEffect, useRef, useId } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
+import { setGated } from '@/lib/gated'
+import { readKeys, unlockWithKey, unlockWithPassword, writeKey } from '@/lib/gate-crypto'
 
+// The password is never in the bundle. The page content is an AES-GCM blob
+// (scripts/encrypt-gated.mjs); the password derives the key in the browser, and only the
+// derived key is remembered (per blob, under STORAGE_KEY), never the password.
 const STORAGE_KEY = 'allianz_gate_v2'
-const CORRECT_PASSWORD = '1234'
 
 type GateState = 'idle' | 'typing' | 'checking' | 'error' | 'success'
 
@@ -24,7 +28,24 @@ const SHAKE_STYLE = `
 .gate-shake { animation: gate-shake 420ms cubic-bezier(0.36,0.07,0.19,0.97) both; }
 `
 
-export function AllianzGate({ children }: { children: React.ReactNode }) {
+const DEFAULT_HEADING = 'AI document workflows'
+const DEFAULT_INTRO =
+  'I designed tools that bring rule changes and document review into the same workflow, so business teams can inspect routing and operators can take over unresolved cases. Enter the shared password to view the examples.'
+
+export function AllianzGate({
+  children,
+  content,
+  heading = DEFAULT_HEADING,
+  intro = DEFAULT_INTRO,
+  mailSubject = 'Allianz case study',
+}: {
+  children: React.ReactNode
+  /** Name of the encrypted blob in /gated/ that holds this page's content. */
+  content: string
+  heading?: string
+  intro?: string
+  mailSubject?: string
+}) {
   const [isOpen, setIsOpen]   = useState(true)
   const [hasMounted, setHasMounted] = useState(false)
   const [value, setValue]     = useState('')
@@ -34,12 +55,16 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
   const formRef   = useRef<HTMLDivElement>(null)
   const inputId   = useId()
 
+  // A returning visitor's remembered key decrypts straight away; the placeholder holds the
+  // page until then, so the gate doesn't flash. A stale key (new build) falls back to the gate.
   useEffect(() => {
-    setHasMounted(true)
-    try {
-      if (localStorage.getItem(STORAGE_KEY) === 'true') setIsOpen(false)
-    } catch {}
-  }, [])
+    const key = readKeys(STORAGE_KEY)[content]
+    if (!key) { setHasMounted(true); return }
+    unlockWithKey(content, key)
+      .then(data => { setGated(content, data); setIsOpen(false) })
+      .catch(() => writeKey(STORAGE_KEY, content, null))
+      .finally(() => setHasMounted(true))
+  }, [content])
 
   // Auto-focus when gate opens
   useEffect(() => {
@@ -66,16 +91,14 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
   const handleSubmit = () => {
     if (!value.trim()) return
     setState('checking')
-    // Tiny artificial pause — makes the check feel deliberate
-    setTimeout(() => {
-      if (value.trim() === CORRECT_PASSWORD) {
+    unlockWithPassword(content, value.trim())
+      .then(({ data, keyB64 }) => {
+        setGated(content, data)
+        writeKey(STORAGE_KEY, content, keyB64)
         setState('success')
-        try { localStorage.setItem(STORAGE_KEY, 'true') } catch {}
         setTimeout(() => setIsOpen(false), 600)
-      } else {
-        triggerError()
-      }
-    }, 350)
+      })
+      .catch(() => triggerError())
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -88,7 +111,9 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
     setState(e.target.value.length > 0 ? 'typing' : 'idle')
   }
 
-  if (!hasMounted) return <>{children}</>
+  // Before mount we can't read the unlock flag, so hold the page background and keep
+  // protected content out of the static HTML entirely.
+  if (!hasMounted) return <div aria-hidden="true" className="min-h-svh bg-[var(--bg)]" />
 
   return (
     <>
@@ -156,10 +181,10 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
                     'text-[var(--fg)] mb-2'
                   )}
                 >
-                  AI document workflows
+                  {heading}
                 </h1>
                 <p className="text-[var(--type-sm)] text-[var(--fg-muted)] leading-[1.65] mb-8">
-                  I designed tools that bring rule changes and document review into the same workflow, so business teams can inspect routing and operators can take over unresolved cases. Enter the shared password to view the examples.
+                  {intro}
                 </p>
               </motion.div>
 
@@ -282,7 +307,7 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
               >
                 <p className="text-[var(--type-sm)] text-[var(--fg-muted)] leading-[1.6] mb-4">
                   Need access?{' '}
-                  <a href="mailto:tanawitch.saentree@gmail.com?subject=Allianz%20case%20study" className="underline underline-offset-2">
+                  <a href={`mailto:tanawitch.saentree@gmail.com?subject=${encodeURIComponent(mailSubject)}`} className="underline underline-offset-2">
                     Email me for a walkthrough.
                   </a>
                 </p>
@@ -302,10 +327,8 @@ export function AllianzGate({ children }: { children: React.ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* Page content — always in DOM so it loads behind the gate */}
-      <div aria-hidden={isOpen ? 'true' : undefined}>
-        {children}
-      </div>
+      {/* Page content renders only once unlocked; the gate's own background holds the page until then */}
+      {!isOpen && children}
     </>
   )
 }
@@ -327,8 +350,8 @@ function LockIcon({ unlocked }: { unlocked: boolean }) {
     >
       {/* Shackle */}
       <motion.path
-        d="M8 11V7a4 4 0 1 1 8 0v4"
-        animate={unlocked ? { d: 'M8 11V7a4 4 0 0 1 8 0' } : { d: 'M8 11V7a4 4 0 1 1 8 0v4' }}
+        d={unlocked ? 'M8 11V7a4 4 0 0 1 8 0' : 'M8 11V7a4 4 0 1 1 8 0v4'}
+        animate={{ y: unlocked ? -2 : 0 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       />
       {/* Body */}
@@ -336,8 +359,9 @@ function LockIcon({ unlocked }: { unlocked: boolean }) {
       {/* Keyhole dot */}
       <motion.circle
         cx="12" cy="16" r="1"
-        animate={unlocked ? { r: 0 } : { r: 1 }}
-        transition={{ duration: 0.2 }}
+        style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
+        animate={{ scale: unlocked ? 0 : 1 }}
+        transition={{ duration: 0.2, ease: [0.65, 0, 0.35, 1] }}
       />
     </motion.svg>
   )

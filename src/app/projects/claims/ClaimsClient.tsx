@@ -3,34 +3,27 @@
 import { ClaimsStory } from '@/components/case-study/CompactStories'
 
 
+import '@fontsource/onest/400.css'
+import '@fontsource/onest/500.css'
+import '@fontsource/onest/600.css'
 import { useEffect } from 'react'
 import { C } from '@/demos/claims/tokens'
 
-const FONTS_URL =
-  'https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap'
-
+// Fonts are self-hosted: Onest from @fontsource (the weights the case file uses), IBM Plex
+// Mono from @fontsource in the root layout. No request goes to Google Fonts.
 const GLOBAL_CSS = `
-  @import url('${FONTS_URL}');
 
   [data-demo="claims"] {
     font-family: var(--c-font-body);
-    background: var(--c-bg);
-    color: var(--c-tx);
+    background: var(--cf-desk);
+    color: var(--cf-desk-fg);
     font-size: 16.5px;
     line-height: 1.62;
     -webkit-font-smoothing: antialiased;
     overflow-x: clip;
     min-height: 100dvh;
   }
-  [data-demo="claims"]::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background: radial-gradient(120% 80% at 80% -10%, color-mix(in srgb, var(--c-live) 6%, transparent), transparent 55%);
-  }
-  [data-demo="claims"] ::selection { background: var(--c-live); color: var(--c-bg); }
+  [data-demo="claims"] ::selection { background: var(--cf-desk-fg); color: var(--cf-desk); }
   [data-demo="claims"] b, [data-demo="claims"] strong { font-weight: 600; color: var(--c-tx-hi); }
 
   .claims-wrap {

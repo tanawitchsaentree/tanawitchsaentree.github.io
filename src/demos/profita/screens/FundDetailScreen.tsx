@@ -10,7 +10,7 @@ const ROWS: { group: string; items: Row[] }[] = [
     { k: 'Later purchases (THB)',      v: '5,000.00' },
   ]},
   { group: 'Order times', items: [
-    { k: 'Order cut-off time',        v: '3:00 pm' },
+    { k: 'Order cut-off time',        v: '3:30 pm' },
     { k: 'Sell order cutoff',  v: '3:00 pm', help: "The deadline for submitting an order for the current dealing day." },
   ]},
   { group: 'Trading fees', items: [

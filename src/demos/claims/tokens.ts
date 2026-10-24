@@ -20,6 +20,7 @@ export const C = {
     lineBri:  '#bac1cc',
     txOnLive: '#04150e',   // text on green fills
     overlay:  'rgba(11,17,30,.42)', // modal scrim, warm-dark, not blue-navy
+    overlayClear: 'rgba(11,17,30,0)', // scrim start/end: same rgb so framer can interpolate
   },
   alpha: {
     liveSoft: 'color-mix(in srgb,var(--signal-ok) 10%,transparent)',

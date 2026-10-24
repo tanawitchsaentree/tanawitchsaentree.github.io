@@ -1,0 +1,3 @@
+.surface { display:flex; justify-content:center; padding:8px 0; }
+.pair { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:20px; width:min(100%, 560px); align-items:start; }
+@media (max-width:520px) { .pair { grid-template-columns:1fr; } }

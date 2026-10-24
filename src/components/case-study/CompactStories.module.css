@@ -1,9 +1,9 @@
 .story { max-width:1088px; margin:auto; padding:28px 24px 48px; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:14px; line-height:1.65; }
 .story a { color:inherit; text-underline-offset:4px; }.story a:focus-visible { outline:2px solid currentColor; outline-offset:5px; }
 
-.label,.note { font-size:12px; opacity:.75; }.story section { padding:32px 0; border-top:1px solid currentColor; border-color:color-mix(in srgb,currentColor 16%,transparent); }.story h2 { font-size:21px; line-height:1.25; font-weight:500; margin:0 0 12px; }.story p { max-width:65ch; margin:0 0 20px; }.story figure { margin:0; }.story figcaption { font-size:14px; margin-top:20px; max-width:32ch; }.gallery { display:flex; flex-wrap:wrap; justify-content:center; gap:32px 40px; }.phone { width:289px; height:612px; position:relative; }.phone > div { transform:scale(.85); transform-origin:top left; width:340px; }.single { display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center; }.single figure { justify-self:center; }.wide { overflow-x:auto; }.wide > div { min-width:700px; }.story footer { padding-top:32px; }.story :global(.claims-wrap) { padding:0; }.story :global(.claims-animate) { opacity:1; transform:none; }
+.label,.note { font-size:12px; opacity:.75; }.story section { padding:32px 0; border-top:1px solid currentColor; border-color:color-mix(in srgb,currentColor 16%,transparent); }.story h2 { font-size:21px; line-height:1.25; font-weight:500; margin:0 0 12px; }.story p { max-width:65ch; margin:0 0 20px; }.story figure { margin:0; }.story figcaption { font-size:14px; margin-top:20px; max-width:32ch; }.gallery { display:flex; flex-wrap:wrap; justify-content:center; gap:32px 40px; }.phone { width:289px; height:auto; aspect-ratio:340 / 720; position:relative; flex:none; }.phone > div { transform:scale(.85); transform-origin:top left; width:340px; }.single { display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center; }.single figure { justify-self:center; }.wide { overflow-x:auto; }.wide > div { min-width:700px; }.story footer { padding-top:32px; }.story :global(.claims-wrap) { padding:0; }.story :global(.claims-animate) { opacity:1; transform:none; }
 @media(max-width:700px) { .single { grid-template-columns:1fr; } }
-@media(max-width:350px) { .phone { width:255px; height:540px; }.phone > div { transform:scale(.75); }.single figure { transform:scale(.9); transform-origin:top center; } }
+@media(max-width:350px) { .phone { width:255px; }.phone > div { transform:scale(.75); }.single figure { transform:scale(.9); transform-origin:top center; } }
 
 .story { color:#252a2c; }
 .story header p,.story section > p,.single > div > p,.story figcaption { color:#596166; }
@@ -15,3 +15,12 @@
 .story :global(#skeleton) > div > div:first-child p,
 .story :global(#skeleton) > div > p { color:#596166 !important; font-size:14px !important; }
 .story :global(#skeleton) > div > div:first-child b { color:#252a2c !important; }
+
+/* Tims iPad: scale the whole 700px-min mockup down to the column instead of
+   side-scrolling it. tan(atan2(a, b)) yields the unitless ratio a/b in pure CSS,
+   so no JS measuring. The 16:10 wrapper carries the scaled height. Browsers
+   without CSS trig keep the old overflow-x:auto fallback above. */
+@supports (scale: tan(atan2(1px, 1px))) {
+  .wide { overflow:visible; container-type:inline-size; position:relative; aspect-ratio:16 / 10; }
+  .wide > div { min-width:0; position:absolute; top:0; left:0; width:max(700px, 100cqw); transform-origin:0 0; scale:min(1, tan(atan2(100cqw, 700px))); }
+}

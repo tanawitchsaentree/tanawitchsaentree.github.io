@@ -3,10 +3,8 @@ export const allianzMeta = {
   company: 'Allianz Technology',
   role: 'Senior Designer · Sole designer on the project',
   year: '2025–present',
-  timeline: '6 months',
-  team: '20 people',
   summary:
-    'I designed rule previews and review workflows at Allianz Technology, giving business teams a way to check routing changes and operators the context to handle documents that need a human decision.',
+    "Each office files insurance documents its own way. I designed the tool where a team builds its filing system, turns it into the AI's prompt and tests it before it goes live.",
   coverColor: '#003781',
   subCaseSlugs: ['document-classification', 'prompt-management', 'fallback-states'],
 } as const

@@ -3,7 +3,6 @@ import '@fontsource/ibm-plex-mono/400.css'
 import '@fontsource/ibm-plex-mono/500.css'
 import '@fontsource/ibm-plex-mono/400-italic.css'
 import '../styles/globals.css'
-import { LenisProvider } from '@/components/providers/LenisProvider'
 import { CustomCursor } from '@/components/ui/CustomCursor'
 
 const SITE_TITLE = 'Tanawitch Saentree — Senior Product Designer'
@@ -33,9 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="bg-[var(--bg)] text-[var(--fg)]">
-        <LenisProvider>
-          {children}
-        </LenisProvider>
+        {children}
         <CustomCursor />
       </body>
     </html>

@@ -1,10 +1,6 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
 
 /**
  * DecodeText — teletype "lock-on" reveal for section headings.
@@ -90,15 +86,20 @@ export function DecodeText({ text, className, duration = 620 }: DecodeTextProps)
       .map(c => (c === ' ' ? ' ' : scrambleGlyph(c)))
       .join('')
 
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: 'top 85%',
-      once: true,
-      onEnter: () => { raf = requestAnimationFrame(frame) },
-    })
+    // Native IntersectionObserver — fires when the top crosses 85% of the viewport.
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some(e => e.isIntersecting)) {
+          io.disconnect()
+          raf = requestAnimationFrame(frame)
+        }
+      },
+      { rootMargin: '0px 0px -15% 0px' },
+    )
+    io.observe(el)
 
     return () => {
-      st.kill()
+      io.disconnect()
       if (raf) cancelAnimationFrame(raf)
       if (!finished) el.textContent = text
     }

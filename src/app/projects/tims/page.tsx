@@ -4,8 +4,8 @@ import { TimsClient } from './TimsClient'
 export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
-  title: 'Forty Seconds: Tims POS Concept · Tanawitch Saentree',
-  description: 'A personal POS concept based on two years working at Tim Hortons, with presets and custom orders to try against remembered counter situations.',
+  title: 'Tims POS Concept · Tanawitch Saentree',
+  description: 'A POS concept built around the orders I took most at Tim Hortons and the changes people made at the last second.',
 }
 
 export default function TimsPage() {

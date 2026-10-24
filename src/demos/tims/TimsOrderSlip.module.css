@@ -1,0 +1,43 @@
+/* Tims order demo: the iPad POS with paper order slips beside it. */
+.demo { display:grid; grid-template-columns:minmax(0,1fr) 240px; gap:32px; align-items:start; }
+.ipad { min-width:0; }
+
+/* Lay the iPad out at 860px and scale it to the column in pure CSS. tan(atan2(a, b)) gives the unitless
+   ratio a/b, so no JS measuring and no ResizeObserver. */
+.scaler { position:relative; aspect-ratio:16 / 10; container-type:inline-size; }
+.scaler > div { position:absolute; top:0; left:0; width:max(860px, 100cqw); transform-origin:0 0; scale:min(1, tan(atan2(100cqw, 860px))); }
+@supports not (scale: tan(atan2(1px, 1px))) { .scaler { overflow-x:auto; aspect-ratio:auto; } .scaler > div { position:static; min-width:860px; } }
+
+.poster img { display:block; width:100%; height:auto; border-radius:18px; }
+.poster a { display:inline-block; margin-top:14px; font-size:14px; min-height:24px; }
+
+/* Slips. Mono, like a printed ticket. The shell forces system sans with !important, hence the opt-out. */
+:global(.project-pages) .slips, :global(.project-pages) .slips * { font-family:'IBM Plex Mono', ui-monospace, monospace !important; }
+.slips { display:flex; flex-direction:column; gap:20px; }
+.slip { position:relative; padding:18px 18px 20px; background:var(--bg-elevated); color:var(--fg); border-radius:4px; box-shadow:0 1px 2px color-mix(in srgb, var(--fg) 10%, transparent), 0 14px 30px -18px color-mix(in srgb, var(--fg) 40%, transparent); transform:rotate(-1deg); }
+.slip::after { content:''; position:absolute; left:0; right:0; bottom:-6px; height:6px; background:radial-gradient(circle at 5px -1px, transparent 5px, var(--bg-elevated) 5.5px) 0 0 / 10px 6px repeat-x; }
+.slip[data-second] { transform:rotate(1.5deg); animation:slipIn .6s cubic-bezier(.34,1.56,.64,1) both; }
+.slip[hidden] { display:none; }
+@keyframes slipIn { from { transform:translateY(-28px) rotate(-4deg); clip-path:inset(0 0 100% 0); } to { transform:rotate(1.5deg); clip-path:inset(0 0 -12px 0); } }
+.slipHead { margin:0 0 10px; padding-bottom:10px; border-bottom:1px dashed var(--border); font-size:11px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--fg-muted); }
+.call { margin:0 0 14px; font-size:14px; line-height:1.45; font-weight:500; }
+.lines { list-style:none; margin:0; padding:0; display:grid; gap:8px; font-size:14px; font-weight:400; line-height:1.45; color:var(--fg-muted); }
+.lines li { display:flex; align-items:flex-start; gap:8px; }
+.lines li[data-have] { color:var(--fg); }
+.box { display:grid; place-content:center; width:16px; height:16px; margin-top:1px; border:1.5px solid var(--fg-subtle); border-radius:3px; flex:none; }
+.lines li[data-have] .box { background:var(--fg); border-color:var(--fg); color:var(--bg-elevated); }
+.stamp { display:inline-block; margin:16px 0 0; padding:4px 8px; border:2px solid var(--tims-red); border-radius:4px; background:var(--bg-elevated); color:var(--tims-red); font-size:11px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; transform:rotate(-6deg); animation:stamp .4s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes stamp { from { transform:rotate(-14deg) scale(1.6); clip-path:inset(0 100% 0 0); } to { transform:rotate(-6deg) scale(1); clip-path:inset(0 0 0 0); } }
+.counter { display:grid; grid-template-columns:1fr auto; align-items:end; gap:4px 12px; margin-top:12px; padding-top:16px; border-top:1px solid var(--border); }
+.counterLabel { grid-column:1 / -1; font-size:11px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--fg-muted); }
+.counterNum { font-size:40px; line-height:1; font-weight:500; font-variant-numeric:tabular-nums; }
+.again { min-height:36px; padding:6px 12px; border:1px solid var(--border); border-radius:8px; background:var(--bg-elevated); color:var(--fg); font-size:12px; cursor:pointer; }
+.again:hover { border-color:var(--fg-muted); }
+.srOnly { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+
+@media (max-width:999px) {
+  .demo { grid-template-columns:1fr; }
+  .slips { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:24px; }
+  .counter { margin-top:0; }
+}
+@media (prefers-reduced-motion:reduce) { .slip[data-second], .stamp { animation:none; } }

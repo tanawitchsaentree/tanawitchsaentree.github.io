@@ -4,9 +4,11 @@ import { useState, useEffect, useRef, useId } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { cn } from '@/lib/cn'
+import { unlockWithPassword } from '@/lib/gate-crypto'
 
 const STORAGE_KEY = 'invitrace_gate_v1'
-const CORRECT_PASSWORD = '1234'
+// The password is checked by decrypting the (empty) invitrace blob, so it is not in the
+// bundle. The page content itself is not encrypted yet.
 
 type GateState = 'idle' | 'typing' | 'checking' | 'error' | 'success'
 
@@ -67,15 +69,13 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
   const handleSubmit = () => {
     if (!value.trim()) return
     setState('checking')
-    setTimeout(() => {
-      if (value.trim() === CORRECT_PASSWORD) {
+    unlockWithPassword('invitrace', value.trim())
+      .then(() => {
         setState('success')
         try { localStorage.setItem(STORAGE_KEY, 'true') } catch {}
         setTimeout(() => setIsOpen(false), 600)
-      } else {
-        triggerError()
-      }
-    }, 350)
+      })
+      .catch(() => triggerError())
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -88,14 +88,16 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
     setState(e.target.value.length > 0 ? 'typing' : 'idle')
   }
 
-  if (!hasMounted) return <>{children}</>
+  // Same tree shape before and after mount: only the overlay toggles, the
+  // children wrapper never changes, so the embedded iframe loads exactly once.
+  const gateVisible = hasMounted && isOpen
 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: SHAKE_STYLE }} />
 
       <AnimatePresence>
-        {isOpen && (
+        {gateVisible && (
           <motion.div
             key="invitrace-gate"
             initial={{ opacity: 0 }}
@@ -308,7 +310,7 @@ export function InvitraceGate({ children }: { children: React.ReactNode }) {
         )}
       </AnimatePresence>
 
-      <div aria-hidden={isOpen ? 'true' : undefined}>
+      <div aria-hidden={gateVisible ? 'true' : undefined}>
         {children}
       </div>
     </>
@@ -326,15 +328,16 @@ function LockIcon({ unlocked }: { unlocked: boolean }) {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <motion.path
-        d="M8 11V7a4 4 0 1 1 8 0v4"
-        animate={unlocked ? { d: 'M8 11V7a4 4 0 0 1 8 0' } : { d: 'M8 11V7a4 4 0 1 1 8 0v4' }}
+        d={unlocked ? 'M8 11V7a4 4 0 0 1 8 0' : 'M8 11V7a4 4 0 1 1 8 0v4'}
+        animate={{ y: unlocked ? -2 : 0 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       />
       <rect x="3" y="11" width="18" height="11" rx="2" />
       <motion.circle
         cx="12" cy="16" r="1"
-        animate={unlocked ? { r: 0 } : { r: 1 }}
-        transition={{ duration: 0.2 }}
+        style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
+        animate={{ scale: unlocked ? 0 : 1 }}
+        transition={{ duration: 0.2, ease: [0.65, 0, 0.35, 1] }}
       />
     </motion.svg>
   )

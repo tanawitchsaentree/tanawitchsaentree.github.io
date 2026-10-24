@@ -14,6 +14,11 @@ const DATA: Record<string, [string, number, number][]> = {
 }
 const TABS = ['For you','Dinner','Snacks','Dessert','Chicken','Breakfast']
 
+/* hero clip — src is set by the IntersectionObserver so nothing downloads until
+   the phone is on screen; the poster holds the frame until then. */
+const HERO_VIDEO  = '/images/stellareating/phone%20mockup%20content/kneading-400.mp4'
+const HERO_POSTER = '/images/stellareating/phone%20mockup%20content/kneading-poster.webp'
+
 const CSS = `
 .s1-scroll{position:absolute;inset:0;overflow-y:auto;border-radius:44px;scrollbar-width:none;background:var(--stellar-white)}
 .s1-scroll::-webkit-scrollbar{display:none}
@@ -135,12 +140,17 @@ const CSS = `
 
 /* skeleton */
 .s1-sugg-skel{align-self:flex-start;width:90%;background:var(--stellar-white);border:1px solid color-mix(in srgb, var(--stellar-ink-app) 7%, transparent);border-radius:16px;overflow:hidden}
-.s1-skel-img{height:78px;background:linear-gradient(90deg,var(--stellar-skeleton-a) 25%,var(--stellar-skeleton-b) 50%,var(--stellar-skeleton-a) 75%);background-size:200% 100%;animation:s1shimmer 1.3s cubic-bezier(.65,0,.35,1) infinite}
+.s1-skel-img,.s1-skel-line,.s1-skel-btn{position:relative;overflow:hidden;background:var(--stellar-skeleton-a)}
+.s1-skel-img::after,.s1-skel-line::after,.s1-skel-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,var(--stellar-skeleton-b) 50%,transparent 100%);transform:translateX(-100%);animation:s1shimmer 1.3s cubic-bezier(.65,0,.35,1) infinite;will-change:transform}
+.s1-skel-img{height:78px}
+.s1-skel-line{height:10px;border-radius:5px}
+.s1-skel-short{width:55%}
+.s1-skel-short::after{animation-delay:.15s}
+.s1-skel-btn{height:32px;border-radius:10px}
+.s1-skel-btn::after{animation-delay:.3s}
+@keyframes s1shimmer{to{transform:translateX(100%)}}
+@media(prefers-reduced-motion:reduce){.s1-skel-img::after,.s1-skel-line::after,.s1-skel-btn::after{animation:none;display:none}}
 .s1-skel-body{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
-.s1-skel-line{height:10px;border-radius:5px;background:linear-gradient(90deg,var(--stellar-skeleton-a) 25%,var(--stellar-skeleton-b) 50%,var(--stellar-skeleton-a) 75%);background-size:200% 100%;animation:s1shimmer 1.3s cubic-bezier(.65,0,.35,1) infinite}
-.s1-skel-short{width:55%;animation-delay:.15s}
-.s1-skel-btn{height:32px;border-radius:10px;background:linear-gradient(90deg,var(--stellar-skeleton-a) 25%,var(--stellar-skeleton-b) 50%,var(--stellar-skeleton-a) 75%);background-size:200% 100%;animation:s1shimmer 1.3s cubic-bezier(.65,0,.35,1) infinite;animation-delay:.3s}
-@keyframes s1shimmer{to{background-position:-200% 0}}
 
 /* input bar */
 .s1-input-bar{flex-shrink:0;padding:8px 12px 6px;background:var(--stellar-white);border-top:1px solid color-mix(in srgb, var(--stellar-ink-app) 7%, transparent)}
@@ -198,7 +208,16 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
      user-operable pause control independent of prefers-reduced-motion. */
   const [paused, setPaused] = useState(false)
   const pausedRef = useRef(false)
-  useEffect(() => { pausedRef.current = paused }, [paused])
+  /* off-screen = IntersectionObserver says the phone is out of view; the loop
+     and the hero video both hold until it scrolls back in. */
+  const offscreenRef = useRef(true)
+  useEffect(() => {
+    pausedRef.current = paused
+    const vid = videoRef.current
+    if (!vid || !vid.src) return
+    if (paused || offscreenRef.current) vid.pause()
+    else vid.play().catch(() => {})
+  }, [paused])
 
   /* ── render recipes helper ───────────────────────────────── */
   function renderRecipes(tab: string) {
@@ -255,7 +274,7 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
       let remaining = ms
       const tick = () => {
         if (cancelled) { resolve(); return }
-        if (pausedRef.current) { setTimeout(tick, 150); return }
+        if (pausedRef.current || offscreenRef.current) { setTimeout(tick, 150); return }
         if (remaining <= 0) { resolve(); return }
         const step = Math.min(100, remaining)
         setTimeout(() => { remaining -= step; tick() }, step)
@@ -426,29 +445,31 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
 
     renderRecipes('For you')
 
-    if (preview) {
-      /* card cover — load + play video, start loop immediately without waiting for IO */
-      const vid = videoRef.current
-      if (vid) { vid.load(); vid.play().catch(() => {}) }
-      setTimeout(loop, 700)
-      return () => { cancelled = true }
-    }
+    const START_RATIO = preview ? 0 : 0.4
+    let started = false
+    const startLoop = () => { if (!started) { started = true; setTimeout(loop, 700) } }
 
+    /* Keep observing (never disconnect after the first hit): pause the scripted
+       loop + video when the phone leaves the viewport, resume when it returns. */
+    const vid = videoRef.current
     const io = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        // lazy-load + play video only when visible
-        const vid = videoRef.current
-        if (vid && !vid.src) {
-          vid.src = '/images/stellareating/phone%20mockup%20content/Hands_kneading_spaghetti_dough_202606261157.mp4'
-          vid.load()
-        }
-        vid?.play().catch(() => {})
-        io.disconnect()
-        setTimeout(loop, 700)
+      const entry = entries[entries.length - 1]
+      // start once 40% is visible; hold only when the phone is fully out of view
+      // (isIntersecting stays true for partial visibility below the 40% mark)
+      if (entry.isIntersecting) {
+        if (!started && entry.intersectionRatio < START_RATIO) return
+        offscreenRef.current = false
+        // lazy-load the video only once the phone is visible
+        if (vid && !vid.src) { vid.src = HERO_VIDEO; vid.load() }
+        if (vid && !pausedRef.current) vid.play().catch(() => {})
+        startLoop()
+      } else {
+        offscreenRef.current = true
+        vid?.pause()
       }
-    }, { threshold: 0.4 })
+    }, { threshold: [0, START_RATIO] })
     io.observe(screen)
-    return () => { cancelled = true; io.disconnect() }
+    return () => { cancelled = true; io.disconnect(); vid?.pause() }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview])
 
@@ -499,9 +520,9 @@ export function StellarScreen1({ preview = false }: { preview?: boolean }) {
                 loop
                 playsInline
                 preload="none"
-              >
-                <source src="/images/stellareating/phone%20mockup%20content/Hands_kneading_spaghetti_dough_202606261157.mp4" type="video/mp4" />
-              </video>
+                poster={HERO_POSTER}
+                aria-hidden="true"
+              />
               <div className="s1-veil" />
               {/* status bar */}
               <div className="s1-statusbar">

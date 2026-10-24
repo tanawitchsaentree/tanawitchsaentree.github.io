@@ -4,8 +4,8 @@ import { ClaimsClient } from './ClaimsClient'
 export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
-  title: 'Designer as Builder · Claims Platform · Tanawitch Saentree',
-  description: 'Working interface prototypes for reviewing commercial claims workflows with the product team, from editing a claim to handling missing information.',
+  title: 'The life of a cargo claim · Claims · Tanawitch Saentree',
+  description: 'Following one damaged shipment through a claims system I designed and prototyped, from the first phone call to closing.',
 }
 
 export default function ClaimsPage() {
