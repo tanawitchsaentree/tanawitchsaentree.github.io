@@ -43,7 +43,7 @@ export function Console({ st }: { st: Store }) {
   return (
     // A scrollable region must be reachable by keyboard (WCAG 2.1.1, axe scrollable-region-focusable).
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-    <div ref={win} className={s.consoleWindow} style={resolved.css as CSSProperties} tabIndex={0} role="region" aria-label="Ward console preview. Scroll inside it to see every part.">
+    <div ref={win} className={s.consoleWindow} style={resolved.css as CSSProperties} tabIndex={0} role="region" aria-label="Ward console preview, scrollable">
     <div className={s.console} data-density={resolved.theme['brand.density']} data-dark={presetObj?.surface === 'dark' || undefined} data-shortcut={shortcut || undefined}>
       {/* A hospital switch wipes a surface-coloured shutter off the console (clip-path), so the
           change reads as one event; the console itself stays mounted, which keeps the switch cheap. */}
@@ -64,13 +64,14 @@ export function Console({ st }: { st: Store }) {
             <IconPlus size={14} />
             <span className={comp['button.label'] === 'icon-only' ? s.srOnly : undefined}>Admit patient</span>
           </span>
+          <span className={s.cBtn2}>Transfer</span>
           <span className={s.cTarget}>{comp['button.minHeight']} target</span>
         </div>
 
-        <div className={s.cField} data-ix-region="field" data-float={comp['field.label'] === 'floating' || undefined}>
+        <div className={s.cField} data-ix-region="field" data-float={comp['field.label'] === 'floating' || undefined} data-error={st.fieldError || undefined}>
           <span className={s.cLabel}>Patient ID</span>
           <span className={s.cInput}>{comp['field.label'] === 'floating' ? 'HN 2025-0418' : ''}</span>
-          <span className={s.cError}><IconErr size={13} /> Enter the full hospital number.</span>
+          {st.fieldError && <span className={s.cError}><IconErr size={13} /> Enter the full hospital number.</span>}
         </div>
 
         <div className={s.cTable} role="table" aria-label="Sample admissions" data-ix-region="table" data-nobed={comp['table.bedColumn'] === 'hidden-for-role' || undefined}>
@@ -114,7 +115,7 @@ export function Console({ st }: { st: Store }) {
       </div>
       <div ref={end} className={s.cEnd} aria-hidden="true" />
     </div>
-    {more && <div className={s.cScrollHint} aria-hidden="true">Scroll inside the console for more ↓</div>}
+    {more && <div className={s.cScrollHint} aria-hidden="true">More below ↓</div>}
     </div>
   )
 }

@@ -12,12 +12,11 @@ import type { Store } from './useInvitrace'
 import s from './invitrace.module.css'
 
 // ── Small shared pieces ──
-export function Section({ id, n, title, lead, body, children }: { id: string; n: string; title: string; lead: string; body: string[]; children?: ReactNode }) {
+export function Section({ id, n, title, body, children }: { id: string; n: string; title: string; body: string[]; children?: ReactNode }) {
   return (
     <section id={id} className={s.section} aria-labelledby={`${id}-h`}>
       <p className={s.eyebrow} aria-hidden="true">{n}</p>
       <h2 id={`${id}-h`} className={s.h2}>{title}</h2>
-      <p className={s.sectionLead}>{lead}</p>
       {body.map(p => <p key={p} className={s.body}>{p}</p>)}
       {children}
     </section>
@@ -89,11 +88,11 @@ export function Problem({ st }: { st: Store }) {
   // Each landed column takes a share of the drift out, so the buttons straighten as the table converges.
   const lean = one ? 1 - conv / COLUMNS.length : 1
   return (
-    <Section id="ix-problem" n="01" title={t.title} lead={t.lead} body={t.body}>
+    <Section id="ix-problem" n="01" title={t.title} body={t.body}>
       <Panel label="Forked buttons">
         <div className={s.row}>
-          <button type="button" className={st.drift === 'idle' ? s.btn : s.btnQuiet} onClick={st.actions.showDrift} aria-pressed={st.drift === 'drifted'}>See the drift</button>
-          <button type="button" className={s.btnQuiet} onClick={st.actions.consolidate} disabled={st.drift === 'idle'} aria-pressed={one}>Bring them back to one component</button>
+          <button type="button" className={st.drift === 'idle' ? s.btn : s.btnQuiet} onClick={st.actions.showDrift} aria-pressed={st.drift === 'drifted'}>Show forks</button>
+          <button type="button" className={s.btnQuiet} onClick={st.actions.consolidate} disabled={st.drift === 'idle'} aria-pressed={one}>Consolidate</button>
         </div>
         {st.drift !== 'idle' && (
           <div className={s.drift} data-one={settled || undefined}>
@@ -161,7 +160,7 @@ export function Tiers({ st }: { st: Store }) {
   const r = st.resolved
   const apply = (hex: string) => setCheck(st.actions.setPrimary(hex))
   return (
-    <Section id="ix-tiers" n="02" title={t.title} lead={t.lead} body={t.body}>
+    <Section id="ix-tiers" n="02" title={t.title} body={t.body}>
       <ol className={s.tiers} aria-label="Where the brand colour resolves">
         <li><span className={s.tierName}>Raw</span><span className={s.mono}>raw.white {RAW.white} · raw.critical {RAW.critical}</span></li>
         <li><span className={s.tierName}>Theme</span><span className={s.mono}>brand.primary {r.theme['brand.primary']} · brand.text {r.theme['brand.text']}</span></li>
@@ -169,8 +168,8 @@ export function Tiers({ st }: { st: Store }) {
         <li><span className={s.tierName}>Component</span><span className={s.mono}>button.background → color.primary · alert.background → color.critical</span></li>
       </ol>
       <XRay st={st} />
-      <Disclosure label={['Show the lineage table', 'Hide the lineage table']}
-        onToggle={o => { if (o) st.actions.note('You opened the lineage table.', 'Every console part, tier by tier, from the same graph as the X-ray.', { tier: 'Lineage' }) }}>
+      <Disclosure label={['Show lineage table', 'Hide lineage table']}
+        onToggle={o => { if (o) st.actions.note('Lineage table opened', 'Every console part, tier by tier, from the X-ray graph.', { tier: 'Lineage' }) }}>
         <LineageTable st={st} />
       </Disclosure>
       <Panel label="Hospital theme">
@@ -195,9 +194,9 @@ export function Tiers({ st }: { st: Store }) {
         </form>
         {check && !check.ok && (
           <div className={s.blocked} role="group" aria-label="Contrast check">
-            <p>✕ That colour reaches {check.ratio.toFixed(2)}:1 against white text. Buttons need {BRAND_MIN}:1.</p>
+            <p>✕ Blocked: contrast {check.ratio.toFixed(2)}:1 with white text, needs {BRAND_MIN}:1</p>
             <button type="button" className={s.btnQuiet} onClick={() => apply(check.nearest)}>
-              <span className={s.dot} style={{ background: check.nearest }} aria-hidden="true" /> Use {check.nearest}, the nearest that passes
+              <span className={s.dot} style={{ background: check.nearest }} aria-hidden="true" /> Use {check.nearest}, nearest pass
             </button>
           </div>
         )}
@@ -209,7 +208,7 @@ export function Tiers({ st }: { st: Store }) {
           <button type="button" className={s.btnQuiet} onClick={() => st.actions.stepRadius(2)} aria-label="Larger radius">+ 2px</button>
         </div>
         <p className={s.panelLabel}>Status colours</p>
-        <button type="button" className={s.btnQuiet} onClick={st.actions.tryAlertColour}>Recolour the critical alert for this hospital</button>
+        <button type="button" className={s.btnQuiet} onClick={st.actions.tryAlertColour}>Recolour critical alert</button>
       </Panel>
     </Section>
   )
@@ -227,7 +226,7 @@ export function Governance({ st }: { st: Store }) {
   const nextDensity = st.resolved.theme['brand.density'] === 'compact' ? 'regular' : 'compact'
   const rec = RECORDS[`${prim}-${a}`]
   return (
-    <Section id="ix-governance" n="03" title={t.title} lead={t.lead} body={t.body}>
+    <Section id="ix-governance" n="03" title={t.title} body={t.body}>
       <Panel label="Locked and flexible axes">
         <p className={s.panelLabel}>{ARCHETYPES[a].label} rules · <span className={s.muted}>{ARCHETYPES[a].who}</span></p>
         <ul className={s.govList}>
@@ -249,7 +248,7 @@ export function Governance({ st }: { st: Store }) {
           <li className={s.govItem}>
             <button type="button" className={s.govBtn} aria-pressed={st.gov.desktopFlag} data-state={a === 'large' ? 'flexible' : 'locked'} onClick={() => { st.actions.toggleFlag(); setTried('touch') }}>
               <span className={s.govState} aria-hidden="true">{a === 'large' ? (st.gov.desktopFlag ? '●' : '○') : <Lock />}</span>
-              <span>Mark this screen as desktop-locked</span>
+              <span>Desktop-locked screen flag</span>
               <span className={s.govTag}>{a === 'large' ? 'Environment flag' : 'Locked'}</span>
             </button>
           </li>
@@ -261,12 +260,12 @@ export function Governance({ st }: { st: Store }) {
           </div>
         )}
       </Panel>
-      <Disclosure label={[`Show the ${ARCHETYPES[a].label} variant records`, 'Hide the variant records']} open={st.recordsOpen}
-        onToggle={o => { st.actions.setRecordsOpen(o); if (o) st.actions.note(`You opened the ${ARCHETYPES[a].label} variant records.`, `A ${ARCHETYPES[a].label} theme can change only the flexible axes. The locked ones come with the hospital type.`, { tier: 'Component rules' }) }}>
+      <Disclosure label={[`Show ${ARCHETYPES[a].label} variant records`, 'Hide variant records']} open={st.recordsOpen}
+        onToggle={o => { st.actions.setRecordsOpen(o); if (o) st.actions.note(`${ARCHETYPES[a].label} variant records opened`, `A ${ARCHETYPES[a].label} theme changes flexible settings only. Locked settings come with the hospital type.`, { tier: 'Component rules' }) }}>
       <Panel label="Variant records">
         <p className={s.panelLabel}>The {ARCHETYPES[a].label} record for each component</p>
         <Seg label="Component" value={prim} options={[{ id: 'button', label: 'Button' }, { id: 'field', label: 'Field' }, { id: 'table', label: 'Table' }]}
-          onPick={p => { st.actions.setRecordPrim(p); st.actions.note(`You opened the ${ARCHETYPES[a].label} ${p} record.`, `The locked axes of the ${p} come with this hospital type.`, { tier: 'Component rules', rule: { href: `#ix-rec-${p}-${a}`, label: 'Variant record' } }) }} />
+          onPick={p => { st.actions.setRecordPrim(p); st.actions.note(`${ARCHETYPES[a].label} ${p} record`, `Locked ${p} settings come with this hospital type.`, { tier: 'Component rules', rule: { href: `#ix-rec-${p}-${a}`, label: 'Variant record' } }) }} />
         {rec && (
           <div className={s.records} id={`ix-rec-${prim}-${a}`}>
             <div><p className={s.recHead}>Flexible</p><ul>{rec.flexible.map(x => <li key={x}>{x}</li>)}</ul></div>
@@ -285,12 +284,12 @@ export function Governance({ st }: { st: Store }) {
 export function Rot({ st }: { st: Store }) {
   const t = SECTIONS.rot
   return (
-    <Section id="ix-rot" n="04" title={t.title} lead={t.lead} body={t.body}>
+    <Section id="ix-rot" n="04" title={t.title} body={t.body}>
       <Panel label="Library demo">
         <div className={s.master}>
           <span className={s.dotLg} style={{ background: st.master }} aria-hidden="true" />
           <span><span className={s.panelLabel}>Master token</span><span className={s.mono}> color/primary {st.master}</span></span>
-          <button type="button" className={s.btnQuiet} onClick={st.actions.changeMaster}>Change the master</button>
+          <button type="button" className={s.btnQuiet} onClick={st.actions.changeMaster}>Change master colour</button>
         </div>
         <ul className={s.instances}>
           {st.instances.map(i => (
@@ -320,11 +319,11 @@ export function Rot({ st }: { st: Store }) {
 export function Slots({ st }: { st: Store }) {
   const t = SECTIONS.slots
   return (
-    <Section id="ix-slots" n="05" title={t.title} lead={t.lead} body={t.body}>
+    <Section id="ix-slots" n="05" title={t.title} body={t.body}>
       <Panel label="Doctor card layout">
         <p className={s.panelLabel}>brand.layout for {st.hospital.name}</p>
         <Seg<Layout> label="Doctor card layout" value={st.hospital.layout} options={[{ id: 'row', label: 'Row' }, { id: 'column', label: 'Column with footer' }, { id: 'hero', label: 'HeroDoctorCard' }]} onPick={st.actions.setLayout} />
-        <button type="button" className={s.btnQuiet} onClick={st.actions.tryFork}>Fork it as DoctorCard-HospitalB</button>
+        <button type="button" className={s.btnQuiet} onClick={st.actions.tryFork}>Fork as DoctorCard-HospitalB</button>
       </Panel>
       <pre className={s.code} aria-label="DoctorCard compound component"><code>{`// DoctorCard owns the data contract; slots decide layout
 <DoctorCard data={doctor} layout={brand.layout}>
@@ -342,7 +341,7 @@ export function Slots({ st }: { st: Store }) {
 export function Edges({ st }: { st: Store }) {
   const t = SECTIONS.edges
   return (
-    <Section id="ix-edges" n="06" title={t.title} lead={t.lead} body={t.body}>
+    <Section id="ix-edges" n="06" title={t.title} body={t.body}>
       <Panel label="Ward presets">
         <p className={s.panelLabel}>Preset</p>
         <Seg label="Ward preset" value={st.preset ?? 'none'} options={[{ id: 'none', label: 'None' }, ...PRESETS.map(p => ({ id: p.id, label: p.label }))]}
@@ -359,16 +358,16 @@ export function Edges({ st }: { st: Store }) {
   )
 }
 
-// ── 7 · What didn't work ──
+// ── 7 · Keyboard shortcut layers ──
 export function Failed({ st }: { st: Store }) {
   const t = SECTIONS.failed
   return (
-    <Section id="ix-failed" n="07" title={t.title} lead={t.lead} body={t.body}>
+    <Section id="ix-failed" n="07" title={t.title} body={t.body}>
       <Panel label="Shortcut layer demo">
         <p className={s.note}>{t.demoNote}</p>
         <div className={s.row}>
-          <button type="button" className={s.btnQuiet} aria-pressed={st.shortcut} onClick={st.actions.toggleShortcut}>{st.shortcut ? 'Remove the shortcut layer' : 'Add a shortcut layer'}</button>
-          <button type="button" className={s.btnQuiet} onClick={st.actions.focusList}>Focus the patient list</button>
+          <button type="button" className={s.btnQuiet} aria-pressed={st.shortcut} onClick={st.actions.toggleShortcut}>{st.shortcut ? 'Remove shortcut layer' : 'Add shortcut layer'}</button>
+          <button type="button" className={s.btnQuiet} onClick={st.actions.focusList}>Focus patient list</button>
         </div>
       </Panel>
     </Section>
@@ -380,15 +379,15 @@ export function Decisions({ st }: { st: Store }) {
   const t = SECTIONS.decisions
   const [open, setOpen] = useState<number | null>(null)
   return (
-    <Section id="ix-decisions" n="08" title={t.title} lead={t.lead} body={t.body}>
+    <Section id="ix-decisions" n="08" title={t.title} body={t.body}>
       <ol className={s.decisions}>
         {DECISIONS.map((d, i) => (
           <li key={d.title} className={s.decision}>
             <h3 className={s.h3}>{d.title}</h3>
             <p>{d.problem}</p>
             <button type="button" className={s.btnQuiet} aria-expanded={open === i} aria-controls={`ix-dec-${i}`}
-              onClick={() => { const opening = open !== i; setOpen(opening ? i : null); if (opening) st.actions.note(`You opened the decision "${d.title}".`, `Option ${d.chosen} came with a cost. ${d.cost}`, { tier: 'Decision record' }) }}>
-              {open === i ? 'Hide the options' : 'Show the options and the cost'}
+              onClick={() => { const opening = open !== i; setOpen(opening ? i : null); if (opening) st.actions.note(`Decision record: ${d.title}`, `Chose ${d.chosen}. Cost: ${d.cost}`, { tier: 'Decision record' }) }}>
+              {open === i ? 'Hide options' : 'Show options and cost'}
             </button>
             {open === i && (
               <div id={`ix-dec-${i}`} className={s.decBody}>
@@ -412,11 +411,11 @@ export function Views({ st }: { st: Store }) {
   const h = st.hospital
   const locked = GOVERNANCE.filter(g => g[h.archetype].state === 'locked').map(g => g.label.toLowerCase())
   return (
-    <Section id="ix-views" n="09" title={t.title} lead={t.lead} body={t.body}>
-      <Disclosure label={['Show the current state for each role', 'Hide the role views']}
-        onToggle={o => { if (o) st.actions.note(`You opened the role views for ${h.name}.`, 'All three views are generated from the same resolved theme tier.', { tier: 'Theme (read only)' }) }}>
+    <Section id="ix-views" n="09" title={t.title} body={t.body}>
+      <Disclosure label={['Show role views', 'Hide role views']}
+        onToggle={o => { if (o) st.actions.note(`Role views opened for ${h.name}`, 'Each view is generated from the same resolved theme tier.', { tier: 'Theme (read only)' }) }}>
       <Seg label="Role" value={view} options={[{ id: 'designer', label: 'Designer' }, { id: 'engineer', label: 'Engineer' }, { id: 'pm', label: 'Product manager' }]}
-        onPick={v => { setView(v); st.actions.note(`You opened the ${v === 'pm' ? 'product manager' : v} view of ${h.name}.`, v === 'designer' ? 'Designers review tokens tier by tier.' : v === 'engineer' ? 'Engineers read component tokens, which alias semantic names only.' : 'The summary is written from the same theme file the build reads.', { tier: 'Theme (read only)' }) }} />
+        onPick={v => { setView(v); st.actions.note(`Role view: ${v === 'pm' ? 'product manager' : v}`, v === 'designer' ? 'Tokens listed tier by tier.' : v === 'engineer' ? 'Component tokens, aliasing semantic names only.' : 'Summary written from the theme file the build reads.', { tier: 'Theme (read only)' }) }} />
       <div className={s.viewBox}>
         {view === 'designer' && (
           <table className={s.table}><caption className={s.panelLabel}>Tokens for {h.name}</caption>
@@ -463,18 +462,18 @@ export function Onboarding({ st }: { st: Store }) {
   const go = (n: number, did: string, why: string) => { setStep(n); st.actions.note(did, why, { tier: 'Onboarding' }) }
   const back = (n: number) => setStep(n)
   return (
-    <Section id="ix-onboarding" n="10" title={t.title} lead={t.lead} body={t.body}>
+    <Section id="ix-onboarding" n="10" title={t.title} body={t.body}>
       <ol className={s.steps} aria-label="Steps">
         {['Hospital type', 'Theme', 'Contrast check', 'Preview'].map((x, i) => <li key={x} aria-current={step === i + 1 ? 'step' : undefined} data-done={step > i + 1 || undefined}>{i + 1}. {x}</li>)}
       </ol>
       <Panel label="New hospital">
         {step === 1 && (
           <>
-            <p className={s.panelLabel}>Which rules should it follow?</p>
+            <p className={s.panelLabel}>Hospital type</p>
             <Seg label="Hospital type" value={arch} options={(['medium', 'large', 'specialty'] as const).map(a => ({ id: a, label: ARCHETYPES[a].label }))}
-              onPick={a => { setArch(a); if (a === 'specialty') setDensity('regular'); st.actions.note(`Onboarding: you picked the ${ARCHETYPES[a].label} rules.`, ARCHETYPES[a].who, { tier: 'Onboarding' }) }} />
+              onPick={a => { setArch(a); if (a === 'specialty') setDensity('regular'); st.actions.note(`Onboarding: ${ARCHETYPES[a].label} rules`, ARCHETYPES[a].who, { tier: 'Onboarding' }) }} />
             <p className={s.note}>{ARCHETYPES[arch].who}</p>
-            <button type="button" className={s.btn} onClick={() => go(2, 'Onboarding: you moved on to the theme.', `A ${ARCHETYPES[arch].label} theme can only touch the ${ARCHETYPES[arch].label} flexible axes.`)}>Next</button>
+            <button type="button" className={s.btn} onClick={() => go(2, 'Onboarding: theme step', `A ${ARCHETYPES[arch].label} theme changes ${ARCHETYPES[arch].label} flexible settings only.`)}>Next</button>
           </>
         )}
         {step === 2 && (
@@ -483,34 +482,34 @@ export function Onboarding({ st }: { st: Store }) {
             <input id={`${id}-n`} className={s.input} value={name} onChange={e => setName(e.target.value)} maxLength={40} />
             <p className={s.panelLabel}>Brand colour</p>
             <div className={s.swatches} role="group" aria-label="New hospital brand colour">
-              {SWATCHES.map(hex => <button key={hex} type="button" className={s.swatch} style={{ background: hex }} aria-pressed={primary === hex} aria-label={hex} onClick={() => { setPrimary(hex); st.actions.note(`Onboarding: you picked ${hex} for ${name.trim() || 'the new hospital'}.`, 'The contrast check runs on the next step, before anything is added.', { tier: 'Onboarding' }) }} />)}
+              {SWATCHES.map(hex => <button key={hex} type="button" className={s.swatch} style={{ background: hex }} aria-pressed={primary === hex} aria-label={hex} onClick={() => { setPrimary(hex); st.actions.note(`Onboarding: brand colour ${hex}`, 'Contrast is checked on the next step.', { tier: 'Onboarding' }) }} />)}
             </div>
             <p className={s.panelLabel}>Corners <span className={s.mono}>{radius}px</span></p>
             <div className={s.row}>
-              <button type="button" className={s.btnQuiet} onClick={() => { const r = Math.max(0, radius - 2); setRadius(r); st.actions.note(r === radius ? 'Onboarding: the corners are already at 0px.' : `Onboarding: you set the corners to ${r}px.`, r === radius ? 'brand.radius runs from 0 to 24px.' : 'brand.radius in the new theme file.', { tier: 'Onboarding', blocked: r === radius }) }} aria-label="Smaller radius">− 2px</button>
-              <button type="button" className={s.btnQuiet} onClick={() => { const r = Math.min(24, radius + 2); setRadius(r); st.actions.note(r === radius ? 'Onboarding: the corners are already at 24px.' : `Onboarding: you set the corners to ${r}px.`, r === radius ? 'brand.radius runs from 0 to 24px.' : 'brand.radius in the new theme file.', { tier: 'Onboarding', blocked: r === radius }) }} aria-label="Larger radius">+ 2px</button>
+              <button type="button" className={s.btnQuiet} onClick={() => { const r = Math.max(0, radius - 2); setRadius(r); st.actions.note(r === radius ? 'Onboarding: corners at 0px minimum' : `Onboarding: corners ${r}px`, r === radius ? 'brand.radius range: 0 to 24px.' : 'brand.radius in the new theme file.', { tier: 'Onboarding', blocked: r === radius }) }} aria-label="Smaller radius">− 2px</button>
+              <button type="button" className={s.btnQuiet} onClick={() => { const r = Math.min(24, radius + 2); setRadius(r); st.actions.note(r === radius ? 'Onboarding: corners at 24px maximum' : `Onboarding: corners ${r}px`, r === radius ? 'brand.radius range: 0 to 24px.' : 'brand.radius in the new theme file.', { tier: 'Onboarding', blocked: r === radius }) }} aria-label="Larger radius">+ 2px</button>
             </div>
             <p className={s.panelLabel}>Density</p>
             <Seg<Density> label="Density" value={density} options={[{ id: 'compact', label: 'Compact' }, { id: 'regular', label: 'Regular' }]}
-              onPick={d => { if (arch === 'specialty' && d !== 'regular') { st.actions.note('Onboarding: you tried compact density for a Specialty clinic.', GOVERNANCE.find(g => g.id === 'density')!.specialty.why, { tier: 'Onboarding (locked)', blocked: true }); return } setDensity(d); st.actions.note(`Onboarding: you set density to ${d}.`, 'brand.density in the new theme file.', { tier: 'Onboarding' }) }} />
+              onPick={d => { if (arch === 'specialty' && d !== 'regular') { st.actions.note('Onboarding: compact density refused for Specialty', GOVERNANCE.find(g => g.id === 'density')!.specialty.why, { tier: 'Onboarding (locked)', blocked: true }); return } setDensity(d); st.actions.note(`Onboarding: density ${d}`, 'brand.density in the new theme file.', { tier: 'Onboarding' }) }} />
             <div className={s.row}>
               <button type="button" className={s.btnQuiet} onClick={() => back(1)}>Back</button>
-              <button type="button" className={s.btn} disabled={!name.trim()} onClick={() => go(3, `Onboarding: you set a theme for ${name.trim()}.`, `brand.primary is checked against white button text, ${BRAND_MIN}:1.`)}>Next</button>
+              <button type="button" className={s.btn} disabled={!name.trim()} onClick={() => go(3, `Onboarding: theme set for ${name.trim()}`, `brand.primary is checked against white text at ${BRAND_MIN}:1.`)}>Next</button>
             </div>
           </>
         )}
         {step === 3 && (
           <>
             <p className={s.panelLabel}>Contrast check</p>
-            <p className={c.ok ? s.passed : s.blockedText}>{c.ok ? '✓' : '✕'} {primary} reaches {c.ratio.toFixed(2)}:1 against white button text. {c.ok ? 'It passes.' : `Buttons need ${BRAND_MIN}:1.`}</p>
-            {!c.ok && <button type="button" className={s.btnQuiet} onClick={() => { setPrimary(c.nearest); st.actions.note(`Onboarding: you switched to ${c.nearest}, the nearest colour that passes.`, `${c.nearest} keeps the hue and reaches ${BRAND_MIN}:1.`, { tier: 'Onboarding' }) }}>
+            <p className={c.ok ? s.passed : s.blockedText}>{c.ok ? '✓' : '✕'} {primary}: contrast {c.ratio.toFixed(2)}:1 with white text, {c.ok ? 'passes' : `needs ${BRAND_MIN}:1`}</p>
+            {!c.ok && <button type="button" className={s.btnQuiet} onClick={() => { setPrimary(c.nearest); st.actions.note(`Onboarding: brand colour ${c.nearest}`, `Same hue, reaches ${BRAND_MIN}:1.`, { tier: 'Onboarding' }) }}>
               <span className={s.dot} style={{ background: c.nearest }} aria-hidden="true" /> Use {c.nearest}
             </button>}
             <div className={s.row}>
               <button type="button" className={s.btnQuiet} onClick={() => back(2)}>Back</button>
               <button type="button" className={s.btn} aria-disabled={!c.ok} onClick={() => {
-                if (!c.ok) { st.actions.note('Onboarding: you tried to continue with a failing colour.', `The theme can't be reviewed until the brand colour reaches ${BRAND_MIN}:1.`, { tier: 'Onboarding (blocked)', blocked: true }); return }
-                go(4, 'Onboarding: the contrast check passed.', 'A theme that passes is ready for review as a file diff.')
+                if (!c.ok) { st.actions.note('Onboarding: blocked at contrast check', `Blocked: brand.primary needs ${BRAND_MIN}:1 before review.`, { tier: 'Onboarding (blocked)', blocked: true }); return }
+                go(4, 'Onboarding: contrast check passed', 'Ready for review as a file diff.')
               }}>Next</button>
             </div>
           </>
@@ -525,7 +524,7 @@ export function Onboarding({ st }: { st: Store }) {
             </div>
             <div className={s.row}>
               <button type="button" className={s.btnQuiet} onClick={() => back(3)}>Back</button>
-              <button type="button" className={s.btn} onClick={() => { st.actions.addHospital({ archetype: arch, name: name.trim(), primary, radius, density, layout: arch === 'specialty' ? 'hero' : 'row' }); setStep(1) }}>Add to the console</button>
+              <button type="button" className={s.btn} onClick={() => { st.actions.addHospital({ archetype: arch, name: name.trim(), primary, radius, density, layout: arch === 'specialty' ? 'hero' : 'row' }); setStep(1) }}>Add to console</button>
             </div>
           </>
         )}
@@ -538,8 +537,8 @@ export function Onboarding({ st }: { st: Store }) {
 export function LogSection({ st }: { st: Store }) {
   const t = SECTIONS.log
   return (
-    <Section id="ix-log" n="11" title={t.title} lead={t.lead} body={t.body}>
-      <button type="button" className={s.btnQuiet} onClick={st.actions.clearLog} disabled={st.log.length === 0}>Clear the log</button>
+    <Section id="ix-log" n="11" title={t.title} body={t.body}>
+      <button type="button" className={s.btnQuiet} onClick={st.actions.clearLog} disabled={st.log.length === 0}>Clear log</button>
       <ChangeLog log={st.log} onRecord={st.actions.openRecord} />
     </Section>
   )

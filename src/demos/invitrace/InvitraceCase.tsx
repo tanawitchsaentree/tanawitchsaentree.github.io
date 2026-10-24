@@ -1,11 +1,13 @@
 'use client'
 
-import '@fontsource-variable/bricolage-grotesque'
-import '@fontsource/ibm-plex-sans/400.css'
-import '@fontsource/ibm-plex-sans/500.css'
-import '@fontsource/ibm-plex-sans/600.css'
-import '@fontsource/ibm-plex-mono/400.css'
-import '@fontsource/ibm-plex-mono/500.css'
+// Atkinson Hyperlegible, the Braille Institute's typeface for low-vision readers: one family for
+// every level of the page, hierarchy by weight, size and spacing.
+import '@fontsource/atkinson-hyperlegible-next/400.css'
+import '@fontsource/atkinson-hyperlegible-next/500.css'
+import '@fontsource/atkinson-hyperlegible-next/600.css'
+import '@fontsource/atkinson-hyperlegible-next/700.css'
+import '@fontsource/atkinson-hyperlegible-mono/400.css'
+import '@fontsource/atkinson-hyperlegible-mono/500.css'
 import Link from 'next/link'
 import { ChangeLog } from './ChangeLog'
 import { Console } from './Console'

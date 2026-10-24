@@ -259,7 +259,7 @@ export function ContrastField({ st }: { st: Store }) {
       <p className={s.fieldRead} data-grade={grade(ratio)}>
         <span className={s.dot} style={{ background: hex }} aria-hidden="true" />
         <span className={s.mono}>{hex}</span> {ratio.toFixed(2)}:1, {grade(ratio)}
-        {moved && <button type="button" className={s.btnQuiet} onClick={() => commit(pt, hue)}>Apply this colour</button>}
+        {moved && <button type="button" className={s.btnQuiet} onClick={() => commit(pt, hue)}>Apply</button>}
       </p>
       <ul className={s.fieldLegend}>
         <li><i data-k="pass" />{FIELD.legend.pass}</li>

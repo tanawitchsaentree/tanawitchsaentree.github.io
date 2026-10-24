@@ -45,6 +45,8 @@ export function useInvitrace() {
   const [recordsOpen, setRecordsOpen] = useState(false)
   const [recordPrim, setRecordPrim] = useState<'button' | 'field' | 'table'>('field')
   const [pick, setPick] = useState('button.background')
+  // The Patient ID field starts neutral; the error state appears only when a demo triggers it.
+  const [fieldError, setFieldError] = useState(false)
   const [pulse, setPulse] = useState<(Propagation & { n: number }) | null>(null)
   const n = useRef(0)
   const nextId = useRef(2)
@@ -80,13 +82,13 @@ export function useInvitrace() {
 
   const archLabel = (a: ArchetypeId) => ARCHETYPES[a].label
   // A control that changes nothing still says so, so every interaction leaves an entry.
-  const same = (did: string) => write({ did, tier: 'No change', tokens: [], followed: [], held: [], why: 'The value you picked is the one already in place.' })
+  const same = (did: string) => write({ did, tier: 'No change', tokens: [], followed: [], held: [], why: 'Already set.' })
 
   // ── The problem: drift → one component ──
   const showDrift = () => {
     setDrift('drifted')
-    write({ did: 'You showed the forked Admit buttons.', tier: 'No shared tier', tokens: ['padding, radius and fill hard-coded per fork'],
-      followed: [], held: ['Every fork keeps its own values'], why: 'One fix has to be made once per fork.' })
+    write({ did: 'Showed forked Admit buttons', tier: 'No shared tier', tokens: ['padding, radius and fill hard-coded per fork'],
+      followed: [], held: ['Each fork keeps its own values'], why: 'Hard-coded per fork. Each fix is made once per fork.' })
   }
   const consolidate = () => {
     setDrift('one')
@@ -94,7 +96,7 @@ export function useInvitrace() {
     const sum = driftSummary(SAMPLE_COLOURS.drift, canon)
     const lines = [...sum.converged.map(c => `${c.col.label} converged. ${c.forks} of ${SAMPLE_COLOURS.drift.length} forks changed.`),
       `${forkName(sum.most.i)} changed most, ${sum.most.n} of ${COLUMNS.length} properties.`]
-    write({ trace: { label: 'Converged', lines }, did: 'You brought the forks back to one Admit button.', tier: 'Component', tokens: ['button.background → color.primary', 'button.radius → brand.radius'],
+    write({ trace: { label: 'Converged', lines }, did: 'Consolidated forks into one Button', tier: 'Component', tokens: ['button.background → color.primary', 'button.radius → brand.radius'],
       followed: ['Admit button in every hospital theme'], held: [], why: 'One component, themed per hospital.',
       code: ['components/button.json', '+ "button.background": "{color.primary}"', '+ "button.radius": "{brand.radius}"'] })
   }
@@ -102,44 +104,44 @@ export function useInvitrace() {
   // ── Hospital theme (Tier 2) ──
   const pickHospital = (id: string) => {
     const h = hospitals.find(x => x.id === id); if (!h) return
-    if (id === active) { same(`You picked ${h.name}, which is already on the console.`); return }
+    if (id === active) { same(`${h.name} is already on the console`); return }
     setActive(id)
-    writeTheme({ did: `You switched the console to ${h.name}.`, tier: 'Theme', tokens: ['brand.primary', 'brand.radius', 'brand.density', 'brand.layout'],
+    writeTheme({ did: `Hospital: ${h.name}`, tier: 'Theme', tokens: ['brand.primary', 'brand.radius', 'brand.density', 'brand.layout'],
       followed: ['Admit button', 'Patient table', 'Doctor card layout', 'Field'], region: 'header', held: ['Critical alert, which reads raw.critical'],
-      why: `Only the theme tier differs. ${h.name} follows the ${archLabel(h.archetype)} rules.`,
+      why: `Theme tier only. ${archLabel(h.archetype)} rules apply.`,
       rule: { href: '#ix-governance', label: `${archLabel(h.archetype)} rules` } }, h, presetObj, govs[id] ?? GOV_DEFAULT)
   }
   const setPrimary = (hex: string) => {
     const c = checkBrand(hex)
     if (!c.ok) {
-      write({ did: `You tried ${hex} as the ${hospital.name} brand colour.`, region: 'actions', tier: 'Theme (blocked)', tokens: ['brand.primary'], blocked: true,
+      write({ did: `Brand colour ${hex} refused`, region: 'actions', tier: 'Theme (blocked)', tokens: ['brand.primary'], blocked: true,
         followed: [], held: ['Admit button keeps its current colour'],
-        why: `${c.ratio.toFixed(2)}:1 against white text. Buttons need 4.5:1, and ${c.nearest} is the nearest that passes.`,
+        why: `Blocked: contrast ${c.ratio.toFixed(2)}:1, needs 4.5:1. Nearest pass ${c.nearest}.`,
         rule: { href: '#ix-tiers', label: 'Brand contrast check' } })
       return c
     }
     const from = hospital.primary
-    if (from.toUpperCase() === hex.toUpperCase()) { same(`You picked ${hex.toUpperCase()}, the colour ${hospital.name} already uses.`); return c }
+    if (from.toUpperCase() === hex.toUpperCase()) { same(`${hex.toUpperCase()} is already the brand colour`); return c }
     setHospitals(hs => hs.map(h => h.id === active ? { ...h, primary: hex.toUpperCase() } : h))
     const d = diffLines(hospital.id, 'brand.primary', from, hex.toUpperCase())
-    writeTheme({ did: `You set the ${hospital.name} brand colour to ${hex.toUpperCase()}.`, region: 'actions', tier: 'Theme', tokens: ['brand.primary', 'color.primary', 'button.background'],
-      followed: ['Admit button', 'Doctor card action', 'Selected row marker'], held: ['Critical alert, because status colours skip the theme tier', 'Text colour, which depends on the surface'],
-      why: `Passes at ${c.ratio.toFixed(2)}:1. Status colours skip the theme tier, so the alert stays the same.`,
+    writeTheme({ did: `Brand colour set to ${hex.toUpperCase()}`, region: 'actions', tier: 'Theme', tokens: ['brand.primary', 'color.primary', 'button.background'],
+      followed: ['Admit button', 'Doctor card action', 'Selected row marker'], held: ['Critical alert (status skips the theme tier)', 'Text colour (follows the surface)'],
+      why: `Contrast ${c.ratio.toFixed(2)}:1 with white text. The alert keeps its raw colour.`,
       rule: { href: '#ix-tiers', label: 'Status skips the theme tier' }, figma: d.figma, code: d.code }, { ...hospital, primary: hex.toUpperCase() }, presetObj, gov)
     return c
   }
   const stepRadius = (delta: number) => {
     const to = Math.max(0, Math.min(24, hospital.radius + delta))
-    if (to === hospital.radius) { write({ did: `You tried to take the radius past ${to}px.`, tier: 'Theme (limit)', tokens: ['brand.radius'], blocked: true, followed: [], held: ['Radius stays at its limit'], why: 'Theme radius runs from 0 to 24px, so every component keeps a readable shape.' }); return }
+    if (to === hospital.radius) { write({ did: `Radius limit ${to}px`, tier: 'Theme (limit)', tokens: ['brand.radius'], blocked: true, followed: [], held: ['Radius stays at its limit'], why: 'brand.radius range: 0 to 24px.' }); return }
     setHospitals(hs => hs.map(h => h.id === active ? { ...h, radius: to } : h))
     const d = diffLines(hospital.id, 'brand.radius', `${hospital.radius}px`, `${to}px`)
-    writeTheme({ did: `You changed the ${hospital.name} corner radius to ${to}px.`, region: 'actions', tier: 'Theme', tokens: ['brand.radius', 'button.radius', 'card.radius'],
-      followed: ['Admit button', 'Field', 'Doctor card', 'Alert'], held: ['Focus ring offset, which is locked'],
-      why: 'Radius is a flexible theme value.', figma: d.figma, code: d.code }, { ...hospital, radius: to }, presetObj, gov)
+    writeTheme({ did: `Corner radius set to ${to}px`, region: 'actions', tier: 'Theme', tokens: ['brand.radius', 'button.radius', 'card.radius'],
+      followed: ['Admit button', 'Field', 'Doctor card', 'Alert'], held: ['Focus ring offset (locked)'],
+      why: 'brand.radius is a flexible theme value.', figma: d.figma, code: d.code }, { ...hospital, radius: to }, presetObj, gov)
   }
   const tryAlertColour = () => {
-    write({ did: `You tried to recolour the critical alert for ${hospital.name}.`, region: 'alert', tier: 'Raw (locked)', tokens: ['color.critical → raw.critical'], blocked: true,
-      followed: [], held: ['Critical alert stays the same in every hospital'],
+    write({ did: 'Critical alert recolour refused', region: 'alert', tier: 'Raw (locked)', tokens: ['color.critical → raw.critical'], blocked: true,
+      followed: [], held: ['Critical alert, same in every hospital'],
       why: 'Status colours read raw values and skip the theme tier.',
       rule: { href: '#ix-tiers', label: 'Status skips the theme tier' } })
   }
@@ -157,41 +159,47 @@ export function useInvitrace() {
       const next = current === 'compact' ? 'regular' : 'compact'
       setGovs(g => ({ ...g, [active]: { ...gov, density: next } }))
       if (presetObj) {
-        write({ did: `You switched ${hospital.name} to ${next} density.`, tier: 'Theme (held by preset)', tokens: ['brand.density'], region,
-          followed: [], held: [`Patient table spacing, because the ${presetObj.label} preset sets density`],
-          why: 'A ward preset sits above the hospital theme, so its density wins until the preset is off.', rule: link,
+        write({ did: `Density set to ${next}`, tier: 'Theme (held by preset)', tokens: ['brand.density'], region,
+          followed: [], held: [`Patient table spacing (${presetObj.label} preset sets density)`],
+          why: 'The ward preset overrides theme density until it is removed.', rule: link,
           code: [`themes/${hospital.id}.json`, `+ "brand.density": "${next}"`, `presets/${presetObj.id}.json wins`] })
         return
       }
-      writeTheme({ did: `You switched ${hospital.name} to ${next} density.`, tier: 'Theme', tokens: ['brand.density', 'space.pad'], region,
-        followed: ['Patient table spacing', 'Field padding'], held: ['Touch targets, which keep their locked size'], why: r.short, rule: link,
+      writeTheme({ did: `Density set to ${next}`, tier: 'Theme', tokens: ['brand.density', 'space.pad'], region,
+        followed: ['Patient table spacing', 'Field padding'], held: ['Touch targets (locked size)'], why: r.short, rule: link,
         code: [`themes/${hospital.id}.json`, `- "brand.density": "${current}"`, `+ "brand.density": "${next}"`] }, hospital, presetObj, { ...gov, density: next })
       return
     }
     if (r.state === 'locked' || !key || (r.state === 'flag' && !gov.desktopFlag)) {
       const needFlag = r.state === 'flag' && !gov.desktopFlag
-      write({ did: `You tried "${rule.label}" on ${hospital.name}.`, tier: 'Component (locked)', tokens: [componentToken(id)], blocked: true,
-        followed: [], held: [`${rule.primitive} keeps its ${archLabel(hospital.archetype)} contract`],
-        why: needFlag ? `${r.short} Mark the screen as desktop-locked first.` : r.short, rule: link, region })
+      if (id === 'errors') {
+        setFieldError(true)
+        write({ did: 'Patient ID error shown', tier: 'Component (locked)', tokens: ['field.error', 'field.border'], blocked: true, region: 'field',
+          followed: ['Patient ID field: error rule and message'], held: ['Error message stays until the field is fixed'], why: r.short, rule: link })
+        return
+      }
+      write({ did: `${rule.label}: refused`, tier: 'Component (locked)', tokens: [componentToken(id)], blocked: true,
+        followed: [], held: [`${rule.primitive}, ${archLabel(hospital.archetype)} contract`],
+        why: needFlag ? `${r.short} Set the desktop-locked flag first.` : r.short, rule: link, region })
       return
     }
     setGovs(g => ({ ...g, [active]: { ...gov, [key]: on } }))
-    write({ did: `You ${on ? 'turned on' : 'turned off'} "${rule.label}" for ${hospital.name}.`, tier: 'Component', tokens: [componentToken(id)],
-      followed: [followerOf(id)], held: id === 'bedcol' ? ['Risk column, which can never be hidden'] : [],
+    write({ did: `${rule.label}: ${on ? 'on' : 'off'}`, tier: 'Component', tokens: [componentToken(id)],
+      followed: [followerOf(id)], held: id === 'bedcol' ? ['Risk column (never hidden)'] : [],
       why: r.short, rule: link, region, code: [`themes/${hospital.id}.json`, `${on ? '+' : '-'} "${componentToken(id)}": "${valueOf(id)}"`] })
   }
   const toggleFlag = () => {
     if (hospital.archetype !== 'large') {
-      write({ did: `You tried to mark a ${hospital.name} screen as desktop-locked.`, tier: 'Environment (locked)', tokens: ['env.desktopLocked'], blocked: true,
-        followed: [], held: ['Touch targets stay at 44px'], why: `${archLabel(hospital.archetype)} screens are touch devices, so 44px stays.`, region: 'actions',
+      write({ did: 'Desktop-locked flag refused', tier: 'Environment (locked)', tokens: ['env.desktopLocked'], blocked: true,
+        followed: [], held: ['Touch targets stay at 44px'], why: `Locked: ${archLabel(hospital.archetype)} screens are touch devices. 44px stays.`, region: 'actions',
         rule: { href: '#ix-governance', label: 'Touch target rule' } })
       return
     }
     const on = !gov.desktopFlag
     setGovs(g => ({ ...g, [active]: { ...gov, desktopFlag: on, touch36: on ? gov.touch36 : false } }))
-    write({ did: `You ${on ? 'marked' : 'unmarked'} this ${hospital.name} screen as desktop-locked.`, tier: 'Environment', tokens: ['env.desktopLocked'],
+    write({ did: `Desktop-locked flag ${on ? 'on' : 'off'}`, tier: 'Environment', tokens: ['env.desktopLocked'],
       followed: on ? ['36px targets become possible'] : ['Touch targets back to 44px'], held: [],
-      why: on ? '36px targets are now possible on this screen.' : 'Touch targets are back to 44px.', rule: { href: '#ix-rec-field-large', label: 'Teaching field record' } })
+      why: on ? '36px targets now allowed on this screen.' : 'Touch targets back to 44px.', rule: { href: '#ix-rec-field-large', label: 'Teaching field record' } })
   }
 
   // ── Detach, copy, invent ──
@@ -200,9 +208,9 @@ export function useInvitrace() {
     const color = kind === 'invent' ? SAMPLE_COLOURS.invent : master
     setInstances(is => [...is, { id, kind, color }])
     const k = SECTIONS.rot.kinds[kind]
-    write({ did: `You added a ${k.name.toLowerCase()}.`, tier: kind === 'prop' ? 'Component' : 'None (outside the system)', tokens: kind === 'prop' ? ['button.contrastMode = high', 'button.background → color.primary'] : ['Values copied by hand'],
+    write({ did: `Added ${k.name.toLowerCase()}`, tier: kind === 'prop' ? 'Component' : 'None (outside the system)', tokens: kind === 'prop' ? ['button.contrastMode = high', 'button.background → color.primary'] : ['Values copied by hand'],
       followed: kind === 'prop' ? ['Stays bound to the master'] : [], held: kind === 'prop' ? [] : [`${k.name} is no longer bound to the master`],
-      why: k.short, rule: { href: '#ix-rot', label: 'Detach, copy and invent' } })
+      why: k.short, rule: { href: '#ix-rot', label: 'Detaching and copying' } })
   }
   const changeMaster = () => {
     const M = SAMPLE_COLOURS.masters
@@ -212,68 +220,68 @@ export function useInvitrace() {
     setInstances(is => is.map(i => (i.kind === 'bound' || i.kind === 'prop' ? { ...i, color: to } : i)))
     const names = (k: Instance['kind']) => instances.filter(i => i.kind === k).length
     const held = (['detach', 'copy', 'invent'] as const).filter(k => names(k)).map(k => `${SECTIONS.rot.kinds[k].name}, frozen at its old value`)
-    write({ did: `You changed the master colour to ${to}.`, tier: 'Raw and semantic (library master)', tokens: ['color/primary'],
+    write({ did: `Master colour set to ${to}`, tier: 'Raw and semantic (library master)', tokens: ['color/primary'],
       followed: ['Bound instance', ...(names('prop') ? ['Instance with contrast prop'] : [])], held,
-      why: held.length ? 'Bound instances follow. The others froze when they left the system.' : 'Every instance is bound, so all of them follow.',
-      rule: { href: '#ix-rot', label: 'Detach, copy and invent' }, figma: `Library › color/primary  ${from} → ${to}`, code: ['tokens/master.json', `- "color.primary": "${from}"`, `+ "color.primary": "${to}"`] })
+      why: held.length ? 'Bound instances follow. Detached ones keep their old value.' : 'All instances are bound and follow.',
+      rule: { href: '#ix-rot', label: 'Detaching and copying' }, figma: `Library › color/primary  ${from} → ${to}`, code: ['tokens/master.json', `- "color.primary": "${from}"`, `+ "color.primary": "${to}"`] })
   }
   const resetInstances = () => {
     setInstances([{ id: 1, kind: 'bound', color: master }]); nextId.current = 2
-    write({ did: 'You reset the library demo to one bound instance.', tier: 'Component', tokens: ['button.background → color.primary'], followed: ['Bound instance'], held: [], why: 'Every instance reads the master again.' })
+    write({ did: 'Reset to one bound instance', tier: 'Component', tokens: ['button.background → color.primary'], followed: ['Bound instance'], held: [], why: 'The instance reads the master.' })
   }
 
   // ── Slots ──
   const setLayout = (layout: Layout) => {
-    if (layout === hospital.layout) { same(`You picked the ${layout} layout, which ${hospital.name} already uses.`); return }
+    if (layout === hospital.layout) { same(`${layout} layout is already set`); return }
     if (hospital.layout === 'hero' || layout === 'hero') {
       const toHero = layout === 'hero'
-      write({ did: `You tried to give ${hospital.name} the ${toHero ? 'HeroDoctorCard' : layout + ' layout'}.`, tier: 'Component (separate)', tokens: ['heroDoctorCard', 'doctorCard.layout'], blocked: true, region: 'doctor',
-        followed: [], held: [toHero ? `${hospital.name} keeps DoctorCard with slots` : 'Specialty keeps HeroDoctorCard'],
-        why: toHero ? 'HeroDoctorCard is a separate component for a screen with one hero card, so it is not a layout value.' : 'Specialty uses its own HeroDoctorCard, so slot layouts don’t apply.',
-        rule: { href: '#ix-slots', label: 'When a variant earns its own component' } })
+      write({ did: `${toHero ? 'HeroDoctorCard' : layout + ' layout'} refused`, tier: 'Component (separate)', tokens: ['heroDoctorCard', 'doctorCard.layout'], blocked: true, region: 'doctor',
+        followed: [], held: [toHero ? 'DoctorCard with slots stays' : 'HeroDoctorCard stays'],
+        why: toHero ? 'HeroDoctorCard is a separate component, not a layout value.' : 'Specialty uses HeroDoctorCard. Slot layouts don’t apply.',
+        rule: { href: '#ix-slots', label: 'DoctorCard slots' } })
       return
     }
     const from = hospital.layout
     setHospitals(hs => hs.map(h => h.id === active ? { ...h, layout } : h))
     const d = diffLines(hospital.id, 'brand.layout', from, layout)
-    write({ did: `You switched the ${hospital.name} doctor card to the ${layout} layout.`, region: 'doctor', tier: 'Theme', tokens: ['brand.layout', 'doctorCard.layout'],
-      followed: ['DoctorCard slots rearrange'], held: ['Data contract unchanged'], why: 'Layout is a theme token, so the slots rearrange.', figma: d.figma, code: d.code })
+    write({ did: `DoctorCard layout set to ${layout}`, region: 'doctor', tier: 'Theme', tokens: ['brand.layout', 'doctorCard.layout'],
+      followed: ['DoctorCard slots rearrange'], held: ['Data contract unchanged'], why: 'brand.layout is a theme token. Slots rearrange.', figma: d.figma, code: d.code })
   }
   const tryFork = () => {
-    write({ did: 'You tried to fork the card as DoctorCard-HospitalB.', region: 'doctor', tier: 'None (fork declined)', tokens: ['doctorCard.*'], blocked: true,
-      followed: [], held: ['One DoctorCard stays the only card'], why: 'A fork copies the data contract, and a slot layout keeps it in one place.', rule: { href: '#ix-slots', label: 'Slots instead of forks' } })
+    write({ did: 'Fork DoctorCard-HospitalB refused', region: 'doctor', tier: 'None (fork declined)', tokens: ['doctorCard.*'], blocked: true,
+      followed: [], held: ['Single DoctorCard stays'], why: 'A fork copies the data contract. Use a slot layout.', rule: { href: '#ix-slots', label: 'DoctorCard slots' } })
   }
 
   // ── Presets and edge cases ──
   const pickPreset = (id: PresetId | null) => {
-    if (id === preset) { same(id ? 'You picked the preset that is already on.' : 'You picked no preset, and none was on.'); return }
+    if (id === preset) { same(id ? 'Preset already on' : 'No preset was on'); return }
     const p = id ? PRESETS.find(x => x.id === id)! : null
     setPreset(id)
     if (!p) {
-      writeTheme({ did: 'You removed the ward preset.', tier: 'Theme', tokens: ['brand.density', 'brand.surface', 'brand.text'], followed: ['Console back to the hospital theme'], held: [], why: 'The hospital theme is back as it was.' }, hospital, null, gov)
+      writeTheme({ did: 'Ward preset removed', tier: 'Theme', tokens: ['brand.density', 'brand.surface', 'brand.text'], followed: ['Console on the hospital theme'], held: [], why: 'Hospital theme restored.' }, hospital, null, gov)
       return
     }
     const changes = [`brand.density = ${p.density}`, `brand.textScale = ${p.textScale}`, `brand.surface = ${p.surface}`, ...(p.contrast === 'high' ? ['brand.text = high contrast ink'] : []), ...(p.surface === 'dark' ? ['brand.text = light, through the theme tier'] : [])]
-    writeTheme({ did: `You applied the ${p.label} preset to ${hospital.name}.`, region: 'table', tier: 'Theme (preset)', tokens: changes,
+    writeTheme({ did: `Preset: ${p.label}`, region: 'table', tier: 'Theme (preset)', tokens: changes,
       followed: ['Patient table spacing', 'All text', ...(p.surface === 'dark' ? ['Surfaces and cards'] : [])],
-      held: ['Critical alert colour', 'Brand colour', 'Locked contracts such as the 44px target'],
+      held: ['Critical alert colour', 'Brand colour', 'Locked contracts (44px target)'],
       why: p.who, rule: { href: '#ix-edges', label: 'Ward presets' },
       code: [`presets/${p.id}.json`, ...changes.map(c => `+ ${c}`)] }, hospital, p, gov)
   }
   const pickEdge = (e: Edge) => {
-    if (e === edge) { same('You picked the patient list content that is already showing.'); return }
+    if (e === edge) { same('That content is already showing'); return }
     setEdge(e)
-    write({ did: e === 'none' ? 'You returned the patient list to its usual content.' : e === 'long' ? 'You gave a patient a very long name.' : 'You emptied the admissions list.',
+    write({ did: e === 'none' ? 'Patient list: usual content' : e === 'long' ? 'Patient list: long name' : 'Patient list: empty',
       tier: 'Content rule', tokens: e === 'long' ? ['table.name.overflow = wrap', 'doctorCard.meta.overflow = truncate'] : e === 'empty' ? ['table.emptyState'] : [], region: 'table',
-      followed: e === 'none' ? [] : ['Patient table'], held: [], why: e === 'long' ? 'Patient names wrap and are never cut short.' : e === 'empty' ? 'An empty list says what is empty.' : 'Sample data restored.', rule: { href: '#ix-edges', label: 'Edge-case rules' } })
+      followed: e === 'none' ? [] : ['Patient table'], held: [], why: e === 'long' ? 'Names wrap, never truncate.' : e === 'empty' ? 'Empty state names what is empty.' : 'Sample data restored.', rule: { href: '#ix-edges', label: 'Ward presets' } })
   }
 
   // ── What didn't work ──
   const toggleShortcut = () => {
     const on = !shortcut; setShortcut(on)
-    write({ did: on ? 'You added a hospital keyboard shortcut layer to the patient list.' : 'You removed the shortcut layer.', tier: on ? 'Outside the component contract' : 'Component', tokens: ['table.keyboard', 'focus.ring'], region: 'table',
-      followed: on ? [] : ['Focus ring and Tab order back to the contract'], held: on ? ['Focus ring on the patient rows'] : [],
-      why: on ? 'The layer handled Tab first, so the focus ring disappeared.' : 'Keyboard behaviour is the shared contract again.', rule: { href: '#ix-failed', label: 'What didn’t work' } })
+    write({ did: on ? 'Shortcut layer added to patient list' : 'Shortcut layer removed', tier: on ? 'Outside the component contract' : 'Component', tokens: ['table.keyboard', 'focus.ring'], region: 'table',
+      followed: on ? [] : ['Focus ring and Tab order (contract)'], held: on ? ['Focus ring on patient rows'] : [],
+      why: on ? 'The layer handles Tab first. Focus ring lost.' : 'Keyboard behaviour back on the shared contract.', rule: { href: '#ix-failed', label: 'Keyboard shortcut layers' } })
   }
 
   // ── Views, decisions, onboarding ──
@@ -282,10 +290,10 @@ export function useInvitrace() {
 
   // Keyboard focus into the console's patient list (the What didn't work demo).
   const focusList = () => {
-    write({ did: 'You moved keyboard focus to the patient list.', tier: shortcut ? 'Outside the component contract' : 'Component (keyboard)', tokens: ['table.keyboard', 'focus.ring'], region: 'table',
-      followed: shortcut ? [] : ['Row focus ring'], held: shortcut ? ['Row focus ring, swallowed by the shortcut layer'] : [],
-      why: shortcut ? 'The layer handles Tab first, so the focused row shows no ring.' : 'Rows are in the Tab order and show the shared focus ring. Press Tab to move between them.',
-      rule: { href: '#ix-failed', label: 'What didn’t work' } })
+    write({ did: 'Focus moved to patient list', tier: shortcut ? 'Outside the component contract' : 'Component (keyboard)', tokens: ['table.keyboard', 'focus.ring'], region: 'table',
+      followed: shortcut ? [] : ['Row focus ring'], held: shortcut ? ['Row focus ring (taken by the shortcut layer)'] : [],
+      why: shortcut ? 'The layer handles Tab first. The focused row has no ring.' : 'Rows are in the Tab order with the shared focus ring. Tab moves between them.',
+      rule: { href: '#ix-failed', label: 'Keyboard shortcut layers' } })
     requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-ix-row]')?.focus())
   }
   // Log links to a variant record open the records and switch to that component.
@@ -299,9 +307,9 @@ export function useInvitrace() {
     const id = `${slug(h.name)}-${nextId.current++}`
     const hosp: Hospital = { ...h, id, custom: true }
     setHospitals(hs => [...hs, hosp]); setActive(id)
-    writeTheme({ did: `You added ${h.name} to the console.`, region: 'header', tier: 'Theme (new file)', tokens: ['brand.primary', 'brand.radius', 'brand.density', 'brand.layout'],
-      followed: ['Every shared component, with the new theme'], held: [`${archLabel(h.archetype)} locked axes, inherited as they are`],
-      why: `It inherits the ${archLabel(h.archetype)} locked axes.`,
+    writeTheme({ did: `Added ${h.name}`, region: 'header', tier: 'Theme (new file)', tokens: ['brand.primary', 'brand.radius', 'brand.density', 'brand.layout'],
+      followed: ['Every shared component, with the new theme'], held: [`${archLabel(h.archetype)} locked settings (inherited)`],
+      why: `Inherits ${archLabel(h.archetype)} locked settings.`,
       rule: { href: '#ix-governance', label: `${archLabel(h.archetype)} rules` },
       code: [`themes/${id}.json`, `+ "brand.primary": "${h.primary}"`, `+ "brand.radius": "${h.radius}px"`, `+ "brand.density": "${h.density}"`, `+ "brand.layout": "${h.layout}"`, `+ "archetype": "${h.archetype}"`] }, hosp, presetObj, GOV_DEFAULT)
   }
@@ -323,25 +331,25 @@ export function useInvitrace() {
     setPick(id)
     const el = XRAY.elements.find(e => e.id === id)
     const { l, lines, why } = lineageLines(id)
-    write({ did: `You traced the ${el ? el.label.toLowerCase() : id}.`, tier: 'Lineage', tokens: l.chain.map(c => c.id), followed: [], held: [], why,
+    write({ did: `Traced ${el ? el.label.toLowerCase() : id}`, tier: 'Lineage', tokens: l.chain.map(c => c.id), followed: [], held: [], why,
       region: REGION[id.split('.')[0]], trace: { label: 'Path', lines }, rule: { href: '#ix-tiers', label: 'Token tiers' } })
   }
   const explode = (on: boolean) => {
-    write({ did: on ? 'You split the console into its four tiers.' : 'You put the tiers back into one console.', tier: 'Lineage', tokens: [], followed: [], held: [],
-      why: on ? XRAY.intro : 'The stack folds back into the console you see.' })
+    write({ did: on ? 'Tiers separated' : 'Tiers stacked', tier: 'Lineage', tokens: [], followed: [], held: [],
+      why: on ? XRAY.intro : 'Back to the console view.' })
   }
   const stepTier = (t: Tier) => {
     const { l } = lineageLines(pick)
     const node = l.at(t)
-    write({ did: `You stepped to the ${TIER_LABEL[t]} tier.`, tier: 'Lineage', tokens: node ? [node.id] : [], followed: [], held: [],
-      why: node ? `${node.id} is ${node.value} on this tier.` : t === 'theme' && l.skipsTheme ? (l.status ? XRAY.notes.status : XRAY.notes.shared) : 'Nothing on this tier for the part you picked.' })
+    write({ did: `Tier: ${TIER_LABEL[t]}`, tier: 'Lineage', tokens: node ? [node.id] : [], followed: [], held: [],
+      why: node ? `${node.id} = ${node.value}` : t === 'theme' && l.skipsTheme ? (l.status ? XRAY.notes.status : XRAY.notes.shared) : 'No token on this tier for this part.' })
   }
 
   // ── Contrast field ──
   /** A drop outside the pass region: the theme tier refuses it, then the nearest passing point applies. */
   const snapPrimary = (tried: string, ratio: number, snapped: string) => {
-    write({ did: `You dropped the ${hospital.name} brand colour on ${tried}.`, region: 'actions', tier: 'Theme (refused)', tokens: ['brand.primary'], blocked: true,
-      followed: [`Kept your hue and moved to ${snapped}, the nearest colour that reaches 4.5:1`], held: [`${tried} at ${ratio.toFixed(2)}:1`],
+    write({ did: `Brand colour ${tried} refused`, region: 'actions', tier: 'Theme (refused)', tokens: ['brand.primary'], blocked: true,
+      followed: [`Snapped to ${snapped}, same hue, 4.5:1`], held: [`${tried}, contrast ${ratio.toFixed(2)}:1`],
       why: FIELD.refused, rule: { href: '#ix-tiers', label: 'Brand contrast check' } })
     setPrimary(snapped)
   }
@@ -349,7 +357,7 @@ export function useInvitrace() {
   const clearLog = () => { setLog([]); n.current = 0 }
 
   return {
-    hospitals, hospital, active, preset, presetObj, gov, edge, drift, master, instances, shortcut, log, resolved, recordsOpen, recordPrim, graph, pick, pulse,
+    hospitals, hospital, active, preset, presetObj, gov, edge, drift, master, instances, shortcut, log, resolved, recordsOpen, recordPrim, graph, pick, pulse, fieldError,
     actions: { showDrift, consolidate, pickHospital, setPrimary, stepRadius, tryAlertColour, tryGov, toggleFlag, addInstance, changeMaster, resetInstances,
       setLayout, tryFork, pickPreset, pickEdge, toggleShortcut, note, addHospital, clearLog, focusList, openRecord, setRecordsOpen, setRecordPrim,
       pickLineage, explode, stepTier, snapPrimary, lineageLines },

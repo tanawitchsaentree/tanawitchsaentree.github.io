@@ -58,14 +58,9 @@
 .anchor { display: block; height: 0; }
 
 /* Panels: a raised sheet on the lightbox. */
-.panel { margin-top: 24px; padding: 16px; display: grid; gap: 12px; background: var(--ixp-card); border-radius: 6px; box-shadow: var(--ixp-shadow), inset 0 1px 0 var(--ixp-hi); }
-/* The panel's first row of controls sits on a band-tone toolbar strip that runs edge to edge. */
-.panel > .row:first-child { margin: -16px -16px 0; padding: 12px 16px; background: var(--ixp-band); border-radius: 6px 6px 0 0; box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--ixp-ink) 10%, transparent); }
+.panel { margin-top: 24px; padding: 16px 0 0; display: grid; gap: 12px; border-top: 1px solid var(--ixp-line); }
 .panel > .row:first-child .btnQuiet { background: var(--ixp-card); }
-/* Panels that open with a label get it as a band-tone title bar. */
-.panel > .panelLabel:first-child + .govList { border-top: 0; }
-.panel > .panelLabel:first-child { margin: -16px -16px 0; padding: 10px 16px; background: var(--ixp-band); border-radius: 6px 6px 0 0; box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--ixp-ink) 10%, transparent); }
-.panel > .steps:first-child { margin: -16px -16px 0; width: auto; max-width: none; padding: 10px 16px; gap: 4px; border-radius: 6px 6px 0 0; box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--ixp-ink) 10%, transparent); }
+
 .panel > * { min-width: 0; }
 /* Actions keep their own width; a full-bleed primary would flood the panel with the accent. */
 .panel > :is(.btn, .btnQuiet) { justify-self: start; }
@@ -95,7 +90,7 @@
 .segBtn:hover { color: var(--ixp-ink); }
 .segBtn[aria-pressed="true"] { color: var(--ixp-ink); font-weight: 600; }
 /* Inputs: a band-tone well with a 1px rule; focus moves the rule to the signal plus the ring. */
-.input { font-size: .9375rem; min-height: 36px; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--ixp-ink) 22%, transparent); border-radius: 4px; color: var(--ixp-ink); background: var(--ixp-band); box-shadow: inset 0 1px 1px color-mix(in srgb, var(--ixp-ink) 8%, transparent); box-sizing: border-box; --ixp-font: var(--ixp-mono); transition: border-color .15s var(--ease-in-out-natural); }
+.input { font-size: .9375rem; min-height: 36px; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--ixp-ink) 22%, transparent); border-radius: 4px; color: var(--ixp-ink); background: var(--ixp-card); box-shadow: inset 0 1px 1px color-mix(in srgb, var(--ixp-ink) 6%, transparent); box-sizing: border-box; --ixp-font: var(--ixp-mono); transition: border-color .15s var(--ease-in-out-natural); }
 .input:hover { border-color: var(--ixp-line-strong); }
 .input:focus-visible { border-color: var(--ixp-violet); }
 .input[aria-invalid="true"] { border-color: var(--ixp-del); }
@@ -140,7 +135,7 @@
 .matrix tbody tr:nth-child(even) :is(th, td):not([data-ref]) { background: color-mix(in srgb, var(--ixp-band) 30%, var(--ixp-card)); }
 .matrix tbody th { font-weight: 500; font-size: .75rem; }
 .matrix tbody tr:last-child :is(th, td) { border-bottom: 0; }
-.matrix [data-ref] { background: var(--ixp-band); border-left: 1px solid color-mix(in srgb, var(--ixp-ink) 22%, transparent); padding-left: 8px; font-weight: 500; }
+.matrix [data-ref] { background: var(--ixp-card); border-left: 1px solid color-mix(in srgb, var(--ixp-ink) 22%, transparent); padding-left: 8px; font-weight: 500; }
 /* On narrow screens the sheet scrolls; Reference stays pinned at the right edge so the value every fork is corrected to stays in view. */
 @media (max-width: 959px) { .matrix [data-ref] { position: sticky; right: 0; z-index: 1; box-shadow: -1px 0 0 color-mix(in srgb, var(--ixp-ink) 30%, transparent); } }
 .matrix td[data-out] { font-weight: 600; }
@@ -203,7 +198,7 @@
 .table caption { text-align: left; padding: 0 0 6px; }
 .table th, .table td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--ixp-line); vertical-align: top; overflow-wrap: anywhere; }
 .table thead th { color: var(--ixp-muted); background: var(--ixp-band); border-bottom: 1px solid color-mix(in srgb, var(--ixp-ink) 18%, transparent); }
-.table tbody tr > :first-child { background: var(--ixp-band); font-weight: 500; }
+.table tbody tr > :first-child { font-weight: 500; }
 .table tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--ixp-band) 40%, var(--ixp-card)); }
 .table tbody tr:hover :is(th, td) { background: color-mix(in srgb, var(--ixp-band) 60%, var(--ixp-card)); }
 .table tbody tr:last-child :is(th, td) { border-bottom: 0; }
@@ -242,7 +237,7 @@
 .entryBadgeHeld { color: var(--ixp-ink); }
 .entry[data-blocked] { box-shadow: inset 3px 0 0 var(--ixp-del); }
 .entryHeld { font-weight: 500; }
-.entryTop { display: flex; gap: 8px; align-items: center; color: var(--ixp-muted); margin: -10px -12px 4px; padding: 5px 12px; background: var(--ixp-band); }
+.entryTop { display: flex; gap: 8px; align-items: center; color: var(--ixp-muted); }
 .entryN { color: var(--ixp-ink); }
 .entryTime { color: var(--ixp-muted); }
 .entryTier { color: var(--ixp-violet); margin-left: auto; }
@@ -258,7 +253,6 @@
 .logLatest { background: var(--ixp-card); border-radius: 4px; box-shadow: var(--ixp-shadow); }
 .logLatest .logList { overflow: visible; }
 .logLatest .entry { border-bottom: 0; padding: 7px 10px; }
-.logLatest .entryTop { margin: -7px -10px 4px; padding: 4px 10px; }
 .logLatest :is(.entryTokens, .entryFollow, .entryTrace, .entryWhy, .entryFigma, .entryCode) { display: none; }
 .entryTrace ol { margin: 2px 0 0; padding: 0 0 0 10px; list-style: none; display: grid; gap: 1px; border-left: 1px solid var(--ixp-violet); font-size: .6875rem; overflow-wrap: anywhere; }
 
@@ -273,43 +267,48 @@
   background: var(--ix-surface); color: var(--ix-text);
   font-size: calc(12px * var(--ix-scale)); line-height: 1.4; font-variant-numeric: tabular-nums;
 }
-.cScrollHint { position: sticky; bottom: 0; left: 0; display: block; padding: 5px 12px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; text-align: center; color: var(--ixp-ink); background: var(--ixp-band); border-top: 1px solid color-mix(in srgb, var(--ixp-ink) 14%, transparent); --ixp-font: var(--ixp-mono); }
+.cScrollHint { position: sticky; bottom: 0; left: 0; display: block; padding: 5px 12px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; text-align: center; color: var(--ixp-ink); background: var(--ixp-card); border-top: 1px solid color-mix(in srgb, var(--ixp-ink) 14%, transparent); --ixp-font: var(--ixp-mono); }
 .cEnd { height: 1px; }
 .consoleBody { box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 .cShutter { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: var(--ix-surface); animation: shutter .4s var(--ease-out-standard) both; }
 /* Header plate on the band tone, with the brand stripe and a 1px top light. */
-.cHead { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--ix-radius); background: var(--ix-band); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ix-card) 70%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--ix-text) 6%, transparent); }
+.cHead { display: flex; align-items: center; gap: 10px; padding: 2px 0 10px; border-bottom: 1px solid var(--ix-line); }
 .cStripe { width: 3px; align-self: stretch; border-radius: 2px; background: var(--ix-primary); }
 .cName { font-weight: 600; font-size: 1.17em; letter-spacing: -0.01em; }
 .cMeta { color: var(--ix-muted); font-size: .92em; text-transform: uppercase; letter-spacing: .08em; }
-/* Alarm bar: the softened critical tone, a cut-out icon block in the deeper step, white text. */
-.cAlert { display: flex; align-items: stretch; gap: 10px; min-height: 32px; border-radius: var(--ix-radius); background: var(--ix-critical); color: var(--ix-on-primary); font-weight: 600; overflow: hidden; box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 18%, transparent); }
+/* Alarm bar: slim. A solid status block with a cut-out icon, then dark text on a soft tint of the
+   critical tone (AA on both light and night surfaces). Urgent without taking over the console. */
+.cAlert { display: flex; align-items: stretch; gap: 10px; min-height: 28px; border-radius: var(--ix-radius); background: color-mix(in srgb, var(--ix-critical) 13%, var(--ix-surface)); color: var(--ix-text); font-weight: 600; overflow: hidden; }
 .cAlert > span:last-child { align-self: center; padding-right: 10px; }
-.cAlertIcon { display: grid; place-items: center; flex: none; width: 32px; background: var(--ix-critical-deep); color: var(--ix-on-primary); }
+.cAlertIcon { display: grid; place-items: center; flex: none; width: 28px; background: var(--ix-critical); color: var(--ix-on-primary); }
 .cActions { display: flex; align-items: center; gap: 10px; }
 /* Primary action: brand fill, top-light highlight, hairline in a deeper step of the brand. */
 .cBtn { display: inline-flex; align-items: center; gap: 6px; min-height: var(--ix-target); padding: 0 16px; box-sizing: border-box; border-radius: var(--ix-radius); background: var(--ix-primary); color: var(--ix-on-primary); font-weight: 600;
   border: 1px solid color-mix(in srgb, var(--ix-primary) 82%, var(--ixp-ink)); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 24%, transparent), 0 1px 1px color-mix(in srgb, var(--ixp-ink) 16%, transparent); }
 .cBtn:hover { background: color-mix(in srgb, var(--ix-primary) 92%, var(--ixp-ink)); }
 .cBtn[data-icon] { padding: 0; width: var(--ix-target); justify-content: center; }
-.cTarget { font-size: .92em; color: var(--ix-muted); }
+/* Secondary action: the band tone with a text label, same height and radius as the primary. */
+.cBtn2 { display: inline-flex; align-items: center; min-height: var(--ix-target); padding: 0 16px; box-sizing: border-box; border-radius: var(--ix-radius); background: var(--ix-band); color: var(--ix-text); font-weight: 600; border: 1px solid color-mix(in srgb, var(--ix-text) 14%, transparent); }
+.cTarget { font-size: .92em; color: var(--ix-muted); margin-left: auto; }
 .cField { display: grid; gap: 4px; position: relative; }
 .cLabel { color: var(--ix-muted); font-size: .92em; }
 .cField[data-float] .cLabel { position: absolute; top: 3px; left: 10px; font-size: .92em; }
-/* Input well on the band tone; this sample shows the error state (status rule, icon, message). */
-.cInput { min-height: var(--ix-target); box-sizing: border-box; padding: calc(var(--ix-pad) + 6px) 10px 4px; border: 1px solid var(--ix-critical); border-radius: var(--ix-radius); background: var(--ix-band); color: var(--ix-text); box-shadow: inset 0 1px 2px color-mix(in srgb, var(--ixp-ink) 8%, transparent); }
+/* Input: neutral by default (card fill, 1px rule). The error state (status rule, icon, message)
+   appears only after the errors governance rule is tried, and that is logged. */
+.cInput { min-height: var(--ix-target); box-sizing: border-box; padding: calc(var(--ix-pad) + 6px) 10px 4px; border: 1px solid color-mix(in srgb, var(--ix-text) 28%, transparent); border-radius: var(--ix-radius); background: var(--ix-card); color: var(--ix-text); }
 .cField:not([data-float]) .cInput { padding-top: var(--ix-pad); }
-.console[data-dark] .cInput { background: var(--ix-card); }
+.cField[data-float] .cInput { padding-top: calc(var(--ix-pad) + 12px); }
+.cField[data-error] .cInput { border-color: var(--ix-critical); box-shadow: inset 0 0 0 1px var(--ix-critical); }
 .cField[data-float] .cInput { padding-top: calc(var(--ix-pad) + 12px); }
 .cError { display: flex; align-items: center; gap: 5px; font-size: .92em; color: var(--ix-text); }
 .cError svg { color: var(--ix-critical); flex: none; }
-.cTable { border-radius: var(--ix-radius); background: var(--ix-card); overflow: hidden; box-shadow: inset 0 0 0 1px var(--ix-line); }
-.cRow { display: grid; grid-template-columns: 30px 1.3fr 66px 1fr; gap: 8px; align-items: center; padding: var(--ix-pad) 10px; border-top: 1px solid color-mix(in srgb, var(--ix-line) 70%, transparent); }
+.cTable { border-radius: var(--ix-inner); overflow: hidden; border-bottom: 1px solid var(--ix-line); }
+.cRow { display: grid; grid-template-columns: 30px 1.3fr 66px 1fr; gap: 8px; align-items: center; padding: calc(var(--ix-pad) + 3px) 10px; border-top: 1px solid color-mix(in srgb, var(--ix-line) 70%, transparent); }
 .cTable[data-nobed] .cRow { grid-template-columns: 1fr 70px 1fr; }
-.cRow[data-head] { border-top: 0; background: var(--ix-band); color: var(--ix-muted); font-size: .92em; padding-block: 7px; }
+.cRow[data-head] { border-top: 0; background: var(--ix-band); color: var(--ix-muted); font-size: .92em; padding-block: 9px; border-radius: var(--ix-inner); }
 .cRow[data-head] + .cRow { border-top: 0; }
-.cRow[data-ix-row]:nth-child(even) { background: color-mix(in srgb, var(--ix-band) 55%, var(--ix-card)); }
-.cRow[data-ix-row]:hover { background: color-mix(in srgb, var(--ix-band) 70%, var(--ix-card)); }
+.cRow[data-ix-row]:nth-child(even) { background: var(--ix-band); }
+.cRow[data-ix-row]:hover { background: color-mix(in srgb, var(--ix-band) 70%, var(--ix-line)); }
 .console .cRow:focus-visible { outline: 2px solid var(--ix-text); outline-offset: -2px; }
 /* The broken shortcut layer: wins over the row ring above (higher specificity). */
 .console[data-shortcut] .cRow[data-ix-row]:focus-visible { outline: none; }
@@ -321,10 +320,10 @@
 .cRisk i { width: 8px; height: 8px; flex: none; clip-path: polygon(0 0, 100% 0, 100% 62%, 62% 100%, 0 100%); }
 .cEmpty { padding: 16px 10px; color: var(--ix-muted); border-top: 1px solid var(--ix-line); text-align: center; }
 /* Doctor card: a raised card, monogram ring in the brand at low weight, secondary action. */
-.cDoctor { display: flex; align-items: center; gap: 10px; padding: calc(var(--ix-pad) + 2px) 12px; border-radius: var(--ix-radius); background: var(--ix-card); box-shadow: inset 0 0 0 1px var(--ix-line), inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 50%, transparent), 0 1px 2px color-mix(in srgb, var(--ixp-ink) 8%, transparent); }
+/* The one raised surface in the console. */
+.cDoctor { margin-top: 4px; display: flex; align-items: center; gap: 10px; padding: calc(var(--ix-pad) + 2px) 12px; border-radius: var(--ix-radius); background: var(--ix-card); box-shadow: inset 0 0 0 1px var(--ix-line), 0 1px 2px color-mix(in srgb, var(--ixp-ink) 10%, transparent); }
 .cDoctor[data-layout="column"] { flex-direction: column; align-items: flex-start; }
-/* On light themes the action row sits on a band-tone strip, like a control shelf. */
-.console:not([data-dark]) .cActions { padding: 8px; border-radius: var(--ix-radius); background: var(--ix-band); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ix-card) 70%, transparent); }
+
 .cDoctor[data-layout="column"] .cDocAction { align-self: stretch; text-align: center; }
 .cDoctor[data-layout="hero"] { flex-direction: column; align-items: flex-start; gap: 4px; box-shadow: inset 3px 0 0 var(--ix-primary), inset 0 0 0 1px var(--ix-line); }
 .cAvatar { width: 34px; height: 34px; box-sizing: border-box; border-radius: 50%; display: grid; place-items: center; background: transparent; border: 1.5px solid var(--ix-primary); color: var(--ix-primary); font-weight: 600; font-size: .92em; letter-spacing: .04em; flex: none; }
@@ -337,7 +336,7 @@
 .cLive { color: var(--ix-text); font-weight: 600; }
 .cBroken { padding: 6px 8px 6px 10px; border-radius: var(--ix-inner); background: var(--ix-card); box-shadow: inset 3px 0 0 var(--ix-warning), inset 0 0 0 1px var(--ix-line); font-size: .92em; }
 .cGov { font-size: .92em; color: var(--ix-muted); min-height: 1em; text-transform: uppercase; letter-spacing: .08em; }
-.console[data-density="compact"] .cRow { padding-block: 4px; }
+.console[data-density="compact"] .cRow { padding-block: 6px; }
 
 /* ── Token lineage X-ray: four acetate films clipped to a lightbox (CSS 3D, transform only). ── */
 .xray { margin-top: 20px; }
@@ -383,19 +382,20 @@
 .xFace { box-sizing: border-box; height: calc(100% - 26px); padding: 8px; border-radius: 4px; background: var(--ix-surface); color: var(--ix-text); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 30%, transparent); font-size: 11px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
 .xFace [data-part] { cursor: pointer; }
 .xFace[data-lit], .xFace [data-part][data-lit] { outline: 2px solid var(--ixp-violet); outline-offset: 2px; }
-.xHead { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; padding: 4px 6px; border-radius: var(--ix-radius); background: var(--ix-band); }
+.xHead { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; padding-bottom: 4px; border-bottom: 1px solid var(--ix-line); }
 .xHead b { white-space: nowrap; font-weight: 600; }
 .xStripe { width: 3px; height: 14px; border-radius: 2px; background: var(--ix-primary); }
 .xHint { color: var(--ix-muted); }
 .xCopies { display: flex; gap: 4px; margin-left: auto; }
 .xStage:not([data-mode="stack"]) .xCopies { flex-basis: 100%; margin-left: 0; }
 .xCopy { white-space: nowrap; padding: 0 5px; border: 1px dashed var(--ix-muted); color: var(--ix-text); }
-.xAlert { padding: 3px 7px; border-radius: var(--ix-radius); background: var(--ix-critical); color: var(--ix-on-primary); font-weight: 600; }
+.xAlert { padding: 2px 7px; border-radius: var(--ix-inner, 2px); background: color-mix(in srgb, var(--ix-critical) 13%, var(--ix-surface)); box-shadow: inset 4px 0 0 var(--ix-critical); color: var(--ix-text); font-weight: 600; }
 .xRowFlex { display: flex; align-items: center; gap: 8px; }
 .xBtn { display: inline-flex; align-items: center; height: calc(var(--ix-target) * .6); padding: 0 12px; border-radius: var(--ix-radius); background: var(--ix-primary); color: var(--ix-on-primary); font-weight: 600; box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 24%, transparent); }
 .xLabel { color: var(--ix-muted); align-self: flex-start; text-transform: uppercase; letter-spacing: .08em; }
-.xInput { display: block; height: 18px; border: 1px solid var(--ix-critical); border-radius: var(--ix-radius); background: var(--ix-band); }
-.xTable { border-radius: var(--ix-radius); background: var(--ix-card); box-shadow: inset 0 0 0 1px var(--ix-line); overflow: hidden; }
+.xInput { display: block; height: 18px; border: 1px solid color-mix(in srgb, var(--ix-text) 28%, transparent); border-radius: var(--ix-radius); background: var(--ix-card); }
+.xInput[data-error] { border-color: var(--ix-critical); }
+.xTable { overflow: hidden; border-bottom: 1px solid var(--ix-line); }
 .xTr:nth-child(odd) { background: color-mix(in srgb, var(--ix-band) 38%, var(--ix-card)); }
 .xTr { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: calc(var(--ix-pad) * .6) 7px; border-top: 1px solid var(--ix-line); }
 .xTr:first-child { border-top: 0; }
@@ -538,8 +538,7 @@
   .logDesk { flex: 1; min-height: 0; display: flex; }
   .prose { grid-column: 1; grid-row: 1; }
   .aside { grid-column: 2; grid-row: 1; }
-  /* The console and its tape sit in a band-tone rack, like an instrument bay. */
-  .sticky { background: var(--ixp-band); border-radius: 8px; padding: 12px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 8%, transparent), inset 0 1px 0 var(--ixp-hi); }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -547,3 +546,4 @@
   /* No travelling pulse: the token highlight carries the change. */
   .xPulse { display: none; }
 }
+.panelLabel .muted { text-transform: none; letter-spacing: 0; font-size: .875rem; }

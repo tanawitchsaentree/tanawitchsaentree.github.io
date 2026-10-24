@@ -15,7 +15,7 @@ import s from './invitrace.module.css'
 const PART: Record<string, string> = {
   'console.surface': 'surface', 'header.stripe': 'stripe', 'alert.background': 'alert',
   'button.background': 'button', 'button.text': 'button', 'button.radius': 'button', 'button.minHeight': 'button',
-  'field.label': 'label', 'field.border': 'input', 'table.text': 'name', 'table.rowPad': 'row', 'table.line': 'row',
+  'field.label': 'label', 'field.border': 'input', 'field.error': 'input', 'table.text': 'name', 'table.rowPad': 'row', 'table.line': 'row',
   'focus.ring': 'ringRow', 'focus.ringOffset': 'ringRow', 'risk.high': 'riskH', 'risk.medium': 'riskM', 'risk.low': 'riskL',
   'card.background': 'card', 'card.radius': 'card', 'doctorCard.action': 'action', 'doctorCard.ring': 'card', 'fork.admitButtons': 'forks',
 }
@@ -234,7 +234,7 @@ export function XRay({ st }: { st: Store }) {
         <span className={s.xHint}>{st.resolved.component['button.minHeight']}</span>
       </div>
       <span className={s.xLabel} data-part="label" data-lit={lit.has('field.label') || undefined}>Patient ID</span>
-      <span className={s.xInput} data-part="input" data-lit={lit.has('field.border') || undefined} />
+      <span className={s.xInput} data-error={st.fieldError || undefined} data-part="input" data-lit={lit.has('field.border') || undefined} />
       <div className={s.xTable}>
         {(['riskH', 'riskM', 'riskL'] as const).map((r, i) => (
           <div key={r} className={s.xTr} data-part={i === 0 ? 'ringRow' : i === 1 ? 'row' : undefined} data-ring={i === 0 || undefined}
@@ -267,7 +267,7 @@ export function XRay({ st }: { st: Store }) {
   return (
     <div ref={wrap} className={s.xray}>
       <div className={s.row}>
-        {mode === 'stack' && <button type="button" className={s.btn} aria-pressed={open} onClick={toggle}>{open ? 'Fold the tiers back into the console' : 'Split the console into its tiers'}</button>}
+        {mode === 'stack' && <button type="button" className={s.btn} aria-pressed={open} onClick={toggle}>{open ? 'Stack tiers' : 'Separate tiers'}</button>}
         {mode === 'step' && (
           <>
             <button type="button" className={s.btnQuiet} disabled={stepAt === 0} onClick={() => { const i = stepAt - 1; setStepAt(i); st.actions.stepTier(TIER_ORDER[i]) }}>Up a tier</button>
@@ -306,7 +306,7 @@ export function XRay({ st }: { st: Store }) {
         ))}
       </div>
 
-      <div ref={list} className={s.xList} role="toolbar" aria-label="Console parts. Arrow keys move between them." onKeyDown={onListKey}>
+      <div ref={list} className={s.xList} role="toolbar" aria-label="Console parts. Arrow keys move between parts." onKeyDown={onListKey}>
         {elements.map((el, i) => (
           <button key={el.id} type="button" className={s.xPart} aria-pressed={st.pick === el.id} aria-describedby={st.pick === el.id ? capId : undefined} tabIndex={i === idx ? 0 : -1} onClick={() => st.actions.pickLineage(el.id)}>{el.label}</button>
         ))}

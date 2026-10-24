@@ -49,7 +49,7 @@ export function ChangeLog({ log, id, latestOnly, onRecord }: { log: Entry[]; id?
     <div className={latestOnly ? s.logLatest : s.log} id={id} data-count={log.length}>
       {!latestOnly && <div className={s.logHead}><span>Change log</span><span>{log.length} {log.length === 1 ? 'entry' : 'entries'}</span></div>}
       {shown.length === 0
-        ? <p className={s.logEmpty}>Nothing changed yet. Every control on this page writes an entry here.</p>
+        ? <p className={s.logEmpty}>No entries yet. Every control on this page writes one.</p>
         : <ol className={s.logList} reversed>{shown.map(e => <LogEntry key={e.n} e={e} onRecord={onRecord ? record : undefined} />)}</ol>}
     </div>
   )

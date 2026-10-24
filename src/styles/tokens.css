@@ -222,8 +222,9 @@
   --ixp-del-on-code: #A8433A;
   --ixp-hi: color-mix(in srgb, #FEFEFF 75%, transparent);  /* 1px inner top highlight on raised surfaces */
   --ixp-shadow: 0 1px 2px color-mix(in srgb, #14181D 12%, transparent), 0 0 0 1px color-mix(in srgb, #14181D 10%, transparent);  /* raised: 2px blur max plus a hairline */
-  --ixp-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', sans-serif;
-  --ixp-sans: 'IBM Plex Sans', sans-serif;
-  --ixp-mono: 'IBM Plex Mono', monospace;
+  /* One family: Atkinson Hyperlegible (Braille Institute), chosen for a system with a low-vision preset. */
+  --ixp-display: 'Atkinson Hyperlegible Next', sans-serif;
+  --ixp-sans: 'Atkinson Hyperlegible Next', sans-serif;
+  --ixp-mono: 'Atkinson Hyperlegible Mono', monospace;
   --ixp-font: var(--ixp-sans);
 }

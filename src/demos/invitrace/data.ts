@@ -6,7 +6,7 @@ import type { Fork } from './drift'
 import type { ArchetypeId, GovRule, Hospital, Preset } from './model'
 
 const G = 'invitrace'
-type Section = { title: string; lead: string; body: string[] }
+type Section = { title: string; body: string[] }
 
 export const HERO = gated<{ eyebrow: string; title: string; intro: string; sample: string }>(G, 'HERO')
 export const SECTIONS = gated<{
