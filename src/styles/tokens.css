@@ -192,32 +192,36 @@
 }
 
 /* ── Invitrace case study (demo surface: [data-demo="invitrace"] only) ──────────
-   Direction: radiology lightbox + clinical instrument. The ward console's own values are
-   demo data (src/demos/invitrace/model.ts, tiers raw → theme → semantic → component); each
-   hospital's brand colour appears inside the console only.
-   Contrast (computed, on lightbox / sheet): ink 17.5 / 18.6 · graphite 9.6 / 10.2 ·
-   rule 4.4 / 4.7 (control borders, 3:1 non-text) · violet 5.9 / 6.3 · status red 5.5,
-   amber 5.1, green 5.8 (markers and bars; white on each passes 5.3+). Hairline is
-   decorative only (1.5:1). */
+   Direction: radiology lightbox + clinical instrument, in soft tones, 60-30-10.
+   60 lightbox · 30 film band and rules · 10 one dusty violet signal. The ward console's own
+   values are demo data (src/demos/invitrace/model.ts): each hospital type has a soft ramp
+   (sage, fog, plum, plus night) and its brand colour appears inside the console only.
+   Contrast (computed): ink on lightbox 16.3 / on band 13.9 · graphite 7.9 / 6.8 ·
+   violet 5.7 on lightbox, white on violet 6.1, white on violet-deep 7.5 · rule-strong 4.2
+   (control borders, 3:1 non-text) · status red 5.4, amber 5.0, green 5.0 on lightbox,
+   white on each 5.4+ (markers and bars only). Hairline is decorative (1.5:1). */
 [data-demo="invitrace"] {
-  --ixp-paper:    #F6F7F5;   /* lightbox: page ground */
-  --ixp-card:     #FEFEFF;   /* sheet: printed report, tape, lit lightbox panel */
-  --ixp-film:     #DCE3E8;   /* acetate film, used at about 55% over the lightbox */
-  --ixp-ink:      #0F1216;
-  --ixp-muted:    #3A414A;   /* graphite: secondary text */
-  --ixp-line:     #C5CCD2;   /* hairline rules, decorative */
-  --ixp-line-strong: #6B747E; /* control borders and ticks, 4.4:1 */
-  --ixp-violet:   #5644E3;   /* the one signal: selection, beam, primary action */
-  --ixp-violet-500: #5644E3;
-  --ixp-violet-soft: #EDEBFC;   /* violet at 10% on sheet: lit-token wash only */
-  --ixp-code:     #FEFEFF;
-  --ixp-code-ink: #0F1216;
-  --ixp-add:      #1D6E48;   /* status green */
-  --ixp-del:      #B8322A;   /* status red */
-  --ixp-amber:    #9A5B00;   /* status amber */
-  --ixp-add-on-code: #1D6E48;
-  --ixp-del-on-code: #B8322A;
-  --ixp-shadow: 2px 2px 0 #0F1216;  /* the only shadow: a hard ≤4px offset */
+  --ixp-paper:    #F4F5F2;   /* 60: lightbox ground */
+  --ixp-card:     #FAFBF9;   /* raised sheet: tape, lab sheet, panels */
+  --ixp-film:     #DFE4E6;   /* 30: film and band tone */
+  --ixp-band:     #DFE4E6;
+  --ixp-ink:      #14181D;
+  --ixp-muted:    #454C55;   /* graphite: secondary text */
+  --ixp-line:     #CDD3D6;   /* hairline rules, decorative */
+  --ixp-line-strong: #6E767E; /* control borders and ticks, 4.2:1 */
+  --ixp-violet:   #5A54B8;   /* 10: the one signal, selection, beam, primary action */
+  --ixp-violet-deep: #4E48A4; /* hover and pressed step of the signal */
+  --ixp-violet-500: #5A54B8;
+  --ixp-violet-soft: #EAE9F4; /* signal at about 10% on the sheet: lit-token wash only */
+  --ixp-code:     #FAFBF9;
+  --ixp-code-ink: #14181D;
+  --ixp-add:      #3E7458;   /* status green */
+  --ixp-del:      #A8433A;   /* status red */
+  --ixp-amber:    #8A6116;   /* status amber */
+  --ixp-add-on-code: #3E7458;
+  --ixp-del-on-code: #A8433A;
+  --ixp-hi: color-mix(in srgb, #FEFEFF 75%, transparent);  /* 1px inner top highlight on raised surfaces */
+  --ixp-shadow: 0 1px 2px color-mix(in srgb, #14181D 12%, transparent), 0 0 0 1px color-mix(in srgb, #14181D 10%, transparent);  /* raised: 2px blur max plus a hairline */
   --ixp-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', sans-serif;
   --ixp-sans: 'IBM Plex Sans', sans-serif;
   --ixp-mono: 'IBM Plex Mono', monospace;

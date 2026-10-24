@@ -1,4 +1,7 @@
-/* Invitrace case study. Direction: radiology lightbox + clinical instrument.
+/* Invitrace case study. Direction: radiology lightbox + clinical instrument, soft tones, 60-30-10.
+   Craft: raised surfaces = 1px hairline + 1px inner top highlight + at most a 2px shadow; the 30%
+   band tone carries headers, wells, row bands and secondary controls; the 10% accent is kept to
+   the primary action, selection and focus.
    Page chrome: --ixp-* (src/styles/tokens.css → [data-demo="invitrace"]): lightbox ground,
    printed sheets, acetate films, ink, graphite, hairlines and one violet signal. The ward
    console reads --ix-* values resolved per hospital in model.ts; only it carries a brand colour
@@ -54,46 +57,60 @@
 .limits { font-size: .875rem; color: var(--ixp-muted); margin: 32px 0 0; }
 .anchor { display: block; height: 0; }
 
-/* Panels: a ruled instrument area on the lightbox, no card. */
-.panel { margin-top: 24px; padding: 14px 0 0; border-top: 1px solid var(--ixp-line-strong); display: grid; gap: 10px; }
+/* Panels: a raised sheet on the lightbox. */
+.panel { margin-top: 24px; padding: 16px; display: grid; gap: 12px; background: var(--ixp-card); border-radius: 6px; box-shadow: var(--ixp-shadow), inset 0 1px 0 var(--ixp-hi); }
+/* The panel's first row of controls sits on a band-tone toolbar strip that runs edge to edge. */
+.panel > .row:first-child { margin: -16px -16px 0; padding: 12px 16px; background: var(--ixp-band); border-radius: 6px 6px 0 0; box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--ixp-ink) 10%, transparent); }
+.panel > .row:first-child .btnQuiet { background: var(--ixp-card); }
+/* Panels that open with a label get it as a band-tone title bar. */
+.panel > .panelLabel:first-child + .govList { border-top: 0; }
+.panel > .panelLabel:first-child { margin: -16px -16px 0; padding: 10px 16px; background: var(--ixp-band); border-radius: 6px 6px 0 0; box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--ixp-ink) 10%, transparent); }
+.panel > .steps:first-child { margin: -16px -16px 0; width: auto; max-width: none; padding: 10px 16px; gap: 4px; border-radius: 6px 6px 0 0; box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--ixp-ink) 10%, transparent); }
 .panel > * { min-width: 0; }
-.panelLabel { color: var(--ixp-muted); margin: 6px 0 0; }
+/* Actions keep their own width; a full-bleed primary would flood the panel with the accent. */
+.panel > :is(.btn, .btnQuiet) { justify-self: start; }
+.panelLabel { color: var(--ixp-muted); margin: 4px 0 0; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
-/* Controls: square-ish, 1px, every state drawn. */
+/* Buttons. Primary: the signal with a top-light highlight; hover deepens, press drops 1px and
+   loses the highlight. Secondary: the band tone with an ink label. Tertiary: a text button. */
 .btn, .btnQuiet, .segBtn, .govBtn, .xPart {
-  font-size: .875rem; font-weight: 500; min-height: 36px; padding: 7px 14px; border-radius: 2px; cursor: pointer;
-  transition: background-color .15s var(--ease-in-out-natural), border-color .15s var(--ease-in-out-natural), color .15s var(--ease-in-out-natural), transform .15s var(--ease-in-out-natural);
+  font-size: .875rem; font-weight: 500; min-height: 36px; padding: 7px 14px; border-radius: 4px; cursor: pointer;
+  transition: background-color .15s var(--ease-in-out-natural), border-color .15s var(--ease-in-out-natural), color .15s var(--ease-in-out-natural), transform .12s var(--ease-in-out-natural), box-shadow .15s var(--ease-in-out-natural);
 }
-.btn { background: var(--ixp-violet); color: var(--ixp-card); border: 1px solid var(--ixp-violet); }
-.btn:hover:not(:disabled) { background: var(--ixp-ink); border-color: var(--ixp-ink); }
-.btnQuiet { background: transparent; color: var(--ixp-ink); border: 1px solid var(--ixp-line-strong); }
-.btnQuiet:hover:not(:disabled) { border-color: var(--ixp-ink); background: var(--ixp-card); }
-:is(.btn, .btnQuiet, .segBtn, .xPart):active:not(:disabled) { transform: translateY(1px); }
-.btn:disabled, .btnQuiet:disabled, .btn[aria-disabled="true"] { background: transparent; color: var(--ixp-muted); border: 1px dashed var(--ixp-line-strong); cursor: not-allowed; }
-.btn[aria-pressed="true"], .btnQuiet[aria-pressed="true"] { border-color: var(--ixp-violet); box-shadow: inset 0 0 0 1px var(--ixp-violet); color: var(--ixp-violet); background: var(--ixp-card); }
+.btn { background: var(--ixp-violet); color: var(--ixp-card); border: 1px solid var(--ixp-violet-deep); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 24%, transparent), 0 1px 1px color-mix(in srgb, var(--ixp-ink) 14%, transparent); }
+.btn:hover:not(:disabled) { background: var(--ixp-violet-deep); }
+.btnQuiet { background: var(--ixp-band); color: var(--ixp-ink); border: 1px solid color-mix(in srgb, var(--ixp-ink) 16%, transparent); box-shadow: inset 0 1px 0 var(--ixp-hi); }
+.btnQuiet:hover:not(:disabled) { background: color-mix(in srgb, var(--ixp-band) 92%, var(--ixp-ink)); border-color: color-mix(in srgb, var(--ixp-ink) 28%, transparent); }
+:is(.btn, .btnQuiet):active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
+.btn:disabled, .btnQuiet:disabled, .btn[aria-disabled="true"] { background: transparent; color: var(--ixp-muted); border: 1px dashed var(--ixp-line-strong); box-shadow: none; cursor: not-allowed; }
+.btn[aria-pressed="true"], .btnQuiet[aria-pressed="true"] { background: var(--ixp-card); color: var(--ixp-ink); border-color: var(--ixp-violet); box-shadow: inset 0 0 0 1px var(--ixp-violet); }
 .btn[aria-pressed="true"] { background: var(--ixp-violet); color: var(--ixp-card); }
-/* Segmented control: one ruled strip, like a selector on an instrument face. */
-.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--ixp-line-strong); border-radius: 2px; width: fit-content; max-width: 100%; }
-.segBtn { background: transparent; color: var(--ixp-ink); border: 0; border-right: 1px solid var(--ixp-line-strong); border-radius: 0; }
-.segBtn:last-child { border-right: 0; }
-.segBtn:hover { background: var(--ixp-card); }
-.segBtn[aria-pressed="true"] { background: var(--ixp-violet); color: var(--ixp-card); }
-.input { font-size: .9375rem; min-height: 36px; padding: 6px 10px; border: 1px solid var(--ixp-line-strong); border-radius: 2px; color: var(--ixp-ink); background: var(--ixp-card); box-sizing: border-box; --ixp-font: var(--ixp-mono); }
-.input:hover { border-color: var(--ixp-ink); }
-.input[aria-invalid="true"] { border-color: var(--ixp-del); box-shadow: inset 3px 0 0 var(--ixp-del); }
-.swatches { display: flex; flex-wrap: wrap; gap: 6px; }
-.swatch { width: 36px; height: 36px; border-radius: 2px; border: 1px solid var(--ixp-ink); cursor: pointer; color: var(--ixp-card); font-size: .8125rem; display: grid; place-items: center; transition: transform .15s var(--ease-in-out-natural); }
+/* Segmented control: a band-tone track; a raised indicator slides to the pressed option. */
+.seg { position: relative; display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: var(--ixp-band); border-radius: 6px; width: fit-content; max-width: 100%; box-shadow: inset 0 1px 1px color-mix(in srgb, var(--ixp-ink) 8%, transparent); }
+.segInd { position: absolute; left: 0; top: 0; border-radius: 4px; background: var(--ixp-card); box-shadow: 0 1px 2px color-mix(in srgb, var(--ixp-ink) 16%, transparent), 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 8%, transparent), inset 0 1px 0 var(--ixp-hi);
+  transition: transform .32s var(--ease-out-standard), width .32s var(--ease-out-standard), height .32s var(--ease-out-standard); pointer-events: none; }
+.segInd::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: 3px; height: 2px; border-radius: 1px; background: var(--ixp-violet); }
+.segBtn { position: relative; z-index: 1; background: transparent; color: var(--ixp-muted); border: 0; border-radius: 4px; min-height: 34px; }
+.segBtn:hover { color: var(--ixp-ink); }
+.segBtn[aria-pressed="true"] { color: var(--ixp-ink); font-weight: 600; }
+/* Inputs: a band-tone well with a 1px rule; focus moves the rule to the signal plus the ring. */
+.input { font-size: .9375rem; min-height: 36px; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--ixp-ink) 22%, transparent); border-radius: 4px; color: var(--ixp-ink); background: var(--ixp-band); box-shadow: inset 0 1px 1px color-mix(in srgb, var(--ixp-ink) 8%, transparent); box-sizing: border-box; --ixp-font: var(--ixp-mono); transition: border-color .15s var(--ease-in-out-natural); }
+.input:hover { border-color: var(--ixp-line-strong); }
+.input:focus-visible { border-color: var(--ixp-violet); }
+.input[aria-invalid="true"] { border-color: var(--ixp-del); }
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatch { width: 36px; height: 36px; border-radius: 4px; border: 1px solid color-mix(in srgb, var(--ixp-ink) 22%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 28%, transparent); cursor: pointer; color: var(--ixp-card); font-size: .8125rem; display: grid; place-items: center; transition: transform .15s var(--ease-in-out-natural); }
 .swatch[aria-pressed="true"] { outline: 2px solid var(--ixp-ink); outline-offset: 2px; }
 /* Failing swatches carry the ✕ in ink: white on a light colour would itself fail 3:1. */
 .swatch[data-fail] { color: var(--ixp-ink); }
 .swatch:hover { transform: translateY(-1px); }
-.dot { display: inline-block; width: 10px; height: 10px; border-radius: 0; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 40%, transparent); vertical-align: -1px; margin-right: 6px; }
-.dotLg { display: inline-block; width: 28px; height: 28px; border-radius: 2px; flex: none; box-shadow: inset 0 0 0 1px var(--ixp-ink); }
-/* Notices: a left bar in status colour on the sheet. */
-.blocked { padding: 10px 12px; background: var(--ixp-card); box-shadow: inset 3px 0 0 var(--ixp-del); border: 1px solid var(--ixp-line); display: grid; gap: 8px; font-size: 1rem; animation: wipe .3s var(--ease-out-standard) both; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 30%, transparent); vertical-align: -1px; margin-right: 6px; }
+.dotLg { display: inline-block; width: 28px; height: 28px; border-radius: 4px; flex: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 25%, transparent), inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 28%, transparent); }
+/* Notices: a left bar in status colour on a band-tone well. */
+.blocked { padding: 10px 12px 10px 14px; background: var(--ixp-paper); box-shadow: inset 3px 0 0 var(--ixp-del), inset 0 0 0 1px var(--ixp-line); border-radius: 4px; display: grid; gap: 8px; font-size: 1rem; animation: wipe .3s var(--ease-out-standard) both; }
 .blocked p { margin: 0; }
-.reason { padding: 10px 12px; background: var(--ixp-card); box-shadow: inset 3px 0 0 var(--ixp-add); border: 1px solid var(--ixp-line); display: grid; gap: 6px; font-size: 1rem; animation: wipe .3s var(--ease-out-standard) both; }
+.reason { padding: 10px 12px 10px 14px; background: var(--ixp-paper); box-shadow: inset 3px 0 0 var(--ixp-add), inset 0 0 0 1px var(--ixp-line); border-radius: 4px; display: grid; gap: 6px; font-size: 1rem; animation: wipe .3s var(--ease-out-standard) both; }
 .reason p, .blocked .recHead { margin: 0; }
 .blockedText { margin: 0; font-size: 1rem; box-shadow: inset 3px 0 0 var(--ixp-del); padding-left: 10px; }
 .passed { margin: 0; font-size: 1rem; box-shadow: inset 3px 0 0 var(--ixp-add); padding-left: 10px; }
@@ -109,23 +126,23 @@
 .driftItem { display: inline-grid; justify-items: center; gap: 6px; }
 .driftTag { font-size: .6875rem; color: var(--ixp-muted); text-transform: uppercase; letter-spacing: .1em; --ixp-font: var(--ixp-mono); }
 .driftBtn {
-  display: inline-flex; align-items: center; box-sizing: border-box; white-space: nowrap; padding: 9px 16px; border-radius: 8px; background: var(--ixp-violet); color: var(--ixp-card); font-size: .8125rem; font-weight: 600;
+  display: inline-flex; align-items: center; box-sizing: border-box; white-space: nowrap; padding: 9px 16px; border-radius: 8px; background: var(--ixp-violet); color: var(--ixp-card); font-size: .8125rem; font-weight: 600; box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 22%, transparent), 0 1px 1px color-mix(in srgb, var(--ixp-ink) 14%, transparent);
   transition: transform .45s var(--ease-in-out-natural), border-radius .35s var(--ease-in-out-natural), background-color .35s var(--ease-in-out-natural);
 }
 .tableWrap { position: relative; max-width: 100%; overflow-x: auto; }
 /* The sheet scrolls sideways on phones; a hard edge shadow at the cut says so. */
-.tableWrap:has(.matrix) { background:
-  linear-gradient(to left, var(--ixp-line-strong) 1px, transparent 1px) right center / 8px 100% no-repeat scroll,
-  var(--ixp-card); border: 1px solid var(--ixp-ink); }
+.tableWrap[data-sheet] { background:
+  var(--ixp-card); border-radius: 4px; box-shadow: var(--ixp-shadow), inset 0 1px 0 var(--ixp-hi); }
 .matrix { width: 100%; border-collapse: collapse; font-size: 11px; }
 .matrix caption { text-align: left; font-size: .8125rem; color: var(--ixp-muted); padding: 10px 10px 8px; caption-side: top; }
 .matrix th, .matrix td { text-align: left; padding: 6px 5px; border-bottom: 1px solid var(--ixp-line); white-space: nowrap; }
-.matrix thead th { color: var(--ixp-muted); border-top: 2px solid var(--ixp-ink); border-bottom: 1px solid var(--ixp-ink); }
+.matrix thead th { color: var(--ixp-muted); background: var(--ixp-band); border-bottom: 1px solid color-mix(in srgb, var(--ixp-ink) 22%, transparent); }
+.matrix tbody tr:nth-child(even) :is(th, td):not([data-ref]) { background: color-mix(in srgb, var(--ixp-band) 30%, var(--ixp-card)); }
 .matrix tbody th { font-weight: 500; font-size: .75rem; }
-.matrix tbody tr:last-child :is(th, td) { border-bottom: 2px solid var(--ixp-ink); }
-.matrix [data-ref] { background: var(--ixp-card); border-left: 1px solid var(--ixp-ink); padding-left: 8px; font-weight: 500; }
+.matrix tbody tr:last-child :is(th, td) { border-bottom: 0; }
+.matrix [data-ref] { background: var(--ixp-band); border-left: 1px solid color-mix(in srgb, var(--ixp-ink) 22%, transparent); padding-left: 8px; font-weight: 500; }
 /* On narrow screens the sheet scrolls; Reference stays pinned at the right edge so the value every fork is corrected to stays in view. */
-@media (max-width: 959px) { .matrix [data-ref] { position: sticky; right: 0; z-index: 1; } }
+@media (max-width: 959px) { .matrix [data-ref] { position: sticky; right: 0; z-index: 1; box-shadow: -1px 0 0 color-mix(in srgb, var(--ixp-ink) 30%, transparent); } }
 .matrix td[data-out] { font-weight: 600; }
 .matrix td[data-fail]::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 6px; background: var(--ixp-del); vertical-align: 1px; }
 .mFlag { margin-left: 3px; font-size: 11px; font-weight: 600; color: var(--ixp-ink); vertical-align: super; line-height: 0; }
@@ -134,16 +151,16 @@
 .mOld::after { content: ''; position: absolute; left: -1px; right: -1px; top: 52%; border-top: 1.5px solid var(--ixp-ink); animation: strike .28s var(--ease-in-out-natural) both; }
 .mFix { display: block; width: fit-content; text-decoration: none; font-weight: 600; color: var(--ixp-ink); animation: write .3s var(--ease-in-out-natural) .18s both; }
 /* Corrected text values may wrap, so the sheet's end state fits the column at desktop width. */
-.matrix td:has(.mFix) { white-space: normal; }
+.matrix td[data-fixed] { white-space: normal; }
 .matrix .mOld { white-space: nowrap; }
 .mOk { color: var(--ixp-ink); --ixp-font: var(--ixp-sans); }
 .mOk::before { content: ''; display: inline-block; width: 7px; height: 7px; margin: 0 4px 0 6px; background: var(--ixp-add); vertical-align: 1px; }
 
 /* Governance: ruled rows of axes. */
-.govList { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ixp-ink); }
+.govList { list-style: none; margin: 0; padding: 0; border-top: 1px solid color-mix(in srgb, var(--ixp-ink) 40%, transparent); }
 .govItem { border-bottom: 1px solid var(--ixp-line); }
 .govBtn { width: 100%; display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center; text-align: left; background: transparent; border: 0; border-radius: 0; color: var(--ixp-ink); padding-inline: 4px; }
-.govBtn:hover { background: var(--ixp-card); }
+.govBtn:hover { background: color-mix(in srgb, var(--ixp-band) 55%, transparent); }
 .govBtn[data-state="locked"] { color: var(--ixp-muted); }
 .govBtn[aria-pressed="true"] { box-shadow: inset 3px 0 0 var(--ixp-violet); }
 .govState { font-size: .875rem; text-align: center; }
@@ -155,9 +172,9 @@
 /* Library instances: printed tiles; anything outside the system is drawn dashed. */
 .master { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .instances { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-.instance { padding: 10px; border: 1px solid var(--ixp-ink); background: var(--ixp-card); display: grid; gap: 6px; justify-items: start; animation: wipe .3s var(--ease-out-standard) both; }
+.instance { padding: 10px; border-radius: 4px; border: 1px solid color-mix(in srgb, var(--ixp-ink) 14%, transparent); background: var(--ixp-paper); box-shadow: inset 0 1px 0 var(--ixp-hi); display: grid; gap: 6px; justify-items: start; animation: wipe .3s var(--ease-out-standard) both; }
 .instance[data-kind="detach"], .instance[data-kind="copy"], .instance[data-kind="invent"] { border-style: dashed; border-color: var(--ixp-line-strong); }
-.instBtn { padding: 6px 12px; border-radius: 2px; color: var(--ixp-card); font-size: .8125rem; font-weight: 600; }
+.instBtn { padding: 6px 12px; border-radius: 4px; box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 24%, transparent); color: var(--ixp-card); font-size: .8125rem; font-weight: 600; }
 .instName { font-size: .875rem; font-weight: 600; }
 .instState { font-size: .8125rem; color: var(--ixp-muted); }
 .cards3 { margin-top: 16px; border-top: 1px solid var(--ixp-ink); }
@@ -166,7 +183,7 @@
 .cardTitle { font-weight: 600; margin-bottom: 4px !important; }
 
 /* Code reads as print on a sheet: +/- lines in status ink, no dark panel. */
-.code, .entryCode { margin: 16px 0 0; padding: 12px 14px; background: var(--ixp-card); color: var(--ixp-ink); border: 1px solid var(--ixp-line); box-shadow: inset 2px 0 0 var(--ixp-ink); font-size: .75rem; line-height: 1.6; overflow-x: auto; white-space: pre; }
+.code, .entryCode { margin: 16px 0 0; padding: 12px 14px; background: var(--ixp-paper); color: var(--ixp-ink); border-radius: 4px; box-shadow: inset 0 0 0 1px var(--ixp-line), inset 2px 0 0 var(--ixp-line-strong); font-size: .75rem; line-height: 1.6; overflow-x: auto; white-space: pre; }
 .add, .del { box-shadow: inset 3px 0 0 var(--ixp-add); padding-left: 6px; margin-left: -9px; }
 .del { box-shadow: inset 3px 0 0 var(--ixp-del); }
 
@@ -182,35 +199,42 @@
 .cost { box-shadow: inset 2px 0 0 var(--ixp-line-strong); padding-left: 10px; }
 
 .viewBox { margin-top: 12px; }
-.table { width: 100%; border-collapse: collapse; font-size: .8125rem; border-top: 2px solid var(--ixp-ink); border-bottom: 2px solid var(--ixp-ink); }
+.table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .8125rem; background: var(--ixp-card); border-radius: 4px; box-shadow: var(--ixp-shadow); overflow: hidden; }
 .table caption { text-align: left; padding: 0 0 6px; }
-.table th, .table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--ixp-line); vertical-align: top; overflow-wrap: anywhere; }
-.table thead th { color: var(--ixp-muted); border-bottom: 1px solid var(--ixp-ink); }
+.table th, .table td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--ixp-line); vertical-align: top; overflow-wrap: anywhere; }
+.table thead th { color: var(--ixp-muted); background: var(--ixp-band); border-bottom: 1px solid color-mix(in srgb, var(--ixp-ink) 18%, transparent); }
+.table tbody tr > :first-child { background: var(--ixp-band); font-weight: 500; }
+.table tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--ixp-band) 40%, var(--ixp-card)); }
+.table tbody tr:hover :is(th, td) { background: color-mix(in srgb, var(--ixp-band) 60%, var(--ixp-card)); }
+.table tbody tr:last-child :is(th, td) { border-bottom: 0; }
 .table td .mono { font-size: .75rem; }
-.summary { padding: 14px 16px; border: 1px solid var(--ixp-ink); background: var(--ixp-card); font-size: 1rem; line-height: 1.6; }
+.summary { padding: 14px 16px; border-radius: 4px; background: var(--ixp-card); box-shadow: var(--ixp-shadow), inset 0 1px 0 var(--ixp-hi); font-size: 1rem; line-height: 1.6; }
 .summary p { margin: 0 0 8px; }
 
-/* Onboarding steps: a printed sequence with the current step underlined. */
-.steps { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid var(--ixp-line-strong); }
-.steps li { padding: 6px 12px 7px 0; margin-right: 12px; color: var(--ixp-muted); box-shadow: inset 0 -2px 0 transparent; }
-.steps li[aria-current="step"] { color: var(--ixp-violet); box-shadow: inset 0 -2px 0 var(--ixp-violet); }
+/* Onboarding steps: a numbered track; done steps get a check tone, the current one the signal bar. */
+.steps { list-style: none; margin: 16px 0 0; padding: 2px; display: flex; flex-wrap: wrap; gap: 2px; background: var(--ixp-band); border-radius: 6px; counter-reset: step; width: fit-content; max-width: 100%; }
+.steps li { counter-increment: step; position: relative; padding: 6px 12px 7px; border-radius: 4px; color: var(--ixp-muted); }
+.steps li::before { content: counter(step, decimal-leading-zero) ' '; color: var(--ixp-line-strong); }
+.steps li[aria-current="step"] { color: var(--ixp-ink); background: var(--ixp-card); box-shadow: 0 1px 2px color-mix(in srgb, var(--ixp-ink) 14%, transparent), inset 0 1px 0 var(--ixp-hi); }
+.steps li[aria-current="step"]::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: 2px; height: 2px; border-radius: 1px; background: var(--ixp-violet); }
 .steps li[data-done] { color: var(--ixp-ink); }
-.miniPreview { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px; border-radius: 2px; background: var(--ix-surface); color: var(--ix-text); border: 1px solid var(--ixp-ink); }
+.steps li[data-done]::before { content: '✓ '; color: var(--ixp-add); }
+.miniPreview { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px; border-radius: 6px; background: var(--ix-surface); color: var(--ix-text); box-shadow: inset 0 0 0 1px var(--ix-line); }
 
 /* Disclosures: closed by default; content mounts on open with a clip-path reveal. */
 .disclosure { margin-top: 16px; }
-.disclosureBtn { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ixp-violet); background: none; border: 0; padding: 8px 0; cursor: pointer; font-weight: 500; --ixp-font: var(--ixp-mono); }
-.disclosureBtn::before { content: '▸ '; display: inline-block; transition: transform .2s var(--ease-in-out-natural); }
-.disclosureBtn[aria-expanded="true"]::before { transform: rotate(90deg); }
-.disclosureBtn:hover { color: var(--ixp-ink); }
+.disclosureBtn { display: inline-flex; align-items: center; gap: 6px; font-size: .875rem; color: var(--ixp-violet); background: none; border: 0; padding: 8px 0; cursor: pointer; font-weight: 500; text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--ixp-violet) 40%, transparent); text-underline-offset: 5px; transition: color .15s var(--ease-in-out-natural), text-decoration-color .15s var(--ease-in-out-natural); }
+.disclosureBtn svg { transition: transform .2s var(--ease-in-out-natural); }
+.disclosureBtn[aria-expanded="true"] svg { transform: rotate(90deg); }
+.disclosureBtn:hover { color: var(--ixp-violet-deep); text-decoration-color: currentColor; }
 .disclosureBody { margin-top: 8px; animation: wipe .3s var(--ease-out-standard) both; }
 
 /* ── Change log: an audit tape. A narrow printed strip, timestamped mono lines, stamps. ── */
-.log { flex: 1; min-height: 0; display: flex; flex-direction: column; background: var(--ixp-card); border: 1px solid var(--ixp-ink); box-shadow: var(--ixp-shadow); }
-.logHead { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 12px 8px; border-bottom: 1px solid var(--ixp-ink); color: var(--ixp-ink); }
+.log { flex: 1; min-height: 0; display: flex; flex-direction: column; background: var(--ixp-card); border-radius: 4px; box-shadow: var(--ixp-shadow), inset 0 1px 0 var(--ixp-hi); overflow: hidden; }
+.logHead { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 12px 6px; background: var(--ixp-violet); color: var(--ixp-card); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 22%, transparent); }
 .logList { list-style: none; margin: 0; padding: 0; overflow-y: auto; }
 .logEmpty { margin: 0; padding: 14px 12px; font-size: .8125rem; color: var(--ixp-muted); --ixp-font: var(--ixp-mono); }
-.entry { position: relative; padding: 10px 12px; border-bottom: 1px dashed var(--ixp-line-strong); font-size: .75rem; line-height: 1.5; display: grid; gap: 3px; --ixp-font: var(--ixp-mono); animation: entryIn .3s var(--ease-out-standard) both; }
+.entry { position: relative; padding: 10px 12px 12px; border-bottom: 1px solid var(--ixp-line); font-size: .75rem; line-height: 1.5; display: grid; gap: 3px; --ixp-font: var(--ixp-mono); animation: entryIn .3s var(--ease-out-standard) both; }
 .entry p { margin: 0; }
 /* Stamps: inked boxes, set at a slight angle as if pressed onto the tape. */
 .entryBadge, .entryBadgeHeld { display: inline-flex; align-items: center; gap: 4px; padding: 0 5px; border: 1.5px solid currentColor; font-weight: 600; letter-spacing: .1em; transform: rotate(-3deg); }
@@ -218,7 +242,7 @@
 .entryBadgeHeld { color: var(--ixp-ink); }
 .entry[data-blocked] { box-shadow: inset 3px 0 0 var(--ixp-del); }
 .entryHeld { font-weight: 500; }
-.entryTop { display: flex; gap: 8px; align-items: center; color: var(--ixp-muted); }
+.entryTop { display: flex; gap: 8px; align-items: center; color: var(--ixp-muted); margin: -10px -12px 4px; padding: 5px 12px; background: var(--ixp-band); }
 .entryN { color: var(--ixp-ink); }
 .entryTime { color: var(--ixp-muted); }
 .entryTier { color: var(--ixp-violet); margin-left: auto; }
@@ -231,71 +255,87 @@
 .entryCode { margin: 4px 0 0; padding: 6px 8px; font-size: .6875rem; }
 .entryFollow p { color: var(--ixp-ink); }
 .logPhone { display: none; }
-.logLatest { background: var(--ixp-card); border: 1px solid var(--ixp-ink); }
+.logLatest { background: var(--ixp-card); border-radius: 4px; box-shadow: var(--ixp-shadow); }
 .logLatest .logList { overflow: visible; }
 .logLatest .entry { border-bottom: 0; padding: 7px 10px; }
+.logLatest .entryTop { margin: -7px -10px 4px; padding: 4px 10px; }
 .logLatest :is(.entryTokens, .entryFollow, .entryTrace, .entryWhy, .entryFigma, .entryCode) { display: none; }
 .entryTrace ol { margin: 2px 0 0; padding: 0 0 0 10px; list-style: none; display: grid; gap: 1px; border-left: 1px solid var(--ixp-violet); font-size: .6875rem; overflow-wrap: anywhere; }
 
 /* ── The ward console: a clinical instrument, 1:1 in a scrollable window (no text under 11px).
-   Only status and the hospital's brand carry colour; radius comes from the theme tokens. ── */
-.consoleWindow { position: relative; flex: none; max-height: calc(100svh - 32px - 230px); overflow: auto; border-radius: 2px; border: 1px solid var(--ixp-ink); box-shadow: var(--ixp-shadow); background: var(--ix-surface, var(--ixp-paper)); scrollbar-gutter: stable; }
+   60 the hospital surface and raised cards · 30 the band tone (header, wells, table head, row
+   bands, secondary action) and text · 10 the brand action plus status. Radius is the theme token;
+   nested corners use the outer radius minus the padding. ── */
+.consoleWindow { position: relative; flex: none; max-height: calc(100svh - 32px - 230px); overflow: auto; border-radius: 6px; box-shadow: var(--ixp-shadow); background: var(--ix-surface, var(--ixp-paper)); scrollbar-gutter: stable; }
 .console {
-  position: relative; width: 380px; min-height: 520px;
+  --ix-inner: max(0px, calc(var(--ix-radius) - 4px));
+  position: relative; width: 380px;
   background: var(--ix-surface); color: var(--ix-text);
   font-size: calc(12px * var(--ix-scale)); line-height: 1.4; font-variant-numeric: tabular-nums;
 }
-.cScrollHint { position: sticky; bottom: 0; left: 0; display: block; padding: 5px 12px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; text-align: center; color: var(--ixp-ink); background: var(--ixp-card); border-top: 1px solid var(--ixp-ink); --ixp-font: var(--ixp-mono); }
+.cScrollHint { position: sticky; bottom: 0; left: 0; display: block; padding: 5px 12px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; text-align: center; color: var(--ixp-ink); background: var(--ixp-band); border-top: 1px solid color-mix(in srgb, var(--ixp-ink) 14%, transparent); --ixp-font: var(--ixp-mono); }
 .cEnd { height: 1px; }
-.consoleBody { min-height: 520px; box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; gap: 8px; animation: wipe .35s var(--ease-out-standard) both; }
-.cHead { display: flex; align-items: center; gap: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--ix-line); }
-.cStripe { width: 4px; align-self: stretch; background: var(--ix-primary); }
-.cName { font-weight: 600; font-size: 1.25em; letter-spacing: -0.01em; }
+.consoleBody { box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.cShutter { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: var(--ix-surface); animation: shutter .4s var(--ease-out-standard) both; }
+/* Header plate on the band tone, with the brand stripe and a 1px top light. */
+.cHead { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--ix-radius); background: var(--ix-band); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ix-card) 70%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--ix-text) 6%, transparent); }
+.cStripe { width: 3px; align-self: stretch; border-radius: 2px; background: var(--ix-primary); }
+.cName { font-weight: 600; font-size: 1.17em; letter-spacing: -0.01em; }
 .cMeta { color: var(--ix-muted); font-size: .92em; text-transform: uppercase; letter-spacing: .08em; }
-/* The alarm bar: solid status fill with a square marker, as on a bedside monitor. */
-.cAlert { display: flex; gap: 8px; align-items: center; padding: 6px 10px; border-radius: var(--ix-radius); background: var(--ix-critical); color: var(--ix-on-primary); font-weight: 600; }
-.cAlert > span:first-child { display: inline-grid; place-items: center; width: 1.25em; height: 1.25em; background: var(--ix-on-primary); color: var(--ix-critical); font-weight: 700; line-height: 1; }
+/* Alarm bar: the softened critical tone, a cut-out icon block in the deeper step, white text. */
+.cAlert { display: flex; align-items: stretch; gap: 10px; min-height: 32px; border-radius: var(--ix-radius); background: var(--ix-critical); color: var(--ix-on-primary); font-weight: 600; overflow: hidden; box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 18%, transparent); }
+.cAlert > span:last-child { align-self: center; padding-right: 10px; }
+.cAlertIcon { display: grid; place-items: center; flex: none; width: 32px; background: var(--ix-critical-deep); color: var(--ix-on-primary); }
 .cActions { display: flex; align-items: center; gap: 10px; }
-.cBtn { display: inline-flex; align-items: center; gap: 6px; min-height: var(--ix-target); padding: 0 16px; box-sizing: border-box; border-radius: var(--ix-radius); background: var(--ix-primary); color: var(--ix-on-primary); font-weight: 600; }
+/* Primary action: brand fill, top-light highlight, hairline in a deeper step of the brand. */
+.cBtn { display: inline-flex; align-items: center; gap: 6px; min-height: var(--ix-target); padding: 0 16px; box-sizing: border-box; border-radius: var(--ix-radius); background: var(--ix-primary); color: var(--ix-on-primary); font-weight: 600;
+  border: 1px solid color-mix(in srgb, var(--ix-primary) 82%, var(--ixp-ink)); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 24%, transparent), 0 1px 1px color-mix(in srgb, var(--ixp-ink) 16%, transparent); }
+.cBtn:hover { background: color-mix(in srgb, var(--ix-primary) 92%, var(--ixp-ink)); }
 .cBtn[data-icon] { padding: 0; width: var(--ix-target); justify-content: center; }
 .cTarget { font-size: .92em; color: var(--ix-muted); }
-.cField { display: grid; gap: 3px; position: relative; }
+.cField { display: grid; gap: 4px; position: relative; }
 .cLabel { color: var(--ix-muted); font-size: .92em; }
 .cField[data-float] .cLabel { position: absolute; top: 3px; left: 10px; font-size: .92em; }
-.cInput { min-height: var(--ix-target); box-sizing: border-box; padding: calc(var(--ix-pad) + 6px) 10px 4px; border: 1px solid var(--ix-critical); outline: 1px solid var(--ix-critical); outline-offset: -2px; border-radius: var(--ix-radius); background: var(--ix-card); color: var(--ix-text); }
+/* Input well on the band tone; this sample shows the error state (status rule, icon, message). */
+.cInput { min-height: var(--ix-target); box-sizing: border-box; padding: calc(var(--ix-pad) + 6px) 10px 4px; border: 1px solid var(--ix-critical); border-radius: var(--ix-radius); background: var(--ix-band); color: var(--ix-text); box-shadow: inset 0 1px 2px color-mix(in srgb, var(--ixp-ink) 8%, transparent); }
 .cField:not([data-float]) .cInput { padding-top: var(--ix-pad); }
+.console[data-dark] .cInput { background: var(--ix-card); }
 .cField[data-float] .cInput { padding-top: calc(var(--ix-pad) + 12px); }
-.cError { font-size: .92em; color: var(--ix-text); padding-left: 2px; }
-.cError > span:first-child { color: var(--ix-text); font-weight: 700; }
-.cTable { border: 1px solid var(--ix-line); border-radius: var(--ix-radius); background: var(--ix-card); overflow: hidden; }
-.cRow { display: grid; grid-template-columns: 30px 1.3fr 66px 1fr; gap: 8px; align-items: center; padding: var(--ix-pad) 10px; border-top: 1px solid var(--ix-line); }
-.cTable:has(.cRow[data-head] > :nth-child(3):last-child) .cRow { grid-template-columns: 1fr 70px 1fr; }
-.cRow[data-head] { border-top: 0; border-bottom: 1px solid var(--ix-text); color: var(--ix-muted); font-size: .92em; }
+.cError { display: flex; align-items: center; gap: 5px; font-size: .92em; color: var(--ix-text); }
+.cError svg { color: var(--ix-critical); flex: none; }
+.cTable { border-radius: var(--ix-radius); background: var(--ix-card); overflow: hidden; box-shadow: inset 0 0 0 1px var(--ix-line); }
+.cRow { display: grid; grid-template-columns: 30px 1.3fr 66px 1fr; gap: 8px; align-items: center; padding: var(--ix-pad) 10px; border-top: 1px solid color-mix(in srgb, var(--ix-line) 70%, transparent); }
+.cTable[data-nobed] .cRow { grid-template-columns: 1fr 70px 1fr; }
+.cRow[data-head] { border-top: 0; background: var(--ix-band); color: var(--ix-muted); font-size: .92em; padding-block: 7px; }
 .cRow[data-head] + .cRow { border-top: 0; }
-.cRow[data-ix-row]:hover { background: var(--ix-surface); }
-.console .cRow:focus-visible { outline: 3px solid var(--ix-text); outline-offset: -3px; }
+.cRow[data-ix-row]:nth-child(even) { background: color-mix(in srgb, var(--ix-band) 55%, var(--ix-card)); }
+.cRow[data-ix-row]:hover { background: color-mix(in srgb, var(--ix-band) 70%, var(--ix-card)); }
+.console .cRow:focus-visible { outline: 2px solid var(--ix-text); outline-offset: -2px; }
 /* The broken shortcut layer: wins over the row ring above (higher specificity). */
 .console[data-shortcut] .cRow[data-ix-row]:focus-visible { outline: none; }
 .cPatient { overflow-wrap: anywhere; font-weight: 500; }
 .cStatus { color: var(--ix-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cMono { font-size: .95em; }
-/* Risk: a solid square marker plus the word, never a tinted pill. */
+.cMono { font-size: .95em; color: var(--ix-muted); }
+/* Risk: a small notched square plus the word. */
 .cRisk { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
-.cRisk i { width: 8px; height: 8px; flex: none; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ix-text) 55%, transparent); }
-.cEmpty { padding: 14px 10px; color: var(--ix-muted); border-top: 1px solid var(--ix-line); }
-.cDoctor { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: var(--ix-pad) 10px; border: 1px solid var(--ix-line); border-radius: var(--ix-radius); background: var(--ix-card); }
+.cRisk i { width: 8px; height: 8px; flex: none; clip-path: polygon(0 0, 100% 0, 100% 62%, 62% 100%, 0 100%); }
+.cEmpty { padding: 16px 10px; color: var(--ix-muted); border-top: 1px solid var(--ix-line); text-align: center; }
+/* Doctor card: a raised card, monogram ring in the brand at low weight, secondary action. */
+.cDoctor { display: flex; align-items: center; gap: 10px; padding: calc(var(--ix-pad) + 2px) 12px; border-radius: var(--ix-radius); background: var(--ix-card); box-shadow: inset 0 0 0 1px var(--ix-line), inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 50%, transparent), 0 1px 2px color-mix(in srgb, var(--ixp-ink) 8%, transparent); }
 .cDoctor[data-layout="column"] { flex-direction: column; align-items: flex-start; }
+/* On light themes the action row sits on a band-tone strip, like a control shelf. */
+.console:not([data-dark]) .cActions { padding: 8px; border-radius: var(--ix-radius); background: var(--ix-band); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ix-card) 70%, transparent); }
 .cDoctor[data-layout="column"] .cDocAction { align-self: stretch; text-align: center; }
-.cDoctor[data-layout="hero"] { flex-direction: column; align-items: flex-start; gap: 4px; border-left: 4px solid var(--ix-primary); }
-.cAvatar { width: 34px; height: 34px; border-radius: var(--ix-radius); display: grid; place-items: center; background: var(--ix-primary); color: var(--ix-on-primary); font-weight: 600; flex: none; }
+.cDoctor[data-layout="hero"] { flex-direction: column; align-items: flex-start; gap: 4px; box-shadow: inset 3px 0 0 var(--ix-primary), inset 0 0 0 1px var(--ix-line); }
+.cAvatar { width: 34px; height: 34px; box-sizing: border-box; border-radius: 50%; display: grid; place-items: center; background: transparent; border: 1.5px solid var(--ix-primary); color: var(--ix-primary); font-weight: 600; font-size: .92em; letter-spacing: .04em; flex: none; }
 .cDocText { min-width: 0; flex: 1; }
 .cDocName { font-weight: 600; }
 .cDocMeta { color: var(--ix-muted); font-size: .92em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.cDocAction { padding: 6px 12px; border-radius: var(--ix-radius); background: var(--ix-primary); color: var(--ix-on-primary); font-weight: 600; }
+.cDocAction { padding: 6px 12px; border-radius: var(--ix-inner); background: var(--ix-band); color: var(--ix-text); font-weight: 600; border: 1px solid color-mix(in srgb, var(--ix-text) 14%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ix-card) 70%, transparent); }
 .cHeroTag { color: var(--ix-muted); font-size: .92em; }
 .console .cHeroTag { text-transform: none; letter-spacing: 0; }
 .cLive { color: var(--ix-text); font-weight: 600; }
-.cBroken { padding: 6px 8px; background: var(--ix-card); box-shadow: inset 3px 0 0 var(--ix-warning); border: 1px solid var(--ix-line); font-size: .92em; }
+.cBroken { padding: 6px 8px 6px 10px; border-radius: var(--ix-inner); background: var(--ix-card); box-shadow: inset 3px 0 0 var(--ix-warning), inset 0 0 0 1px var(--ix-line); font-size: .92em; }
 .cGov { font-size: .92em; color: var(--ix-muted); min-height: 1em; text-transform: uppercase; letter-spacing: .08em; }
 .console[data-density="compact"] .cRow { padding-block: 4px; }
 
@@ -303,11 +343,11 @@
 .xray { margin-top: 20px; }
 .xStage { position: relative; margin-top: 12px; }
 /* The lit lightbox panel. Height comes from STAGE_H in XRay.tsx (the films' vanishing point depends on it). */
-.xStage[data-mode="stack"] { display: grid; place-items: center; overflow: hidden; background: var(--ixp-card); border: 1px solid var(--ixp-ink); }
+.xStage[data-mode="stack"] { display: grid; place-items: center; overflow: hidden; background: var(--ixp-card); border-radius: 6px; box-shadow: var(--ixp-shadow), inset 0 1px 0 var(--ixp-hi); }
 /* No preserve-3d anywhere: each film carries its own perspective transform (filmTransform in XRay.tsx). */
 .xScene { position: relative; }
 .xPlane { position: absolute; inset: 0; box-sizing: border-box; padding: 10px 12px 12px; border-radius: 0;
-  background: color-mix(in srgb, var(--ixp-film) 55%, transparent); border: 1px solid var(--ixp-ink);
+  background: color-mix(in srgb, var(--ixp-film) 84%, transparent); border: 1px solid color-mix(in srgb, var(--ixp-ink) 45%, transparent); box-shadow: inset 0 1px 0 var(--ixp-hi);
   transition: transform .75s var(--ease-in-out-natural) calc(var(--i) * 60ms), transform-origin .75s var(--ease-in-out-natural) calc(var(--i) * 60ms); }
 /* Film-edge notch code, printed down the right edge; a different pattern per tier. */
 .xNotch { position: absolute; right: 3px; top: 30px; width: 3px; height: 36px; background: repeating-linear-gradient(to bottom, var(--ixp-muted) 0 calc(var(--n, 1) * 2px), transparent 0 calc(var(--n, 1) * 2px + 4px)); }
@@ -318,7 +358,7 @@
 .xReg[data-c="tl"] { left: -5px; top: -5px; } .xReg[data-c="tr"] { right: -5px; top: -5px; }
 .xReg[data-c="bl"] { left: -5px; bottom: -5px; } .xReg[data-c="br"] { right: -5px; bottom: -5px; }
 .xStage[data-mode="flat"] .xScene { width: 100%; height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 36px 28px; grid-template-areas: "component semantic" "raw theme"; transform: none; }
-.xStage[data-mode="flat"], .xStage[data-mode="step"] { padding: 16px; background: var(--ixp-card); border: 1px solid var(--ixp-ink); }
+.xStage[data-mode="flat"], .xStage[data-mode="step"] { padding: 16px; background: var(--ixp-card); border-radius: 6px; box-shadow: var(--ixp-shadow); }
 .xStage[data-mode="flat"] .xPlane, .xStage[data-mode="step"] .xPlane { position: relative; inset: auto; min-height: 300px; transform: none; }
 .xStage[data-mode="flat"] .xPlane[data-tier="component"] { grid-area: component; }
 .xStage[data-mode="flat"] .xPlane[data-tier="semantic"] { grid-area: semantic; }
@@ -334,39 +374,40 @@
 .xChip { position: relative; display: flex; align-items: center; gap: 6px; min-width: 0; padding: 2px 4px; color: var(--ixp-muted); box-shadow: inset 0 0 0 1px transparent;
   font-size: 11px; line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   transition: transform .3s var(--ease-in-out-natural), color .2s var(--ease-in-out-natural), box-shadow .2s var(--ease-in-out-natural); }
-.xChip[data-lit] { color: var(--ixp-ink); font-weight: 500; background: var(--ixp-card); box-shadow: inset 0 0 0 1px var(--ixp-violet); }
+.xChip[data-lit] { color: var(--ixp-ink); font-weight: 500; background: var(--ixp-card); border-radius: 2px; box-shadow: inset 0 0 0 1px var(--ixp-violet), 0 1px 1px color-mix(in srgb, var(--ixp-ink) 12%, transparent); }
 .xChip[data-pulse] { color: var(--ixp-ink); animation: xFlash .6s var(--ease-in-out-natural) var(--d) both; }
 .xSw { flex: none; width: 8px; height: 8px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 35%, transparent); }
 .xSkip { margin: 8px 0 0; padding: 5px 8px; border: 1px dashed var(--ixp-ink); font-size: 11px; color: var(--ixp-ink); --ixp-font: var(--ixp-mono); }
 
 /* The console face on the component film, painted from the resolved --ix-* values. */
-.xFace { box-sizing: border-box; height: calc(100% - 26px); padding: 8px; border-radius: 0; background: var(--ix-surface); color: var(--ix-text); border: 1px solid var(--ixp-ink); font-size: 11px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+.xFace { box-sizing: border-box; height: calc(100% - 26px); padding: 8px; border-radius: 4px; background: var(--ix-surface); color: var(--ix-text); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 30%, transparent); font-size: 11px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
 .xFace [data-part] { cursor: pointer; }
 .xFace[data-lit], .xFace [data-part][data-lit] { outline: 2px solid var(--ixp-violet); outline-offset: 2px; }
-.xHead { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; padding-bottom: 4px; border-bottom: 1px solid var(--ix-line); }
+.xHead { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; padding: 4px 6px; border-radius: var(--ix-radius); background: var(--ix-band); }
 .xHead b { white-space: nowrap; font-weight: 600; }
-.xStripe { width: 4px; height: 14px; background: var(--ix-primary); }
+.xStripe { width: 3px; height: 14px; border-radius: 2px; background: var(--ix-primary); }
 .xHint { color: var(--ix-muted); }
 .xCopies { display: flex; gap: 4px; margin-left: auto; }
 .xStage:not([data-mode="stack"]) .xCopies { flex-basis: 100%; margin-left: 0; }
 .xCopy { white-space: nowrap; padding: 0 5px; border: 1px dashed var(--ix-muted); color: var(--ix-text); }
 .xAlert { padding: 3px 7px; border-radius: var(--ix-radius); background: var(--ix-critical); color: var(--ix-on-primary); font-weight: 600; }
 .xRowFlex { display: flex; align-items: center; gap: 8px; }
-.xBtn { display: inline-flex; align-items: center; height: calc(var(--ix-target) * .6); padding: 0 12px; border-radius: var(--ix-radius); background: var(--ix-primary); color: var(--ix-on-primary); font-weight: 600; }
+.xBtn { display: inline-flex; align-items: center; height: calc(var(--ix-target) * .6); padding: 0 12px; border-radius: var(--ix-radius); background: var(--ix-primary); color: var(--ix-on-primary); font-weight: 600; box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 24%, transparent); }
 .xLabel { color: var(--ix-muted); align-self: flex-start; text-transform: uppercase; letter-spacing: .08em; }
-.xInput { display: block; height: 18px; border: 1px solid var(--ix-critical); border-radius: var(--ix-radius); background: var(--ix-card); }
-.xTable { border: 1px solid var(--ix-line); border-radius: var(--ix-radius); background: var(--ix-card); }
+.xInput { display: block; height: 18px; border: 1px solid var(--ix-critical); border-radius: var(--ix-radius); background: var(--ix-band); }
+.xTable { border-radius: var(--ix-radius); background: var(--ix-card); box-shadow: inset 0 0 0 1px var(--ix-line); overflow: hidden; }
+.xTr:nth-child(odd) { background: color-mix(in srgb, var(--ix-band) 38%, var(--ix-card)); }
 .xTr { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: calc(var(--ix-pad) * .6) 7px; border-top: 1px solid var(--ix-line); }
 .xTr:first-child { border-top: 0; }
 .xTr[data-ring] { box-shadow: inset 0 0 0 2px var(--ix-text); }
 .xName { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .xRisk { display: inline-flex; align-items: center; gap: 5px; color: var(--ix-text); font-weight: 500; }
-.xRisk i { width: 7px; height: 7px; }
+.xRisk i { width: 7px; height: 7px; clip-path: polygon(0 0, 100% 0, 100% 62%, 62% 100%, 0 100%); }
 .xRisk[data-risk="riskH"] i { background: var(--ix-critical); }
 .xRisk[data-risk="riskM"] i { background: var(--ix-warning); }
 .xRisk[data-risk="riskL"] i { background: var(--ix-ok); }
-.xCard { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding: calc(var(--ix-pad) * .6) 7px; border: 1px solid var(--ix-line); border-radius: var(--ix-radius); background: var(--ix-card); }
-.xAction { padding: 1px 8px; border-radius: var(--ix-radius); background: var(--ix-primary); color: var(--ix-on-primary); font-weight: 600; }
+.xCard { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding: calc(var(--ix-pad) * .6) 7px; border-radius: var(--ix-radius); background: var(--ix-card); box-shadow: inset 0 0 0 1px var(--ix-line); }
+.xAction { padding: 1px 8px; border-radius: var(--ix-radius); background: var(--ix-band); color: var(--ix-text); font-weight: 600; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ix-text) 14%, transparent); }
 
 /* Overlay: the beam is the lightbox showing through every film at the picked token; callouts are
    printed like radiologist annotations, mono with hairline leaders, in a gutter right of the films. */
@@ -387,11 +428,11 @@
 .xTag span:last-child { color: var(--ixp-muted); }
 
 /* Parts list: the keyboard path through the console, set as a ruled index. */
-.xList { display: flex; flex-wrap: wrap; gap: 0; margin-top: 14px; border-top: 1px solid var(--ixp-line-strong); border-left: 1px solid var(--ixp-line-strong); }
-.xPart { font-size: .8125rem; min-height: 32px; padding: 4px 10px; background: transparent; color: var(--ixp-ink); border: 0; border-radius: 0; border-right: 1px solid var(--ixp-line-strong); border-bottom: 1px solid var(--ixp-line-strong); }
-.xPart:hover { background: var(--ixp-card); }
-.xPart[aria-pressed="true"] { background: var(--ixp-violet); color: var(--ixp-card); }
-.xCaption { margin-top: 12px; padding: 12px 14px; border: 1px solid var(--ixp-ink); background: var(--ixp-card); font-size: 1rem; display: grid; gap: 6px; }
+.xList { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 14px; }
+.xPart { font-size: .8125rem; min-height: 32px; padding: 4px 10px; background: var(--ixp-band); color: var(--ixp-ink); border: 1px solid transparent; box-shadow: inset 0 1px 0 var(--ixp-hi); }
+.xPart:hover { border-color: color-mix(in srgb, var(--ixp-ink) 22%, transparent); }
+.xPart[aria-pressed="true"] { background: var(--ixp-card); border-color: var(--ixp-violet); box-shadow: inset 0 0 0 1px var(--ixp-violet); font-weight: 600; }
+.xCaption { margin-top: 12px; padding: 12px 14px; border-radius: 4px; box-shadow: var(--ixp-shadow), inset 0 1px 0 var(--ixp-hi); background: var(--ixp-card); font-size: 1rem; display: grid; gap: 6px; }
 .xCaption p { margin: 0; }
 .xCaption ol { margin: 0; padding: 0 0 0 10px; list-style: none; border-left: 1px solid var(--ixp-violet); font-size: .8125rem; display: grid; gap: 2px; overflow-wrap: anywhere; }
 .xStops { margin: 0; padding: 0 0 0 10px; list-style: none; border-left: 1px dashed var(--ixp-del); font-size: .875rem; display: grid; gap: 2px; }
@@ -404,8 +445,8 @@
 .fieldHue > span:first-child { color: var(--ixp-muted); }
 .fieldHue > span:first-child .mono { color: var(--ixp-ink); letter-spacing: 0; }
 .fieldTrack { position: relative; display: block; padding-block: 9px; }
-.fieldStrip { position: relative; display: block; height: 10px; border: 1px solid var(--ixp-ink); }
-.fieldStrip canvas { display: block; width: 100%; height: 100%; }
+.fieldStrip { position: relative; display: block; height: 10px; border-radius: 2px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 35%, transparent); overflow: visible; }
+.fieldStrip canvas { display: block; width: 100%; height: 100%; border-radius: 2px; }
 /* Hospital hues on the strip: small registration ticks under a hairline. */
 .fieldStrip i { position: absolute; top: -5px; width: 9px; height: 18px; margin-left: -4.5px; box-sizing: border-box; background: var(--m); border: 1px solid var(--ixp-ink); }
 .fieldStrip i[data-on] { outline: 1px solid var(--ixp-ink); outline-offset: 1px; }
@@ -426,7 +467,7 @@
 .fieldTicksX { left: 34px; right: 0; bottom: 0; height: 18px; }
 .fieldTicksX span { position: absolute; top: 4px; transform: translateX(-50%); }
 .fieldTicksX span::before { content: ''; position: absolute; left: 50%; top: -6px; height: 4px; border-left: 1px solid var(--ixp-ink); }
-.fieldBox { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; touch-action: none; cursor: crosshair; border: 1px solid var(--ixp-ink); background: var(--ixp-paper); }
+.fieldBox { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; touch-action: none; cursor: crosshair; border-radius: 2px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 40%, transparent); background: var(--ixp-paper); }
 .fieldCanvas, .fieldLines { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
 .fieldGridMinor { fill: none; stroke: color-mix(in srgb, var(--ixp-ink) 9%, transparent); stroke-width: 1; }
 .fieldGridMajor { fill: none; stroke: color-mix(in srgb, var(--ixp-ink) 22%, transparent); stroke-width: 1; }
@@ -446,10 +487,12 @@
 .fieldHandle::after { top: 50%; left: -8px; height: 1px; width: 42px; margin-top: -.5px; clip-path: polygon(0 0, 7px 0, 7px 100%, 0 100%, 0 0, 35px 0, 100% 0, 100% 100%, 35px 100%); }
 .fieldHandle:active { cursor: grabbing; }
 .fieldHandle[data-snap], .fieldTag[data-snap] { transition: transform .45s var(--ease-in-out-natural); }
-.fieldTag { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; white-space: nowrap; padding: 2px 6px; background: var(--ixp-card); border: 1px solid var(--ixp-ink); color: var(--ixp-ink); font-size: 11px; }
+.fieldTag { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; white-space: nowrap; padding: 2px 6px; background: var(--ixp-card); border-radius: 3px; box-shadow: var(--ixp-shadow); color: var(--ixp-ink); font-size: 11px; }
 .fieldTag[data-grade="fails"] { box-shadow: inset 3px 0 0 var(--ixp-del); padding-left: 9px; }
-.fieldRead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; font-size: 1rem; }
-.fieldRead[data-grade="fails"] { box-shadow: inset 3px 0 0 var(--ixp-del); padding-left: 10px; font-weight: 500; }
+.fieldRead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; padding: 7px 12px; width: fit-content; max-width: 460px; box-sizing: border-box; border-radius: 4px; font-size: 1rem; background: var(--ixp-violet); color: var(--ixp-card); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ixp-card) 22%, transparent); }
+.fieldRead .dot { box-shadow: 0 0 0 1px var(--ixp-card); }
+.fieldRead .btnQuiet { min-height: 30px; padding: 3px 10px; }
+.fieldRead[data-grade="fails"] { box-shadow: inset 4px 0 0 var(--ixp-del); padding-left: 14px; font-weight: 500; }
 .fieldLegend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .8125rem; color: var(--ixp-muted); }
 .fieldLegend li { display: flex; align-items: center; gap: 6px; }
 .fieldLegend i { display: inline-block; width: 14px; height: 10px; box-shadow: inset 0 0 0 1px var(--ixp-ink); }
@@ -463,6 +506,7 @@
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 @keyframes wipe { from { transform: translateY(4px); clip-path: inset(0 0 100% 0); } to { transform: none; clip-path: inset(0 0 0 0); } }
+@keyframes shutter { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(100% 0 0 0); } }
 @keyframes strike { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 @keyframes write { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 @keyframes xDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
@@ -477,9 +521,8 @@
    newest log line under it; the full log is the last section. ── */
 @media (max-width: 959px) {
   .grid { grid-template-columns: minmax(0, 1fr); }
-  .aside { position: sticky; top: 0; z-index: 5; align-self: start; background: var(--ixp-paper); padding-block: 8px; border-bottom: 1px solid var(--ixp-ink); }
-  .consoleWindow { max-height: min(44svh, 340px); box-shadow: none; }
-  .log { box-shadow: none; }
+  .aside { position: sticky; top: 0; z-index: 5; align-self: start; background: var(--ixp-paper); padding-block: 8px; box-shadow: 0 1px 0 var(--ixp-line); }
+  .consoleWindow { max-height: min(44svh, 340px); }
   /* In-page jumps land below the pinned console and its newest log line. */
   .page [id] { scroll-margin-top: calc(min(44svh, 340px) + 120px); }
   .sticky { position: static; height: auto; gap: 8px; }
@@ -491,10 +534,12 @@
 @media (min-width: 960px) {
   .page [id] { scroll-margin-top: 16px; }
   /* The pinned console and log have a fixed box, so new entries never relayout the page. */
-  .sticky { contain: strict; padding: 0 3px 3px 0; box-sizing: border-box; }
+  .sticky { contain: strict; box-sizing: border-box; }
   .logDesk { flex: 1; min-height: 0; display: flex; }
   .prose { grid-column: 1; grid-row: 1; }
   .aside { grid-column: 2; grid-row: 1; }
+  /* The console and its tape sit in a band-tone rack, like an instrument bay. */
+  .sticky { background: var(--ixp-band); border-radius: 8px; padding: 12px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ixp-ink) 8%, transparent), inset 0 1px 0 var(--ixp-hi); }
 }
 
 @media (prefers-reduced-motion: reduce) {

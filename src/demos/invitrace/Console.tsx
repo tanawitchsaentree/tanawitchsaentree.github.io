@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ARCHETYPES, DOCTOR, PATIENTS, TEXT } from './data'
+import { IconAlert, IconErr, IconPlus } from './Icons'
 import type { Store } from './useInvitrace'
 import s from './invitrace.module.css'
 
@@ -27,10 +28,15 @@ export function Console({ st }: { st: Store }) {
   useEffect(() => {
     const w = win.current, region = latest?.region
     if (!w || !region) return
-    const el = w.querySelector<HTMLElement>(`[data-ix-region="${region}"]`)
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    w.scrollTo({ top: Math.max(0, el.offsetTop - 8), behavior: reduced ? 'auto' : 'smooth' })
+    // Next frame: React flushes effects synchronously after a click, and reading offsetTop
+    // there would force a layout inside the click task.
+    const id = requestAnimationFrame(() => {
+      const el = w.querySelector<HTMLElement>(`[data-ix-region="${region}"]`)
+      if (!el) return
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      w.scrollTo({ top: Math.max(0, el.offsetTop - 8), behavior: reduced ? 'auto' : 'smooth' })
+    })
+    return () => cancelAnimationFrame(id)
   }, [latest?.n, latest?.region])
   const comp = resolved.component
   const rows = edge === 'empty' ? [] : PATIENTS.map((p, i) => (edge === 'long' && i === 0 ? { ...p, name: TEXT.LONG_NAME } : p))
@@ -38,9 +44,11 @@ export function Console({ st }: { st: Store }) {
     // A scrollable region must be reachable by keyboard (WCAG 2.1.1, axe scrollable-region-focusable).
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
     <div ref={win} className={s.consoleWindow} style={resolved.css as CSSProperties} tabIndex={0} role="region" aria-label="Ward console preview. Scroll inside it to see every part.">
-    <div className={s.console} data-density={resolved.theme['brand.density']} data-shortcut={shortcut || undefined}>
-      {/* key: a hospital switch wipes the body in (clip-path), so the change reads as one event */}
-      <div key={hospital.id} className={s.consoleBody}>
+    <div className={s.console} data-density={resolved.theme['brand.density']} data-dark={presetObj?.surface === 'dark' || undefined} data-shortcut={shortcut || undefined}>
+      {/* A hospital switch wipes a surface-coloured shutter off the console (clip-path), so the
+          change reads as one event; the console itself stays mounted, which keeps the switch cheap. */}
+      <span key={hospital.id} className={s.cShutter} aria-hidden="true" />
+      <div className={s.consoleBody}>
         <div className={s.cHead} data-ix-region="header">
           <span className={s.cStripe} aria-hidden="true" />
           <div>
@@ -49,11 +57,11 @@ export function Console({ st }: { st: Store }) {
           </div>
         </div>
 
-        <div className={s.cAlert} data-ix-region="alert"><span aria-hidden="true">!</span> {TEXT.ALERT}</div>
+        <div className={s.cAlert} data-ix-region="alert"><span className={s.cAlertIcon}><IconAlert size={16} /></span><span>{TEXT.ALERT}</span></div>
 
         <div className={s.cActions} data-ix-region="actions">
           <span className={s.cBtn} data-icon={comp['button.label'] === 'icon-only' || undefined}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+            <IconPlus size={14} />
             <span className={comp['button.label'] === 'icon-only' ? s.srOnly : undefined}>Admit patient</span>
           </span>
           <span className={s.cTarget}>{comp['button.minHeight']} target</span>
@@ -62,10 +70,10 @@ export function Console({ st }: { st: Store }) {
         <div className={s.cField} data-ix-region="field" data-float={comp['field.label'] === 'floating' || undefined}>
           <span className={s.cLabel}>Patient ID</span>
           <span className={s.cInput}>{comp['field.label'] === 'floating' ? 'HN 2025-0418' : ''}</span>
-          <span className={s.cError}><span aria-hidden="true">✕</span> Enter the full hospital number.</span>
+          <span className={s.cError}><IconErr size={13} /> Enter the full hospital number.</span>
         </div>
 
-        <div className={s.cTable} role="table" aria-label="Sample admissions" data-ix-region="table">
+        <div className={s.cTable} role="table" aria-label="Sample admissions" data-ix-region="table" data-nobed={comp['table.bedColumn'] === 'hidden-for-role' || undefined}>
           <div className={s.cRow} role="row" data-head>
             {comp['table.bedColumn'] !== 'hidden-for-role' && <span role="columnheader">Bed</span>}
             <span role="columnheader">Patient</span><span role="columnheader">Risk</span><span role="columnheader">Status</span>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
 import { PATIENTS, XRAY } from './data'
 import { TIER_LABEL, TIER_ORDER, lineage, type Tier, type TokenNode } from './lineage'
 import type { Store } from './useInvitrace'
@@ -17,7 +17,7 @@ const PART: Record<string, string> = {
   'button.background': 'button', 'button.text': 'button', 'button.radius': 'button', 'button.minHeight': 'button',
   'field.label': 'label', 'field.border': 'input', 'table.text': 'name', 'table.rowPad': 'row', 'table.line': 'row',
   'focus.ring': 'ringRow', 'focus.ringOffset': 'ringRow', 'risk.high': 'riskH', 'risk.medium': 'riskM', 'risk.low': 'riskL',
-  'card.background': 'card', 'card.radius': 'card', 'doctorCard.action': 'action', 'fork.admitButtons': 'forks',
+  'card.background': 'card', 'card.radius': 'card', 'doctorCard.action': 'action', 'doctorCard.ring': 'card', 'fork.admitButtons': 'forks',
 }
 /** Clicking a part of the face picks its main token. */
 const PART_PICK: Record<string, string> = {
@@ -109,7 +109,7 @@ export function XRay({ st }: { st: Store }) {
 
   // Stage width and each film's top (films are content-height, anchored to the scene bottom).
   // Layout reads only, on mount, resize and content change; never per frame.
-  useLayoutEffect(() => {
+  useEffect(() => {
     const st0 = stage.current; if (!st0 || mode !== 'stack') return
     const read = () => {
       setStageW(st0.clientWidth)
@@ -117,9 +117,10 @@ export function XRay({ st }: { st: Store }) {
       st0.querySelectorAll<HTMLElement>('[data-tier]').forEach(el => { next[el.dataset.tier as Tier] = SCENE.h - el.offsetHeight })
       setTops(prev => (TIER_ORDER.every(t => prev[t] === next[t]) ? prev : next))
     }
-    read()
+    // Next frame: the browser lays out first, so a theme switch never forces a sync layout.
+    const id = requestAnimationFrame(read)
     const ro = new ResizeObserver(read); ro.observe(st0)
-    return () => ro.disconnect()
+    return () => { cancelAnimationFrame(id); ro.disconnect() }
   }, [mode, shape, st.resolved, lin.skipsTheme, lin.status])
 
   const measure = useCallback(() => {

@@ -1,4 +1,5 @@
 // Invitrace ward console: the token model behind the demo. Pure functions; no DOM.
+import { hexToOklch, oklchToHex } from './oklch'
 // Tier 1 raw → Tier 2 theme (the only tier a hospital edits) → Tier 3 semantic → Tier 4 component.
 
 export type ArchetypeId = 'medium' | 'large' | 'specialty'
@@ -13,24 +14,25 @@ export type GovRule = { id: string; primitive: string; label: string } & Record<
 
 /** Tier 1: raw values shared by every hospital. Status colours live here and nowhere else. */
 export const RAW = {
-  white: '#FEFEFF',   // near-white: button text and cards (no pure #FFF)
-  ink: '#1D1A26',
-  inkHigh: '#0B0A10',
-  inkMuted: '#5B5670',
-  inkMutedHigh: '#3A3548',
-  paper: '#FBFAFE',
-  card: '#FEFEFF',
-  line: '#E2DDEC',
-  lineHigh: '#8C849E',
-  night: '#15131C',
-  nightCard: '#211E2B',
-  nightText: '#F3F0FA',
-  nightMuted: '#C2BBD3',
-  nightLine: '#3A3548',
-  critical: '#B8322A',
-  warning: '#9A5B00',
-  ok: '#1D6E48',
+  white: '#FEFEFF',   // near-white: text on brand and status fills (no pure #FFF)
+  critical: '#A8433A',
+  criticalDeep: '#8A342D',
+  warning: '#8A6116',
+  ok: '#3E7458',
 } as const
+
+/** Tier 1 palettes. Each hospital type has a soft ramp; the night ramp serves every hospital.
+    Steps: 25 raised card · 50 base surface (60%) · 200 band (30%) · 300 rule · 500 strong rule ·
+    600 secondary text · 900 text · 950 high-contrast text. Night runs the other way. */
+export type PaletteId = 'sage' | 'fog' | 'plum'
+export type Ramp = { '25': string; '50': string; '200': string; '300': string; '500': string; '600': string; '900': string; '950': string }
+export const PALETTES: Record<PaletteId, Ramp> = {
+  sage: { '25': '#F9FAF7', '50': '#F3F5F1', '200': '#DDE6DE', '300': '#C6D1C8', '500': '#7C8A80', '600': '#4F5D55', '900': '#23302A', '950': '#141C18' },
+  fog:  { '25': '#F8F9FB', '50': '#F2F4F7', '200': '#DCE3EC', '300': '#C5CFDB', '500': '#7A8799', '600': '#4B5767', '900': '#1F2A37', '950': '#121A24' },
+  plum: { '25': '#FBF9F8', '50': '#F7F3F2', '200': '#EADFDD', '300': '#D8C8C5', '500': '#8D7B78', '600': '#5C4B4F', '900': '#2E2326', '950': '#1C1517' },
+}
+export const NIGHT = { '900': '#1B1F25', '850': '#222830', '800': '#262C34', '700': '#353C46', '400': '#7D8794', '300': '#AEB5BF', '100': '#E6E9EE', '50': '#F4F6F9' } as const
+export const ARCH_PALETTE: Record<ArchetypeId, PaletteId> = { medium: 'sage', large: 'fog', specialty: 'plum' }
 
 // ── Colour maths (WCAG 2.x) ──
 const toRgb = (hex: string) => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255) as [number, number, number]
@@ -54,11 +56,19 @@ function hslToHex(h: number, s: number, l: number) {
 export function nearestPassing(hex: string, on: string = RAW.white, min = 4.5) {
   const [h, s, l0] = rgbToHsl(toRgb(hex))
   for (let l = l0; l >= 0; l -= 0.005) { const c = hslToHex(h, s, l); if (contrast(c, on) >= min) return c }
-  return RAW.ink
+  return PALETTES.sage['950']
 }
 
 /** The brand colour carries white button text, so it must reach AA (4.5:1) against white. */
 export const BRAND_MIN = 4.5
+/** The brand colour on a dark surface: lifted in lightness while white text still reaches 4.6:1. */
+export function liftForDark(hex: string) {
+  const o = hexToOklch(hex)
+  let best = hex
+  for (let d = 0.01; d <= 0.08; d += 0.01) { const c = oklchToHex(o.L + d, o.C, o.h); if (contrast(c, RAW.white) >= 4.6) best = c; else break }
+  return best
+}
+
 export const checkBrand = (hex: string) => { const r = contrast(hex, RAW.white); return { ratio: r, ok: r >= BRAND_MIN, nearest: r >= BRAND_MIN ? hex : nearestPassing(hex) } }
 
 // ── Tier resolution ──
@@ -82,16 +92,19 @@ export function resolve(h: Hospital, preset: Preset | null, gov: Gov): Resolved 
   const scale = preset?.textScale ?? 1
   // Tier 2: what a hospital (or a ward preset) may change. Text routes through here because
   // it depends on the surface.
+  const ramp = PALETTES[ARCH_PALETTE[h.archetype]]
+  const dark = surface === 'dark'
   const theme: Record<string, string> = {
-    'brand.primary': h.primary,
+    'brand.primary': dark ? liftForDark(h.primary) : h.primary,
     'brand.radius': `${h.radius}px`,
     'brand.density': density,
     'brand.layout': h.layout,
-    'brand.surface': surface === 'dark' ? RAW.night : RAW.paper,
-    'brand.card': surface === 'dark' ? RAW.nightCard : RAW.card,
-    'brand.text': surface === 'dark' ? RAW.nightText : high ? RAW.inkHigh : RAW.ink,
-    'brand.textMuted': surface === 'dark' ? RAW.nightMuted : high ? RAW.inkMutedHigh : RAW.inkMuted,
-    'brand.line': surface === 'dark' ? RAW.nightLine : high ? RAW.lineHigh : RAW.line,
+    'brand.surface': dark ? NIGHT['900'] : ramp['50'],
+    'brand.card': dark ? NIGHT['850'] : ramp['25'],
+    'brand.band': dark ? NIGHT['800'] : ramp['200'],
+    'brand.text': dark ? NIGHT['100'] : high ? ramp['950'] : ramp['900'],
+    'brand.textMuted': dark ? NIGHT['300'] : high ? ramp['900'] : ramp['600'],
+    'brand.line': dark ? NIGHT['700'] : high ? ramp['500'] : ramp['300'],
     'brand.textScale': String(scale),
   }
   // Tier 3: names by intent. Status skips Tier 2 and reads Tier 1 directly.
@@ -100,6 +113,7 @@ export function resolve(h: Hospital, preset: Preset | null, gov: Gov): Resolved 
     'color.onPrimary': '{raw.white}',
     'color.surface': '{brand.surface}',
     'color.card': '{brand.card}',
+    'color.band': '{brand.band}',
     'color.text': '{brand.text}',
     'color.textMuted': '{brand.textMuted}',
     'color.critical': '{raw.critical}',
@@ -123,7 +137,9 @@ export function resolve(h: Hospital, preset: Preset | null, gov: Gov): Resolved 
     'doctorCard.layout': '{brand.layout}',
   }
   const css: Record<string, string> = {
-    '--ix-primary': h.primary,
+    '--ix-primary': theme['brand.primary'],
+    '--ix-band': theme['brand.band'],
+    '--ix-critical-deep': RAW.criticalDeep,
     '--ix-on-primary': RAW.white,
     '--ix-surface': theme['brand.surface'],
     '--ix-card': theme['brand.card'],

@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect, useId, useState, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { ARCHETYPES, DECISIONS, DRIFT, GOVERNANCE, PRESETS, RECORDS, SAMPLE_COLOURS, SECTIONS, SWATCHES } from './data'
 import { COLUMNS, cell, flag, forkName, outlier, type ButtonProps, type Column, type Fork } from './drift'
 import { ContrastField } from './ContrastField'
 import { LineageTable, XRay } from './XRay'
 import { BRAND_MIN, RAW, checkBrand, isHex, resolve, GOV_DEFAULT, type ArchetypeId, type Density, type Layout } from './model'
 import { ChangeLog } from './ChangeLog'
+import { IconChevron, IconLock } from './Icons'
 import type { Store } from './useInvitrace'
 import s from './invitrace.module.css'
 
@@ -22,9 +23,26 @@ export function Section({ id, n, title, lead, body, children }: { id: string; n:
     </section>
   )
 }
+/** A segmented control with a sliding indicator. The indicator's box is read from the pressed
+    button on change and resize only; it travels on the system curve. */
 function Seg<T extends string>({ label, value, options, onPick }: { label: string; value: T | null; options: { id: T; label: string }[]; onPick: (v: T) => void }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [box, setBox] = useState<{ x: number; y: number; w: number; h: number } | null>(null)
+  // Read in the next frame, after the browser's own layout, so a click never forces one.
+  useEffect(() => {
+    const el = ref.current; if (!el) return
+    const read = () => {
+      const b = el.querySelector<HTMLElement>('button[aria-pressed="true"]')
+      const next = b ? { x: b.offsetLeft, y: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight } : null
+      setBox(prev => (prev && next && prev.x === next.x && prev.y === next.y && prev.w === next.w && prev.h === next.h ? prev : next))
+    }
+    const id = requestAnimationFrame(read)
+    const ro = new ResizeObserver(read); ro.observe(el)
+    return () => { cancelAnimationFrame(id); ro.disconnect() }
+  }, [value, options.length])
   return (
-    <div className={s.seg} role="group" aria-label={label}>
+    <div ref={ref} className={s.seg} role="group" aria-label={label}>
+      {box && <span className={s.segInd} aria-hidden="true" style={{ transform: `translate(${box.x}px, ${box.y}px)`, width: box.w, height: box.h }} />}
       {options.map(o => <button key={o.id} type="button" className={s.segBtn} aria-pressed={value === o.id} onClick={() => onPick(o.id)}>{o.label}</button>)}
     </div>
   )
@@ -36,12 +54,12 @@ function Disclosure({ label, children, onToggle, open: controlled }: { label: [s
   const id = useId()
   return (
     <div className={s.disclosure}>
-      <button type="button" className={s.disclosureBtn} aria-expanded={open} aria-controls={id} onClick={() => { setOwn(!open); onToggle(!open) }}>{open ? label[1] : label[0]}</button>
+      <button type="button" className={s.disclosureBtn} aria-expanded={open} aria-controls={id} onClick={() => { setOwn(!open); onToggle(!open) }}><IconChevron size={12} />{open ? label[1] : label[0]}</button>
       {open && <div id={id} className={s.disclosureBody}>{children}</div>}
     </div>
   )
 }
-const Lock = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+const Lock = () => <IconLock size={14} />
 const Panel = ({ children, label }: { children: ReactNode; label: string }) => <div className={s.panel} role="group" aria-label={label}>{children}</div>
 
 // ── 1 · The problem ──
@@ -97,7 +115,7 @@ export function Problem({ st }: { st: Store }) {
         {st.drift !== 'idle' && (
           // A sideways-scrolling region must be reachable by keyboard (WCAG 2.1.1).
           // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-          <div className={s.tableWrap} tabIndex={0} role="region" aria-label="Fork property matrix, scrolls sideways">
+          <div className={s.tableWrap} data-sheet tabIndex={0} role="region" aria-label="Fork property matrix, scrolls sideways">
             <table className={s.matrix}>
               <caption>{DRIFT.caption}</caption>
               <thead><tr><th scope="col">Property</th>{forks.map((_, fi) => <th key={fi} scope="col">{forkName(fi)}</th>)}<th scope="col" data-ref>Reference</th></tr></thead>
@@ -113,7 +131,7 @@ export function Problem({ st }: { st: Store }) {
                         const fl = out ? flag(f, canon, c.id) : null
                         const fail = !d && c.id === 'contrast' && !checkBrand(f.bg).ok
                         return (
-                          <td key={fi} data-out={(!d && out) || undefined} data-fail={fail || undefined}>
+                          <td key={fi} data-out={(!d && out) || undefined} data-fail={fail || undefined} data-fixed={(d && out) || undefined}>
                             {d && out
                               ? <><del className={s.mOld}>{v}</del> <ins className={s.mFix}>{ref}</ins></>
                               : <>{v}{fl && <sup className={s.mFlag}>{fl}<span className={s.srOnly}>{fl === 'H' ? ', above reference' : fl === 'L' ? ', below reference' : ', differs from reference'}</span></sup>}</>}

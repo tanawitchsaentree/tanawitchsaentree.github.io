@@ -1,7 +1,7 @@
 // Token lineage: the four tiers as a dependency graph, computed from the same definitions the
 // console renders from (model.ts). Each node names the token it reads; values resolve by
 // following those names. Pure; no DOM.
-import { DENSITY_PAD, RAW, type Density, type Gov, type Hospital, type Preset } from './model'
+import { ARCH_PALETTE, DENSITY_PAD, NIGHT, PALETTES, RAW, liftForDark, type Density, type Gov, type Hospital, type Preset } from './model'
 
 export type Tier = 'raw' | 'theme' | 'semantic' | 'component'
 export const TIER_ORDER: Tier[] = ['component', 'semantic', 'theme', 'raw']
@@ -41,24 +41,31 @@ export function tokenGraph(h: Hospital, preset: Preset | null, gov: Gov, ctx: Gr
   const list: (Omit<TokenNode, 'value'> & { value?: string })[] = []
   const add = (id: string, tier: Tier, ref: string | null, extra: Partial<TokenNode> = {}) => list.push({ id, tier, ref, ...extra })
 
-  // Tier 1: raw values shared by every hospital.
-  for (const [k, v] of Object.entries(RAW)) add(`raw.${k}`, 'raw', null, { value: v, colour: true })
+  // Tier 1: raw values. Shared status values, this hospital type's ramp and the night ramp.
+  const pal = ARCH_PALETTE[h.archetype], ramp = PALETTES[pal]
+  for (const [k, v] of Object.entries(RAW)) if (k !== 'criticalDeep') add(`raw.${k}`, 'raw', null, { value: v, colour: true })
+  for (const [k, v] of Object.entries(ramp)) add(`raw.${pal}.${k}`, 'raw', null, { value: v, colour: true })
+  for (const [k, v] of Object.entries(NIGHT)) add(`raw.night.${k}`, 'raw', null, { value: v, colour: true })
+  const r = (k: string) => `raw.${pal}.${k}`, n = (k: string) => `raw.night.${k}`
 
-  // Tier 2: theme. Literals come from the hospital file or a preset; surface-dependent values read raw.
-  add('brand.primary', 'theme', null, { value: h.primary, source: file, colour: true })
+  // Tier 2: theme. Literals come from the hospital file or a preset; surfaces and text read the
+  // ramp, so whether text is dark or light follows the surface.
+  add('brand.primary', 'theme', null, dark ? { value: liftForDark(h.primary), source: 'presets/night.json, lifted for dark', colour: true } : { value: h.primary, source: file, colour: true })
   add('brand.radius', 'theme', null, { value: `${h.radius}px`, source: file })
   add('brand.density', 'theme', null, { value: density, source: preset ? `presets/${preset.id}.json` : file })
-  add('brand.surface', 'theme', dark ? 'raw.night' : 'raw.paper')
-  add('brand.card', 'theme', dark ? 'raw.nightCard' : 'raw.card')
-  add('brand.text', 'theme', dark ? 'raw.nightText' : high ? 'raw.inkHigh' : 'raw.ink')
-  add('brand.textMuted', 'theme', dark ? 'raw.nightMuted' : high ? 'raw.inkMutedHigh' : 'raw.inkMuted')
-  add('brand.line', 'theme', dark ? 'raw.nightLine' : high ? 'raw.lineHigh' : 'raw.line')
+  add('brand.surface', 'theme', dark ? n('900') : r('50'))
+  add('brand.card', 'theme', dark ? n('850') : r('25'))
+  add('brand.band', 'theme', dark ? n('800') : r('200'))
+  add('brand.text', 'theme', dark ? n('100') : high ? r('950') : r('900'))
+  add('brand.textMuted', 'theme', dark ? n('300') : high ? r('900') : r('600'))
+  add('brand.line', 'theme', dark ? n('700') : high ? r('500') : r('300'))
 
   // Tier 3: semantic names. Status reads raw directly and skips the theme.
   add('color.primary', 'semantic', 'brand.primary')
   add('color.onPrimary', 'semantic', 'raw.white')
   add('color.surface', 'semantic', 'brand.surface')
   add('color.card', 'semantic', 'brand.card')
+  add('color.band', 'semantic', 'brand.band')
   add('color.text', 'semantic', 'brand.text')
   add('color.textMuted', 'semantic', 'brand.textMuted')
   add('color.line', 'semantic', 'brand.line')
@@ -90,7 +97,8 @@ export function tokenGraph(h: Hospital, preset: Preset | null, gov: Gov, ctx: Gr
   add('risk.low', 'component', 'color.ok')
   add('card.background', 'component', 'color.card')
   add('card.radius', 'component', 'radius.control')
-  add('doctorCard.action', 'component', 'color.primary')
+  add('doctorCard.action', 'component', 'color.band')
+  add('doctorCard.ring', 'component', 'color.primary')
   for (const f of ctx.forks) add(f.id, 'component', 'color.primary', { value: f.value, stop: ctx.forkWhy, colour: true })
   for (const d of ctx.detached) add(d.id, 'component', 'color.primary', { value: d.value, stop: d.why, colour: true })
 
