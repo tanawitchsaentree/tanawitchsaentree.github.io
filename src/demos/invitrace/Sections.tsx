@@ -1,7 +1,10 @@
 'use client'
 
-import { useId, useState, type ReactNode } from 'react'
-import { ARCHETYPES, DECISIONS, GOVERNANCE, PRESETS, RECORDS, SAMPLE_COLOURS, SECTIONS, SWATCHES } from './data'
+import { useEffect, useId, useState, type ReactNode } from 'react'
+import { ARCHETYPES, DECISIONS, DRIFT, GOVERNANCE, PRESETS, RECORDS, SAMPLE_COLOURS, SECTIONS, SWATCHES } from './data'
+import { COLUMNS, cell, flag, forkName, outlier, type ButtonProps, type Column, type Fork } from './drift'
+import { ContrastField } from './ContrastField'
+import { LineageTable, XRay } from './XRay'
 import { BRAND_MIN, RAW, checkBrand, isHex, resolve, GOV_DEFAULT, type ArchetypeId, type Density, type Layout } from './model'
 import { ChangeLog } from './ChangeLog'
 import type { Store } from './useInvitrace'
@@ -42,27 +45,90 @@ const Lock = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" s
 const Panel = ({ children, label }: { children: ReactNode; label: string }) => <div className={s.panel} role="group" aria-label={label}>{children}</div>
 
 // ── 1 · The problem ──
+const STEP = 420
 export function Problem({ st }: { st: Store }) {
   const t = SECTIONS.problem
   const one = st.drift === 'one'
+  const forks = SAMPLE_COLOURS.drift
+  const canon: ButtonProps = { pad: '0 16px', r: st.hospital.radius, bg: st.hospital.primary, weight: 600, label: 'Admit patient', h: parseInt(st.resolved.component['button.minHeight']) }
+  // Rows are corrected one at a time, like a reviewer going down a printed sheet: the old
+  // value is struck through and the reference value written beside it.
+  const [conv, setConv] = useState(0)
+  useEffect(() => {
+    if (st.drift !== 'one') { setConv(0); return }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setConv(COLUMNS.length); return }
+    let k = 0
+    setConv(1)
+    const id = window.setInterval(() => { k = Math.min(COLUMNS.length, k + 1); setConv(k + 1); if (k + 1 >= COLUMNS.length) window.clearInterval(id) }, STEP)
+    return () => window.clearInterval(id)
+  }, [st.drift])
+  const done = (c: Column) => conv > COLUMNS.findIndex(x => x.id === c)
+  const shown = (f: Fork): ButtonProps => ({
+    pad: done('pad') ? canon.pad : f.pad, r: done('r') ? canon.r : f.r, bg: done('contrast') ? canon.bg : f.bg,
+    weight: done('weight') ? canon.weight : f.weight, label: done('label') ? canon.label : f.label, h: done('h') ? canon.h : f.h,
+  })
+  const settled = one && conv >= COLUMNS.length
+  // Each landed column takes a share of the drift out, so the buttons straighten as the table converges.
+  const lean = one ? 1 - conv / COLUMNS.length : 1
   return (
     <Section id="ix-problem" n="01" title={t.title} lead={t.lead} body={t.body}>
       <Panel label="Forked buttons">
         <div className={s.row}>
-          <button type="button" className={s.btn} onClick={st.actions.showDrift} aria-pressed={st.drift === 'drifted'}>See the drift</button>
+          <button type="button" className={st.drift === 'idle' ? s.btn : s.btnQuiet} onClick={st.actions.showDrift} aria-pressed={st.drift === 'drifted'}>See the drift</button>
           <button type="button" className={s.btnQuiet} onClick={st.actions.consolidate} disabled={st.drift === 'idle'} aria-pressed={one}>Bring them back to one component</button>
         </div>
         {st.drift !== 'idle' && (
-          <div className={s.drift} data-one={one || undefined}>
-            {SAMPLE_COLOURS.drift.map((d, i) => (
-              <span key={i} className={s.driftBtn} aria-hidden="true"
-                style={one ? undefined : { padding: d.pad, borderRadius: d.r, background: d.bg, transform: `translate(${d.x}px, ${d.y}px) rotate(${d.rot}deg)` }}>
-                Admit patient
-              </span>
-            ))}
+          <div className={s.drift} data-one={settled || undefined}>
+            {forks.map((f, i) => {
+              const b = shown(f)
+              return (
+                <span key={i} className={s.driftItem} aria-hidden="true">
+                  <span className={s.driftBtn}
+                    style={{ padding: b.pad, borderRadius: b.r, background: b.bg, fontWeight: b.weight, height: b.h, transform: settled ? undefined : `translate(${f.x * lean}px, ${f.y * lean}px) rotate(${f.rot * lean}deg)` }}>
+                    {b.label}
+                  </span>
+                  <span className={s.driftTag}>{forkName(i)}</span>
+                </span>
+              )
+            })}
           </div>
         )}
         {st.drift !== 'idle' && <p className={s.note}>{one ? t.consolidated : t.drifted}</p>}
+        {st.drift !== 'idle' && (
+          // A sideways-scrolling region must be reachable by keyboard (WCAG 2.1.1).
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+          <div className={s.tableWrap} tabIndex={0} role="region" aria-label="Fork property matrix, scrolls sideways">
+            <table className={s.matrix}>
+              <caption>{DRIFT.caption}</caption>
+              <thead><tr><th scope="col">Property</th>{forks.map((_, fi) => <th key={fi} scope="col">{forkName(fi)}</th>)}<th scope="col" data-ref>Reference</th></tr></thead>
+              <tbody>
+                {COLUMNS.map(c => {
+                  const d = done(c.id)
+                  return (
+                    <tr key={c.id} data-conv={d || undefined}>
+                      <th scope="row">{c.label}</th>
+                      {forks.map((f, fi) => {
+                        const v = cell(f, c.id), ref = cell(canon, c.id)
+                        const out = outlier(f, canon, c.id)
+                        const fl = out ? flag(f, canon, c.id) : null
+                        const fail = !d && c.id === 'contrast' && !checkBrand(f.bg).ok
+                        return (
+                          <td key={fi} data-out={(!d && out) || undefined} data-fail={fail || undefined}>
+                            {d && out
+                              ? <><del className={s.mOld}>{v}</del> <ins className={s.mFix}>{ref}</ins></>
+                              : <>{v}{fl && <sup className={s.mFlag}>{fl}<span className={s.srOnly}>{fl === 'H' ? ', above reference' : fl === 'L' ? ', below reference' : ', differs from reference'}</span></sup>}</>}
+                          </td>
+                        )
+                      })}
+                      <td data-ref>{cell(canon, c.id)}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {st.drift !== 'idle' && <p className={s.sample}>{DRIFT.legend}</p>}
       </Panel>
     </Section>
   )
@@ -84,6 +150,11 @@ export function Tiers({ st }: { st: Store }) {
         <li><span className={s.tierName}>Semantic</span><span className={s.mono}>color.primary → brand.primary · color.critical → raw.critical</span></li>
         <li><span className={s.tierName}>Component</span><span className={s.mono}>button.background → color.primary · alert.background → color.critical</span></li>
       </ol>
+      <XRay st={st} />
+      <Disclosure label={['Show the lineage table', 'Hide the lineage table']}
+        onToggle={o => { if (o) st.actions.note('You opened the lineage table.', 'Every console part, tier by tier, from the same graph as the X-ray.', { tier: 'Lineage' }) }}>
+        <LineageTable st={st} />
+      </Disclosure>
       <Panel label="Hospital theme">
         <p className={s.panelLabel} id={`${id}-h`}>Hospital</p>
         <Seg label="Hospital" value={st.active} options={st.hospitals.map(h => ({ id: h.id, label: h.name }))} onPick={st.actions.pickHospital} />
@@ -112,6 +183,8 @@ export function Tiers({ st }: { st: Store }) {
             </button>
           </div>
         )}
+        <p className={s.panelLabel}>Contrast field</p>
+        <ContrastField st={st} />
         <p className={s.panelLabel}>Corner radius <span className={s.mono}>{st.hospital.radius}px</span></p>
         <div className={s.row}>
           <button type="button" className={s.btnQuiet} onClick={() => st.actions.stepRadius(-2)} aria-label="Smaller radius">− 2px</button>
@@ -199,7 +272,7 @@ export function Rot({ st }: { st: Store }) {
         <div className={s.master}>
           <span className={s.dotLg} style={{ background: st.master }} aria-hidden="true" />
           <span><span className={s.panelLabel}>Master token</span><span className={s.mono}> color/primary {st.master}</span></span>
-          <button type="button" className={s.btn} onClick={st.actions.changeMaster}>Change the master</button>
+          <button type="button" className={s.btnQuiet} onClick={st.actions.changeMaster}>Change the master</button>
         </div>
         <ul className={s.instances}>
           {st.instances.map(i => (
@@ -429,7 +502,7 @@ export function Onboarding({ st }: { st: Store }) {
             <p className={s.panelLabel}>Preview of {name.trim()}</p>
             <div className={s.miniPreview} style={preview.css as React.CSSProperties}>
               <span className={s.cBtn}>Admit patient</span>
-              <span className={s.cChip} style={{ background: 'var(--ix-critical)' }}>High</span>
+              <span className={s.cRisk}><i aria-hidden="true" style={{ background: 'var(--ix-critical)' }} />High</span>
               <span className={s.mono}>{ARCHETYPES[arch].label} rules · {density} · {radius}px</span>
             </div>
             <div className={s.row}>

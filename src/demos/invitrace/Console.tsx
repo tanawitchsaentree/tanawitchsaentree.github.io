@@ -76,7 +76,7 @@ export function Console({ st }: { st: Store }) {
             <div key={p.bed} className={s.cRow} role="row" tabIndex={0} data-ix-row>
               {comp['table.bedColumn'] !== 'hidden-for-role' && <span role="cell" className={s.cMono}>{p.bed}</span>}
               <span role="cell" className={s.cPatient}>{p.name}</span>
-              <span role="cell"><span className={s.cChip} style={{ background: RISK[p.risk] }}>{p.risk}</span></span>
+              <span role="cell" className={s.cRisk}><i aria-hidden="true" style={{ background: RISK[p.risk] }} />{p.risk}</span>
               <span role="cell" className={s.cStatus}>{p.status}</span>
             </div>
           ))}

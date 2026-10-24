@@ -2,6 +2,7 @@
 // content/gated/invitrace.json and ship only as an encrypted blob (scripts/encrypt-gated.mjs).
 // These exports are live views that read the decrypted blob at render time (src/lib/gated.ts).
 import { gated } from '@/lib/gated'
+import type { Fork } from './drift'
 import type { ArchetypeId, GovRule, Hospital, Preset } from './model'
 
 const G = 'invitrace'
@@ -31,5 +32,13 @@ export const PRESETS = gated<Preset[]>(G, 'PRESETS')
 export const PATIENTS = gated<{ bed: string; name: string; risk: 'High' | 'Medium' | 'Low'; status: string }[]>(G, 'PATIENTS')
 export const DOCTOR = gated<{ name: string; role: string; where: string; action: string }>(G, 'DOCTOR')
 export const DECISIONS = gated<{ title: string; problem: string; options: { key: string; text: string }[]; chosen: string; rationale: string; cost: string }[]>(G, 'DECISIONS')
-export const SAMPLE_COLOURS = gated<{ drift: { pad: string; r: number; bg: string; rot: number; x: number; y: number }[]; masters: string[]; invent: string; onboardingStart: string }>(G, 'SAMPLE_COLOURS')
+export const SAMPLE_COLOURS = gated<{ drift: Fork[]; masters: string[]; invent: string; onboardingStart: string }>(G, 'SAMPLE_COLOURS')
 export const TEXT = gated<{ LONG_NAME: string; ALERT: string }>(G, 'TEXT')
+export const XRAY = gated<{
+  intro: string
+  elements: { id: string; label: string }[]
+  notes: { status: string; shared: string; text: string; literal: string; plain: string; skipped: string; skippedShared: string }
+  reasons: { ring: string; fork: string }
+}>(G, 'XRAY')
+export const FIELD = gated<{ intro: string; legend: { pass: string; large: string; fail: string; gamut: string }; keys: string; others: string; refused: string }>(G, 'FIELD')
+export const DRIFT = gated<{ caption: string; legend: string }>(G, 'DRIFT')

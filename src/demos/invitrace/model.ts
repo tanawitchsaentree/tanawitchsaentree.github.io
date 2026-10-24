@@ -27,9 +27,9 @@ export const RAW = {
   nightText: '#F3F0FA',
   nightMuted: '#C2BBD3',
   nightLine: '#3A3548',
-  critical: '#B42318',
-  warning: '#A15C07',
-  ok: '#067647',
+  critical: '#B8322A',
+  warning: '#9A5B00',
+  ok: '#1D6E48',
 } as const
 
 // ── Colour maths (WCAG 2.x) ──
@@ -73,7 +73,7 @@ export type Resolved = {
   css: Record<string, string>
 }
 
-const DENSITY_PAD: Record<Density, number> = { compact: 6, regular: 10, comfortable: 14 }
+export const DENSITY_PAD: Record<Density, number> = { compact: 6, regular: 10, comfortable: 14 }
 
 export function resolve(h: Hospital, preset: Preset | null, gov: Gov): Resolved {
   const surface: Surface = preset?.surface ?? 'light'

@@ -192,29 +192,34 @@
 }
 
 /* ── Invitrace case study (demo surface: [data-demo="invitrace"] only) ──────────
-   Page chrome around the ward console. The console's own values are demo data
-   (src/demos/invitrace/model.ts, tiers raw → theme → semantic → component).
-   Contrast (computed): ink on paper 16.5:1 · muted on paper 6.7:1 · violet on
-   paper 6.1:1 · card on violet 6.3:1 · ink on card 17:1. */
+   Direction: radiology lightbox + clinical instrument. The ward console's own values are
+   demo data (src/demos/invitrace/model.ts, tiers raw → theme → semantic → component); each
+   hospital's brand colour appears inside the console only.
+   Contrast (computed, on lightbox / sheet): ink 17.5 / 18.6 · graphite 9.6 / 10.2 ·
+   rule 4.4 / 4.7 (control borders, 3:1 non-text) · violet 5.9 / 6.3 · status red 5.5,
+   amber 5.1, green 5.8 (markers and bars; white on each passes 5.3+). Hairline is
+   decorative only (1.5:1). */
 [data-demo="invitrace"] {
-  --ixp-paper:    #FBFAFE;
-  --ixp-card:     #FEFEFF;
-  --ixp-ink:      #1D1A26;
-  --ixp-muted:    #5B5670;
-  --ixp-line:     #E2DDEC;
-  --ixp-line-strong: #8C849E;  /* control borders, 3.4:1 on paper */
-  --ixp-violet:   #5644E3;     /* violet-ink: AA step derived from Invitrace violet-500, 6.1:1 on paper; links, focus, page buttons */
-  --ixp-violet-500: #6C5CE7;   /* Invitrace violet-500 (invitrace-system/tokens/global.json), large accents only */
-  --ixp-violet-soft: #F1ECFB;
-  --ixp-code:     #15131C;
-  --ixp-code-ink: #EDE9F6;
-  --ixp-add:      #0B7A44;     /* diff + lines, 5.4:1 on paper */
-  --ixp-del:      #B42318;     /* diff − lines, 6.3:1 on paper */
-  --ixp-add-on-code: #7EE2A8;  /* diff + on the code panel, 11:1 */
-  --ixp-del-on-code: #FDA29B;  /* diff − on the code panel, 9:1 */
-  --ixp-shadow: 0 18px 40px -24px rgba(29, 26, 38, .35);
+  --ixp-paper:    #F6F7F5;   /* lightbox: page ground */
+  --ixp-card:     #FEFEFF;   /* sheet: printed report, tape, lit lightbox panel */
+  --ixp-film:     #DCE3E8;   /* acetate film, used at about 55% over the lightbox */
+  --ixp-ink:      #0F1216;
+  --ixp-muted:    #3A414A;   /* graphite: secondary text */
+  --ixp-line:     #C5CCD2;   /* hairline rules, decorative */
+  --ixp-line-strong: #6B747E; /* control borders and ticks, 4.4:1 */
+  --ixp-violet:   #5644E3;   /* the one signal: selection, beam, primary action */
+  --ixp-violet-500: #5644E3;
+  --ixp-violet-soft: #EDEBFC;   /* violet at 10% on sheet: lit-token wash only */
+  --ixp-code:     #FEFEFF;
+  --ixp-code-ink: #0F1216;
+  --ixp-add:      #1D6E48;   /* status green */
+  --ixp-del:      #B8322A;   /* status red */
+  --ixp-amber:    #9A5B00;   /* status amber */
+  --ixp-add-on-code: #1D6E48;
+  --ixp-del-on-code: #B8322A;
+  --ixp-shadow: 2px 2px 0 #0F1216;  /* the only shadow: a hard ≤4px offset */
   --ixp-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', sans-serif;
-  --ixp-sans: 'DM Sans Variable', 'DM Sans', sans-serif;
-  --ixp-mono: 'Space Mono', monospace;
+  --ixp-sans: 'IBM Plex Sans', sans-serif;
+  --ixp-mono: 'IBM Plex Mono', monospace;
   --ixp-font: var(--ixp-sans);
 }
