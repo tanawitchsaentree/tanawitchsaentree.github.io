@@ -12,12 +12,12 @@ export function TimsCounter() {
         <div style={{ marginBottom: 'clamp(2.4rem,6vw,4rem)' }}>
           <span className="tims-label-section">Two years on the headset</span>
           <h2 style={{ fontFamily: T.font.display, fontWeight: 600, fontSize: T.size.display, letterSpacing: '-.015em', lineHeight: 1.03, margin: '.7rem 0 1.1rem', color: T.color.ink }}>
-            I used the bad POS. So I rebuilt it.
+            Twelve taps for a Double-Double.
           </h2>
         </div>
 
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
-          After two years taking orders at Tim Hortons, I knew exactly how broken the POS was. A Double-Double took 12 taps to ring in, and the eight-car line outside never once cared.
+          After two years taking orders at Tim Hortons, I knew exactly how broken the POS was. Every one of those taps happened while eight cars waited outside.
         </p>
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
           Years later, as a designer, I went back and redesigned the system from scratch. I had no access to internal systems. I worked from memory, the public menu and two years of using the POS every day.

@@ -25,7 +25,7 @@ export function TimsDemo() {
             The terminal, running.
           </h2>
           <p style={{ color: T.alpha.cream62, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            I built it in front-end code, so it runs here as a working prototype. Every tap responds instantly, and the order ticket stays live the whole time.
+            It&apos;s built in front-end code and runs here as a working prototype. Every tap responds instantly, and the order ticket stays live the whole time.
           </p>
         </div>
 

@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-// Fonts are self-hosted (case-fonts.css, generated from @fontsource). No request goes to Google Fonts.
-import '@/styles/case-fonts.css'
 import { T } from '@/demos/tims/tokens'
 import { TimsNav }        from '@/demos/tims/TimsNav'
 import { TimsHero }       from '@/demos/tims/TimsHero'
@@ -38,14 +36,14 @@ export function TimsClient() {
         .tims-narrow { max-width:760px }
 
         .tims-label {
-          font-family:'Space Mono',monospace; font-size:.75rem; letter-spacing:.22em;
+          font-family:${T.font.mono}; font-size:.75rem; letter-spacing:.22em;
           text-transform:uppercase; color:${T.color.red}; display:inline-flex;
           align-items:center; gap:.7em; margin-bottom:1.6rem;
         }
         .tims-label::before { content:""; width:26px; height:1.5px; background:${T.color.red} }
 
         .tims-label-section {
-          font-family:'Space Mono',monospace; font-size:.82rem; color:${T.color.mutedLt}; letter-spacing:.12em;
+          font-family:${T.font.mono}; font-size:.82rem; color:${T.color.mutedLt}; letter-spacing:.12em;
           text-transform:uppercase; display:block; margin-bottom:.7rem;
         }
 
@@ -67,6 +65,7 @@ export function TimsClient() {
 
         /* responsive */
         @media(max-width:720px) { .tims-nav-links{display:none!important} }
+        @media(max-width:480px) { .tims-label{letter-spacing:.14em} }
         @media(max-width:760px) { .tims-scene-grid{grid-template-columns:1fr!important} }
         @media(max-width:900px) { .tims-hero-grid{grid-template-columns:1fr!important} }
         @media(max-width:680px) { .tims-takes-grid{grid-template-columns:1fr!important} .tims-princ-grid{grid-template-columns:1fr!important} }

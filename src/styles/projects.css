@@ -62,9 +62,10 @@
 .project-pages [data-universe="allianz"] [data-demo="docsort"] p { font-size: var(--docsort-p-size, inherit); }
 .project-pages [data-demo="docsort"] :is(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--docsort-focus); outline-offset: 2px; }
 
-/* Stellareat, Vitae, Tims and Profita opt out of the editorial shell the same way as claims:
-   each keeps its 5c4cfe5^ typefaces (self-hosted in case-fonts.css and set inline by the demo
-   components, so the shared font rule above skips these roots), its own page background, its
+/* Stellareat, Vitae, Tims and Profita opt out of the editorial shell the same way as claims.
+   Stellareat, Vitae and Profita keep their 5c4cfe5^ typefaces (self-hosted in case-fonts.css and
+   set inline by the demo components, so the shared font rule above skips these roots). Tims sets
+   the system sans inline from its own tokens (2026-10-27). Each also keeps its own page background, its
    own hero h1 scale (the values its hero sets inline) and a focus ring in its own accent
    (--case-focus, set on each root). Scoped to those four surfaces only. */
 .project-pages [data-demo="stellar"] h1 { font-size: clamp(2.4rem, 7vw, 6rem) !important; font-weight: 700 !important; line-height: 1.02 !important; letter-spacing: -0.02em !important; }

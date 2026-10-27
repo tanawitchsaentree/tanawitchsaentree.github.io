@@ -1,6 +1,9 @@
-// Tims POS case study design tokens: Bricolage Grotesque + DM Sans + Space Mono
+// Tims POS case study design tokens. Type is the portfolio's own system sans (San Francisco on
+// macOS), the same stack as the homepage, so the page downloads no webfonts.
 // Scoped to the demo surface (data-demo="tims"). NOT portfolio shell tokens.
 // Primary palette: warm near-black #14110F / #CF162D / warm near-white #FFFDF9 (no pure #000/#fff)
+
+const SYSTEM_SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 
 export const T = {
   color: {
@@ -62,9 +65,9 @@ export const T = {
     shadowLg:'0 18px 40px rgba(0,0,0,.18)',
   },
   font: {
-    display: "'Bricolage Grotesque', sans-serif",
-    sans:    "'DM Sans', sans-serif",
-    mono:    "'Space Mono', monospace",
+    display: SYSTEM_SANS,
+    sans:    SYSTEM_SANS,
+    mono:    SYSTEM_SANS,  // label role (eyebrows, ticket meta); same face, hierarchy comes from case + tracking
   },
   size: {
     hero:    'clamp(3rem,11vw,9rem)',

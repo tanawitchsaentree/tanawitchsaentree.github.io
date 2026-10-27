@@ -6,20 +6,20 @@ const FIXES = [
   {
     tag: 'FIX 1',
     title: 'Put the clock on screen',
-    body: "I'd been judging “fast” by feel. So I added what the back wall had, a live order timer in seconds against the real 40s mark, plus a tap counter.",
+    body: "Until then I'd judged “fast” by feel. I put the back wall's clock on screen, as a live order timer in seconds against the real 40s mark, plus a tap counter.",
     why: 'After that, I could measure every later change against the same clock I used to work under.',
   },
   {
     tag: 'FIX 2',
     title: 'Make the weird orders possible without slowing the normal ones',
     body: 'Half-step cream and sugar, one-tap blend presets (½ coffee · ½ FV, mocha, ¾ · ¼), and a "custom blend" door for the rare full recipe.',
-    why: 'The double-double stayed one tap, and the triple-triple half-steeped tea became manageable. The timer showed the bet held.',
+    why: 'The double-double stayed one tap, and the triple-triple half-steeped tea became manageable. The timer showed the common orders were still fast.',
   },
   {
     tag: 'FIX 3',
     title: 'Make changing your mind harmless',
     body: 'A live preview that updates before anything\'s committed, undo on edits, and the big catering orders (Box of Joe, dozens) that I always fumbled.',
-    why: 'The 8 a.m. waffler stopped being a problem, and the highest-value orders finally fit.',
+    why: 'In the walkthrough, a customer changing their mind stopped being a problem, and those large orders finally fit.',
   },
 ] as const
 
@@ -31,12 +31,12 @@ export function TimsFixed() {
     >
       <div className="tims-wrap tims-animate">
         <div style={{ marginBottom: 'clamp(2.4rem,6vw,4rem)' }}>
-          <span className="tims-label-section">The gaps were obvious, so I went back</span>
+          <span className="tims-label-section">Three obvious gaps sent me back in</span>
           <h2 style={{ fontFamily: T.font.display, fontWeight: 600, fontSize: T.size.display, letterSpacing: '-.015em', lineHeight: 1.03, margin: '.7rem 0 1.1rem', color: T.color.ink }}>
             Three things the first build got wrong.
           </h2>
           <p style={{ color: T.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            The walkthrough showed where a rushed first version fails. I gave myself three passes, and each one fixed a gap that affected real orders.
+            The walkthrough showed where my rushed first version failed. I gave myself three passes, and each one fixed a gap that affected real orders.
           </p>
         </div>
 

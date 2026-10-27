@@ -219,12 +219,14 @@ function KdsRail() {
         if (loop) { clearInterval(loop); loop = null }
       }
 
-      const io = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) start(); else stop()
-      }, { threshold: 0 })
+      let onScreen = false
+      const sync = () => { if (onScreen && !document.hidden) start(); else stop() }
+      const io = new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync() }, { threshold: 0 })
       io.observe(rail)
+      // A background tab keeps no clock running.
+      document.addEventListener('visibilitychange', sync)
 
-      return () => { stop(); io.disconnect(); pendingRef.current.forEach(clearTimeout); pendingRef.current = [] }
+      return () => { stop(); io.disconnect(); document.removeEventListener('visibilitychange', sync); pendingRef.current.forEach(clearTimeout); pendingRef.current = [] }
     }
   }, [arrive, bump, refresh, later])
 
@@ -237,11 +239,11 @@ function KdsRail() {
           Drive-thru KDS · morning rush
         </span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: '1.1rem' }}>
-          <div style={{ fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.06em', color: T.color.muted, textAlign: 'right' }}>
-            In queue<b style={{ display: 'block', fontSize: '1.15rem', color: T.color.cream, letterSpacing: 0, lineHeight: 1.1 }} ref={queueEl}>0</b>
+          <div style={{ fontFamily: T.font.mono, fontSize: '.6875rem', letterSpacing: '.06em', color: T.color.muted, textAlign: 'right' }}>
+            In queue<b style={{ display: 'block', fontSize: '1.15rem', color: T.color.cream, letterSpacing: 0, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }} ref={queueEl}>0</b>
           </div>
-          <div style={{ fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.06em', color: T.color.muted, textAlign: 'right' }}>
-            Over target<b style={{ display: 'block', fontSize: '1.15rem', color: T.color.red, letterSpacing: 0, lineHeight: 1.1 }} ref={overEl}>0</b>
+          <div style={{ fontFamily: T.font.mono, fontSize: '.6875rem', letterSpacing: '.06em', color: T.color.muted, textAlign: 'right' }}>
+            Over target<b style={{ display: 'block', fontSize: '1.15rem', color: T.color.red, letterSpacing: 0, lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }} ref={overEl}>0</b>
           </div>
         </div>
       </div>
@@ -262,8 +264,8 @@ function KdsRail() {
         >
           ✓ Bump served
         </button>
-        <span style={{ fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.05em', color: T.color.muted }}>
-          Clear the car at the window. <b style={{ color: T.alpha.cream62 }} ref={servedEl}>0 cleared</b>
+        <span style={{ fontFamily: T.font.mono, fontSize: '.6875rem', letterSpacing: '.05em', color: T.color.muted }}>
+          Clear the car at the window. <b style={{ color: T.alpha.cream62, fontVariantNumeric: 'tabular-nums' }} ref={servedEl}>0 cleared</b>
         </span>
       </div>
     </div>
@@ -331,25 +333,25 @@ function DecodePanel() {
       <div aria-hidden style={{ position: 'absolute', inset: 0, background: `radial-gradient(60% 50% at 85% 8%, ${T.alpha.red10}, transparent 70%)`, zIndex: -1, pointerEvents: 'none' }} />
 
       {/* live pip */}
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '.55em', fontFamily: T.font.mono, fontSize: '.66rem', letterSpacing: '.2em', textTransform: 'uppercase', color: T.alpha.cream62 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '.55em', fontFamily: T.font.mono, fontSize: '.6875rem', letterSpacing: '.2em', textTransform: 'uppercase', color: T.alpha.cream62 }}>
         <span className="tims-decode-pip" />
         The order, decoded
       </span>
 
-      <h3 style={{ fontFamily: T.font.display, fontWeight: 800, fontSize: 'clamp(1.5rem,3.6vw,2.05rem)', lineHeight: 1.12, letterSpacing: '-.02em', margin: '1.1rem 0 2rem', color: T.color.cream }}>
+      <h3 style={{ fontFamily: T.font.display, fontWeight: 700, fontSize: 'clamp(1.5rem,3.6vw,2.05rem)', lineHeight: 1.12, letterSpacing: '-.02em', margin: '1.1rem 0 2rem', color: T.color.cream }}>
         Ringing in an order <span style={{ color: T.color.red }}>means translating it into taps.</span>
       </h3>
 
-      <div style={{ fontFamily: T.font.mono, fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '.7rem' }}>
+      <div style={{ fontFamily: T.font.mono, fontSize: '.6875rem', letterSpacing: '.18em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '.7rem' }}>
         What the customer says
       </div>
       <p ref={spokenRef} className="tims-spoken" style={{ fontFamily: T.font.display, fontWeight: 700, fontSize: 'clamp(1.15rem,2.8vw,1.55rem)', lineHeight: 1.34, color: T.color.cream, margin: '0 0 1.7rem', minHeight: '3.5em' }} />
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '.7em', fontFamily: T.font.mono, fontSize: '.63rem', letterSpacing: '.08em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '1.1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.7em', fontFamily: T.font.mono, fontSize: '.6875rem', letterSpacing: '.08em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '1.1rem' }}>
         <span style={{ flex: 'none', width: 20, height: 1, background: T.color.muted, display: 'inline-block' }} />
         becomes the buttons I have to find
       </div>
-      <div style={{ fontFamily: T.font.mono, fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '.7rem' }}>
+      <div style={{ fontFamily: T.font.mono, fontSize: '.6875rem', letterSpacing: '.18em', textTransform: 'uppercase', color: T.color.muted, marginBottom: '.7rem' }}>
         What I press
       </div>
 
@@ -367,18 +369,18 @@ function DecodePanel() {
 const TAKES = [
   {
     icon: <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M7 8h10M7 8a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4M7 8l1 11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2l1-11"/></svg>,
-    title: 'The language is the product.',
+    title: 'Customers order in their own words.',
     body:  '"Large triple-triple, extra hot, half steeped tea." My job was to turn that into the right taps before the next car rolled up.',
   },
   {
     icon: <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><circle cx={12} cy={13} r={8}/><path d="M12 9v4l2.5 2.5M12 1h0M9 1h6"/></svg>,
-    title: 'Speed was a glowing number on the wall.',
-    body:  'It judged me on every single car. The screen had to keep up with my hands, not the other way around.',
+    title: 'The wall timer clocked every car.',
+    body:  'It judged me on each one. The screen had to keep up with my hands.',
   },
   {
     icon: <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>,
-    title: 'One waffler taxes everyone.',
-    body:  '"Make it medium… no, iced." On a slow screen, that one change makes the whole line wait. Every interaction had a queue behind it.',
+    title: 'One changed order slows the whole line.',
+    body:  '"Make it medium… no, iced." On a slow screen, that one change makes every car behind it wait. Every tap I spent fixing it was a tap the next car waited through.',
   },
 ] as const
 
@@ -407,19 +409,19 @@ export function TimsProblem() {
         @keyframes timsDecPip{0%{transform:scale(1);opacity:1}70%{transform:scale(3.25);opacity:0}100%{transform:scale(1);opacity:0}}
         .tims-spoken{animation:timsSpokenIn .5s cubic-bezier(.4,0,.2,1)}
         @keyframes timsSpokenIn{from{opacity:0;transform:translateY(8px)}}
-        .tims-tap{display:inline-flex;align-items:center;background:${T.color.chipBg};border:1px solid ${T.alpha.cream10};border-radius:11px;padding:.55rem .85rem;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:${T.alpha.cream45};opacity:.32;transform:translateY(5px);transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.16,1,.3,1),background .35s cubic-bezier(.65,0,.35,1),color .35s cubic-bezier(.65,0,.35,1),box-shadow .35s cubic-bezier(.65,0,.35,1),border-color .35s cubic-bezier(.65,0,.35,1)}
+        .tims-tap{display:inline-flex;align-items:center;background:${T.color.chipBg};border:1px solid ${T.alpha.cream10};border-radius:11px;padding:.55rem .85rem;font-family:${T.font.sans};font-size:.85rem;font-weight:600;color:${T.alpha.cream45};opacity:.32;transform:translateY(5px);transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.16,1,.3,1),background .35s cubic-bezier(.65,0,.35,1),color .35s cubic-bezier(.65,0,.35,1),box-shadow .35s cubic-bezier(.65,0,.35,1),border-color .35s cubic-bezier(.65,0,.35,1)}
         .tims-tap.tims-tap-lit{opacity:1;transform:none;background:linear-gradient(135deg,${T.color.red},${T.color.redDk});color:${T.color.cream};border-color:transparent;box-shadow:0 6px 16px -6px ${T.alpha.gold55}}
         .tims-tk{position:relative;background:${T.color.ticketBg};border:1px solid ${T.alpha.cream10};border-top:3px solid var(--tkc);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0;transition:transform .52s cubic-bezier(.16,1,.3,1),opacity .42s cubic-bezier(.4,0,.2,1),border-color .3s cubic-bezier(.65,0,.35,1);will-change:transform;--tkc:${T.color.green}}
         .tims-tk-arriving{opacity:0;transform:translateX(54px) scale(.92)}
         .tims-tk-leaving{opacity:0;transform:scale(.9) translateY(-10px);transition:opacity .34s cubic-bezier(.4,0,.2,1),transform .34s cubic-bezier(.4,0,.2,1)}
-        .tims-tk-hd{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.5rem .7rem;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tkc)}
+        .tims-tk-hd{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.5rem .7rem;font-family:${T.font.mono};font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb,var(--tkc) 52%,${T.color.cream})}
         .tims-tk-st{font-weight:700;display:flex;align-items:center;gap:.45em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .tims-tk-dot{flex:none;width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 7px currentColor;display:inline-block}
+        .tims-tk-dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--tkc);box-shadow:0 0 7px var(--tkc);display:inline-block}
         .tims-tk-tm{font-variant-numeric:tabular-nums;font-weight:700;flex:none}
         .tims-tk[data-zone="window"]{--tkc:${T.color.red}}
         .tims-tk[data-zone="over"]::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid color-mix(in srgb,var(--tkc) 45%,transparent);opacity:0;pointer-events:none;animation:timsKdsPulse 1.5s cubic-bezier(.4,0,.2,1) infinite}
         @keyframes timsKdsPulse{0%,100%{opacity:0}50%{opacity:1}}
-        .tims-tk-car{font-family:'Space Mono',monospace;font-size:.64rem;letter-spacing:.1em;color:${T.alpha.cream50};padding:0 .7rem .1rem}
+        .tims-tk-car{font-family:${T.font.mono};font-size:.7rem;letter-spacing:.1em;color:${T.alpha.cream50};padding:0 .7rem .1rem}
         .tims-tk-items{padding:.5rem .7rem .8rem;display:flex;flex-direction:column;gap:.55rem}
         .tims-tk-it{display:flex;gap:.5rem;align-items:flex-start}
         .tims-tk-ic{flex:none;width:18px;height:18px;color:${T.alpha.cream65};opacity:.85;margin-top:1px}
@@ -439,11 +441,11 @@ export function TimsProblem() {
       <div className="tims-wrap tims-animate">
         <div style={{ marginBottom: 'clamp(2.4rem,6vw,4rem)' }}>
           <span className="tims-label-section">What the job taught me</span>
-          <h2 style={{ fontFamily: T.font.display, fontWeight: 800, fontSize: T.size.display, letterSpacing: '-.03em', lineHeight: 1.02, margin: '1.1rem 0 .9rem', maxWidth: '18ch', color: T.color.ink }}>
-            8 a.m. The line is eight cars deep.
+          <h2 style={{ fontFamily: T.font.display, fontWeight: 600, fontSize: T.size.display, letterSpacing: '-.015em', lineHeight: 1.02, margin: '1.1rem 0 .9rem', maxWidth: '18ch', color: T.color.ink }}>
+            At 8 a.m., the line is eight cars deep.
           </h2>
           <p style={{ fontSize: 'clamp(1.05rem,2.2vw,1.28rem)', color: T.color.inkSoft, maxWidth: '46ch' }}>
-            This is the moment a POS earns its keep, or quietly loses you the timer. The screen below is the one I actually read, order after order.
+            That&apos;s when a slow POS puts me over the timer. The screen below is the one I read, order after order.
           </p>
         </div>
 
@@ -468,8 +470,8 @@ export function TimsProblem() {
         </div>
 
         <p className="tims-animate" style={{ fontFamily: T.font.display, fontWeight: 500, fontSize: 'clamp(1.15rem,2.4vw,1.6rem)', lineHeight: 1.35, color: T.color.ink, maxWidth: '30ch', marginTop: '.4rem' }}>
-          What makes Tims <em style={{ fontStyle: 'normal', color: T.color.red }}>Tims</em> is ordering it your exact weird way.{' '}
-          <strong style={{ color: T.color.red }}>That same freedom is what fought me on the clock, one car at a time.</strong>
+          Regulars ordered their Tims down to the last detail.{' '}
+          <strong style={{ color: T.color.red }}>Every custom order cost me time on the clock.</strong>
         </p>
       </div>
     </section>

@@ -5,15 +5,15 @@ import { T } from './tokens'
 const PRINCIPLES = [
   {
     title: 'Make the constraint a number.',
-    body: '"Fast" is an opinion. Forty seconds is a brief. A measurable constraint turns design taste into design decisions.',
+    body: 'Forty seconds gave me a target I could test every layout against. Before that, every choice came down to my opinion of what felt fast.',
   },
   {
-    title: 'Design for the distribution.',
-    body: 'Optimise for the order that happens ten thousand times. Presets come first, and anything unusual goes through an escape hatch.',
+    title: 'Design for the common order.',
+    body: 'Most orders were the same handful. Presets come first, and anything unusual goes through the custom door.',
   },
   {
-    title: 'Reversible is what makes fast safe.',
-    body: 'Speed only helps if mistakes cost nothing. Undo, live preview, and edit-in-place are speed features.',
+    title: 'Undo makes speed safe.',
+    body: 'Speed only helps when a mistake is cheap to fix. I count undo, live preview and edit-in-place as speed features.',
   },
   {
     title: 'The ticket never hides.',

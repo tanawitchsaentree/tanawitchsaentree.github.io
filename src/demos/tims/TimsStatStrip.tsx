@@ -6,7 +6,7 @@ const STATS = [
   { value: '~40s', desc: 'per order at the window, the number on the board I got judged by' },
   { value: '2 yrs', desc: 'I actually rang these orders in, headset and all' },
   { value: '≤3',   desc: 'iterations before shipping, a cap I set for myself on purpose' },
-  { value: '1 bet', desc: 'preset-first, custom as escape hatch' },
+  { value: '1 decision', desc: 'presets up front, rare orders allowed to be slow' },
 ] as const
 
 export function TimsStatStrip() {

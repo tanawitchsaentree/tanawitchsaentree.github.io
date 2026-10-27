@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
+import { T } from './tokens'
 
 export function TimsiPadMockup() {
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -10,7 +11,7 @@ export function TimsiPadMockup() {
     const iframe = iframeRef.current
     if (!iframe) return
     const onLoad = () => setLoaded(true)
-    // Eager iframe can finish before hydration attaches the listener.
+    // The iframe can finish before hydration attaches the listener.
     try {
       if (iframe.contentDocument?.readyState === 'complete' && iframe.contentDocument.URL !== 'about:blank') setLoaded(true)
     } catch { /* cross-origin: rely on the load event */ }
@@ -35,11 +36,11 @@ export function TimsiPadMockup() {
           placeContent:  'center',
           gap:           '.6rem',
           textAlign:     'center',
-          fontFamily:    'var(--font-mono, monospace)',
+          fontFamily:    T.font.mono,
           fontSize:      '.75rem',
           letterSpacing: '.14em',
           textTransform: 'uppercase',
-          color:         'rgba(247,241,232,.55)',
+          color:         T.alpha.cream55,
         }}>
           <span style={{ fontSize: '1.6rem' }}>☕</span>
           Loading terminal…
@@ -59,7 +60,9 @@ export function TimsiPadMockup() {
           transition: `opacity .4s cubic-bezier(.16,1,.3,1)`,
         }}
         allow="autoplay"
-        loading="eager"
+        // Lazy: the terminal sits far below the fold, so its 57KB document and scripts wait until
+        // the reader scrolls near it instead of competing with the hero on first load.
+        loading="lazy"
       />
     </div>
   )
