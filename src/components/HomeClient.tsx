@@ -3,12 +3,21 @@
 import { useCallback, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight, ArrowUpRight, ChevronDown, LockKeyhole } from 'lucide-react'
+import dynamic from 'next/dynamic'
+import { ArrowRight, ArrowUpRight, ChevronDown, Github, LockKeyhole } from 'lucide-react'
 import { GraphiteBackground } from '@/components/home/GraphiteBackground'
 import { ManabiModal } from '@/components/home/ManabiModal'
 import { BrewcodexModal } from '@/components/home/BrewcodexModal'
-import { BREWCODEX_PROJECT, PERSONAL_PROJECT, PROFILE, SELECTED_WORK, TOOLS } from '@/data/home'
+import { BrickForgeModal } from '@/components/home/BrickForgeModal'
+import { BREWCODEX_PROJECT, BRICKFORGE_PROJECT, PERSONAL_PROJECT, PROFILE, SELECTED_WORK, TOOLS } from '@/data/home'
 import styles from '@/components/home/HomeDocument.module.css'
+
+// Pane renders in `npm run dev` only. The condition has to stay a literal NODE_ENV check:
+// webpack drops the import (and every word of the unpublished copy) only when it can evaluate the
+// branch at build time. To publish, replace the condition with `true`.
+const PaneRow = process.env.NODE_ENV === 'development'
+  ? dynamic(() => import('@/components/home/PaneRow').then(m => m.PaneRow))
+  : null
 
 export function HomeClient() {
   const [lightPaused, setLightPaused] = useState(false)
@@ -16,10 +25,13 @@ export function HomeClient() {
   const closeManabi = useCallback(() => setManabiOpen(false), [])
   const [brewcodexOpen, setBrewcodexOpen] = useState(false)
   const closeBrewcodex = useCallback(() => setBrewcodexOpen(false), [])
+  const [paneOpen, setPaneOpen] = useState(false)
+  const [brickForgeOpen, setBrickForgeOpen] = useState(false)
+  const closeBrickForge = useCallback(() => setBrickForgeOpen(false), [])
 
   return (
     <>
-      <GraphiteBackground paused={lightPaused || manabiOpen || brewcodexOpen} />
+      <GraphiteBackground paused={lightPaused || manabiOpen || brewcodexOpen || brickForgeOpen || paneOpen} />
       <main id="main-content" tabIndex={-1} className={styles.page}>
         <div className={styles.document}>
           <header className={styles.intro}>
@@ -52,11 +64,14 @@ export function HomeClient() {
                   <Image src="/images/manabi-thumb.webp" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
                 </div>
                 <div>
+                  <div className={styles.projectHead}>
                   <h3 className={styles.projectTitle}>{PERSONAL_PROJECT.title}</h3>
+                  <span className={styles.projectTag}>{PERSONAL_PROJECT.tag}</span>
+                </div>
                   <p className={styles.projectDescription}>{PERSONAL_PROJECT.description}</p>
                   <div className={styles.projectLinks}>
                     <button type="button" onClick={() => setManabiOpen(true)} aria-haspopup="dialog">
-                      {PERSONAL_PROJECT.details} <ArrowRight size={14} aria-hidden="true" />
+                      {PERSONAL_PROJECT.details} <ArrowRight size={14} aria-hidden="true" /><span className="sr-only">: {PERSONAL_PROJECT.title}</span>
                     </button>
                     <a href={PERSONAL_PROJECT.url} target="_blank" rel="noopener noreferrer">
                       Visit Manabi <ArrowUpRight size={12} aria-hidden="true" />
@@ -70,11 +85,14 @@ export function HomeClient() {
                   <Image src="/images/brewcodex-thumb.webp" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
                 </div>
                 <div>
+                  <div className={styles.projectHead}>
                   <h3 className={styles.projectTitle}>{BREWCODEX_PROJECT.title}</h3>
+                  <span className={styles.projectTag}>{BREWCODEX_PROJECT.tag}</span>
+                </div>
                   <p className={styles.projectDescription}>{BREWCODEX_PROJECT.description}</p>
                   <div className={styles.projectLinks}>
                     <button type="button" onClick={() => setBrewcodexOpen(true)} aria-haspopup="dialog">
-                      {BREWCODEX_PROJECT.details} <ArrowRight size={14} aria-hidden="true" />
+                      {BREWCODEX_PROJECT.details} <ArrowRight size={14} aria-hidden="true" /><span className="sr-only">: {BREWCODEX_PROJECT.title}</span>
                     </button>
                     <a href={BREWCODEX_PROJECT.url} target="_blank" rel="noopener noreferrer">
                       Visit Brewcodex <ArrowUpRight size={12} aria-hidden="true" />
@@ -83,6 +101,28 @@ export function HomeClient() {
                   </div>
                 </div>
               </div>
+              <div className={styles.project}>
+                <div className={styles.projectImage}>
+                  <Image src="/images/brickforge-thumb.webp" alt="" fill sizes="(max-width: 480px) 64px, 96px" />
+                </div>
+                <div>
+                  <div className={styles.projectHead}>
+                    <h3 className={styles.projectTitle}>{BRICKFORGE_PROJECT.title}</h3>
+                    <span className={styles.projectTag}>{BRICKFORGE_PROJECT.tag}</span>
+                  </div>
+                  <p className={styles.projectDescription}>{BRICKFORGE_PROJECT.description}</p>
+                  <div className={styles.projectLinks}>
+                    <button type="button" onClick={() => setBrickForgeOpen(true)} aria-haspopup="dialog">
+                      {BRICKFORGE_PROJECT.details} <ArrowRight size={14} aria-hidden="true" /><span className="sr-only">: {BRICKFORGE_PROJECT.title}</span>
+                    </button>
+                    <a href={BRICKFORGE_PROJECT.url} target="_blank" rel="noopener noreferrer">
+                      {BRICKFORGE_PROJECT.linkLabel} <ArrowUpRight size={12} aria-hidden="true" />
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              {PaneRow && <PaneRow onOpenChange={setPaneOpen} />}
             </div>
           </section>
 
@@ -116,14 +156,18 @@ export function HomeClient() {
           <details className={styles.more}>
             <summary>Writing &amp; tools <ChevronDown size={14} aria-hidden="true" /></summary>
             <div className={styles.moreContent}>
-              <p className={styles.moreIntro}>A few things I make and share alongside product work.</p>
+              <p className={styles.moreIntro}>Claude Code skills I build and share alongside product work. They&apos;re public on GitHub.</p>
               <ul className={styles.toolList}>
                 {TOOLS.map(tool => (
                   <li key={tool.name}>
                     <a href={tool.href} target="_blank" rel="noopener noreferrer">
-                      <span className={styles.toolName}>
-                        {tool.name} <ArrowUpRight size={12} aria-hidden="true" />
-                        <span className="sr-only"> (opens in a new tab)</span>
+                      <span className={styles.toolHead}>
+                        <span className={styles.toolName}>
+                          <Github size={13} aria-hidden="true" className={styles.toolIcon} />
+                          {tool.name} <ArrowUpRight size={12} aria-hidden="true" />
+                          <span className="sr-only"> on GitHub (opens in a new tab)</span>
+                        </span>
+                        <span className={styles.toolKind}>{tool.kind}</span>
                       </span>
                       <span className={styles.toolDescription}>{tool.description}</span>
                     </a>
@@ -147,6 +191,7 @@ export function HomeClient() {
       </main>
       <ManabiModal open={manabiOpen} onClose={closeManabi} />
       <BrewcodexModal open={brewcodexOpen} onClose={closeBrewcodex} />
+      <BrickForgeModal open={brickForgeOpen} onClose={closeBrickForge} />
     </>
   )
 }

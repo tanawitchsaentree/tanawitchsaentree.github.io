@@ -21,11 +21,13 @@ interface ProjectModalProps {
   sections:   ProjectSection[]
   technical:  string
   url:        string
+  /** Link text; defaults to "Visit {name}". */
+  linkLabel?: string
   /** Fills the cover slot (image or typographic panel). The close button sits on it. */
   cover:      ReactNode
 }
 
-export function ProjectModal({ open, onClose, id, name, title, intro, sections, technical, url, cover }: ProjectModalProps) {
+export function ProjectModal({ open, onClose, id, name, title, intro, sections, technical, url, linkLabel, cover }: ProjectModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const previouslyFocused = useRef<HTMLElement | null>(null)
@@ -138,7 +140,7 @@ export function ProjectModal({ open, onClose, id, name, title, intro, sections, 
             target="_blank"
             rel="noopener noreferrer"
           >
-            Visit {name} <ArrowUpRight size={14} aria-hidden="true" />
+            {linkLabel ?? `Visit ${name}`} <ArrowUpRight size={14} aria-hidden="true" />
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </div>

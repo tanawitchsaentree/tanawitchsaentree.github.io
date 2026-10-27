@@ -67,10 +67,13 @@
 .moreContent { padding-top: var(--space-4); }
 .moreIntro { color: var(--fg-muted); margin-bottom: var(--space-4); font-size: var(--type-home-note); }
 .toolList { display: grid; gap: var(--space-4); }
-.toolList a { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: var(--space-4); text-decoration: none; font-size: var(--type-home-note); }
-.toolName { display: inline-flex; align-items: baseline; gap: var(--space-1); color: var(--fg); }
+.toolList a { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: var(--space-4); text-decoration: none; font-size: var(--type-home-note); }
+.toolHead { display: flex; flex-direction: column; gap: var(--space-1); }
+.toolName { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--fg); }
+.toolIcon { flex: none; color: var(--fg-muted); }
+.toolKind { font-size: var(--type-xs); color: var(--fg-subtle); white-space: nowrap; }
 .toolDescription { color: var(--fg-muted); }
-.toolList a:hover .toolName { color: var(--accent-text); }
+.toolList a:hover .toolName, .toolList a:focus-visible .toolName { color: var(--accent-text); }
 .profileLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin-top: var(--space-5); font-size: var(--type-home-note); color: var(--fg-muted); }
 .profileLinks a { padding-block: var(--space-1); }
 .footer { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: baseline; gap: var(--space-3) var(--space-6); margin-top: var(--space-10); }
@@ -86,3 +89,7 @@
 }
 @media (prefers-reduced-motion: reduce), (pointer: coarse) { .lightControl { display: none; } }
 @media (prefers-reduced-motion: reduce) { .graphite, .workTitle, .more summary svg { transition: none; } }
+/* Category tag inline with an independent project's name: neutral hairline, no tint. */
+.projectHead { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); }
+.projectHead .projectTitle { margin: 0; }
+.projectTag { display: inline-block; padding: 0 var(--space-2); border: 1px solid var(--border); border-radius: 999px; font-size: var(--type-home-note); line-height: 1.4; font-weight: 400; color: var(--fg-muted); white-space: nowrap; }

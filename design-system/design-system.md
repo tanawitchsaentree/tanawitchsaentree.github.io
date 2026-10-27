@@ -60,6 +60,15 @@ these two surfaces. Keep existing project/case-study typography unchanged.
 Homepage width is 42rem and prose is 29rem; use rem for layout columns so changing
 from monospace does not collapse the composition through narrower ch units.
 
+## Tims typography override — 2026-10-27
+
+The user asked for the Tims case study (`/projects/tims`) to use the homepage face. Tims now
+sets the same native system sans stack (San Francisco on macOS) for display, body and label
+roles via `src/demos/tims/tokens.ts`, and loads no webfonts. This overrides the Bricolage
+Grotesque / DM Sans / Space Mono project typefaces listed below for Tims only. Live counters
+and timers carry `font-variant-numeric: tabular-nums`, since the proportional face no longer
+gives fixed-width digits; meta text stays at 11px or larger.
+
 ## Typography
 
 > **Direction: one monospace document.** The portfolio shell is set in one face —

@@ -24,7 +24,7 @@ export function ManabiModal({ open, onClose }: ManabiModalProps) {
       id="manabi-modal"
       name="Manabi"
       title="Helping parents make a school shortlist"
-      intro="Manabi is a school-search site I made for families in Thailand. I designed it and built it on my own."
+      intro="Manabi is a school-search site I made for Thai and expat families in Thailand. I designed it and built it on my own."
       sections={SECTIONS}
       technical="Built with Next.js, TypeScript and Supabase/PostgreSQL, with AI assistance during development. Search uses PostGIS for location and PostgreSQL full-text search for Thai queries."
       url={PERSONAL_PROJECT.url}

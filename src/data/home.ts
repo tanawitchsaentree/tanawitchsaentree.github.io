@@ -78,19 +78,30 @@ export const SELECTED_WORK = [
 
 export const PERSONAL_PROJECT = {
   title: 'Manabi',
-  description: 'My independent school-search product for families in Thailand, from the parent experience to school data, admin tools, and launch.',
+  tag: 'Two-sided marketplace',
+  description: 'My independent school-search product for Thai and expat families in Thailand, from the parent experience to school data, admin tools, and launch.',
   details: 'Inside the project',
   url: 'https://manabischools.com',
 } as const
 
 export const BREWCODEX_PROJECT = {
   title: 'Brewcodex',
+  tag: 'Recommendation engine',
   description: "A deck builder for MTG players who don't want to spend money on a deck that doesn't fit them. It builds one around what you like and what you already own, then explains why it works.",
   details: 'Inside the project',
   url: 'https://brewcodex.app',
 } as const
 
+export const BRICKFORGE_PROJECT = {
+  title: 'Brick-forge',
+  tag: 'Procedural 3D engine',
+  description: 'A 3D brick builder that designs models for you. Pick a dinosaur, a race car or a house, and it assembles real catalogue parts into a design that stands, with step-by-step instructions.',
+  details: 'Inside the project',
+  url: 'https://github.com/tanawitchsaentree/brick-forge',
+  linkLabel: 'Brick-forge on GitHub',
+} as const
+
 export const TOOLS = [
-  { name: 'Human Tone', description: 'Editing guidance for clearer, more natural writing.', href: 'https://github.com/tanawitchsaentree/Human-tone' },
-  { name: 'Kiln', description: 'A toolkit for creating design systems with AI coding tools.', href: 'https://github.com/tanawitchsaentree/Kiln' },
+  { name: 'Human Tone', kind: 'Claude Code skill · MCP server', description: 'Makes AI writing read like a person wrote it. A linter checks each draft before it goes out, in any language. It learns your own words and stops flagging them.', href: 'https://github.com/tanawitchsaentree/Human-tone' },
+  { name: 'Kiln', kind: 'Claude Code skill', description: 'Builds design systems that skip the usual AI look, like a warm off-white page with one saturated accent. Each one starts from a tradition you pick outside web design, and every claim about contrast or spacing comes from a measured check.', href: 'https://github.com/tanawitchsaentree/Kiln' },
 ] as const
