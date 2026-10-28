@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { ProjectModal, type ProjectSection } from './ProjectModal'
 import styles from './ProjectModal.module.css'
 import { BREWCODEX_PROJECT } from '@/data/home'
@@ -29,16 +30,16 @@ export function BrewcodexModal({ open, onClose }: BrewcodexModalProps) {
       sections={SECTIONS}
       technical="Vanilla JavaScript with no framework, Cloudflare Workers and D1, and deck generation in a Web Worker so the page stays responsive. Card and list data comes from Gatherer, Scryfall, MTGJSON and the lists Wizards publishes. Cutting the Commander data by colour identity took the precon page from 1.5 MB to about 130 KB. The repository is private."
       url={BREWCODEX_PROJECT.url}
+      coverRatio={1662 / 708}
       cover={
-        <p className={styles.coverNote}>
-          <span className="sr-only">Not shown: </span>
-          <s className={styles.coverStruck}>strength %</s>
-          <span className={styles.coverInstead}>
-            <span className="sr-only">Shows instead: </span>
-            the closest named archetype and its real{' '}
-            <span className={styles.coverSignal}>win rate</span>
-          </span>
-        </p>
+        <Image
+          src="/images/brewcodex-cover.webp"
+          alt="Brewcodex artwork: a cat-eyed wizard in a purple night flicks glowing cards toward a castle."
+          fill
+          loading="lazy"
+          sizes="(max-width: 640px) 100vw, 640px"
+          className={styles.cover}
+        />
       }
     />
   )

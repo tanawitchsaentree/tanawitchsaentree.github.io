@@ -1,12 +1,23 @@
 'use client'
 
 import { useEffect, useRef, type ReactNode } from 'react'
+import Image from 'next/image'
 import { X, ArrowUpRight } from 'lucide-react'
 import styles from './ProjectModal.module.css'
 
+export interface ProjectFigure {
+  src:     string
+  alt:     string
+  caption: string
+  width:   number
+  height:  number
+}
+
 export interface ProjectSection {
-  label: string
-  body:  string
+  label:   string
+  body:    string
+  /** An image that sits under the paragraph it illustrates. */
+  figure?: ProjectFigure
 }
 
 interface ProjectModalProps {
@@ -25,9 +36,11 @@ interface ProjectModalProps {
   linkLabel?: string
   /** Fills the cover slot (image or typographic panel). The close button sits on it. */
   cover:      ReactNode
+  /** Width / height of the cover slot; defaults to the shared wide strip. Use the artwork's own ratio to avoid cropping it. */
+  coverRatio?: number
 }
 
-export function ProjectModal({ open, onClose, id, name, title, intro, sections, technical, url, linkLabel, cover }: ProjectModalProps) {
+export function ProjectModal({ open, onClose, id, name, title, intro, sections, technical, url, linkLabel, cover, coverRatio }: ProjectModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const previouslyFocused = useRef<HTMLElement | null>(null)
@@ -94,11 +107,12 @@ export function ProjectModal({ open, onClose, id, name, title, intro, sections, 
       <div
         ref={dialogRef}
         className={styles.dialog}
+        style={sections.some(s => s.figure) ? { width: 'min(760px, 100%)' } : undefined}
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${id}-title`}
       >
-        <div className={styles.coverWrap}>
+        <div className={styles.coverWrap} style={coverRatio ? { aspectRatio: coverRatio } : undefined}>
           {cover}
           <button
             type="button"
@@ -126,6 +140,20 @@ export function ProjectModal({ open, onClose, id, name, title, intro, sections, 
             <section key={section.label} className={styles.section}>
               <h3 className={styles.sectionLabel}>{section.label}</h3>
               <p className={styles.sectionBody}>{section.body}</p>
+              {section.figure && (
+                <figure className={styles.figure}>
+                  <Image
+                    src={section.figure.src}
+                    alt={section.figure.alt}
+                    width={section.figure.width}
+                    height={section.figure.height}
+                    loading="lazy"
+                    sizes="(max-width: 800px) 100vw, 712px"
+                    className={styles.figureImage}
+                  />
+                  <figcaption className={styles.figureCaption}>{section.figure.caption}</figcaption>
+                </figure>
+              )}
             </section>
           ))}
 

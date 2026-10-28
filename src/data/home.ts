@@ -95,10 +95,10 @@ export const BREWCODEX_PROJECT = {
 export const BRICKFORGE_PROJECT = {
   title: 'Brick-forge',
   tag: 'Procedural 3D engine',
-  description: 'A 3D brick builder that designs models for you. Pick a dinosaur, a race car or a house, and it assembles real catalogue parts into a design that stands, with step-by-step instructions.',
+  description: 'For when you run out of ideas for your pile of bricks. It makes new versions of real LEGO designs, a house a stud longer or a car a stud wider, with step-by-step instructions.',
   details: 'Inside the project',
-  url: 'https://github.com/tanawitchsaentree/brick-forge',
-  linkLabel: 'Brick-forge on GitHub',
+  url: 'https://brick-forge.pages.dev',
+  linkLabel: 'Open Brick-forge',
 } as const
 
 export const TOOLS = [

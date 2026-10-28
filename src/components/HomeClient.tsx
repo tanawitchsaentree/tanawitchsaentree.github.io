@@ -18,6 +18,10 @@ import styles from '@/components/home/HomeDocument.module.css'
 const PaneRow = process.env.NODE_ENV === 'development'
   ? dynamic(() => import('@/components/home/PaneRow').then(m => m.PaneRow))
   : null
+// Kiln is the plugin Pane was built with; publish the two rows together.
+const KilnRow = process.env.NODE_ENV === 'development'
+  ? dynamic(() => import('@/components/home/KilnRow').then(m => m.KilnRow))
+  : null
 
 export function HomeClient() {
   const [lightPaused, setLightPaused] = useState(false)
@@ -26,12 +30,13 @@ export function HomeClient() {
   const [brewcodexOpen, setBrewcodexOpen] = useState(false)
   const closeBrewcodex = useCallback(() => setBrewcodexOpen(false), [])
   const [paneOpen, setPaneOpen] = useState(false)
+  const [kilnOpen, setKilnOpen] = useState(false)
   const [brickForgeOpen, setBrickForgeOpen] = useState(false)
   const closeBrickForge = useCallback(() => setBrickForgeOpen(false), [])
 
   return (
     <>
-      <GraphiteBackground paused={lightPaused || manabiOpen || brewcodexOpen || brickForgeOpen || paneOpen} />
+      <GraphiteBackground paused={lightPaused || manabiOpen || brewcodexOpen || brickForgeOpen || paneOpen || kilnOpen} />
       <main id="main-content" tabIndex={-1} className={styles.page}>
         <div className={styles.document}>
           <header className={styles.intro}>
@@ -122,6 +127,7 @@ export function HomeClient() {
                   </div>
                 </div>
               </div>
+              {KilnRow && <KilnRow onOpenChange={setKilnOpen} />}
               {PaneRow && <PaneRow onOpenChange={setPaneOpen} />}
             </div>
           </section>
