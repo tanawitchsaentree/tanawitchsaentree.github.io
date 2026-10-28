@@ -9,7 +9,7 @@ const SECTIONS: ProjectSection[] = [
   {
     label: 'It starts from a designer’s model',
     body: "Every result says where it came from, like “From Apple Tree House, 1 stud longer”. The engine keeps the designer’s parts, copies a middle section and rebuilds only the seams. It learns from about 545 official LEGO designs, and every result is still the designer’s model with a change made to it. A My pieces switch shows how many parts you would still need to buy for each design.",
-    figure: { src: '/images/brickforge-studio.webp', alt: 'Three house designs in the Brick-forge studio, each labelled with the official set it came from, how it was changed and how much of it is held together.', caption: 'Three houses from three official sets (LDraw Official Model Repository, CC BY 2.0). Each card shows what it was changed from and how much of it is held together.', width: 1000, height: 726 },
+    figure: { src: '/images/brickforge-studio.webp', alt: 'Three house designs in the Brick-forge studio, each labelled with the official set it came from, how it was changed and how much of it is held together.', caption: 'Three houses from two official sets (LDraw Official Model Repository, CC BY 2.0). Each card shows what it was changed from, including a recolour, and how much of it is held together.', width: 1000, height: 756 },
   },
   {
     label: 'Why it edits real designs',
@@ -23,7 +23,12 @@ const SECTIONS: ProjectSection[] = [
   {
     label: 'Instructions that follow the designer',
     body: "Official and imported models keep the designer’s own step order, split into small steps. Progress is saved and the booklet prints. It can also read a LEGO instruction PDF and match the parts it draws to the parts list.",
-    figure: { src: '/images/brickforge-steps.webp', alt: 'The step view of a small cottage at step 43 of 84, listing two parts for the step and showing the model on a green baseplate.', caption: 'Step 43 of 84 for the windmill on a small cottage, in the designer’s order.', width: 1100, height: 726 },
+    figure: { src: '/images/brickforge-steps.webp', alt: 'The step view of a generated house at step 41 of 154, listing four parts for the step and showing the model on a green baseplate.', caption: 'Step 41 of 154 for a generated house.', width: 1100, height: 726 },
+  },
+  {
+    label: 'It runs on Pane',
+    body: "The interface is built on Pane, the design system I made with Kiln. This app was its first real test. The 3D scene redraws every frame, which showed that Pane needed a way to switch the blur off, and that option is coming in its next version. Brick-forge itself uses a thinner glass than Pane’s default, which Pane’s readability checks don’t cover, and I haven’t measured the frame rate over the 3D scene.",
+    figure: { src: '/images/brickforge-app.webp', alt: 'The Brick-forge editor with a brown and green house on a baseplate, a parts list on the left and the tool bar at the bottom.', caption: 'The editor. Panels, tabs, buttons and sliders are Pane components.', width: 900, height: 743 },
   },
   {
     label: 'Calls I made',
@@ -51,7 +56,7 @@ export function BrickForgeModal({ open, onClose }: BrickForgeModalProps) {
       title="A brick builder that edits real LEGO designs"
       intro="My kids and I build with LEGO. We have a pile of bricks, and sometimes none of us can think of what to make. The fun is in building on and on, especially after a new box set, when we finish the model from the instructions and then play with it. Brick-forge is for the moments we run out of ideas. It takes a real LEGO design and makes a new version of it, like a house a stud longer or a car a stud wider, with building steps. I directed it and built it with Claude Code."
       sections={SECTIONS}
-      technical="React, Three.js through React Three Fiber and TypeScript. On the corpus, the connection check registers 97.8% of parts as connected. Rebuilding eight official designs from their outline reaches about 0.38 on my own benchmark, where the original designer scores 1.0. Parts come from the LDraw library (CC BY 4.0) and the official models from the LDraw Official Model Repository (CC BY 2.0). The library is about 620 MB, which is too big to ship. The live site serves it from Cloudflare R2 through a small function and loads a pre-parsed pack of the most used parts first. The code is at github.com/tanawitchsaentree/brick-forge, which holds only the first version. LEGO is a trademark of the LEGO Group, which doesn’t sponsor or endorse this project."
+      technical="React, Three.js through React Three Fiber and TypeScript, with the interface on pane-react 0.3.0. On the corpus, the connection check registers 97.8% of parts as connected. Rebuilding eight official designs from their outline reaches about 0.38 on my own benchmark, where the original designer scores 1.0. Parts come from the LDraw library (CC BY 4.0) and the official models from the LDraw Official Model Repository (CC BY 2.0). The library is about 620 MB, which is too big to ship. The live site serves it from Cloudflare R2 through a small function and loads a pre-parsed pack of the most used parts first. The code is at github.com/tanawitchsaentree/brick-forge, which holds only the first version. LEGO is a trademark of the LEGO Group, which doesn’t sponsor or endorse this project."
       url={BRICKFORGE_PROJECT.url}
       linkLabel={BRICKFORGE_PROJECT.linkLabel}
       cover={

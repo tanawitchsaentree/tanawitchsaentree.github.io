@@ -6,10 +6,10 @@ import styles from './ProjectModal.module.css'
 import { KILN_PROJECT } from './kilnData'
 
 const SECTIONS: ProjectSection[] = [
-  { label: 'Borrow from somewhere real', body: "Before Kiln writes a single token, the system has to name a real tradition from outside web design and say what it borrows from it. Pane started from a Bauhaus curtain wall. The same decision also sets how strongly the system speaks on six scales. Everything after that, the tokens, the components, the docs, comes from that choice instead of from the usual defaults." },
-  { label: 'Numbers, not opinions', body: "A design system makes claims about contrast, spacing, shape and density. Kiln attaches a script to each one. The answer is a number you can run and read. Spacing is measured in a real browser instead of judged by eye." },
+  { label: 'Borrow from somewhere real', body: "Before Kiln writes a single token, the system has to name a real tradition from outside web design and say what it borrows from it. Pane started from a Bauhaus curtain wall. The same decision also sets how strongly the system speaks on six scales. Everything after that, the tokens, the components, the docs, comes from that choice." },
+  { label: 'Numbers, not opinions', body: "A design system makes claims about contrast, spacing, shape and density. Kiln attaches a script to each one. The answer is a number you can run and read. Spacing is measured in a real browser." },
   { label: 'Whoever proposes does not judge', body: "When the system needs options for something that defines its identity, one role generates candidates that are really different from each other, and a different role judges them. I review what it picked. It stops the part that wrote an idea from grading its own homework." },
-  { label: 'What it has made', body: "Pane is the first design system built from start to finish with Kiln, and it is also where Kiln got corrected. Every time I rejected something, the fix went into the step that produced it, plus a check to catch it next time. The Pane entry tells that story." },
+  { label: 'What it has made', body: "Pane is the first design system built from start to finish with Kiln, and it is also where Kiln got corrected. Every time I rejected something, the fix went into the step that produced it, plus a check to catch it next time. The Pane entry tells that story, and my brick builder, Brick-forge, now runs on Pane." },
   { label: 'What it can’t do yet', body: "Kiln guides Claude Code and does not replace judgement. I still choose the look, say no to bad work and read the results. It has only built my own projects, two of them to date. Version 2.0 is on GitHub now." },
 ]
 
