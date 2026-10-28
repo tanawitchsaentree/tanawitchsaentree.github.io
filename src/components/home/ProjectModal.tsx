@@ -107,7 +107,7 @@ export function ProjectModal({ open, onClose, id, name, title, intro, sections, 
       <div
         ref={dialogRef}
         className={styles.dialog}
-        style={sections.some(s => s.figure) ? { width: 'min(760px, 100%)' } : undefined}
+        data-figures={sections.some(s => s.figure) ? 'true' : undefined}
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${id}-title`}

@@ -198,3 +198,9 @@
 .figure { margin: var(--space-4) 0 0; }
 .figureImage { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-muted); }
 .figureCaption { margin-top: var(--space-2); font-size: 12px; line-height: 1.5; color: var(--fg-muted); }
+
+/* A modal that carries images is a little wider, and its text fills that width up to a comfortable line. */
+.dialog[data-figures] { width: min(640px, 100%); }
+.dialog[data-figures] .intro,
+.dialog[data-figures] .sectionBody { max-width: 68ch; }
+.dialog[data-figures] .figureCaption { max-width: 68ch; }
