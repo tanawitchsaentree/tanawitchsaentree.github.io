@@ -4,8 +4,8 @@ import { T } from './tokens'
 
 export function TimsFooter() {
   return (
-    <footer style={{ background: T.color.espresso, color: T.color.cream, padding: 'clamp(3.5rem,8vw,6rem) 0 3rem', fontFamily: T.font.sans }}>
-      <div className="tims-wrap tims-animate">
+    <footer data-m={8} style={{ background: T.color.espresso, color: T.color.cream, padding: 'clamp(3.5rem,8vw,6rem) 0 3rem', fontFamily: T.font.sans }}>
+      <div className="tims-wrap tims-wrap-wide tims-animate">
         <h2 style={{ fontFamily: T.font.display, fontWeight: 600, fontSize: T.size.display, letterSpacing: '-.015em', lineHeight: 1.03, color: T.color.cream, marginBottom: '1rem', maxWidth: '18ch' }}>
           A POS for the <em style={{ fontStyle: 'normal', color: T.color.red }}>5 a.m.</em> shift.
         </h2>

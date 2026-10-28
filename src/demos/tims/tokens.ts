@@ -30,6 +30,7 @@ export const T = {
     chipBg:    '#1A1A1A',  // dark chip background before it lights up (decode panel)
     ticketBg:  '#141414',  // KDS ticket card background
     paperWarm: '#FFFDF9',  // warm off-white, takeaway card background
+    ticket:    '#F1E9D8',  // thermal-paper stock for the order ticket that follows the story
   },
   alpha: {
     line:    'rgba(0,0,0,.10)',

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { T } from '@/demos/tims/tokens'
 import { TimsNav }        from '@/demos/tims/TimsNav'
 import { TimsHero }       from '@/demos/tims/TimsHero'
@@ -13,9 +13,22 @@ import { TimsRealOrders } from '@/demos/tims/TimsRealOrders'
 import { TimsFixed }      from '@/demos/tims/TimsFixed'
 import { TimsLearned }    from '@/demos/tims/TimsLearned'
 import { TimsFooter }     from '@/demos/tims/TimsFooter'
+import { TimsTicket }     from '@/demos/tims/TimsTicket'
 
 
 export function TimsClient() {
+  // The page follows one order. The section in the middle band of the screen is the active moment;
+  // the ticket pinned beside the page reads it. One observer, no scroll listener.
+  const [moment, setMoment] = useState(0)
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) setMoment(Number((e.target as HTMLElement).dataset.m)) }),
+      { rootMargin: '-45% 0px -50% 0px' }
+    )
+    document.querySelectorAll('[data-demo="tims"] [data-m]').forEach(el => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+
   // Scroll-reveal for [data-a] equivalents
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -32,7 +45,12 @@ export function TimsClient() {
     <>
       <style dangerouslySetInnerHTML={{ __html: `
 
-        .tims-wrap { max-width:80rem; width:100%; margin:0 auto; padding:0 clamp(1.2rem,5vw,7.5rem) }
+        /* The ticket takes the right-hand rail on wide screens; sections where it steps aside use tims-wrap-wide. */
+        [data-demo="tims"] { --rail:0px }
+        @media(min-width:1180px) { [data-demo="tims"] { --rail:16rem } }
+        .tims-wrap { max-width:80rem; width:100%; margin:0 auto; padding:0 calc(clamp(1.2rem,5vw,7.5rem) + var(--rail)) 0 clamp(1.2rem,5vw,7.5rem) }
+        .tims-wrap.tims-wrap-wide { padding-right:clamp(1.2rem,5vw,7.5rem) }
+
         .tims-narrow { max-width:760px }
 
         .tims-label {
@@ -98,8 +116,8 @@ export function TimsClient() {
         }}
       >
         <TimsNav />
+        <TimsTicket moment={moment} />
         <TimsHero />
-        <TimsStatStrip />
         <TimsCounter />
         <TimsProblem />
         <TimsIdea />
@@ -107,6 +125,7 @@ export function TimsClient() {
         <TimsRealOrders />
         <TimsFixed />
         <TimsLearned />
+        <TimsStatStrip />
         <TimsFooter />
       </div>
     </>

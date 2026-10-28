@@ -19,7 +19,7 @@ const FIXES = [
     tag: 'FIX 3',
     title: 'Make changing your mind harmless',
     body: 'A live preview that updates before anything\'s committed, undo on edits, and the big catering orders (Box of Joe, dozens) that I always fumbled.',
-    why: 'In the walkthrough, a customer changing their mind stopped being a problem, and those large orders finally fit.',
+    why: 'In the walkthrough, changing an order halfway no longer meant starting it again, and those large orders finally fit. Car one can go from large to medium and back without losing the ticket.',
   },
 ] as const
 
@@ -27,6 +27,7 @@ export function TimsFixed() {
   return (
     <section
       id="fixed"
+      data-m={6}
       style={{ padding: 'clamp(5rem,13vw,11rem) 0', fontFamily: T.font.sans }}
     >
       <div className="tims-wrap tims-animate">

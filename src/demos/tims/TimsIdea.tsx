@@ -6,6 +6,7 @@ export function TimsIdea() {
   return (
     <section
       id="idea"
+      data-m={3}
       style={{ padding: 'clamp(5rem,13vw,11rem) 0', fontFamily: T.font.sans }}
     >
       <div className="tims-wrap tims-animate">
@@ -23,6 +24,9 @@ export function TimsIdea() {
 
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
           I tried three layouts and judged each against the forty-second test in my head. I knew exactly what forty seconds felt like. What won came down to <strong style={{ color: T.color.ink, fontWeight: 600 }}>distribution</strong>. All day I rang the same handful of orders, like a large double-double, a medium steeped tea or a French Vanilla. The weird blends were real, but rare, maybe one in fifty.
+        </p>
+        <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
+          Take car one. The double-double is the usual and gets the single tap. Extra hot and the Timbits sit on top of it.
         </p>
         <p style={{ color: T.color.inkSoft, maxWidth: '56ch', marginBottom: '1.2rem', lineHeight: 1.65 }}>
           The design depends on one decision.{' '}

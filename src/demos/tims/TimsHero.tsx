@@ -71,9 +71,10 @@ export function TimsHero() {
     <header
       ref={rootRef}
       id="hero"
+      data-m={0}
       style={{ padding: 'clamp(8rem,17vw,13rem) 0 clamp(3rem,7vw,6rem)', fontFamily: T.font.sans }}
     >
-      <div className="tims-wrap">
+      <div className="tims-wrap tims-wrap-wide">
 
         {/* ── TOP ROW: 70/30 heading | card ─────────────────────── */}
         <div className="tims-hero-grid" style={{
@@ -114,18 +115,30 @@ export function TimsHero() {
           </div>
 
           {/* ── RIGHT: polaroid deck, no background, floats on page ── */}
-          <div
-            className="tims-reveal"
-            style={{
-              position:       'relative',
-              minHeight:      360,
-              display:        'flex',
-              alignItems:     'center',
-              justifyContent: 'center',
-              overflow:       'visible',
-            }}
-          >
-            <HeroPolaroids />
+          <div className="tims-reveal" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div
+              style={{
+                position:       'relative',
+                minHeight:      360,
+                display:        'flex',
+                alignItems:     'center',
+                justifyContent: 'center',
+                overflow:       'visible',
+              }}
+            >
+              <HeroPolaroids />
+            </div>
+          <figure style={{ margin: '1.6rem 0 0', maxWidth: '22rem' }}>
+            <figcaption style={{ fontFamily: T.font.mono, fontSize: '.75rem', letterSpacing: '.16em', textTransform: 'uppercase', color: T.color.mutedLt, marginBottom: '.6rem' }}>
+              8:02 a.m. The speaker crackles.
+            </figcaption>
+            <blockquote style={{ margin: 0, fontFamily: T.font.display, fontWeight: 600, fontSize: 'clamp(1.15rem,2vw,1.4rem)', lineHeight: 1.3, letterSpacing: '-.01em', color: T.color.ink, borderLeft: `3px solid ${T.color.red}`, paddingLeft: '1.1rem' }}>
+              &ldquo;Large double-double, extra hot, and a 10-pack of Timbits.&rdquo;
+            </blockquote>
+            <p style={{ margin: '.9rem 0 0', fontSize: '.95rem', color: T.color.inkSoft, lineHeight: 1.55 }}>
+              I made this order up. The trouble it runs into is what I lived. The page follows it to the window.
+            </p>
+          </figure>
           </div>
 
         </div>{/* end top 2-col grid */}
@@ -136,6 +149,7 @@ export function TimsHero() {
             Forty seconds is roughly how long a Tims order takes. I know, because I was the one getting timed.
             This is a weekend concept. I took what the drive-thru taught me and built the point-of-sale terminal I always wished I&apos;d had.
           </p>
+
 
           <div style={{
             display:    'flex',

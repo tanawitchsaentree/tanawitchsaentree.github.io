@@ -13,19 +13,20 @@ export function TimsDemo() {
   return (
     <section
       id="demo"
+      data-m={4}
       style={{ padding: 'clamp(5rem,13vw,11rem) 0', background: T.color.espresso, color: T.color.cream, fontFamily: T.font.sans }}
     >
-      <div className="tims-wrap tims-animate">
+      <div className="tims-wrap tims-wrap-wide tims-animate">
         <div style={{ marginBottom: 'clamp(2.4rem,6vw,4rem)' }}>
           <span style={{ fontFamily: T.font.mono, fontSize: '.75rem', letterSpacing: '.22em', textTransform: 'uppercase', color: T.color.redOnDark, display: 'inline-flex', alignItems: 'center', gap: '.7em' }}>
             <span style={{ width: 26, height: 1.5, background: T.color.gold, display: 'inline-block' }} />
-            The build
+            The build · car one, again
           </span>
           <h2 style={{ fontFamily: T.font.display, fontWeight: 600, fontSize: T.size.display, letterSpacing: '-.015em', lineHeight: 1.03, margin: '.7rem 0 1.1rem', color: T.color.cream }}>
             The terminal, running.
           </h2>
           <p style={{ color: T.alpha.cream62, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            It&apos;s built in front-end code and runs here as a working prototype. Every tap responds instantly, and the order ticket stays live the whole time.
+            Here is the same order on the terminal I built. It runs as a working prototype in front-end code. Taps respond without a server round trip, and the order stays on screen the whole time.
           </p>
         </div>
 

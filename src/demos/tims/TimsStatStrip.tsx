@@ -11,14 +11,20 @@ const STATS = [
 
 export function TimsStatStrip() {
   return (
-    <div style={{ background: T.color.espresso, color: T.color.cream }}>
+    <div data-m={8} style={{ background: T.color.espresso, color: T.color.cream }}>
+      <div className="tims-wrap tims-wrap-wide tims-animate" style={{ paddingTop: 'clamp(2.4rem,5vw,3.4rem)' }}>
+        <span style={{ fontFamily: T.font.mono, fontSize: '.75rem', letterSpacing: '.22em', textTransform: 'uppercase', color: T.color.redOnDark, display: 'inline-flex', alignItems: 'center', gap: '.7em' }}>
+          <span style={{ width: 26, height: 1.5, background: T.color.red, display: 'inline-block' }} />
+          The receipt
+        </span>
+      </div>
       <div
-        className="tims-wrap tims-animate tims-strip-grid"
+        className="tims-wrap tims-wrap-wide tims-animate tims-strip-grid"
         style={{
           display:             'grid',
           gridTemplateColumns: 'repeat(4,1fr)',
           gap:                 '2rem',
-          paddingTop:    'clamp(2.4rem,5vw,3.4rem)',
+          paddingTop:    'clamp(1.6rem,3vw,2.2rem)',
           paddingBottom: 'clamp(2.4rem,5vw,3.4rem)',
         }}
       >

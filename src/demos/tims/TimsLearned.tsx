@@ -25,6 +25,7 @@ export function TimsLearned() {
   return (
     <section
       id="learned"
+      data-m={7}
       style={{ padding: 'clamp(5rem,13vw,11rem) 0', background: T.color.cream2, fontFamily: T.font.sans }}
     >
       <div className="tims-wrap tims-animate">
@@ -34,7 +35,7 @@ export function TimsLearned() {
             Four things two years of mornings taught me.
           </h2>
           <p style={{ color: T.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch', marginTop: '1rem' }}>
-            Each one shows up somewhere in the build above, from the timer to the ticket that never hides.
+            Car one pulls away from the window. Each of these shows up somewhere in the build above, from the timer to the order that never hides.
           </p>
         </div>
 

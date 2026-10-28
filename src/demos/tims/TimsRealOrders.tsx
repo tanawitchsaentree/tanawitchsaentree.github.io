@@ -31,6 +31,7 @@ export function TimsRealOrders() {
   return (
     <section
       id="real"
+      data-m={5}
       style={{ padding: 'clamp(5rem,13vw,11rem) 0', background: T.color.cream2, fontFamily: T.font.sans }}
     >
       <div className="tims-wrap tims-animate">
@@ -40,7 +41,7 @@ export function TimsRealOrders() {
             These are 20 people I served.
           </h2>
           <p style={{ color: T.color.inkSoft, fontSize: '1.1rem', lineHeight: 1.65, maxWidth: '56ch' }}>
-            The &ldquo;personas&rdquo; are customers I remember, like the 5 a.m. commuter, the hockey parent ordering for the whole bench and the guy who changes his mind every time. I ran the build past all twenty, then was honest about what it could and couldn&apos;t do.
+            Car one is made up. These twenty &ldquo;personas&rdquo; are customers I remember, like the 5 a.m. commuter, the hockey parent ordering for the whole bench and the guy who changes his mind every time. I ran the build past all twenty, then was honest about what it could and couldn&apos;t do.
           </p>
         </div>
 
