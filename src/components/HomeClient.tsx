@@ -3,25 +3,15 @@
 import { useCallback, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import dynamic from 'next/dynamic'
 import { ArrowRight, ArrowUpRight, ChevronDown, Github, LockKeyhole } from 'lucide-react'
 import { GraphiteBackground } from '@/components/home/GraphiteBackground'
 import { ManabiModal } from '@/components/home/ManabiModal'
 import { BrewcodexModal } from '@/components/home/BrewcodexModal'
 import { BrickForgeModal } from '@/components/home/BrickForgeModal'
+import { KilnRow } from '@/components/home/KilnRow'
+import { PaneRow } from '@/components/home/PaneRow'
 import { BREWCODEX_PROJECT, BRICKFORGE_PROJECT, PERSONAL_PROJECT, PROFILE, SELECTED_WORK, TOOLS } from '@/data/home'
 import styles from '@/components/home/HomeDocument.module.css'
-
-// Pane renders in `npm run dev` only. The condition has to stay a literal NODE_ENV check:
-// webpack drops the import (and every word of the unpublished copy) only when it can evaluate the
-// branch at build time. To publish, replace the condition with `true`.
-const PaneRow = process.env.NODE_ENV === 'development'
-  ? dynamic(() => import('@/components/home/PaneRow').then(m => m.PaneRow))
-  : null
-// Kiln is the plugin Pane was built with; publish the two rows together.
-const KilnRow = process.env.NODE_ENV === 'development'
-  ? dynamic(() => import('@/components/home/KilnRow').then(m => m.KilnRow))
-  : null
 
 export function HomeClient() {
   const [lightPaused, setLightPaused] = useState(false)
@@ -127,8 +117,8 @@ export function HomeClient() {
                   </div>
                 </div>
               </div>
-              {KilnRow && <KilnRow onOpenChange={setKilnOpen} />}
-              {PaneRow && <PaneRow onOpenChange={setPaneOpen} />}
+              <KilnRow onOpenChange={setKilnOpen} />
+              <PaneRow onOpenChange={setPaneOpen} />
             </div>
           </section>
 

@@ -1,5 +1,4 @@
-// Pane row data. Kept out of src/data/home.ts so nothing here reaches the production bundle.
-// To publish, follow the note above PaneRow in HomeClient.tsx.
+// Row data for this entry. Figures were read from the repo on the date noted below; refresh them when it ships a new version.
 
 // Counted from the Pane repo on 2026-10-28 (component folders, token source files). Refresh them
 // before publishing. Contrast run totals are left out of the copy on purpose: readers don't use them.

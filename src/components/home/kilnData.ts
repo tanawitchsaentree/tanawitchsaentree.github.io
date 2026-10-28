@@ -1,5 +1,4 @@
-// Kiln row data. Kept out of src/data/home.ts so nothing here reaches the production bundle.
-// Published together with the Pane row; see the note above PaneRow in HomeClient.tsx.
+// Row data for the Kiln entry.
 
 export const KILN_PROJECT = {
   title: 'Kiln',
