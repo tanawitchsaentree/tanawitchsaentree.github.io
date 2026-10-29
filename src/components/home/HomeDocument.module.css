@@ -29,6 +29,8 @@
 .name, .sectionHeading { font-family: inherit; font-size: inherit; line-height: 1.5; letter-spacing: 0; }
 .name { font-weight: 500; }
 .role { color: var(--fg-muted); margin-top: var(--space-1); }
+.role a { color: inherit; text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 0.2em; }
+@media (hover: hover) { .role a:hover { color: var(--accent-text); text-decoration-color: currentColor; } }
 .bio { max-width: none; color: var(--fg-muted); margin-top: var(--space-5); }
 .location { display: flex; flex-wrap: wrap; column-gap: var(--space-2); color: var(--fg-subtle); font-size: var(--type-home-note); margin-top: var(--space-4); }
 .contactLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin-top: var(--space-3); }

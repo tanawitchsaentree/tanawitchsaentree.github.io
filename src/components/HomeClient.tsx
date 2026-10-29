@@ -25,7 +25,10 @@ export function HomeClient() {
         <div className={styles.document}>
           <header className={styles.intro}>
             <h1 className={styles.name}>{PROFILE.name}</h1>
-            <p className={styles.role}>{PROFILE.title}</p>
+            <p className={styles.role}>
+              {PROFILE.title} @{' '}
+              <a href={PROFILE.companyUrl} target="_blank" rel="noopener noreferrer">{PROFILE.company}</a>
+            </p>
             <p className={styles.bio}>{PROFILE.introduction}</p>
             <p className={styles.location}>
               <span>{PROFILE.location}</span>

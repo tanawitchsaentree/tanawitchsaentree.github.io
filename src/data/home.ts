@@ -1,8 +1,10 @@
 /** Public portfolio copy. Keep dates and role names aligned with the supplied resume. */
 export const PROFILE = {
   name: 'Tanawitch Saentree',
-  title: 'Senior Product Designer',
-  introduction: 'I design software for insurance, banking and healthcare, from research and workflow design to working interfaces. At Allianz Technology, I design tools for people who configure and review AI document processing.',
+  title: 'Senior Designer',
+  company: 'Allianz Technology',
+  companyUrl: 'https://tech.allianz.com/en/contact/bangkok.html',
+  introduction: 'I design software for insurance, banking and healthcare, and I build it with an AI coding assistant beside me. Most of my effort goes into context before anything gets built, meaning who the users are, what the rules are and what the design system says. I read everything the assistant makes. Developers can build from the working prototypes that come out of it.',
   location: 'Bangkok, Thailand',
   availability: 'Open to relocation',
   email: 'tanawitch.saentree@gmail.com',
