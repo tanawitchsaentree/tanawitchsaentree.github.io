@@ -4,6 +4,7 @@ import '@fontsource/ibm-plex-mono/500.css'
 import '@fontsource/ibm-plex-mono/400-italic.css'
 import '../styles/globals.css'
 import { CustomCursor } from '@/components/ui/CustomCursor'
+import { Analytics } from '@/components/analytics/Analytics'
 
 const SITE_TITLE = 'Tanawitch Saentree — Senior Product Designer'
 const SITE_DESC =
@@ -34,6 +35,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-[var(--bg)] text-[var(--fg)]">
         {children}
         <CustomCursor />
+        <Analytics />
+        {/* GoatCounter: no cookies, so no consent banner. It reads ?ref=<company> on application links as the source. */}
+        <script data-goatcounter="https://tanawitchsaentree.goatcounter.com/count" async src="https://gc.zgo.at/count.js" />
       </body>
     </html>
   )
