@@ -12,46 +12,60 @@ type TabId = (typeof TABS)[number]['id']
 
 const inTab = (e: Entry, tab: TabId) => tab === 'all' || e.categories.includes(tab)
 
-function Card({ entry, index, onOpen }: { entry: Entry; index: number; onOpen: (key: ModalKey) => void }) {
-  const { primary, external, thumb } = entry
+function Actions({ entry, onOpen }: { entry: Entry; onOpen: (key: ModalKey) => void }) {
+  const { primary, external } = entry
   return (
-    <li className={styles.card} style={{ '--i': index } as CSSProperties}>
-      <div className={styles.head}>
-        <span className={styles.kindWrap}>
-          {thumb && (
-            <span className={`${styles.thumb} ${thumb.contain ? styles.thumbContain : ''}`}>
-              <Image src={thumb.src} alt="" fill sizes="36px" />
-            </span>
-          )}
+    <div className={styles.actions}>
+      {primary?.type === 'case' && (
+        <Link href={primary.href} className={styles.action}>
+          View case study <ArrowRight size={14} aria-hidden="true" />
+          <span className="sr-only">: {entry.title}</span>
+        </Link>
+      )}
+      {primary?.type === 'case' && primary.protected && (
+        <span className={styles.lock}><LockKeyhole size={11} aria-hidden="true" /> Password required</span>
+      )}
+      {primary?.type === 'modal' && (
+        <button type="button" className={styles.action} onClick={() => onOpen(primary.key)} aria-haspopup="dialog">
+          {primary.label} <ArrowRight size={14} aria-hidden="true" />
+          <span className="sr-only">: {entry.title}</span>
+        </button>
+      )}
+      {external && (
+        <a href={external.href} className={primary ? styles.actionQuiet : styles.action} target="_blank" rel="noopener noreferrer">
+          {external.label} <ArrowUpRight size={12} aria-hidden="true" />
+          <span className="sr-only"> ({entry.title}, opens in a new tab)</span>
+        </a>
+      )}
+    </div>
+  )
+}
+
+/** One row. Projects with a picture lead with it; everything else leads with who it was for and when. */
+function Row({ entry, index, onOpen }: { entry: Entry; index: number; onOpen: (key: ModalKey) => void }) {
+  const { thumb } = entry
+  return (
+    <li className={styles.row} data-kind={thumb ? 'project' : 'work'} style={{ '--i': index } as CSSProperties}>
+      {thumb ? (
+        <div className={styles.lead}>
+          <span className={`${styles.thumb} ${thumb.contain ? styles.thumbContain : ''}`}>
+            <Image src={thumb.src} alt="" fill sizes="(max-width: 480px) 64px, 96px" />
+          </span>
+        </div>
+      ) : (
+        <div className={`${styles.lead} ${styles.leadMeta}`}>
           <span className={styles.kind}>{entry.kind}</span>
-        </span>
-        {entry.meta && <span className={styles.meta}>{entry.meta}</span>}
-      </div>
-      <h3 className={styles.title}>{entry.title}</h3>
-      {entry.role && <p className={styles.role}>{entry.role}</p>}
-      <p className={styles.description}>{entry.description}</p>
-      <div className={styles.actions}>
-        {primary?.type === 'case' && (
-          <Link href={primary.href} className={styles.action}>
-            View case study <ArrowRight size={14} aria-hidden="true" />
-            <span className="sr-only">: {entry.title}</span>
-          </Link>
-        )}
-        {primary?.type === 'case' && primary.protected && (
-          <span className={styles.lock}><LockKeyhole size={11} aria-hidden="true" /> Password required</span>
-        )}
-        {primary?.type === 'modal' && (
-          <button type="button" className={styles.action} onClick={() => onOpen(primary.key)} aria-haspopup="dialog">
-            {primary.label} <ArrowRight size={14} aria-hidden="true" />
-            <span className="sr-only">: {entry.title}</span>
-          </button>
-        )}
-        {external && (
-          <a href={external.href} className={primary ? styles.actionQuiet : styles.action} target="_blank" rel="noopener noreferrer">
-            {external.label} <ArrowUpRight size={12} aria-hidden="true" />
-            <span className="sr-only"> ({entry.title}, opens in a new tab)</span>
-          </a>
-        )}
+          {entry.meta && <span className={styles.meta}>{entry.meta}</span>}
+        </div>
+      )}
+      <div className={styles.body}>
+        <div className={styles.head}>
+          <h3 className={styles.title}>{entry.title}</h3>
+          {thumb && <span className={styles.tag}>{entry.kind}</span>}
+        </div>
+        {entry.role && <p className={styles.role}>{entry.role}</p>}
+        <p className={styles.description}>{entry.description}</p>
+        <Actions entry={entry} onOpen={onOpen} />
       </div>
     </li>
   )
@@ -150,9 +164,9 @@ export function WorkTabs({ onOpen }: { onOpen: (key: ModalKey) => void }) {
       </div>
       </div>
       <div id={`${baseId}-panel`} role="tabpanel" aria-labelledby={`${baseId}-tab-${tab}`} tabIndex={0} className={styles.panel}>
-        <ul key={tab} className={styles.grid} data-moved={moved}>
+        <ul key={tab} className={styles.list} data-moved={moved}>
           {visible.map((entry, index) => (
-            <Card key={entry.id} entry={entry} index={index} onOpen={onOpen} />
+            <Row key={entry.id} entry={entry} index={index} onOpen={onOpen} />
           ))}
         </ul>
       </div>
