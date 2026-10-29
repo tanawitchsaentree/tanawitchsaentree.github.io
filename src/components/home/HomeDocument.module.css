@@ -17,6 +17,10 @@
   line-height: var(--home-leading);
 }
 .document { width: 100%; max-width: var(--home-width); margin-inline: auto; }
+/* Name, summary and where I am on the left; how to reach me in a narrow rail beside the summary. */
+.intro { display: grid; grid-template-columns: minmax(0, 1fr) 11rem; column-gap: var(--space-10); }
+.intro > :not(.rail) { grid-column: 1; }
+.rail { grid-column: 2; grid-row: 3 / span 2; align-self: start; margin-top: var(--space-5); }
 .background {
   position: fixed;
   inset: 0;
@@ -31,9 +35,8 @@
 .role { color: var(--fg-muted); margin-top: var(--space-1); }
 .bio { max-width: var(--home-prose); color: var(--fg-muted); margin-top: var(--space-5); }
 .location { display: flex; flex-wrap: wrap; column-gap: var(--space-2); color: var(--fg-subtle); font-size: var(--type-home-note); margin-top: var(--space-4); }
-.contactLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin-top: var(--space-3); }
-.contactLinks a { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--space-8); text-decoration: none; }
-.contactLinks a { color: var(--fg); }
+.contactLinks { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+.contactLinks a { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--space-8); text-decoration: none; color: var(--fg); }
 .contactLinks a:hover { color: var(--accent-text); }
 .section { margin-top: var(--home-section); }
 .sectionHeading { font-size: var(--type-xs); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-subtle); margin-bottom: var(--space-5); }
@@ -43,6 +46,11 @@
 .email { font-size: var(--type-home-note); color: var(--fg-muted); overflow-wrap: anywhere; }
 .lightControl { padding-block: var(--space-2); color: var(--fg-subtle); font-size: var(--type-xs); }
 .lightControl:hover { color: var(--fg); }
+@media (max-width: 640px) {
+  .intro { grid-template-columns: minmax(0, 1fr); }
+  .rail { grid-column: 1; grid-row: auto; margin-top: var(--space-3); }
+  .contactLinks { flex-direction: row; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
+}
 @media (max-width: 480px) {
   .page { --home-top: var(--space-12); --home-inset: var(--space-6); }
 }

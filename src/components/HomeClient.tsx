@@ -32,17 +32,19 @@ export function HomeClient() {
               <span aria-hidden="true">·</span>
               <span>{PROFILE.availability}</span>
             </p>
-            <nav className={styles.contactLinks} aria-label="Contact and profiles">
-              <a href={`mailto:${PROFILE.email}`}>Email me</a>
-              <a href={PROFILE.linkedIn} target="_blank" rel="noopener noreferrer">
-                LinkedIn <ArrowUpRight size={12} aria-hidden="true" />
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-              <a href={PROFILE.github} target="_blank" rel="noopener noreferrer">
-                GitHub <ArrowUpRight size={12} aria-hidden="true" />
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            </nav>
+            <div className={styles.rail}>
+              <nav className={styles.contactLinks} aria-label="Contact and profiles">
+                <a href={`mailto:${PROFILE.email}`}>Email me</a>
+                <a href={PROFILE.linkedIn} target="_blank" rel="noopener noreferrer">
+                  LinkedIn <ArrowUpRight size={12} aria-hidden="true" />
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+                <a href={PROFILE.github} target="_blank" rel="noopener noreferrer">
+                  GitHub <ArrowUpRight size={12} aria-hidden="true" />
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </nav>
+            </div>
           </header>
 
           <section id="work" className={styles.section} aria-labelledby="work-heading">
