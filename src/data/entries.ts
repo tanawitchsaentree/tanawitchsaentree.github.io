@@ -85,7 +85,7 @@ export const ENTRIES: Entry[] = [
   },
   {
     id: 'human-tone', categories: ['personal', 'skill'], kind: 'Claude Code skill', title: humanTone.name,
-    description: humanTone.description,
+    description: humanTone.description, thumb: { src: '/images/humantone-thumb.webp' },
     external: { href: humanTone.href, label: 'View on GitHub' },
   },
 ]
