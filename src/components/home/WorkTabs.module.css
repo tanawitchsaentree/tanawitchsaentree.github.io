@@ -28,11 +28,10 @@
 .bar[data-ready='true'] { visibility: visible; }
 
 .panel:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 4px; border-radius: var(--radius-md); }
-.list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-8); }
+.list { list-style: none; padding: 0; margin: 0 0 calc(var(--space-8) * -1); }
+.item { display: block; }
 /* Both kinds of row share one left column, so the text starts on the same line in the mixed list. */
-.row { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--space-6); align-items: start; }
-.list[data-moved='true'] .row { animation: rowIn var(--duration-slow) var(--ease-out-standard) both; animation-delay: calc(min(var(--i, 0), 5) * 40ms); }
-@keyframes rowIn { from { transform: translateY(12px); } to { transform: none; } }
+.row { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--space-6); align-items: start; padding-bottom: var(--space-8); }
 
 .lead { min-width: 0; }
 .leadMeta { display: flex; flex-direction: column; gap: var(--space-1); padding-top: 3px; }
@@ -69,5 +68,4 @@
 @media (max-width: 600px) { .tabsWrap::after { display: block; } }
 @media (prefers-reduced-motion: reduce) {
   .bar, .tab { transition: none; }
-  .list[data-moved='true'] .row { animation: none; }
 }

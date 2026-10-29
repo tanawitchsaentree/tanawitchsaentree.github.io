@@ -1,9 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
-import type { CSSProperties, KeyboardEvent } from 'react'
+import type { ReactNode } from 'react'
+import type { KeyboardEvent } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { AnimatePresence, motion, useIsPresent, useReducedMotion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, LockKeyhole } from 'lucide-react'
 import { ENTRIES, TABS, type Entry, type ModalKey } from '@/data/entries'
 import styles from './WorkTabs.module.css'
@@ -42,14 +44,14 @@ function Actions({ entry, onOpen }: { entry: Entry; onOpen: (key: ModalKey) => v
 }
 
 /** One row. Projects with a picture lead with it; everything else leads with who it was for and when. */
-function Row({ entry, index, onOpen }: { entry: Entry; index: number; onOpen: (key: ModalKey) => void }) {
+function Row({ entry, onOpen }: { entry: Entry; onOpen: (key: ModalKey) => void }) {
   const { thumb } = entry
   return (
-    <li className={styles.row} data-kind={thumb ? 'project' : 'work'} style={{ '--i': index } as CSSProperties}>
+    <div className={styles.row} data-kind={thumb ? 'project' : 'work'}>
       {thumb ? (
         <div className={styles.lead}>
           <span className={`${styles.thumb} ${thumb.contain ? styles.thumbContain : ''}`}>
-            <Image src={thumb.src} alt="" fill sizes="(max-width: 480px) 64px, 96px" />
+            <Image src={thumb.src} alt="" fill loading="eager" sizes="(max-width: 480px) 64px, 96px" />
           </span>
         </div>
       ) : (
@@ -67,13 +69,36 @@ function Row({ entry, index, onOpen }: { entry: Entry; index: number; onOpen: (k
         <p className={styles.description}>{entry.description}</p>
         <Actions entry={entry} onOpen={onOpen} />
       </div>
-    </li>
+    </div>
+  )
+}
+
+/** A list item that folds shut on exit. While it leaves it is inert and hidden from screen readers, so focus never lands in a vanishing row. */
+function Item({ index, still, children }: { index: number; still: boolean; children: ReactNode }) {
+  const isPresent = useIsPresent()
+  const ref = useRef<HTMLLIElement>(null)
+  useEffect(() => {
+    const el = ref.current as (HTMLLIElement & { inert: boolean }) | null
+    if (el) el.inert = !isPresent
+  }, [isPresent])
+  return (
+    <motion.li
+      ref={ref}
+      className={styles.item}
+      aria-hidden={isPresent ? undefined : true}
+      initial={{ height: 0, overflow: 'hidden' }}
+      animate={{ height: 'auto', transitionEnd: { overflow: 'visible' }, transition: { duration: still ? 0 : 0.6, delay: still ? 0 : Math.min(index, 5) * 0.04, ease: [0.16, 1, 0.3, 1] } }}
+      exit={{ height: 0, overflow: 'hidden', transition: { duration: still ? 0 : 0.55, ease: [0.65, 0, 0.35, 1] } }}
+    >
+      {children}
+    </motion.li>
   )
 }
 
 export function WorkTabs({ onOpen }: { onOpen: (key: ModalKey) => void }) {
   const [tab, setTab] = useState<TabId>('all')
   const [moved, setMoved] = useState(false)
+  const still = useReducedMotion()
   const [ready, setReady] = useState(false)
   const baseId = useId()
   const listRef = useRef<HTMLDivElement>(null)
@@ -164,10 +189,15 @@ export function WorkTabs({ onOpen }: { onOpen: (key: ModalKey) => void }) {
       </div>
       </div>
       <div id={`${baseId}-panel`} role="tabpanel" aria-labelledby={`${baseId}-tab-${tab}`} tabIndex={0} className={styles.panel}>
-        <ul key={tab} className={styles.list} data-moved={moved}>
-          {visible.map((entry, index) => (
-            <Row key={entry.id} entry={entry} index={index} onOpen={onOpen} />
-          ))}
+        <ul className={styles.list}>
+          {/* Rows that stay glide to their new place, rows that leave fold shut, rows that arrive unfold. Nothing fades. */}
+          <AnimatePresence initial={false}>
+            {visible.map((entry, index) => (
+              <Item key={entry.id} index={index} still={!!still}>
+                <Row entry={entry} onOpen={onOpen} />
+              </Item>
+            ))}
+          </AnimatePresence>
         </ul>
       </div>
     </>
