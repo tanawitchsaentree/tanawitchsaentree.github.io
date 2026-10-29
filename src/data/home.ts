@@ -103,5 +103,4 @@ export const BRICKFORGE_PROJECT = {
 
 export const TOOLS = [
   { name: 'Human Tone', kind: 'Claude Code skill · MCP server', description: 'Makes AI writing read like a person wrote it. A linter checks each draft before it goes out, in any language. It learns your own words and stops flagging them.', href: 'https://github.com/tanawitchsaentree/Human-tone' },
-  { name: 'Kiln', kind: 'Claude Code skill', description: 'Builds design systems that skip the usual AI look, like a warm off-white page with one saturated accent. Each one starts from a tradition you pick outside web design, and every claim about contrast or spacing comes from a measured check.', href: 'https://github.com/tanawitchsaentree/Kiln' },
 ] as const

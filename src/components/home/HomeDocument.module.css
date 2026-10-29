@@ -1,8 +1,7 @@
-/* A quiet reading column. Work is visible; only supplementary material collapses. */
+/* A quiet reading column. Work and projects sit in one tabbed grid (see WorkTabs). */
 .page {
   --home-width: 42rem;
   --home-prose: 30rem;
-  --home-thumb: 6rem;
   --home-leading: 1.7;
   --home-inset: clamp(var(--space-6), 5vw, var(--space-16));
   --home-top: clamp(var(--space-16), 12svh, var(--space-24));
@@ -27,53 +26,17 @@
 }
 .graphite { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity var(--duration-reveal) var(--ease-out-quick); }
 .graphite[data-ready='true'] { opacity: 1; }
-.name, .workTitle, .projectTitle, .sectionHeading { font-family: inherit; font-size: inherit; line-height: 1.5; letter-spacing: 0; }
-.name, .workTitle, .projectTitle { font-weight: 500; }
+.name, .sectionHeading { font-family: inherit; font-size: inherit; line-height: 1.5; letter-spacing: 0; }
+.name { font-weight: 500; }
 .role { color: var(--fg-muted); margin-top: var(--space-1); }
 .bio { max-width: var(--home-prose); color: var(--fg-muted); margin-top: var(--space-5); }
 .location { display: flex; flex-wrap: wrap; column-gap: var(--space-2); color: var(--fg-subtle); font-size: var(--type-home-note); margin-top: var(--space-4); }
 .contactLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin-top: var(--space-3); }
-.contactLinks a, .projectLinks a, .projectLinks button { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--space-8); text-decoration: none; }
+.contactLinks a { display: inline-flex; align-items: center; gap: var(--space-1); min-height: var(--space-8); text-decoration: none; }
 .contactLinks a { color: var(--fg); }
-.contactLinks a:hover, .projectLinks a:hover, .projectLinks button:hover { color: var(--accent-text); }
+.contactLinks a:hover { color: var(--accent-text); }
 .section { margin-top: var(--home-section); }
 .sectionHeading { font-size: var(--type-xs); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-subtle); margin-bottom: var(--space-5); }
-.workList, .toolList { list-style: none; padding: 0; margin: 0; }
-.workList { display: grid; gap: var(--space-8); }
-.workLink { display: block; text-decoration: none; border-radius: var(--radius-sm); }
-.workTopline { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2) var(--space-4); margin-bottom: var(--space-1); }
-.company, .period, .workRole { font-size: var(--type-xs); color: var(--fg-subtle); }
-.period { flex-shrink: 0; font-variant-numeric: tabular-nums; }
-.workTitle { color: var(--fg); transition: color var(--duration-base) var(--ease-out-quick); }
-.workLink:hover .workTitle, .workLink:focus-visible .workTitle { color: var(--accent-text); }
-.workRole { margin-top: var(--space-1); }
-.workDescription { margin-top: var(--space-2); color: var(--fg-muted); max-width: 36rem; }
-.workAction { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); margin-top: var(--space-2); font-size: var(--type-home-note); color: var(--fg); }
-.accessNote { display: inline-flex; align-items: center; gap: var(--space-1); margin-left: var(--space-3); color: var(--fg-subtle); font-size: var(--type-xs); }
-.project { display: grid; grid-template-columns: var(--home-thumb) minmax(0, 1fr); gap: var(--space-6); align-items: start; }
-.projectImage { position: relative; width: var(--home-thumb); aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-sm); background: var(--bg-elevated); }
-.projectImage img { object-fit: cover; }
-.projects { display: grid; gap: var(--space-8); }
-.projectLogo img { object-fit: contain; padding: var(--space-1); }
-.projectDescription { color: var(--fg-muted); margin-top: var(--space-2); }
-.projectLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-top: var(--space-2); font-size: var(--type-home-note); }
-.projectLinks button { text-align: left; }
-.more { margin-top: var(--home-section); border-top: 1px solid var(--border); padding-top: var(--space-4); }
-.more summary { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); min-height: var(--space-10); color: var(--fg-muted); font-size: var(--type-home-note); list-style: none; border-radius: var(--radius-sm); }
-.more summary::-webkit-details-marker { display: none; }
-.more summary:hover { color: var(--fg); }
-.more summary svg { transition: transform var(--duration-base) var(--ease-out-quick); }
-.more[open] summary svg { transform: rotate(180deg); }
-.moreContent { padding-top: var(--space-4); }
-.moreIntro { color: var(--fg-muted); margin-bottom: var(--space-4); font-size: var(--type-home-note); }
-.toolList { display: grid; gap: var(--space-4); }
-.toolList a { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: var(--space-4); text-decoration: none; font-size: var(--type-home-note); }
-.toolHead { display: flex; flex-direction: column; gap: var(--space-1); }
-.toolName { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--fg); }
-.toolIcon { flex: none; color: var(--fg-muted); }
-.toolKind { font-size: var(--type-xs); color: var(--fg-subtle); white-space: nowrap; }
-.toolDescription { color: var(--fg-muted); }
-.toolList a:hover .toolName, .toolList a:focus-visible .toolName { color: var(--accent-text); }
 .profileLinks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); margin-top: var(--space-5); font-size: var(--type-home-note); color: var(--fg-muted); }
 .profileLinks a { padding-block: var(--space-1); }
 .footer { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: baseline; gap: var(--space-3) var(--space-6); margin-top: var(--space-10); }
@@ -81,15 +44,7 @@
 .lightControl { padding-block: var(--space-2); color: var(--fg-subtle); font-size: var(--type-xs); }
 .lightControl:hover { color: var(--fg); }
 @media (max-width: 480px) {
-  .page { --home-top: var(--space-12); --home-thumb: 4rem; --home-inset: var(--space-6); }
-  .workTopline { flex-wrap: wrap; }
-  .project { gap: var(--space-4); }
-  .projectLinks { align-items: flex-start; flex-direction: column; gap: var(--space-1); }
-  .toolList a { grid-template-columns: 1fr; gap: var(--space-1); }
+  .page { --home-top: var(--space-12); --home-inset: var(--space-6); }
 }
 @media (prefers-reduced-motion: reduce), (pointer: coarse) { .lightControl { display: none; } }
-@media (prefers-reduced-motion: reduce) { .graphite, .workTitle, .more summary svg { transition: none; } }
-/* Category tag inline with an independent project's name: neutral hairline, no tint. */
-.projectHead { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); }
-.projectHead .projectTitle { margin: 0; }
-.projectTag { display: inline-block; padding: 0 var(--space-2); border: 1px solid var(--border); border-radius: 999px; font-size: var(--type-home-note); line-height: 1.4; font-weight: 400; color: var(--fg-muted); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .graphite { transition: none; } }

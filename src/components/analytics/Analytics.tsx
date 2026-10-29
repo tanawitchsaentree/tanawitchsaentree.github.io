@@ -26,6 +26,12 @@ export function Analytics() {
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const target = e.target as Element | null
+      const tab = target?.closest('button[role="tab"]')
+      if (tab) {
+        const label = (tab.firstChild?.textContent || '').trim()
+        if (label) gc()?.count({ path: `tab/${slug(label)}`, title: `Opened tab ${label}`, event: true })
+        return
+      }
       const dialogButton = target?.closest('button[aria-haspopup="dialog"]')
       if (dialogButton) {
         const name = (dialogButton.querySelector('.sr-only')?.textContent || '').replace(/^[:\s]+/, '').trim()
