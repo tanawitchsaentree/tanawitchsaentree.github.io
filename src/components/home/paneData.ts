@@ -1,11 +1,11 @@
 // Row data for this entry. Figures were read from the repo on the date noted below; refresh them when it ships a new version.
 
-// Counted from the Pane repo on 2026-10-28 (component folders, token source files). Refresh them
+// Reported by the Pane session on 2026-11-01: components from `ls packages/react/src/components | wc -l`, tokens from the first line of `node packages/tokens/build.mjs`. Refresh them
 // before publishing. Contrast run totals are left out of the copy on purpose: readers don't use them.
 export const PANE_STATS = {
-  components: 26,
-  tokens: 489,
-  version: '0.3.0',
+  components: 126,
+  tokens: 1626,
+  version: '0.7.0',
 } as const
 
 export const PANE_PROJECT = {

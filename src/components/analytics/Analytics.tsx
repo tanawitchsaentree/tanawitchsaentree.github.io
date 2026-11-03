@@ -13,7 +13,14 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(
  * GoatCounter counts the first page load by itself, including the ?ref=<company> source on each application link.
  * This adds what it cannot see in a Next.js site: client-side page changes, project dialogs that open on the
  * home page, and clicks that leave the site (the Brick-forge demo, GitHub, email).
+ * It also records how far a visitor scrolls and how long the page stays in view, once per milestone per page.
+ * Nothing is stored on the visitor's device and no one is identified: GoatCounter sees the event name only.
  */
+const DEPTHS = [25, 50, 75, 100]
+const SECONDS = [15, 30, 60, 120, 300]
+
+const pageKey = (pathname: string) => (pathname === '/' ? 'home' : slug(pathname))
+
 export function Analytics() {
   const pathname = usePathname()
   const first = useRef(true)
@@ -22,6 +29,48 @@ export function Analytics() {
     if (first.current) { first.current = false; return }
     gc()?.count({ path: pathname })
   }, [pathname])
+
+  useEffect(() => {
+    const page = pageKey(pathname)
+    const seenDepth = new Set<number>()
+    const seenTime = new Set<number>()
+    let visible = 0
+
+    const onScroll = () => {
+      const doc = document.documentElement
+      const scrollable = doc.scrollHeight - window.innerHeight
+      if (scrollable <= 0) return
+      const pct = Math.min(100, Math.round(((window.scrollY + window.innerHeight) / doc.scrollHeight) * 100))
+      for (const d of DEPTHS) {
+        if (pct >= d && !seenDepth.has(d)) {
+          seenDepth.add(d)
+          gc()?.count({ path: `depth/${page}/${d}`, title: `Scrolled ${d}% of ${page}`, event: true })
+        }
+      }
+    }
+    const tick = window.setInterval(() => {
+      if (document.visibilityState !== 'visible') return
+      visible += 1
+      for (const t of SECONDS) {
+        if (visible >= t && !seenTime.has(t)) {
+          seenTime.add(t)
+          gc()?.count({ path: `time/${page}/${t}s`, title: `${t} seconds on ${page}`, event: true })
+        }
+      }
+    }, 1000)
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => { window.removeEventListener('scroll', onScroll); window.clearInterval(tick) }
+  }, [pathname])
+
+  useEffect(() => {
+    const onCopy = () => {
+      const text = window.getSelection()?.toString() || ''
+      if (text.includes('@')) gc()?.count({ path: 'copy/email', title: 'Copied the email address', event: true })
+    }
+    document.addEventListener('copy', onCopy)
+    return () => document.removeEventListener('copy', onCopy)
+  }, [])
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -40,6 +89,10 @@ export function Analytics() {
       }
       const a = target?.closest('a[href]') as HTMLAnchorElement | null
       if (!a) return
+      if (a.origin === window.location.origin && /\.(pdf|docx?|zip)$/i.test(a.pathname)) {
+        gc()?.count({ path: `download${a.pathname}`, title: `Downloaded ${a.pathname}`, event: true })
+        return
+      }
       if (a.protocol === 'mailto:') { gc()?.count({ path: 'out/email', title: 'Email link', event: true }); return }
       if (a.origin && a.origin !== window.location.origin) {
         gc()?.count({ path: `out/${a.hostname}${a.pathname === '/' ? '' : a.pathname}`, title: `Left for ${a.hostname}`, event: true })
