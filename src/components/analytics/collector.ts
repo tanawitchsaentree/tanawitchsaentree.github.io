@@ -8,7 +8,7 @@
  * only); ?analytics=on removes it.
  */
 
-const ENDPOINT = 'https://portfolio-analytics.REPLACE_SUBDOMAIN.workers.dev/e'
+const ENDPOINT = 'https://portfolio-analytics.tanawitchsaentree.workers.dev/e'
 const PROD_HOST = 'tanawitchsaentree.github.io'
 const FLUSH_MS = 5000
 
@@ -50,7 +50,6 @@ function setup() {
     if (localStorage.getItem('analytics-ignore') === '1') return
   } catch { /* storage blocked: keep tracking, nothing is stored anyway */ }
   const debug = params.get('track') === 'dev'
-  if (ENDPOINT.includes('REPLACE_SUBDOMAIN') && !debug) return // Worker not deployed yet: GoatCounter only
   if (window.location.hostname !== PROD_HOST && !debug) return
   if (navigator.webdriver && !debug) return
   enabled = true
