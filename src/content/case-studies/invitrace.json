@@ -1,0 +1,844 @@
+{
+  "HERO": {
+    "eyebrow": "Invitrace Health · Lead Product Designer · 2024–2025",
+    "title": "A clinic asks for its own look",
+    "intro": "A small specialty clinic signs up for the Invitrace clinical platform. Its manager sets the system up for everyone who works there, and sends over a list of requests. Most of them are about colour and layout, but a few would change what a nurse sees when a result comes back critical. I was the lead designer on the design system, which is where we settled what a hospital is allowed to change. The clinic's list is below, and each answer fills in once you try that request further down the page.",
+    "caption": "The clinic's requests",
+    "requests": [
+      {
+        "id": "copy",
+        "text": "We'd like our own copy of the screens so we can adjust them.",
+        "anchor": "ix-s2"
+      },
+      {
+        "id": "colour",
+        "text": "Can our buttons be in our brand colour?",
+        "anchor": "ix-s4"
+      },
+      {
+        "id": "alert",
+        "text": "Please make the critical alert match our brand too.",
+        "anchor": "ix-s5"
+      },
+      {
+        "id": "doctor",
+        "text": "What will our doctor card look like?",
+        "anchor": "ix-s6"
+      },
+      {
+        "id": "sort",
+        "text": "We'd like to sort our tables, and a compact setting would help.",
+        "anchor": "ix-s7"
+      },
+      {
+        "id": "small",
+        "text": "Could the buttons be smaller on our desktop screens?",
+        "anchor": "ix-s8"
+      }
+    ],
+    "credit": "Rebuilt with sample hospitals, patients and staff. The requests are composites. I designed the system; this interactive rebuild was made with an AI coding assistant.",
+    "requestLabel": "Request from the clinic manager",
+    "notAnswered": "Not answered yet"
+  },
+  "SECTIONS": {
+    "s1": {
+      "title": "Every hospital wants the platform to look like its own",
+      "body": [
+        "Invitrace licenses one clinical platform to many hospitals. At a community hospital, nurses pass tablets along between shifts. Specialists at a teaching hospital use the same tools every day, mostly at desktops. A specialty clinic often has one manager who configures everything. All three want their own colours."
+      ]
+    },
+    "s2": {
+      "title": "We used to give each hospital its own copy",
+      "request": "copy",
+      "body": [
+        "Every install used to start from the shared components and then copy them, so the old answer to this request was yes. Over time the Admit button drifted in padding and contrast from one copy to the next. To fix contrast, someone had to make the same edit in every copy by hand, and any one of them could slip back without anyone seeing it."
+      ],
+      "staleTitle": "How copies went stale",
+      "stale": [
+        "The copies came from two habits, detaching an instance to change one value and pasting a component instead of inserting it from the kit. A detached instance drops its contrast token. A pasted copy looks fine at first, but it never gets another update. I turned the things people detached for into props, contrast mode among them. Inserting from the kit is also quicker than rebuilding by hand."
+      ],
+      "forkF": "Fork F, Specialty clinic copy"
+    },
+    "s3": {
+      "title": "I split the requests by whether they could affect a patient",
+      "body": [
+        "A brand colour or rounder corners only change how the screen looks, and those go in the hospital's theme file. Hiding the risk column could mean a nurse misses a high-risk patient, so that column is built into the table and no hospital can turn it off. I drew the line between those two kinds of request. Touch targets, focus rings, contrast and error messages sit on the locked side as well."
+      ],
+      "themeHead": "Theme file",
+      "themeItems": [
+        "Brand colour",
+        "Corner radius",
+        "Density, where allowed",
+        "Doctor card layout"
+      ],
+      "lockedHead": "Same everywhere",
+      "lockedItems": [
+        "Touch targets",
+        "Focus ring",
+        "Contrast floor",
+        "Risk column",
+        "Errors that stay until fixed"
+      ],
+      "moreTitle": "Locked and flexible settings for each hospital type",
+      "more": [
+        "Density and label position depend on who is reading, so some hospital types can change them and others can't. Touch targets, focus rings, contrast and keyboard activation stay fixed in every hospital. Error messages stay until someone fixes the field."
+      ],
+      "longRule": "Long patient names wrap onto a second line and are never cut. The doctor's ward line is minor detail and may truncate.",
+      "emptyRule": "An empty list names what is empty and says nothing is waiting, which keeps a blank table from passing for a failed load."
+    },
+    "s4": {
+      "title": "The clinic sends its brand colour",
+      "request": "colour",
+      "sent": "#C9937A",
+      "sentLabel": "Sent",
+      "body": [
+        "This one is mostly a yes. The theme file has a slot for the clinic's colour, and the only rule is that white button text on it has to reach 4.5:1, the usual minimum for readable text. If it doesn't, the colour is refused and the closest shade of the same hue that passes is offered instead."
+      ],
+      "substitute": "{sent} only reaches {r}:1, so the clinic's buttons end up a few shades darker than the colour it sent.",
+      "asSent": "{hex} reaches {r}:1, so it goes in exactly as sent.",
+      "refused": "Turned away. {r}:1 with white text, needs 4.5:1"
+    },
+    "s5": {
+      "title": "The clinic wants the critical alert in its colour too",
+      "request": "alert",
+      "body": [
+        "No to this one. The critical alert uses one red, #A8433A, in every hospital, and nothing in a hospital's theme file can change it. The clinic has to live with an alert that may clash with its brand. Text colour is different. I routed it through the theme on purpose, because whether text should be dark or light depends on the background the hospital picked."
+      ]
+    },
+    "s6": {
+      "title": "The clinic asks what its doctor card will look like",
+      "request": "doctor",
+      "body": [
+        "A specialty screen shows one doctor rather than a list, so the clinic gets HeroDoctorCard. It shows the doctor's name and on-call status next to the Page button. Other hospitals wanted changes to the list card instead. One wanted the photo beside the name, and another wanted the Page button in a footer. Our first answer was a copy called DoctorCard-HospitalB, and after that every change to the card had to be made twice. Now there's one shared doctor card, and each hospital's theme file picks how it's laid out."
+      ],
+      "forkWhy": "DoctorCard-HospitalB copied the data contract, so every change to the card had to be made twice. A slot layout lives in a theme token and leaves the contract in one place."
+    },
+    "s7": {
+      "title": "The clinic asks for sortable columns and a compact view",
+      "request": "sort",
+      "body": [
+        "The clinic's tables are short. Usually there are a handful of rows. Our own team had asked for the same two things, and I said no to both. Sorting four to eight rows doesn't help anyone find a patient faster, and every setting we add is another way two clinic screens can end up different. A guideline gets skipped when a deadline is close, so I built the rule into the table itself. That takes a choice away from the clinic, but it also leaves its one manager a single table layout to check."
+      ],
+      "cost": "The clinic can't reorder its list or fit more rows on a screen."
+    },
+    "s8": {
+      "title": "The clinic asks for smaller buttons on its desktops",
+      "request": "small",
+      "body": [
+        "Specialty clinics keep buttons at least 44px tall on every screen, desktops included. Teaching hospitals are a different case. Most of their work is at desktops, and they can go down to 36px on screens marked desktop-only."
+      ],
+      "asideTitle": "How teaching hospitals get 36px",
+      "aside": "If a screen is marked desktop-only by mistake and then used on a tablet, the buttons are too small to tap reliably and nothing warns anyone.",
+      "simulated": "Simulated: no warning shown"
+    },
+    "s9": {
+      "title": "Not every problem came from a request",
+      "body": [
+        "Some hospitals built their own keyboard shortcuts over the shared components. In edge cases those shortcuts broke keyboard focus. We only caught it in QA. Inside the components, keyboard and focus behaviour held steady across hospitals while density changed. Our rules only cover our components, and nothing checks what a hospital builds on top of them."
+      ]
+    },
+    "s10": {
+      "title": "The clinic's theme file goes in for review",
+      "body": [
+        "Everything the clinic was allowed to change ends up in one small theme file. It goes through review like any code change, and the contrast check holds it back until the colour passes. The file below only has what you tried on this page. Lines with a plus are what the clinic got, and struck lines are what it asked for and didn't get, with the reason beside each."
+      ],
+      "file": "themes/specialty-clinic.json",
+      "passed": "Contrast check: passed",
+      "waiting": "Contrast check: waiting for a colour",
+      "empty": "Nothing here yet. Try a request above and its line shows up here.",
+      "limits": "These examples cover theme changes and shared component behaviour. They aren't a full hospital rollout or an accessibility certification. I don't have numbers I trust for any of this, so there are none here."
+    },
+    "rot": {
+      "title": "Detaching and copying",
+      "body": [
+        "Shared libraries decay through detached instances and pasted copies, plus the odd one-off button, and a rules document never stopped it. I made the shared path quicker than each shortcut.",
+        "Create a detached instance or a pasted copy below, then change the master token and watch which instances follow."
+      ],
+      "kinds": {
+        "detach": {
+          "label": "Detach instance",
+          "name": "Detached instance",
+          "why": "Detaching an instance to change one value also drops its contrast token. Every real need is now a prop, contrast mode included, which leaves nothing to detach for.",
+          "short": "Detached: contrast token dropped, fixes no longer arrive."
+        },
+        "copy": {
+          "label": "Paste copy",
+          "name": "Pasted copy",
+          "why": "A pasted copy looks right the day it lands and then stops receiving updates. Inserting from the kit takes less time than rebuilding, which kept the kit the only way in.",
+          "short": "Pasted copy: no longer receives updates."
+        },
+        "invent": {
+          "label": "Add one-off",
+          "name": "One-off button",
+          "why": "Each hospital one-off became another pattern to maintain. New patterns now arrive through contribution and review.",
+          "short": "One-off: another pattern to maintain."
+        },
+        "prop": {
+          "label": "Use contrast prop",
+          "name": "Instance with contrast prop",
+          "why": "Most detaches were really asking for a prop. This instance sets contrast mode through its props and stays bound to the master.",
+          "short": "Contrast prop: still bound to the master."
+        }
+      },
+      "principle": "In these components the accessible version is what an engineer gets by default. Building an inaccessible one takes deliberate extra work."
+    }
+  },
+  "ARCHETYPES": {
+    "medium": {
+      "label": "District",
+      "who": "Community hospital. Staff share tablets between shifts and training time is short."
+    },
+    "large": {
+      "label": "Teaching",
+      "who": "Tertiary hospital. Specialists use the same tools every day, mostly at desktops."
+    },
+    "specialty": {
+      "label": "Specialty",
+      "who": "Specialty clinic with narrow workflows and one manager who configures the system."
+    }
+  },
+  "HOSPITALS": [
+    {
+      "id": "district",
+      "archetype": "medium",
+      "name": "District hospital",
+      "primary": "#3F6B57",
+      "radius": 6,
+      "density": "compact",
+      "layout": "row"
+    },
+    {
+      "id": "teaching",
+      "archetype": "large",
+      "name": "Teaching hospital",
+      "primary": "#3D5A80",
+      "radius": 2,
+      "density": "regular",
+      "layout": "column"
+    },
+    {
+      "id": "specialty",
+      "archetype": "specialty",
+      "name": "Specialty clinic",
+      "primary": "#5C4B4F",
+      "radius": 6,
+      "density": "regular",
+      "layout": "hero"
+    }
+  ],
+  "SWATCHES": [
+    "#3F6B57",
+    "#6E9884",
+    "#3D5A80",
+    "#7A93B5",
+    "#85505F",
+    "#B98593",
+    "#5A54B8"
+  ],
+  "GOVERNANCE": [
+    {
+      "id": "labels",
+      "primitive": "Field",
+      "label": "Hide the label once a field is filled",
+      "medium": {
+        "state": "locked",
+        "record": "field-medium",
+        "why": "Admissions, nursing and billing all fill the same form, and a label that hides once the field is filled turns ambiguous when someone picks up a half-finished form. Labels stay visible.",
+        "short": "Locked: shared forms keep labels visible."
+      },
+      "large": {
+        "state": "flexible",
+        "record": "field-large",
+        "why": "Specialists fill these forms many times a shift and build muscle memory, which is why floating labels are allowed here. Error handling stays locked.",
+        "short": "Flexible: floating labels for repeat users."
+      },
+      "specialty": {
+        "state": "locked",
+        "record": "field-specialty",
+        "why": "Specialty forms use a single field pattern with labels always visible.",
+        "short": "Locked: one field pattern, labels visible."
+      }
+    },
+    {
+      "id": "errors",
+      "primitive": "Field",
+      "label": "Let error messages dismiss themselves",
+      "medium": {
+        "state": "locked",
+        "record": "field-medium",
+        "why": "An error message stays until someone fixes the field. No hospital type can make it auto-dismiss.",
+        "short": "Locked: errors stay until fixed."
+      },
+      "large": {
+        "state": "locked",
+        "record": "field-large",
+        "why": "Errors never auto-dismiss on Teaching screens, dense specialist views included.",
+        "short": "Locked: errors never auto-dismiss."
+      },
+      "specialty": {
+        "state": "locked",
+        "record": "field-specialty",
+        "why": "Errors persist on Specialty screens, as they do in every hospital type.",
+        "short": "Locked: errors persist."
+      }
+    },
+    {
+      "id": "touch",
+      "primitive": "Button and Field",
+      "label": "Use 36px touch targets",
+      "medium": {
+        "state": "locked",
+        "record": "button-medium",
+        "why": "District hospitals run on shared tablets. The 44px minimum touch target is locked.",
+        "short": "Locked: 44px minimum on shared tablets."
+      },
+      "large": {
+        "state": "flag",
+        "record": "field-large",
+        "why": "Teaching hospitals are mostly desktop, so I let the target relax from 44px to 36px on desktop-locked screens. That depends on a runtime environment flag, and a wrong flag fails accessibility without any warning.",
+        "short": "Needs flag: 36px only on desktop-locked screens."
+      },
+      "specialty": {
+        "state": "locked",
+        "record": "button-specialty",
+        "why": "Specialty clinics keep the 44px minimum touch target.",
+        "short": "Locked: 44px minimum."
+      }
+    },
+    {
+      "id": "icons",
+      "primitive": "Button",
+      "label": "Show icon-only buttons",
+      "medium": {
+        "state": "locked",
+        "record": "button-medium",
+        "why": "Turnover is high and training is short. An abstract icon fails when nobody is around to explain it, which is why District buttons keep their text labels.",
+        "short": "Locked: buttons keep text labels."
+      },
+      "large": {
+        "state": "flexible",
+        "record": "button-large",
+        "why": "Specialists scan an interface the way they scan a chart. Icon-only buttons are allowed for recognised actions on role-gated screens only, because the same button fails once it's handed to a new user.",
+        "short": "Flexible: icon-only for recognised actions, role-gated."
+      },
+      "specialty": {
+        "state": "locked",
+        "record": "button-specialty",
+        "why": "Buttons on Specialty screens carry text only.",
+        "short": "Locked: text-only buttons."
+      }
+    },
+    {
+      "id": "density",
+      "primitive": "Button and Table",
+      "label": "Switch density",
+      "medium": {
+        "state": "flexible",
+        "record": "button-medium",
+        "why": "District screens run compact or regular. Density follows the reader, and I left that choice to the hospital.",
+        "short": "Flexible: hospital chooses density."
+      },
+      "large": {
+        "state": "flexible",
+        "record": "table-large",
+        "why": "Teaching staff are repeat users and read compact density without trouble.",
+        "short": "Flexible: compact suits repeat users."
+      },
+      "specialty": {
+        "state": "locked",
+        "record": "button-specialty",
+        "why": "Specialty clinics run one density. The team asked for more flexibility, and I said no because every extra option was one more place for inconsistency to live.",
+        "short": "Locked: one density."
+      }
+    },
+    {
+      "id": "risk",
+      "primitive": "Table",
+      "label": "Hide the risk column",
+      "medium": {
+        "state": "locked",
+        "record": "table-medium",
+        "why": "A misconfigured role could hide critical information. Clinical risk columns are locked and can't be configured away.",
+        "short": "Locked: risk column can't be hidden."
+      },
+      "large": {
+        "state": "locked",
+        "record": "table-large",
+        "why": "Teaching tables have fixed columns, the clinical risk column among them.",
+        "short": "Locked: fixed columns on Teaching tables."
+      },
+      "specialty": {
+        "state": "locked",
+        "record": "table-specialty",
+        "why": "The clinical risk column is locked in every hospital type, Specialty included.",
+        "short": "Locked: risk column in every hospital."
+      }
+    },
+    {
+      "id": "bedcol",
+      "primitive": "Table",
+      "label": "Hide the bed column for this role",
+      "medium": {
+        "state": "flexible",
+        "record": "table-medium",
+        "why": "Each role can trim the table to what it needs without asking IT. Configurable columns kept the system down to one table component.",
+        "short": "Flexible: roles hide columns without IT."
+      },
+      "large": {
+        "state": "locked",
+        "record": "table-large",
+        "why": "Column visibility on Teaching tables is fixed and can't be configured per role.",
+        "short": "Locked: fixed columns."
+      },
+      "specialty": {
+        "state": "flexible",
+        "record": "table-specialty",
+        "why": "On Specialty tables the clinic picks its own short set of columns.",
+        "short": "Flexible: clinic picks its columns."
+      }
+    },
+    {
+      "id": "sort",
+      "primitive": "Table",
+      "label": "Change how the table sorts",
+      "medium": {
+        "state": "locked",
+        "record": "table-medium",
+        "why": "Every District table sorts the same way. Sort behaviour belongs to the shared contract.",
+        "short": "Locked: sort is part of the shared contract."
+      },
+      "large": {
+        "state": "locked",
+        "record": "table-large",
+        "why": "Dense Teaching tables follow the shared sort contract like every other table.",
+        "short": "Locked: shared sort contract."
+      },
+      "specialty": {
+        "state": "locked",
+        "record": "table-specialty",
+        "why": "The team asked for sortable columns and I declined. Short tables don't need sort, and the interaction adds complexity nobody benefits from. A written guideline gets missed under deadline, so I built the rule into the component.",
+        "short": "Locked: no sort on short tables."
+      }
+    }
+  ],
+  "RECORDS": {
+    "button-medium": {
+      "flexible": [
+        "Label position, top-aligned or inline",
+        "Density, compact or regular",
+        "Icons, none or a leading label",
+        "Border, outlined or filled"
+      ],
+      "locked": [
+        "44px minimum touch target",
+        "Focus ring and offset",
+        "Disabled contrast",
+        "Keyboard activation with Enter and Space"
+      ]
+    },
+    "button-large": {
+      "flexible": [
+        "Label position, inline",
+        "Density, compact or extra compact",
+        "Icons, leading or icon-only for recognised actions",
+        "Fill, primary or ghost"
+      ],
+      "locked": [
+        "Accessibility contract",
+        "Keyboard activation with Enter and Space",
+        "Disabled treatment",
+        "Focus ring offset"
+      ]
+    },
+    "button-specialty": {
+      "flexible": [
+        "Label position, top-aligned",
+        "Icons, none"
+      ],
+      "locked": [
+        "44px minimum touch target",
+        "Focus ring and offset",
+        "Disabled contrast",
+        "Keyboard activation with Enter and Space",
+        "Density, regular only"
+      ]
+    },
+    "field-medium": {
+      "flexible": [
+        "Label visibility",
+        "Density, regular or comfortable",
+        "Help text, inline or tooltip"
+      ],
+      "locked": [
+        "Labels always visible",
+        "Errors never auto-dismiss",
+        "44px touch target",
+        "Keyboard focus"
+      ]
+    },
+    "field-large": {
+      "flexible": [
+        "Density, compact or regular",
+        "Labels, floating or always visible",
+        "Help text, hidden, on focus or always"
+      ],
+      "locked": [
+        "Errors never auto-dismiss",
+        "36px touch target on desktop-locked screens only",
+        "Keyboard focus"
+      ]
+    },
+    "field-specialty": {
+      "flexible": [
+        "Help text, inline or hidden"
+      ],
+      "locked": [
+        "Labels always visible",
+        "Density, regular only",
+        "Errors never auto-dismiss",
+        "44px touch target",
+        "Keyboard behaviour"
+      ]
+    },
+    "table-medium": {
+      "flexible": [
+        "Column visibility per role",
+        "Density, regular or comfortable",
+        "Row actions, inline or in a menu"
+      ],
+      "locked": [
+        "Sort behaviour",
+        "Keyboard navigation with arrows and Enter",
+        "Row selection",
+        "Clinical risk columns"
+      ]
+    },
+    "table-large": {
+      "flexible": [
+        "Density, compact",
+        "Horizontal scroll"
+      ],
+      "locked": [
+        "Keyboard navigation",
+        "Row selection",
+        "Sort behaviour",
+        "Clinical risk column",
+        "Column visibility, fixed"
+      ]
+    },
+    "table-specialty": {
+      "flexible": [
+        "Column count, kept short",
+        "Density, regular only"
+      ],
+      "locked": [
+        "Sort, off",
+        "Keyboard navigation",
+        "Row selection",
+        "Column widths"
+      ]
+    }
+  },
+  "PRESETS": [
+    {
+      "id": "compact",
+      "label": "ICU and ER",
+      "who": "High-volume units that need more rows on one screen.",
+      "density": "compact",
+      "textScale": 1,
+      "contrast": "standard",
+      "surface": "light"
+    },
+    {
+      "id": "accessible",
+      "label": "Low-vision ward",
+      "who": "Larger text and stronger contrast take priority.",
+      "density": "comfortable",
+      "textScale": 1.2,
+      "contrast": "high",
+      "surface": "light"
+    },
+    {
+      "id": "night",
+      "label": "Night shift",
+      "who": "Dark surface for dimmed wards. Text turns light through the theme tier.",
+      "density": "regular",
+      "textScale": 1,
+      "contrast": "standard",
+      "surface": "dark"
+    }
+  ],
+  "PATIENTS": [
+    {
+      "bed": "4A",
+      "name": "Malee Srisuk",
+      "risk": "High",
+      "status": "Waiting for a bed"
+    },
+    {
+      "bed": "4B",
+      "name": "Anan Chaiyaporn",
+      "risk": "Low",
+      "status": "Stable"
+    },
+    {
+      "bed": "5",
+      "name": "Pimchanok Rattanakosin",
+      "risk": "Medium",
+      "status": "Observation"
+    }
+  ],
+  "DOCTOR": {
+    "name": "Dr. Somchai Wongkamol",
+    "role": "Cardiology",
+    "where": "On call for ward 3B, internal medicine wing",
+    "action": "Page"
+  },
+  "TEXT": {
+    "LONG_NAME": "Kittiphong Thanawatcharasombat Wongsakulchai",
+    "ALERT": "Critical result for bed 4A"
+  },
+  "SAMPLE_COLOURS": {
+    "drift": [
+      {
+        "pad": "10px 18px",
+        "r": 4,
+        "bg": "#4A7563",
+        "rot": -3,
+        "x": -6,
+        "y": 4,
+        "weight": 600,
+        "label": "Admit patient",
+        "h": 44
+      },
+      {
+        "pad": "6px 12px",
+        "r": 14,
+        "bg": "#6F9A86",
+        "rot": 2,
+        "x": 4,
+        "y": -6,
+        "weight": 500,
+        "label": "Admit",
+        "h": 32
+      },
+      {
+        "pad": "12px 22px",
+        "r": 0,
+        "bg": "#7DA391",
+        "rot": -1.5,
+        "x": 10,
+        "y": 8,
+        "weight": 700,
+        "label": "ADMIT PATIENT",
+        "h": 46
+      },
+      {
+        "pad": "8px 14px",
+        "r": 20,
+        "bg": "#365C4C",
+        "rot": 3.5,
+        "x": -8,
+        "y": -4,
+        "weight": 400,
+        "label": "+ Admit",
+        "h": 36
+      },
+      {
+        "pad": "9px 16px",
+        "r": 8,
+        "bg": "#8BAE9D",
+        "rot": -2.5,
+        "x": 6,
+        "y": 6,
+        "weight": 800,
+        "label": "Admit pt",
+        "h": 38
+      }
+    ],
+    "masters": [
+      "#5A54B8",
+      "#3D5A80",
+      "#3F6B57",
+      "#85505F"
+    ],
+    "invent": "#B0623E",
+    "onboardingStart": "#C9937A"
+  },
+  "XRAY": {
+    "intro": "Pick a console part to trace it through the four tiers.",
+    "elements": [
+      {
+        "id": "button.background",
+        "label": "Admit button fill"
+      },
+      {
+        "id": "button.text",
+        "label": "Admit button text"
+      },
+      {
+        "id": "button.radius",
+        "label": "Admit button corners"
+      },
+      {
+        "id": "button.minHeight",
+        "label": "Admit button height"
+      },
+      {
+        "id": "alert.background",
+        "label": "Critical alert"
+      },
+      {
+        "id": "risk.high",
+        "label": "High risk marker"
+      },
+      {
+        "id": "risk.medium",
+        "label": "Medium risk marker"
+      },
+      {
+        "id": "risk.low",
+        "label": "Low risk marker"
+      },
+      {
+        "id": "field.label",
+        "label": "Field label"
+      },
+      {
+        "id": "field.border",
+        "label": "Field border"
+      },
+      {
+        "id": "table.text",
+        "label": "Patient name"
+      },
+      {
+        "id": "table.rowPad",
+        "label": "Row spacing"
+      },
+      {
+        "id": "table.line",
+        "label": "Row divider"
+      },
+      {
+        "id": "focus.ring",
+        "label": "Focus ring"
+      },
+      {
+        "id": "focus.ringOffset",
+        "label": "Focus ring offset"
+      },
+      {
+        "id": "card.background",
+        "label": "Doctor card fill"
+      },
+      {
+        "id": "card.radius",
+        "label": "Doctor card corners"
+      },
+      {
+        "id": "doctorCard.action",
+        "label": "Doctor card action"
+      },
+      {
+        "id": "header.stripe",
+        "label": "Header stripe"
+      },
+      {
+        "id": "console.surface",
+        "label": "Console surface"
+      }
+    ],
+    "notes": {
+      "status": "Status colours read raw values and skip the theme tier.",
+      "text": "Text goes through the theme tier. The surface decides dark or light.",
+      "literal": "Set in the hospital's theme file. The chain ends here.",
+      "plain": "Each tier reads the tier above it by name.",
+      "skipped": "Skipped: status reads raw values.",
+      "shared": "Same value in every hospital, read from the raw tier.",
+      "skippedShared": "Skipped: same value in every hospital."
+    },
+    "reasons": {
+      "ring": "Locked: ring offset keeps the focus ring clear of rounded corners.",
+      "fork": "Hard-coded fill: theme changes never reach this fork."
+    }
+  },
+  "FIELD": {
+    "intro": "Drag the dot to set the lightness and chroma of brand.primary. Unshaded colour passes 4.5:1 with white text.",
+    "legend": {
+      "pass": "Passes 4.5:1",
+      "large": "Large text only, 3:1 to 4.5:1",
+      "fail": "Fails under 3:1",
+      "gamut": "Outside sRGB"
+    },
+    "keys": "Arrow keys move the dot. Enter applies it.",
+    "others": "Marks on the hue strip are each hospital's brand hue. A hospital appears on the chart only when it shares the current hue.",
+    "refused": "Refused: brand.primary needs 4.5:1 against white text."
+  },
+  "DRIFT": {
+    "caption": "Forks against the shared Button, one property per row.",
+    "legend": "H or L beside a value means above or below the reference, and ≠ means a different label. Contrast is flagged only when it fails."
+  },
+  "MARKS": {
+    "s1": "Three kinds of hospital",
+    "s2": "Yes, a copy · the old answer",
+    "s2after": "No · one shared button",
+    "s3": "Where the line sits",
+    "s4": "Yes · in the theme file",
+    "s5": "No · same in every hospital",
+    "s6": "Yes · a card for one doctor",
+    "s7": "No · built into the table",
+    "s8": "No · 44px stays",
+    "s9": "Not a request",
+    "s10": "In review"
+  },
+  "LINES": {
+    "copy": {
+      "sign": " ",
+      "key": "extends",
+      "value": "shared components (no copies)"
+    },
+    "colour": {
+      "sign": "+",
+      "key": "brand.primary",
+      "value": "{applied}",
+      "note": "from {sent}, {r}:1"
+    },
+    "alert": {
+      "sign": "−",
+      "key": "alert.background",
+      "value": "",
+      "note": "locked: same in every hospital"
+    },
+    "doctorYes": {
+      "sign": "+",
+      "key": "doctorCard",
+      "value": "HeroDoctorCard",
+      "note": "one doctor per screen"
+    },
+    "doctorNo": {
+      "sign": "−",
+      "key": "doctorCard.layout",
+      "value": "{choice}",
+      "note": "specialty screens use HeroDoctorCard"
+    },
+    "sort": {
+      "sign": "−",
+      "key": "table.sort",
+      "value": "on",
+      "note": "locked: short tables don't sort"
+    },
+    "density": {
+      "sign": "−",
+      "key": "brand.density",
+      "value": "compact",
+      "note": "locked: one density"
+    },
+    "small": {
+      "sign": "−",
+      "key": "button.minHeight",
+      "value": "36px",
+      "note": "locked: 44px on every specialty screen"
+    }
+  }
+}

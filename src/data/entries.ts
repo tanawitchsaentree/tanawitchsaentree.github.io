@@ -26,7 +26,7 @@ export interface Entry {
   description: string
   thumb?: { src: string; contain?: boolean }
   /** What the first action does. Entries that only link out have no primary action. */
-  primary?: { type: 'case'; href: string; protected: boolean } | { type: 'modal'; key: ModalKey; label: string }
+  primary?: { type: 'case'; href: string } | { type: 'modal'; key: ModalKey; label: string }
   external?: { href: string; label: string }
 }
 
@@ -34,7 +34,7 @@ const work = (id: string, extra: Category[] = []): Entry => {
   const w = SELECTED_WORK.find(x => x.href === `/projects/${id}/`)!
   return {
     id, categories: ['work', ...extra], kind: w.company, meta: w.period, title: w.title, role: w.role,
-    description: w.description, primary: { type: 'case', href: w.href, protected: w.protected },
+    description: w.description, primary: { type: 'case', href: w.href },
   }
 }
 
@@ -81,7 +81,7 @@ export const ENTRIES: Entry[] = [
   work('stellareat'),
   {
     id: 'tims', categories: ['personal'], kind: tims.company, meta: tims.period, title: tims.title, role: tims.role,
-    description: tims.description, primary: { type: 'case', href: tims.href, protected: false },
+    description: tims.description, primary: { type: 'case', href: tims.href },
   },
   {
     id: 'human-tone', categories: ['personal', 'skill'], kind: 'Claude Code skill', title: humanTone.name,

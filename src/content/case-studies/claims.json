@@ -1,0 +1,130 @@
+{
+  "CLAIM": {
+    "id": "CLM-2026-0418",
+    "line": "Marine cargo",
+    "client": "Northwind Logistics",
+    "lossDay": 12,
+    "policy": "Marine Cargo · NW-4471",
+    "expiredPolicy": "Cargo · NW-2210",
+    "cause": "Water damage, coffee cargo",
+    "location": "Hamburg port, berth 7",
+    "handlerReason": "A clause may exclude water damage before unloading.",
+    "payee": "marine surveyor"
+  },
+  "EDGE_CASES": [
+    {
+      "id": "expired",
+      "label": "Policy expired before the loss date"
+    },
+    {
+      "id": "noCause",
+      "label": "No cause of loss"
+    },
+    {
+      "id": "location",
+      "label": "Location roughly matches"
+    }
+  ],
+  "SECTIONS": [
+    "Cargo",
+    "Business interruption"
+  ],
+  "HERO": {
+    "eyebrow": "Allianz Technology · Senior Designer · 2026–present",
+    "title": "The life of a cargo claim",
+    "intro": "A container of coffee arrives in Hamburg soaked through. Over the next few weeks, a handler and an approver will make dozens of decisions about it. I designed the screens they decide in. Then I built a clickable version so the team could try each decision before engineering started.",
+    "stats": [
+      "505 commits",
+      "about 150 components",
+      "167 tickets",
+      "May to October 2026"
+    ]
+  },
+  "MOMENTS": [
+    {
+      "title": "The call comes in before the paperwork",
+      "body": "Northwind phones it in the same morning. Nobody has the policy number yet, so the claim starts as a skeleton with only a date and a place. Later the handler links the right policy. If something doesn't fit, the screen says what and leaves the choice with them.",
+      "how": [
+        "11 edge-case flows are documented.",
+        "Missing cause of loss defaults to \"Other Event\" with a visible note.",
+        "The typed location is kept, and changing it is opt-in.",
+        "Nothing opens by itself.",
+        "Linking is a 4-step sheet covering policy, claim details, coverages and reserves."
+      ]
+    },
+    {
+      "title": "One claim, several losses",
+      "body": "The beans are ruined and the warehouse lost a week of trade. Those are covered differently, so the claim splits into sections. Each one carries its own damages and its own rules for closing.",
+      "how": [
+        "Each section holds its own entities and damages.",
+        "Closing rules are evaluated per section."
+      ]
+    },
+    {
+      "title": "Someone typed the wrong date",
+      "body": "The loss date was off by a week. Easy to fix. But the sections were built on the old date, so before saving, the handler sees the old and new values side by side. Any section that leaned on the old one gets flagged for a second look.",
+      "how": [
+        "Confirm dialog with Field / Original / Updated rows.",
+        "Affected sections get a \"Review needed\" mark, and a second prompt explains why."
+      ]
+    },
+    {
+      "title": "Paying out",
+      "body": "The handler wants to pay 120,000. The reserve set aside for this loss holds 80,000. The payment screen stops at that line and offers to raise the reserve first. It also won't pay anyone whose details aren't registered yet.",
+      "how": [
+        "A payment over the remaining reserve is blocked and links to \"Go to reserves\".",
+        "A payee without a registered name code can't be paid.",
+        "Sending a confirmation needs a chosen email or postal address.",
+        "The payment sheet has sections for payee, method, amounts, VAT and co-insurance."
+      ]
+    },
+    {
+      "title": "A rejection that waits",
+      "body": "Then the handler finds a clause that may exclude the whole thing. They can propose a rejection, but someone else has to agree. My first version gave the claim a new status while it waited. The team pushed back. A claim only has two, open and closed, and a third would mean a new set of rules for moving between them. So the rejection became a request pinned to the claim, and the claim stays open while it waits.",
+      "how": [
+        "A pilot status was built first (Aug 2026) and removed after the team decision (1 Oct 2026).",
+        "The approval request records the type and the reason, plus who raised it and when.",
+        "If approved, the claim closes with the reason \"Rejection\".",
+        "Reopening uses the existing reopen flow."
+      ]
+    },
+    {
+      "title": "The other side of the desk",
+      "body": "The approver works from a queue. Early on, a row said \"claim rejection\" and nothing about why. Now the handler's reason sits right under it, each tab shows how many requests are waiting, and approving or declining both ask for a reason that goes into the claim's history.",
+      "how": [
+        "A waiting count on each tab.",
+        "The reason sits under the request type, without an extra column.",
+        "A required reason on both Approve and Decline, written to the activity log."
+      ]
+    },
+    {
+      "title": "Closing",
+      "body": "Closing is three checks in a row. First anything still blocking, then what the system needs, then a reason in the handler's own words. The stamp only changes at the end.",
+      "how": [
+        "Closing runs three gates in order, starting with blockers, then the system checklist, then a reason.",
+        "In the handoff, developers copy the order of these steps and build their own component for it."
+      ]
+    }
+  ],
+  "CLOSE_STEPS": [
+    "Clear blockers",
+    "Run the system checklist",
+    "Give a closing reason"
+  ],
+  "COPY": {
+    "dateSection": "Business interruption",
+    "credit": "I designed and specified the prototype and directed an AI coding assistant to build it. The visual designs and written specs came from the product team."
+  },
+  "SECTION_DETAILS": [
+    {
+      "name": "Cargo",
+      "what": "Coffee beans, one container",
+      "damage": "Soaked in transit"
+    },
+    {
+      "name": "Business interruption",
+      "what": "Warehouse",
+      "damage": "A week of lost trade"
+    }
+  ]
+}

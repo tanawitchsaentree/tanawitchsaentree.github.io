@@ -6,7 +6,7 @@ import type { KeyboardEvent } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from 'framer-motion'
-import { ArrowRight, ArrowUpRight, LockKeyhole } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { ENTRIES, TABS, type Entry, type ModalKey } from '@/data/entries'
 import styles from './WorkTabs.module.css'
 
@@ -23,9 +23,6 @@ function Actions({ entry, onOpen }: { entry: Entry; onOpen: (key: ModalKey) => v
           View case study <ArrowRight size={14} aria-hidden="true" />
           <span className="sr-only">: {entry.title}</span>
         </Link>
-      )}
-      {primary?.type === 'case' && primary.protected && (
-        <span className={styles.lock}><LockKeyhole size={11} aria-hidden="true" /> Password required</span>
       )}
       {primary?.type === 'modal' && (
         <button type="button" className={styles.action} onClick={() => onOpen(primary.key)} aria-haspopup="dialog">

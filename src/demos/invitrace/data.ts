@@ -1,6 +1,5 @@
 // Invitrace case study. All story text, rules and sample data live in
-// content/gated/invitrace.json and ship only as an encrypted blob (scripts/encrypt-gated.mjs).
-// These exports are live views that read the decrypted blob at render time (src/lib/gated.ts).
+// src/content/case-studies/invitrace.json, read through src/lib/gated.ts.
 import { gated } from '@/lib/gated'
 import type { Fork } from './drift'
 import type { ArchetypeId, GovRule, Hospital, Preset } from './model'

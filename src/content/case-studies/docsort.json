@@ -1,0 +1,487 @@
+{
+ "HERO": {
+  "eyebrow": "Allianz Technology · Senior Designer · Sole designer · Designed and prototyped",
+  "title": "Property assessor reports kept getting filed under Vehicle",
+  "intro": "At an insurer, an AI reads each incoming document and gives it a category and a document type. It picks from a filing tree that each team keeps for its own line of business. I designed the screens where someone builds that tree and tests the AI against it. I also designed the desk where someone else opens the sorted post. This page follows one invented week, with Ana on the setup side and Theo at the desk.",
+  "caption": "Pick a day to jump to it.",
+  "spreadLabel": "The week at a glance"
+ },
+ "SPREAD": {
+  "ana": {
+   "label": "Ana · setup",
+   "lines": [
+    "Assessor report only under Vehicle",
+    "Adds Assessor report under Property",
+    "Rewords the prompt after a wrong answer",
+    "Version 6 approved and deployed",
+    ""
+   ]
+  },
+  "theo": {
+   "label": "Theo · desk",
+   "lines": [
+    "Refiles a site visit under Property",
+    "Another one filed under Vehicle",
+    "Another one filed under Vehicle",
+    "Another one filed under Vehicle",
+    "A site visit arrives filed under Property"
+   ]
+  },
+  "trayFrom": "Vehicle",
+  "trayTo": "Property"
+ },
+ "DAYS": {
+  "mon": {
+   "heading": "A property report turns up filed under Vehicle",
+   "entries": [
+    {
+     "who": "Ana",
+     "time": "09:00",
+     "paras": [
+      "Ana keeps the filing tree for one line of business. Her name is the one in the Trained by column. The tree has three categories. Assessor report appears once, as a document type under Vehicle, and Property has no document types at all. When a property assessor writes about a flooded kitchen, the only assessor report the AI can choose is the one under Vehicle."
+     ]
+    },
+    {
+     "who": "Theo",
+     "time": "09:12",
+     "paras": [
+      "Theo works in the Completion role. His list shows each document's category and the queue it sits in. On a site visit report's row, the category reads Vehicle. He opens it and reads about a kitchen floor, with no car anywhere in it. He changes the Document type field so the report is filed under Property, then sends it to the Property desk queue. Another one turns up on Tuesday, and they keep coming."
+     ]
+    }
+   ],
+   "how": [
+    "The Completion list shows IngestionDate, Sender, Status, Document Category and Queue.",
+    "A document is Available, or Locked while someone has it open.",
+    "In the designs, Send to queue and the Document type field are separate controls."
+   ]
+  },
+  "tue": {
+   "heading": "Ana adds Assessor report under Property",
+   "entries": [
+    {
+     "who": "Ana",
+     "time": "10:40",
+     "paras": [
+      "Ana opens her tree and adds Assessor report as a document type under Property. The name can sit under two categories, because the tool only blocks a repeat inside the same category. She doesn't touch the list of categories in the prompt. The prompt holds a placeholder, and the tool writes the current tree into that spot every time it runs. Preview shows the new line straight away."
+     ]
+    },
+    {
+     "who": "Ana",
+     "time": "11:15",
+     "paras": [
+      "While cleaning up the wording, Ana deletes the placeholder by mistake. The badge above the prompt changes to Placeholder missing. Test stays blocked until the placeholder is back. Without it, the AI would get the instructions with no categories to pick from."
+     ]
+    }
+   ],
+   "how": [
+    "The template must contain {{CLASSIFICATION_HIERARCHY}}. The tool replaces it with the current tree whenever the prompt runs.",
+    "The badge reads “✓ Placeholder detected” or “✗ Placeholder missing”. Testing is blocked while it's missing.",
+    "Preview shows the filled-in prompt. Reset to Default restores the starting template.",
+    "A document type name can repeat across categories but not within one."
+   ]
+  },
+  "wed": {
+   "heading": "The first test still files the site visit under Vehicle",
+   "entries": [
+    {
+     "who": "Ana",
+     "time": "09:30",
+     "paras": [
+      "Ana uploads four sample letters, including Monday's site visit. For each one she picks the category and document type it should get. Then she runs the test. Each answer arrives with a confidence score and a line of reasoning under it. The site visit comes back as Vehicle, Assessor report, with a confidence of 91. Nothing on screen marks it as wrong. Ana sees the mistake because her expected answer is printed in the same card.",
+      "Tagging every sample first is slower than just reading the answers."
+     ]
+    },
+    {
+     "who": "Ana",
+     "time": "10:10",
+     "paras": [
+      "She adds one line to the prompt. It says an assessor report about a building or its contents belongs under Property. On the second run the site visit comes back as Property, Assessor report, matching what she expected. She saves the prompt as a draft."
+     ],
+     "aside": {
+      "label": "Another way to sort",
+      "text": "The tool has a second sorting mode. With document types switched off, a first prompt picks only the category, and each category then gets a prompt of its own. Ana keeps the one-prompt mode this week."
+     }
+    }
+   ],
+   "how": [
+    "Upload accepts JPG, PNG or PDF, less than 5MB, up to 5 files.",
+    "Each document can carry an Expected Class from the current tree. Status shows Pending, Classified or Failed.",
+    "Each answer has a category, a confidence score between 0 and 100 and a line of reasoning.",
+    "The tool prints the expected class and the answer in the same card. The person compares them."
+   ],
+   "howAside": {
+    "label": "Another way to sort",
+    "text": "With document types off, a first prompt picks the category, then each category has its own prompt. The mode is saved per line of business."
+   }
+  },
+  "thu": {
+   "heading": "The reworded prompt waits for approval",
+   "entries": [
+    {
+     "who": "Ana",
+     "time": "11:20",
+     "paras": [
+      "Ana's draft joins the prompt's version list as version 6. Version 5 is live, and the tool won't let anyone delete the live version. Deploy stays greyed out until version 6 is approved. With a plain publish button her fix could have gone out on Wednesday. Here it goes out on Thursday, after the approval."
+     ]
+    }
+   ],
+   "how": [
+    "Versions show as Draft, Approved or Deployed. Deploy stays off until the version is approved.",
+    "The live version can't be deleted, and nor can the last one left. Copying a version makes a new draft.",
+    "The version list belongs to a prompt. A new category added through Add class gets a v1 Draft in its own list, as the dialog says."
+   ]
+  },
+  "fri": {
+   "heading": "The site visit arrives filed under Property",
+   "entries": [
+    {
+     "who": "Theo",
+     "time": "08:47",
+     "paras": [
+      "On Friday the next site visit report comes in. Its row in Theo's list already reads Property. He opens it, and it locks to him while he works. Some table cells are marked in red. He fills in what the letter tells him and marks it complete.",
+      "The lock stops two people working on the same letter. If someone leaves one open and walks away, nobody else can pick it up."
+     ]
+    }
+   ],
+   "how": [
+    "An opened document shows an outline of its pages grouped by kind, a page viewer and the extracted fields.",
+    "Some table cells are marked in red.",
+    "From the detail view the document is sent to a queue or marked complete."
+   ]
+  }
+ },
+ "NOTES": {
+  "n02": {
+   "heading": "Each team's post needed its own filing tree",
+   "paras": [
+    "The requirements I started from describe several filing systems. Claims and contract changes both use a category with document types under it, but the names differ. Complaints has a single level that every line of business shares. No one list fits all of them, so each team keeps its own tree in the tool."
+   ],
+   "how": [
+    "The tree has three levels. L0 is the line of business, L1 the category, L2 the document type.",
+    "Every tree needs at least one category. Document types are optional.",
+    "The last category can't be deleted. Deleting a category says how many document types go with it.",
+    "Complaints use one level that every line of business can share."
+   ]
+  },
+  "n04": {
+   "heading": "Renaming a category is the one change that doesn't ask first",
+   "paras": [
+    "Creating a category opens a second dialog asking Ana to confirm. Deleting one warns that it can't be undone, and the button is red. Renaming has no confirmation, only a check that the name isn't already taken. That might deserve a confirmation too. The AI reads the new name from its next run."
+   ]
+  },
+  "n08": {
+   "heading": "What this design is betting on",
+   "paras": [
+    "I don't have numbers for this work. The bet is that the person who keeps a team's tree can fix a sorting problem and test the fix before it goes live. Theo's Monday letter is that kind of problem. Ana mostly edits the tree, which she knows well. Preview shows her the prompt the AI will get. When Theo corrects a misfiled letter, nothing in this design tells Ana."
+   ]
+  }
+ },
+ "LETTER": {
+  "file": "site-visit.pdf",
+  "lines": [
+   "Site visit, 2 Rose Court.",
+   "Water damage to kitchen floor and units."
+  ]
+ },
+ "TREE": {
+  "l0": "Claims",
+  "l1": [
+   {
+    "name": "Vehicle",
+    "l2": [
+     "Repair invoice",
+     "Assessor report"
+    ]
+   },
+   {
+    "name": "Liability",
+    "l2": [
+     "Medical certificate"
+    ]
+   },
+   {
+    "name": "Property",
+    "l2": []
+   }
+  ]
+ },
+ "TOGGLE_CARD": {
+  "l1": "Property",
+  "l2": "Assessor report"
+ },
+ "TREES": [
+  {
+   "l0": "Claims",
+   "l1": [
+    {
+     "name": "Vehicle",
+     "l2": [
+      "Repair invoice",
+      "Assessor report"
+     ]
+    },
+    {
+     "name": "Liability",
+     "l2": [
+      "Medical certificate"
+     ]
+    },
+    {
+     "name": "Property",
+     "l2": []
+    }
+   ]
+  },
+  {
+   "l0": "Contract changes",
+   "l1": [
+    {
+     "name": "Household",
+     "l2": [
+      "Cancellation",
+      "Payment terms change"
+     ]
+    }
+   ]
+  },
+  {
+   "l0": "Complaints",
+   "l1": [
+    {
+     "name": "Standard",
+     "l2": []
+    },
+    {
+     "name": "Escalated",
+     "l2": []
+    }
+   ],
+   "note": "One level, shared by every line of business"
+  }
+ ],
+ "PROMPT_HEAD": [
+  "You sort incoming insurance post.",
+  "Pick one class for each document.",
+  "Give a confidence and a reason."
+ ],
+ "SAMPLES": [
+  {
+   "id": "s1",
+   "file": "garage-bill.pdf",
+   "expected": "Vehicle > Repair invoice",
+   "result": {
+    "leaf": "Vehicle > Repair invoice",
+    "confidence": 94,
+    "reasoning": "Itemised parts and labour from a garage."
+   }
+  },
+  {
+   "id": "s2",
+   "file": "doctors-note.pdf",
+   "expected": "Liability > Medical certificate",
+   "result": {
+    "leaf": "Liability > Medical certificate",
+    "confidence": 88,
+    "reasoning": "Signed by a doctor and names an injury."
+   }
+  },
+  {
+   "id": "s3",
+   "file": "site-visit.pdf",
+   "expected": "Property > Assessor report",
+   "result": {
+    "leaf": "Vehicle > Assessor report",
+    "confidence": 91,
+    "reasoning": "Assessor letterhead and a site visit report."
+   },
+   "rerun": {
+    "leaf": "Property > Assessor report",
+    "confidence": 89,
+    "reasoning": "Assessor visit to a flat after water damage."
+   }
+  },
+  {
+   "id": "s4",
+   "file": "scan-0042.pdf",
+   "expected": "Vehicle > Repair invoice",
+   "result": {
+    "failed": "The page could not be read."
+   }
+  }
+ ],
+ "QUEUES": [
+  "Vehicle desk",
+  "Property desk",
+  "General"
+ ],
+ "ROWS": [
+  {
+   "id": "r1",
+   "date": "Fri 08:47",
+   "sender": "Assessor office",
+   "status": "Available",
+   "category": "Property",
+   "queue": "Property desk",
+   "signature": true
+  },
+  {
+   "id": "r2",
+   "date": "Fri 08:52",
+   "sender": "Garage",
+   "status": "Available",
+   "category": "Vehicle",
+   "queue": "Vehicle desk"
+  },
+  {
+   "id": "r3",
+   "date": "Fri 09:03",
+   "sender": "Clinic",
+   "status": "Locked",
+   "category": "Liability",
+   "queue": "General"
+  }
+ ],
+ "DETAIL": {
+  "outline": {
+   "group": "Assessor report (1)",
+   "doc": "Document 1",
+   "pages": [
+    "Page 1",
+    "Page 2"
+   ]
+  },
+  "lobs": [
+   "Claims",
+   "Contract changes",
+   "Complaints"
+  ],
+  "datapoints": [
+   {
+    "field": "Policy number",
+    "value": "PN-55-0193"
+   },
+   {
+    "field": "Visit date",
+    "value": "3 Mar 2026"
+   }
+  ],
+  "columns": [
+   "Item",
+   "Location",
+   "Amount"
+  ],
+  "rows": [
+   [
+    "Kitchen units",
+    "Kitchen",
+    "EUR 2,180"
+   ],
+   [
+    "Floor tiles",
+    "",
+    ""
+   ]
+  ],
+  "redCells": [
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    2
+   ]
+  ]
+ },
+ "DIALOGS": {
+  "create": {
+   "title": "Add class",
+   "sub": "Create a new category under this line of business",
+   "banner": "This category has no prompt version for this document type yet. A new v1 Draft will be created automatically.",
+   "confirm": "This will create a new class under this line of business.",
+   "ask": "Do you want to proceed ?",
+   "toast": "Category created successfully.",
+   "field": "Home contents"
+  },
+  "delete": {
+   "confirm": "Are you sure you want to delete this item? This action cannot be undone.",
+   "ask": "Do you want to proceed ?",
+   "toast": "Category was deleted"
+  },
+  "rename": {
+   "title": "Edit class name",
+   "sub": "Update the name of this class to keep your categories organized.",
+   "error": "This class already exists. Please choose another one.",
+   "toast": "Class name updated successfully.",
+   "from": "Property",
+   "value": "Liability"
+  },
+  "addType": {
+   "title": "Add Document Type (L2)",
+   "error": "A document type with this name already exists in this category"
+  }
+ },
+ "COSTS": {
+  "create": "One more click each time a category is added.",
+  "delete": "Retiring several categories takes several confirmations.",
+  "rename": "The AI reads the new name on its next run, with no pause."
+ },
+ "UI": {
+  "monType": "Document type set to {leaf}. The label now reads {cat}.",
+  "monSent": "Sent to {queue}. The category reads {cat}.",
+  "tueAdded": "Added {l2} under {l1}. Preview shows its line in the prompt.",
+  "tuePreviewOn": "Showing Preview, the prompt the AI gets.",
+  "tuePreviewOff": "Showing the template with the placeholder.",
+  "tueDeleted": "Placeholder deleted. The badge reads Placeholder missing.",
+  "tueRestored": "Placeholder restored. The badge reads Placeholder detected.",
+  "tueTestOk": "The test runs on Wednesday's page.",
+  "blocked": "Testing is blocked until the placeholder is back.",
+  "wedRunning": "Running the test. Every sample is pending.",
+  "wedCard": "{file}. Expected {expected}. AI answer {answer}, confidence {confidence}.",
+  "wedFailed": "{file}. Failed. {reason}",
+  "wedLine": "Added a line to the prompt.",
+  "wedSaved": "Saved as a draft. It becomes version 6 on Thursday's page.",
+  "wedMissing": "Assessor report isn't under Property yet.",
+  "wedTypesOn": "Document types on. One prompt picks the category and the document type.",
+  "wedTypesOff": "Document types off. Stage 1 picks the category, and each category has a prompt of its own.",
+  "wedCost": "One prompt per category to keep current.",
+  "thuLive": "The live version can't be deleted.",
+  "thuDeployOff": "Deploy stays off until this version is approved.",
+  "thuApproved": "Version {n} approved. Deploy is available.",
+  "thuDeployed": "Version {n} deployed and active. Version {prev} is back to Approved.",
+  "thuDeleted": "Version {n} deleted.",
+  "friLocked": "Open on another person's screen.",
+  "friOpened": "Opened the site visit report. It is locked to you.",
+  "friFilled": "Cell filled. Its red mark is gone.",
+  "friDone": "Marked complete. The row reads Done.",
+  "friSent": "Sent to {queue}.",
+  "reset": "Demo reset.",
+  "friOnly": "Only the site visit report opens in this demo."
+ },
+ "ECHO": [
+  {
+   "labels": [
+    "Vehicle"
+   ],
+   "caption": "Mon 09:12"
+  },
+  {
+   "labels": [
+    "Vehicle",
+    "Property"
+   ],
+   "caption": "Wed 09:30"
+  },
+  {
+   "labels": [
+    "Property"
+   ],
+   "caption": "Fri 08:47",
+   "accent": true
+  }
+ ],
+ "TEXT": {
+  "addedLine": "An assessor report about a building or its contents belongs under Property.",
+  "credit": "I designed both sides and built the clickable prototype of the setup screens. The desk screens come from my designs. Ana, Theo, the week and every sample letter are invented."
+ }
+}

@@ -3,9 +3,9 @@
   "private": true,
   "version": "2.0.0",
   "scripts": {
-    "dev": "node scripts/encrypt-gated.mjs && next dev",
+    "dev": "next dev",
     "dev:clean": "kill $(lsof -ti:3000) 2>/dev/null; rm -rf .next && next dev",
-    "build": "node scripts/encrypt-gated.mjs && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit"

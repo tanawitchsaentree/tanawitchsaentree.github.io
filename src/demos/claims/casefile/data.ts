@@ -1,6 +1,5 @@
-// Case file, Act 1. All story text and sample data live in content/gated/claims.json and
-// ship only as an encrypted blob (scripts/encrypt-gated.mjs). These exports are live views
-// that read the decrypted blob at render time; see src/lib/gated.ts.
+// Case file, Act 1. All story text and sample data live in
+// src/content/case-studies/claims.json, read through src/lib/gated.ts.
 import { gated } from '@/lib/gated'
 
 const G = 'claims'

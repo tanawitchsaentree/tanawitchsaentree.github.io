@@ -54,7 +54,6 @@
 .actionQuiet { color: var(--fg-muted); }
 @media (hover: hover) { .action:hover, .actionQuiet:hover { color: var(--accent-text); } }
 .action:focus-visible, .actionQuiet:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; color: var(--accent-text); }
-.lock { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--fg-subtle); font-size: var(--type-xs); }
 
 @media (max-width: 480px) {
   .tabs { gap: var(--space-4); }

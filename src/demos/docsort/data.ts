@@ -1,6 +1,5 @@
-// Allianz case study. All story text and sample data live in content/gated/docsort.json and
-// ship only as an encrypted blob (scripts/encrypt-gated.mjs). These exports are live views
-// that read the decrypted blob at render time; see src/lib/gated.ts.
+// Allianz case study. All story text and sample data live in
+// src/content/case-studies/docsort.json, read through src/lib/gated.ts.
 import { gated } from '@/lib/gated'
 
 const G = 'docsort'

@@ -1,28 +1,20 @@
-// Gated case-study content. Story text and sample data are not in the JS bundle: they ship
-// as AES-GCM blobs (scripts/encrypt-gated.mjs) and are decrypted in the browser after the
-// password is entered. The gate stores the decrypted object here before it renders the page.
+// Case-study content for Allianz (docsort), Claims and Invitrace. It used to ship encrypted behind
+// a shared password; since 2026-11-06 the case studies are public and the JSON is bundled
+// directly from src/content/case-studies. The demo data modules still read it through gated()
+// so their exports stay unchanged.
+import claims from '@/content/case-studies/claims.json'
+import docsort from '@/content/case-studies/docsort.json'
+import invitrace from '@/content/case-studies/invitrace.json'
 
-const store: Record<string, Record<string, unknown> | undefined> = {}
-
-export function setGated(name: string, data: Record<string, unknown>) {
-  store[name] = data
+const store: Record<string, Record<string, unknown>> = {
+  claims: claims as Record<string, unknown>,
+  docsort: docsort as Record<string, unknown>,
+  invitrace: invitrace as Record<string, unknown>,
 }
-export const hasGated = (name: string) => store[name] !== undefined
 
-/**
- * A live view of one key of a gated blob. Reads happen at render time (after unlock), so
- * modules can export these at the top level like ordinary constants.
- */
+/** One key of a case-study content file, typed by the caller. */
 export function gated<T extends object>(name: string, key: string): T {
-  const read = () => {
-    const d = store[name]
-    if (!d) throw new Error(`Gated content "${name}" is read before it was unlocked`)
-    return d[key] as object
-  }
-  return new Proxy(Object.create(null), {
-    get(_, p) { const v = read() as Record<PropertyKey, unknown>; const r = v[p]; return typeof r === 'function' ? (r as (...a: unknown[]) => unknown).bind(v) : r },
-    has(_, p) { return p in read() },
-    ownKeys() { return Reflect.ownKeys(read()) },
-    getOwnPropertyDescriptor(_, p) { const d = Reflect.getOwnPropertyDescriptor(read(), p); return d && { ...d, configurable: true } },
-  }) as T
+  const d = store[name]
+  if (!d || !(key in d)) throw new Error(`Case-study content "${name}.${key}" is missing`)
+  return d[key] as T
 }

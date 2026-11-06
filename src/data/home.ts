@@ -20,7 +20,6 @@ export const SELECTED_WORK = [
     period: '2025–present',
     description: "One invented week at an insurer, following the person who sets up the AI's filing tree and the person who opens the sorted post.",
     href: '/projects/allianz/',
-    protected: true,
   },
   {
     company: 'Allianz Technology',
@@ -29,7 +28,6 @@ export const SELECTED_WORK = [
     period: '2026–present',
     description: 'Following one damaged shipment through a claims system I designed and prototyped, from the first phone call to closing.',
     href: '/projects/claims/',
-    protected: true,
   },
   {
     company: 'Invitrace Health',
@@ -38,7 +36,6 @@ export const SELECTED_WORK = [
     period: '2024–2025',
     description: 'A specialty clinic sends a list of requests, and each answer shows what a hospital can change in the Invitrace design system and what stays the same everywhere.',
     href: '/projects/invitrace/',
-    protected: true,
   },
   {
     company: 'Vitae',
@@ -47,7 +44,6 @@ export const SELECTED_WORK = [
     period: '2025',
     description: "We dropped a health score that read like a diagnosis. I redesigned it to compare each day with the person's own last two weeks.",
     href: '/projects/vitae/',
-    protected: false,
   },
   {
     company: 'Robowealth · LH Bank',
@@ -56,7 +52,6 @@ export const SELECTED_WORK = [
     period: '2020',
     description: "The money leaves the account today, but the fund is priced after the cutoff. I designed LH Bank's purchase flow so every screen says when the order really happens.",
     href: '/projects/profita/',
-    protected: false,
   },
   {
     company: 'Stellareat',
@@ -65,7 +60,6 @@ export const SELECTED_WORK = [
     period: '2024',
     description: 'A recipe app that starts from what\'s left in the fridge. One tester\'s search for "random fridge things" set the direction.',
     href: '/projects/stellareat/',
-    protected: false,
   },
   {
     company: 'Tim Hortons',
@@ -74,7 +68,6 @@ export const SELECTED_WORK = [
     period: 'Personal concept',
     description: 'After two years behind the counter, I built a POS around the orders I took most and the changes people made at the last second.',
     href: '/projects/tims/',
-    protected: false,
   },
 ] as const
 
