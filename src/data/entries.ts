@@ -1,9 +1,10 @@
 import { BREWCODEX_PROJECT, BRICKFORGE_PROJECT, PERSONAL_PROJECT, SELECTED_WORK, TOOLS } from '@/data/home'
 import { PANE_PROJECT } from '@/components/home/paneData'
 import { KILN_PROJECT } from '@/components/home/kilnData'
+import { DIAL_PROJECT } from '@/components/home/dialData'
 
 export type Category = 'work' | 'personal' | 'skill' | 'design-system'
-export type ModalKey = 'manabi' | 'brewcodex' | 'brickforge' | 'pane' | 'kiln'
+export type ModalKey = 'manabi' | 'brewcodex' | 'brickforge' | 'pane' | 'dial' | 'kiln'
 
 export const TABS: { id: 'all' | Category; label: string }[] = [
   { id: 'all', label: 'All' },
@@ -51,6 +52,12 @@ export const ENTRIES: Entry[] = [
     description: PANE_PROJECT.description, thumb: { src: '/images/pane-thumb.webp' },
     primary: { type: 'modal', key: 'pane', label: PANE_PROJECT.details },
     external: { href: PANE_PROJECT.docsUrl, label: 'Pane docs' },
+  },
+  {
+    id: 'dial', categories: ['personal', 'design-system'], kind: DIAL_PROJECT.tag, title: DIAL_PROJECT.title,
+    description: DIAL_PROJECT.description, thumb: { src: '/images/dial-thumb.webp' },
+    primary: { type: 'modal', key: 'dial', label: DIAL_PROJECT.details },
+    external: { href: DIAL_PROJECT.repoUrl, label: DIAL_PROJECT.linkLabel },
   },
   {
     id: 'kiln', categories: ['personal', 'skill', 'design-system'], kind: KILN_PROJECT.tag, title: KILN_PROJECT.title,

@@ -8,6 +8,7 @@ import { BrewcodexModal } from '@/components/home/BrewcodexModal'
 import { BrickForgeModal } from '@/components/home/BrickForgeModal'
 import { KilnModal } from '@/components/home/KilnModal'
 import { PaneModal } from '@/components/home/PaneModal'
+import { DialModal } from '@/components/home/DialModal'
 import { WorkTabs } from '@/components/home/WorkTabs'
 import { PROFILE } from '@/data/home'
 import type { ModalKey } from '@/data/entries'
@@ -69,6 +70,7 @@ export function HomeClient() {
       <BrewcodexModal open={openProject === 'brewcodex'} onClose={close} />
       <BrickForgeModal open={openProject === 'brickforge'} onClose={close} />
       <PaneModal open={openProject === 'pane'} onClose={close} />
+      <DialModal open={openProject === 'dial'} onClose={close} />
       <KilnModal open={openProject === 'kiln'} onClose={close} />
     </>
   )
