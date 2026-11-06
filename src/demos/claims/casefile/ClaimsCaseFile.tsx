@@ -154,7 +154,7 @@ export function ClaimsCaseFile() {
             <p className={s.eyebrow} data-edge>{HERO.eyebrow}</p>
             <h1 className={s.h1} data-edge>{HERO.title}</h1>
             <p className={s.body} data-edge>{HERO.intro}</p>
-            <ul className={s.stats} aria-label="Project in numbers" data-edge>
+            <ul className={s.stats} aria-label="When" data-edge>
               {HERO.stats.map(t => <li key={t}>{t}</li>)}
             </ul>
           </section>

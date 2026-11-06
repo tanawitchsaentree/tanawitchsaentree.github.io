@@ -34,9 +34,6 @@
     "title": "The life of a cargo claim",
     "intro": "A container of coffee arrives in Hamburg soaked through. Over the next few weeks, a handler and an approver will make dozens of decisions about it. I designed the screens they decide in. Then I built a clickable version so the team could try each decision before engineering started.",
     "stats": [
-      "505 commits",
-      "about 150 components",
-      "167 tickets",
       "May to October 2026"
     ]
   },
@@ -45,7 +42,6 @@
       "title": "The call comes in before the paperwork",
       "body": "Northwind phones it in the same morning. Nobody has the policy number yet, so the claim starts as a skeleton with only a date and a place. Later the handler links the right policy. If something doesn't fit, the screen says what and leaves the choice with them.",
       "how": [
-        "11 edge-case flows are documented.",
         "Missing cause of loss defaults to \"Other Event\" with a visible note.",
         "The typed location is kept, and changing it is opt-in.",
         "Nothing opens by itself.",
