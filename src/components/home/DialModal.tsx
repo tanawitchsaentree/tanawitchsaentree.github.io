@@ -34,7 +34,7 @@ export function DialModal({ open, onClose }: DialModalProps) {
       cover={
         <Image
           src="/images/dial-cover.webp"
-          alt="A Dial tuner card. A display reads 88.6 MHz above an orange tuning knob, FM and AM keys, a speaker grille and a volume fader."
+          alt="The Dial wordmark in raised dark letters, with an orange dot over the i, on a warm-white panel marked with a dial ring and one orange tick."
           fill
           loading="lazy"
           sizes="(max-width: 640px) 100vw, 640px"
