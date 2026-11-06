@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { cn } from '@/lib/cn'
 import { setGated } from '@/lib/gated'
 import { readKeys, unlockWithKey, unlockWithPassword, writeKey } from '@/lib/gate-crypto'
+import { track } from '@/components/analytics/track'
 
 // The password is never in the bundle. The page content is an AES-GCM blob
 // (scripts/encrypt-gated.mjs); the password derives the key in the browser, and only the
@@ -59,10 +60,10 @@ export function AllianzGate({
   // page until then, so the gate doesn't flash. A stale key (new build) falls back to the gate.
   useEffect(() => {
     const key = readKeys(STORAGE_KEY)[content]
-    if (!key) { setHasMounted(true); return }
+    if (!key) { setHasMounted(true); track(`gate/${content}/shown`, `Password gate shown on ${content}`); return }
     unlockWithKey(content, key)
-      .then(data => { setGated(content, data); setIsOpen(false) })
-      .catch(() => writeKey(STORAGE_KEY, content, null))
+      .then(data => { setGated(content, data); setIsOpen(false); track(`gate/${content}/unlocked-remembered`, `Returning visitor opened ${content}`) })
+      .catch(() => { writeKey(STORAGE_KEY, content, null); track(`gate/${content}/shown`, `Password gate shown on ${content}`) })
       .finally(() => setHasMounted(true))
   }, [content])
 
@@ -75,6 +76,7 @@ export function AllianzGate({
   }, [isOpen, hasMounted])
 
   const triggerError = () => {
+    track(`gate/${content}/wrong-password`, `Wrong password on ${content}`, `attempt ${attempts + 1}`)
     setState('error')
     setAttempts(a => a + 1)
     setValue('')
@@ -95,6 +97,7 @@ export function AllianzGate({
       .then(({ data, keyB64 }) => {
         setGated(content, data)
         writeKey(STORAGE_KEY, content, keyB64)
+        track(`gate/${content}/unlocked`, `Unlocked ${content} with the password`, `after ${attempts} wrong`)
         setState('success')
         setTimeout(() => setIsOpen(false), 600)
       })
