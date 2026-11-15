@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { ProfitaClient } from './ProfitaClient'
 
+import { NextCase } from '@/components/case-study/NextCase'
+
 export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
@@ -10,5 +12,5 @@ export const metadata: Metadata = {
 }
 
 export default function ProfitaPage() {
-  return <ProfitaClient />
+  return <><ProfitaClient /><NextCase current="profita" /></>
 }

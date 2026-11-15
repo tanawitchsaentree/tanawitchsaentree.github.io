@@ -50,3 +50,7 @@
 }
 @media (prefers-reduced-motion: reduce), (pointer: coarse) { .lightControl { display: none; } }
 @media (prefers-reduced-motion: reduce) { .graphite { transition: none; } }
+.lostList { list-style: none; padding: 0; margin: var(--space-4) 0 var(--space-6); display: grid; gap: var(--space-1); }
+.lostList a { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-3); min-height: var(--space-8); padding-block: var(--space-1); color: var(--fg); text-decoration: none; }
+.lostList a:hover { color: var(--accent-text); }
+.lostList span { color: var(--fg-subtle); font-size: var(--type-home-note); }

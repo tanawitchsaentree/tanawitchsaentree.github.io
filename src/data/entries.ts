@@ -42,11 +42,14 @@ const work = (id: string, extra: Category[] = []): Entry => {
 const tims = SELECTED_WORK.find(x => x.href === '/projects/tims/')!
 const humanTone = TOOLS.find(t => t.name === 'Human Tone')!
 
-/** Order is the order of the "All" tab: the work I'd lead with first, then the projects. */
+/** Order is the order of the "All" tab: the six work case studies first, then the projects; Tims, a personal concept, sits with the projects. */
 export const ENTRIES: Entry[] = [
   work('allianz'),
   work('claims'),
   work('invitrace', ['design-system']),
+  work('vitae'),
+  work('profita'),
+  work('stellareat'),
   {
     id: 'pane', categories: ['personal', 'design-system'], kind: PANE_PROJECT.tag, title: PANE_PROJECT.title,
     description: PANE_PROJECT.description, thumb: { src: '/images/pane-thumb.webp' },
@@ -83,9 +86,6 @@ export const ENTRIES: Entry[] = [
     primary: { type: 'modal', key: 'manabi', label: PERSONAL_PROJECT.details },
     external: { href: PERSONAL_PROJECT.url, label: 'Visit Manabi' },
   },
-  work('vitae'),
-  work('profita'),
-  work('stellareat'),
   {
     id: 'tims', categories: ['personal'], kind: tims.company, meta: tims.period, title: tims.title, role: tims.role,
     description: tims.description, primary: { type: 'case', href: tims.href },
