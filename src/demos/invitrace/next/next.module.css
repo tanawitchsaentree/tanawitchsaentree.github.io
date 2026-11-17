@@ -60,8 +60,7 @@
    once, with no transition: on paper it reads as the old ink hairline, and between two dark fields
    it disappears. The fill also runs one hairline past the section's bottom: two dark fields that
    meet on a fractional pixel each half-cover the shared row, and the blend shows paper through it.
-   The top overhang reaches only this section's own border row (the inset is measured from the padding
-   box), and the section below paints later, so the fill never darkens a section above. */
+   The overlap goes downward only; the section below paints later, so it never darkens a section above. */
 /* Under a dark section, the dark-to-paper edge is the divider, with no hairline. */
 .req[data-no] + .req, .req[data-no] + .summary { border-top-color: transparent; }
 .req[data-no] + .req[data-no] { border-top-color: var(--ds-display-oled-bg); }
@@ -162,6 +161,7 @@
 @media (prefers-reduced-motion: reduce) {
   .reason, .alertBar[data-sweep]::after, .wrap::before, .mask > span { animation: none; }
   .req::before, .trackWin ol { transition: none; }
+  .req { transition: none; }
   .admit, .fork, .doc, .avatar, .docText b, .ruler { transition: none; }
   .req[data-no], .req[data-no] [data-swap], .req[data-no] [data-swap] * { transition: none; }
   .statement { height: auto; }

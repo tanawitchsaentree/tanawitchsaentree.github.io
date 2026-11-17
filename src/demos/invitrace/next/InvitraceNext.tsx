@@ -11,7 +11,7 @@ import n from './next.module.css'
 
 // Invitrace, told as five requests from one clinic. Every section is the same shape:
 // the request in the clinic's words, one button that sends it, the clinic's screen showing what
-// happens, and the answer with one plain reason. Dial is the material (the device and
+// happens, and the answer with one plain reason. Dial is the material (the device, the display,
 // the one orange key); nothing here needs the reader to learn a control.
 
 type Id = Extract<RequestId, 'colour' | 'doctor' | 'copy' | 'small' | 'alert'>
