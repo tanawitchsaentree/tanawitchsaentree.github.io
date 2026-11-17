@@ -69,14 +69,6 @@ Grotesque / DM Sans / Space Mono project typefaces listed below for Tims only. L
 and timers carry `font-variant-numeric: tabular-nums`, since the proportional face no longer
 gives fixed-width digits; meta text stays at 11px or larger.
 
-## Invitrace-next typography override — 2026-11-16
-
-The Invitrace preview at `/projects/invitrace-next/` is set on Tanawitch's dial design system
-(`dial-react`, Helvetica Neue stack) instead of Bricolage Grotesque / DM Sans / Space Mono, for that
-route only. Display type is weight 400 with line-height 0.8–1.15 and tracking at the -0.03em floor;
-the page prints a 12-column hairline grid and turns a request section dark when the answer is No.
-The original `/projects/invitrace/` keeps its own typefaces.
-
 ## Typography
 
 > **Direction: one monospace document.** The portfolio shell is set in one face —
