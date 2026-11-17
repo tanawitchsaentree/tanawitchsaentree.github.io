@@ -42,11 +42,10 @@ const work = (id: string, extra: Category[] = []): Entry => {
 const tims = SELECTED_WORK.find(x => x.href === '/projects/tims/')!
 const humanTone = TOOLS.find(t => t.name === 'Human Tone')!
 
-/** Order is the order of the "All" tab: the six work case studies first, then the projects; Tims, a personal concept, sits with the projects. */
+/** Order is the order of the "All" tab: the work case studies first, then the projects; Tims, a personal concept, sits with the projects. */
 export const ENTRIES: Entry[] = [
   work('allianz'),
   work('claims'),
-  work('invitrace', ['design-system']),
   work('vitae'),
   work('profita'),
   work('stellareat'),

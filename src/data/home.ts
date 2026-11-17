@@ -30,14 +30,6 @@ export const SELECTED_WORK = [
     href: '/projects/claims/',
   },
   {
-    company: 'Invitrace Health',
-    title: 'A clinic asks for its own look',
-    role: 'Lead Product Designer',
-    period: '2024–2025',
-    description: 'A specialty clinic sends a list of requests, and each answer shows what a hospital can change in the Invitrace design system and what stays the same everywhere.',
-    href: '/projects/invitrace/',
-  },
-  {
     company: 'Vitae',
     title: 'Scoring a day against your own last two weeks',
     role: 'Lead Product Designer',
