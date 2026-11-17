@@ -1,0 +1,177 @@
+/* Invitrace on dial. Warm-white page, ink print, one orange key per request (dial P1).
+   The clinic's screen is flat printing: one ink, one brand colour on the Admit key, and the alert red.
+   Every section has the same shape, so the reader learns it once: the request, the device, the answer. */
+
+/* projects.css forces its own family with !important; this surface uses dial's grotesk. */
+.root.root.root.root, .root.root.root.root * { font-family: var(--ds-font-family-sans) !important; }
+.root { overflow-x: clip; --ink: var(--ds-text-primary); --mute: var(--ds-text-secondary); --rule: var(--ds-line-divider); --paper: var(--ds-surface-page);
+  background: var(--paper); color: var(--ink); min-height: 100svh; font-size: var(--ds-font-size-450); line-height: var(--ds-font-leading-body); }
+/* The grid is printed on the page: twelve hairline columns run behind everything, the way printed guides do, and every block starts on a line. */
+.wrap { --cols: 12; position: relative; max-width: 90rem; margin: 0 auto; padding: 0 var(--ds-space-6) var(--ds-space-32); }
+.wrap::before { content: ''; position: absolute; inset: 0 var(--ds-space-6); pointer-events: none; z-index: 0;
+  background-image: linear-gradient(to right, color-mix(in srgb, var(--rule) 60%, transparent) var(--ds-size-hairline), transparent var(--ds-size-hairline)); background-size: calc(100% / var(--cols)) 100%; }
+.wrap::before { animation: guides 1100ms var(--ease-out-standard) both; }
+@keyframes guides { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+.wrap > * { position: relative; z-index: 1; }
+
+.top { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); padding-block: var(--ds-space-5); font-size: var(--ds-font-size-200); color: var(--mute); }
+.top > * { padding-left: var(--ds-space-2); border-left: var(--ds-size-hairline) solid var(--ink); }
+.top a { grid-column: 1 / span 3; color: var(--ink); text-decoration: none; }
+.top span:nth-of-type(1) { grid-column: 4 / span 3; } .top span:nth-of-type(2) { grid-column: 7 / span 3; } .top span:nth-of-type(3) { grid-column: 10 / span 3; }
+.top a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* Hero: one huge line, two small notes, the list of requests. */
+.hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); row-gap: var(--ds-space-12); padding: var(--ds-space-16) 0 var(--ds-space-24); }
+.root.root .title { grid-column: 1 / -1; margin: 0; padding-left: var(--ds-space-2); font-size: clamp(3.5rem, 10.5vw, 10rem) !important; font-weight: 400 !important; line-height: 0.9 !important; letter-spacing: -0.03em !important; }
+.mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.06em; margin-right: 0.22em; }
+.mask > span { display: inline-block; animation: rise 900ms var(--ease-out-standard) both; animation-delay: calc(var(--i) * 70ms + 200ms); }
+@keyframes rise { from { transform: translateY(105%); } to { transform: none; } }
+.heroSide { grid-column: 1 / span 3; margin: 0; padding-left: var(--ds-space-2); font-size: var(--ds-font-size-200); color: var(--mute); }
+.lead { grid-column: 7 / span 5; margin: 0; padding-left: var(--ds-space-2); font-size: var(--ds-font-size-600); line-height: var(--ds-font-leading-tight); }
+.index { grid-column: 1 / -1; list-style: none; margin: 0; padding: 0; border-top: var(--ds-size-hairline) solid var(--ink); }
+.index li { border-bottom: var(--ds-size-hairline) solid var(--rule); }
+.index a { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: baseline; padding-block: var(--ds-space-4); color: inherit; text-decoration: none; }
+.index a:hover .idxQ { text-decoration: underline; text-underline-offset: 4px; }
+.idxN { grid-column: 1; padding-left: var(--ds-space-2); color: var(--mute); font-variant-numeric: tabular-nums; font-size: var(--ds-font-size-200); }
+.idxQ { grid-column: 4 / span 7; font-size: var(--ds-font-size-500); }
+.idxA { grid-column: 12; font-weight: 500; }
+
+/* The rule, set as one statement in a dark field. */
+.statement { margin-inline: calc(50% - 50vw); height: 260svh; background: var(--ds-display-oled-bg); color: var(--ds-display-oled-ink); }
+.pin { position: sticky; top: 0; height: 100svh; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-content: center; row-gap: var(--ds-space-2); padding: 0 max(var(--ds-space-6), calc(50vw - 45rem + var(--ds-space-6))); }
+/* The rule starts on column 4, the same line as every quote. */
+.ruleLine { grid-column: 4 / span 8; margin: 0; padding-left: var(--ds-space-2); max-width: 24ch; text-wrap: balance; font-size: clamp(1.75rem, 3.6vw, 3.4rem); line-height: 1.15; letter-spacing: -0.02em; }
+/* Each word's ink is scrubbed by scroll: --k runs from dim to full. This repaints the words each frame
+   (colour, not a composited property); it is about 18 short spans, which is cheap. */
+.word { display: inline-block; white-space: pre; color: color-mix(in srgb, var(--ds-display-oled-ink) var(--k, 100%), var(--ds-display-oled-bg)); }
+
+/* A request. Light while asked; dark once the system says no. */
+.req { position: relative; isolation: isolate; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); row-gap: var(--ds-space-8); margin-inline: calc(50% - 50vw); padding: var(--ds-space-24) max(var(--ds-space-6), calc(50vw - 45rem + var(--ds-space-6))); border-top: var(--ds-size-hairline) solid var(--ink); }
+/* A refusal: the dark rises from the bottom of the section. Each [data-swap] part changes to light ink at
+   the moment the dark's edge passes its middle; --swap is measured in Request (InvitraceNext.tsx).
+   900ms and the curve must match WIPE_MS and WIPE there. */
+.req::before { content: ''; position: absolute; inset: calc(-1 * var(--ds-size-hairline)) 0 calc(-1 * var(--ds-size-hairline)); z-index: -1; transform: translateZ(0); background: var(--ds-display-oled-bg); clip-path: inset(100% 0 0 0); transition: clip-path 900ms var(--ease-in-out-natural); }
+.req[data-no]::before { clip-path: inset(0 0 0 0); }
+.req[data-no] { border-top-color: var(--ds-display-oled-bg); }
+/* Seams. The fill sits on its own layer (translateZ above): without it, the moving device column made
+   Chrome round the fill's edge differently on the left half, leaving a half-width seam wherever an
+   edge falls between pixels. The fill's -1 hairline top does not always cover the border row at a
+   fractional position, which is why a refused section's own border is set to the dark itself, at
+   once, with no transition: on paper it reads as the old ink hairline, and between two dark fields
+   it disappears. The fill also runs one hairline past the section's bottom: two dark fields that
+   meet on a fractional pixel each half-cover the shared row, and the blend shows paper through it.
+   The overlap goes downward only; the section below paints later, so it never darkens a section above. */
+/* Under a dark section, the dark-to-paper edge is the divider, with no hairline. */
+.req[data-no] + .req, .req[data-no] + .summary { border-top-color: transparent; }
+.req[data-no] + .req[data-no] { border-top-color: var(--ds-display-oled-bg); }
+.req[data-no] [data-swap], .req[data-no] [data-swap] * { transition: color 160ms var(--ease-out-standard) var(--swap, 0ms); }
+.req[data-no] { --ink: var(--ds-display-oled-ink); --mute: color-mix(in srgb, var(--ds-display-oled-ink) 60%, transparent); --rule: color-mix(in srgb, var(--ds-display-oled-ink) 14%, transparent); color: var(--ink); }
+.reqMeta { grid-column: 1 / span 3; display: grid; gap: var(--ds-space-1); margin: 0; padding-left: var(--ds-space-2); font-size: var(--ds-font-size-200); color: var(--mute); font-variant-numeric: tabular-nums; }
+.legend { grid-column: 4 / -1; display: flex; gap: var(--ds-space-6); list-style: none; margin: 0; padding: 0 0 0 var(--ds-space-2); font-size: var(--ds-font-size-200); color: var(--mute); }
+.legend li[data-now] { color: var(--ink); font-weight: 500; }
+.root.root .quote { grid-column: 4 / span 8; margin: 0; padding-left: var(--ds-space-2); font-size: clamp(2rem, 4.4vw, 4rem) !important; font-weight: 400 !important; line-height: 1.02 !important; letter-spacing: -0.03em !important; text-wrap: balance; color: var(--ink); }
+.stage { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: center; margin-top: var(--ds-space-8); }
+.deviceCol { grid-column: 1 / span 6; padding-left: var(--ds-space-2); }
+.device { min-width: 0; }
+.answer { grid-column: 8 / span 5; padding-left: var(--ds-space-2); min-height: 22rem; display: grid; align-content: center; }
+.send { display: grid; gap: var(--ds-space-5); justify-items: start; }
+.hint { margin: 0; font-size: var(--ds-font-size-450); color: var(--mute); }
+.reason { animation: reveal var(--duration-base) var(--ease-out-standard) both; }
+.verdict { margin: 0 0 var(--ds-space-8); font-size: clamp(5rem, 11vw, 10.5rem); line-height: 0.8; letter-spacing: -0.03em; color: var(--ink); }
+.heading { margin: 0 0 var(--ds-space-3); font-size: var(--ds-font-size-600); line-height: var(--ds-font-leading-tight); font-weight: 500; outline: none; color: var(--ink); }
+.why { margin: 0; max-width: 28rem; color: var(--mute); }
+@keyframes reveal { from { clip-path: inset(0 0 100% 0); transform: translateY(12px); } to { clip-path: inset(0 0 0 0); transform: none; } }
+
+.track { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; gap: var(--ds-space-6); padding: var(--ds-space-3) var(--ds-space-6); background: var(--ds-surface-page); border-top: var(--ds-size-hairline) solid var(--ds-line-divider); font-size: var(--ds-font-size-200); color: var(--ds-text-secondary); font-variant-numeric: tabular-nums; }
+.trackN { color: var(--ds-text-primary); }
+.trackWin { overflow: hidden; padding-left: 30%; mask-image: linear-gradient(to right, transparent, var(--ds-text-primary) 25%, var(--ds-text-primary) 75%, transparent); }
+.trackWin ol { display: flex; gap: var(--ds-space-10); list-style: none; margin: 0; padding: 0; white-space: nowrap; transition: transform 700ms var(--ease-out-standard); }
+.trackWin li[data-now] { color: var(--ds-text-primary); font-weight: 500; }
+
+/* The clinic's screen: flat print on a light window, recessed into the device.
+   The state morphs below (button height, doctor card padding, avatar size, name size, the copies'
+   shape) animate layout on purpose, once per press: the change in size is the answer being shown.
+   Scroll-driven motion on this page uses transform and clip-path only. */
+.screen { min-height: 15rem; padding: var(--ds-space-5); border-radius: var(--ds-radius-md); background: var(--ds-surface-light); box-shadow: var(--ds-shadow-well); display: grid; align-content: start; gap: var(--ds-space-5); }
+.scrHead { display: flex; justify-content: space-between; margin: 0; padding-bottom: var(--ds-space-3); border-bottom: var(--ds-size-hairline) solid var(--ds-line-divider); font-size: var(--ds-font-size-200); color: var(--ds-text-secondary); }
+.scrHead span:first-child { color: var(--ds-text-primary); font-weight: 500; }
+.admitRow { display: flex; align-items: center; gap: var(--ds-space-4); min-height: 56px; }
+.admit { display: inline-flex; align-items: center; height: var(--h); padding: 0 var(--ds-space-5); border-radius: var(--ds-radius-sm); background: var(--brand); color: var(--ds-status-on-critical); font-weight: 500; font-size: var(--ds-font-size-300); transition: background-color 600ms var(--ease-in-out-natural), height var(--duration-base) var(--ease-snap); }
+.note { font-size: var(--ds-font-size-200); color: var(--ds-text-secondary); font-variant-numeric: tabular-nums; }
+.note[data-bad] { color: var(--ds-text-primary); font-weight: 500; }
+.ruler { font-size: var(--ds-font-size-200); font-variant-numeric: tabular-nums; color: var(--ds-text-secondary); transition: color var(--duration-base) var(--ease-out-standard); }
+.ruler[data-small] { color: var(--ds-text-primary); font-weight: 500; }
+.table { width: 100%; border-collapse: collapse; font-size: var(--ds-font-size-300); }
+.table td { padding: var(--ds-space-2) 0; border-top: var(--ds-size-hairline) solid var(--ds-line-divider); }
+.table td:first-child { width: 3rem; color: var(--ds-text-secondary); }
+.table td:last-child { text-align: right; color: var(--ds-text-secondary); }
+.table td[data-risk="High"] { color: var(--ds-text-primary); font-weight: 500; }
+
+.doc { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--ds-space-4); transition: padding var(--duration-base) var(--ease-out-standard); }
+.doc[data-layout="hero"] { padding-block: var(--ds-space-4); }
+.avatar { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--ds-surface-solid); font-size: var(--ds-font-size-200); color: var(--ds-text-secondary); transition: width var(--duration-base) var(--ease-out-standard), height var(--duration-base) var(--ease-out-standard); }
+.doc[data-layout="hero"] .avatar { width: 64px; height: 64px; }
+.docText { display: grid; min-width: 0; }
+.docText b { font-weight: 500; font-size: var(--ds-font-size-300); transition: font-size var(--duration-base) var(--ease-out-standard); }
+.doc[data-layout="hero"] .docText b { font-size: var(--ds-font-size-600); }
+.docText span { font-size: var(--ds-font-size-200); color: var(--ds-text-secondary); }
+.page { padding: var(--ds-space-2) var(--ds-space-4); border-radius: var(--ds-radius-sm); border: var(--ds-size-hairline) solid var(--ds-line-ring); font-size: var(--ds-font-size-200); }
+
+/* Copies: one button, then five that drifted apart. */
+.forks { position: relative; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--ds-space-6); min-height: 10rem; }
+.fork { display: inline-flex; align-items: center; height: 44px; padding: 0 var(--ds-space-5); border-radius: var(--ds-radius-sm); color: var(--ds-status-on-critical); font-size: var(--ds-font-size-300); font-weight: 500; white-space: nowrap; transition: transform 700ms var(--ease-out-standard), border-radius 700ms var(--ease-out-standard), padding 700ms var(--ease-out-standard), background-color 700ms var(--ease-out-standard), height 700ms var(--ease-out-standard); }
+.forks[data-state="one"] .fork:not(:first-child) { position: absolute; transform: none; visibility: hidden; }
+
+/* Alerts: three brand stripes, one red. The clinic's bar is swept with its brand and pulled back. */
+.alerts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ds-space-3); }
+.alertCol { display: grid; gap: var(--ds-space-2); }
+.alertBrand { padding-top: var(--ds-space-2); border-top: var(--ds-space-1) solid var(--brand); font-size: var(--ds-font-size-200); color: var(--ds-text-secondary); }
+.alertBar { position: relative; overflow: hidden; display: block; padding: var(--ds-space-4) var(--ds-space-3); border-radius: var(--ds-radius-sm); background: var(--ixp-del); color: var(--ds-status-on-critical); font-weight: 500; font-size: var(--ds-font-size-300); }
+.alertBar[data-sweep]::after { content: ''; position: absolute; inset: 0; background: var(--brand); animation: sweep 1000ms var(--ease-in-out-natural) both; }
+@keyframes sweep { 0% { clip-path: inset(0 100% 0 0); } 50% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 100%); } }
+
+/* The summary: what the clinic got. */
+.summary { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); row-gap: var(--ds-space-8); padding-top: var(--ds-space-24); border-top: var(--ds-size-hairline) solid var(--ink); }
+.summary > * { grid-column: 4 / -1; padding-left: var(--ds-space-2); }
+.summary > .reqMeta { grid-column: 1 / span 3; }
+.file { list-style: none; margin: 0; padding-block: 0; }
+.file li { display: grid; grid-template-columns: 2rem minmax(0, 1fr) minmax(0, 1fr); gap: var(--ds-space-4); padding-block: var(--ds-space-4); border-bottom: var(--ds-size-hairline) solid var(--ds-line-divider); align-items: baseline; }
+.file li[data-state="wait"] { color: var(--ds-text-secondary); }
+.mark { font-weight: 500; }
+.fileA { font-weight: 500; }
+.file li[data-state="wait"] .fileA { font-weight: 400; }
+.fine { max-width: 34rem; margin: var(--ds-space-6) 0 0; font-size: var(--ds-font-size-450); color: var(--ds-text-secondary); }
+.fine a { color: var(--ds-text-primary); }
+
+@media (max-width: 899px) {
+  .wrap { --cols: 4; }
+  .top { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .top a { grid-column: 1 / span 2; } .top span:nth-of-type(1) { grid-column: 3 / span 2; } .top span:nth-of-type(n+2) { display: none; }
+  .hero, .req, .stage, .summary { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .heroSide, .lead, .reqMeta, .legend, .root.root .quote, .deviceCol, .answer, .summary > *, .summary > .reqMeta { grid-column: 1 / -1; }
+  .idxQ { grid-column: 2 / span 9; } .legend { flex-wrap: wrap; gap: var(--ds-space-3); }
+  .stage { row-gap: var(--ds-space-8); }
+  .answer { min-height: 0; }
+  .track { display: none; }
+  .ruleLine { grid-column: 1 / -1; }
+  .alerts { grid-template-columns: minmax(0, 1fr); }
+  .file li { grid-template-columns: 2rem minmax(0, 1fr); }
+  .fileA { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reason, .alertBar[data-sweep]::after, .wrap::before, .mask > span { animation: none; }
+  .req::before, .trackWin ol { transition: none; }
+  .req { transition: none; }
+  .admit, .fork, .doc, .avatar, .docText b, .ruler { transition: none; }
+  .req[data-no], .req[data-no] [data-swap], .req[data-no] [data-swap] * { transition: none; }
+  .statement { height: auto; }
+  .pin { position: static; height: auto; min-height: 100svh; }
+}
+/* The fixed track must never cover a focused key (WCAG 2.4.11). */
+@media (min-width: 900px) { :global(html):has(.track) { scroll-padding-bottom: calc(3rem + var(--ds-space-4)); } }
+
+/* Answer word for screen readers; the large verdict is aria-hidden. */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* dial styles :disabled only; a key that is playing its answer must look it. */
+.sendKey[aria-disabled="true"] { cursor: progress; box-shadow: none; }
+
